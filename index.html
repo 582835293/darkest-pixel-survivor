@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R8 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R9 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -720,24 +720,17 @@
       cursor: pointer;
     }
 
-    #btn-pause {
-      position: absolute;
-      top: env(safe-area-inset-top, 4px);
-      right: 8px;
-      width: 30px;
-      height: 30px;
-      border-radius: 7px;
-      background: rgba(30, 41, 59, 0.92);
-      border: 1px solid #475569;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      cursor: pointer;
-      pointer-events: auto;
-      z-index: 20;
+    #corner-controls {
+      position:absolute;top:calc(env(safe-area-inset-top, 0px) + 4px);right:8px;
+      width:84px;height:36px;display:flex;gap:6px;z-index:20;
     }
+    #corner-controls button {
+      position:static;width:39px;height:36px;padding:2px;border:1px solid #64748b;border-radius:7px;
+      background:rgba(30,41,59,.96);color:#fff;display:flex;flex-direction:column;align-items:center;
+      justify-content:center;font-size:14px;line-height:15px;cursor:pointer;pointer-events:auto;touch-action:manipulation;
+    }
+    #corner-controls button span {font-size:9px;line-height:11px;pointer-events:none;}
+    #btn-lobby-settings-top {display:block;margin:0 auto 12px;padding:8px 14px;}
 
     #combo-badge {
       position: absolute;
@@ -949,7 +942,7 @@
     /* 右上角实时战术雷达小地图 (精简紧凑，独立于右侧90px安全区) */
     #minimap-box {
       position: absolute;
-      top: 38px;
+      top: calc(env(safe-area-inset-top, 0px) + 48px);
       right: 8px;
       width: 84px;
       background: rgba(11, 15, 25, 0.9);
@@ -983,7 +976,7 @@
     }
     @media (max-height: 540px) {
       #minimap-box {
-        top: 32px !important;
+        top: calc(env(safe-area-inset-top, 0px) + 48px) !important;
         transform: scale(0.80);
         transform-origin: top right;
       }
@@ -1192,14 +1185,15 @@
     </div>
 
     <!-- 暂停按钮 -->
-    <div id="btn-pause">⏸</div>
+    <div id="corner-controls" aria-label="游戏快捷设置">
+      <button id="btn-hud-settings" type="button" aria-label="声音设置" title="调整语音、音乐与音效">🔊<span>声音</span></button>
+      <button id="btn-pause" type="button" aria-label="暂停游戏" title="暂停游戏">⏸<span>暂停</span></button>
+    </div>
 
     <!-- 右上角实时战术雷达小地图 (显示玩家、Boss方位、远方地图特殊装备星标) -->
-    <div id="minimap-box" role="button" tabindex="0" aria-label="展开大地图" title="点击展开大地图：队友方向、距离和地图图例">
+    <div id="minimap-box" style="touch-action:manipulation" role="button" tabindex="0" aria-label="展开大地图" title="点击展开大地图：队友方向、距离和地图图例">
       <div class="minimap-legend">
-        <span style="color:#4ade80;">●我/友</span>
-        <span style="color:#34d399;">◆道具</span>
-        <span style="color:#38bdf8;">▲神龛</span>
+        <span style="color:#e2e8f0;display:block;width:100%;text-align:center;">🗺 地图 · 点击展开</span>
       </div>
       <canvas id="minimapCanvas" width="74" height="74"></canvas>
       <div class="minimap-legend" id="minimap-relic-hint" style="color:#fde047; justify-content:center;">⭐秘宝 💀首领</div>
@@ -1252,8 +1246,9 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战</div>
+        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R9</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
+        <button class="btn-secondary" id="btn-lobby-settings-top" type="button">🔊 声音设置 · 音乐 / 音效 / 语音</button>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
         <div class="hero-grid">
@@ -7805,17 +7800,16 @@
           const cy = camera.viewportHeight / 2 + Math.sin(ang) * (Math.min(camera.viewportWidth, camera.viewportHeight) * 0.34);
           ctx.save();
           ctx.translate(cx, cy);
-          ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
-          ctx.strokeStyle = '#fde047';
-          ctx.lineWidth = 1.5;
-          ctx.fillRect(-44, -12, 88, 24);
-          ctx.strokeRect(-44, -12, 88, 24);
-          ctx.fillStyle = '#fde047';
-          ctx.font = 'bold 10px sans-serif';
-          ctx.textAlign = 'center';
           const distM = Math.round(dist / 10);
           const distStr = distM >= 1000 ? `${(distM / 1000).toFixed(2)}km` : `${distM}m`;
-          ctx.fillText(`${mr.icon}${mr.name} ${distStr}`, 0, 4);
+          const label = `${mr.icon || '⭐'} ${distStr}`;
+          ctx.font = 'bold 10px sans-serif';
+          ctx.textAlign = 'center';
+          const w = Math.ceil(ctx.measureText(label).width) + 12;
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
+          ctx.fillRect(-w / 2, -10, w, 20);
+          ctx.fillStyle = '#fde047';
+          ctx.fillText(label, 0, 4);
           ctx.restore();
         }
       }
@@ -9972,7 +9966,7 @@
 
     document.getElementById('btn-hud-skilltree').addEventListener('click', (e) => { e.stopPropagation(); openSkillTreeModal(); });
     document.getElementById('hud-loadout-bar').addEventListener('click', (e) => { e.stopPropagation(); openSkillTreeModal(); });
-    document.getElementById('minimap-box').addEventListener('click', (e) => { e.stopPropagation(); CoopMap.toggle(); });
+    document.getElementById('minimap-box').addEventListener('click', (e) => { e.preventDefault();e.stopPropagation(); CoopMap.toggle(true); });
     document.getElementById('minimap-box').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.stopPropagation();e.preventDefault();CoopMap.toggle();}});
     document.getElementById('btn-lobby-skilltree').addEventListener('click', () => openSkillTreeModal());
     document.getElementById('btn-pause-skilltree').addEventListener('click', () => openSkillTreeModal());
@@ -10136,7 +10130,7 @@
       document.getElementById('pause-modal').style.display = GameState.isPaused ? 'flex' : 'none';
       CoopManager.sendPresenceNow();
     }
-    document.getElementById('btn-pause').addEventListener('click', togglePause);
+    document.getElementById('btn-pause').addEventListener('click',e=>{e.stopPropagation();togglePause();});
     document.getElementById('btn-resume').addEventListener('click', togglePause);
     document.getElementById('btn-restart').addEventListener('click', () => { resetGameSession(false); });
     document.getElementById('btn-over-lobby').addEventListener('click', () => { resetGameSession(true); });
@@ -11498,7 +11492,7 @@
         try{const saved=JSON.parse(localStorage.getItem('ps_audio_levels')||'{}');for(const k of Object.keys(this.values))if(Number.isFinite(saved[k]))this.values[k]=Math.max(0,Math.min(100,saved[k]));}catch(e){}
         for(const k of Object.keys(this.values)){const el=document.getElementById('volume-'+k);el.value=this.values[k];el.addEventListener('input',()=>this.set(k,el.value));}
         this.apply();
-        for(const id of ['btn-pause-settings','btn-lobby-settings'])document.getElementById(id).onclick=()=>this.open();
+        for(const id of ['btn-pause-settings','btn-lobby-settings','btn-lobby-settings-top','btn-hud-settings'])document.getElementById(id).onclick=()=>this.open();
         document.getElementById('btn-close-settings').onclick=()=>this.close();
       },
       set(k,v){if(!(k in this.values))return;this.values[k]=Math.max(0,Math.min(100,Number(v)||0));try{localStorage.setItem('ps_audio_levels',JSON.stringify(this.values));}catch(e){}this.apply();},
@@ -14717,7 +14711,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 8, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 9, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
