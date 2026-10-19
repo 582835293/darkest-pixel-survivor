@@ -12,18 +12,20 @@ async function check(name,fn){await fn();results.push(name);console.log('PASS',n
  async function makePage(viewport={width:1200,height:800}){
   const p=await(await browser.newContext({viewport})).newPage();pages.push(p);
   p.on('pageerror',e=>{errors.push(e.message);console.log('PAGEERROR',e.message)});
-  await p.exposeFunction('relay',async pkt=>{for(const other of pages)if(other!==p)await other.evaluate(pkt=>CoopManager.onReceivePacket(pkt,{kind:'mqtt',url:'test'}),pkt).catch(()=>{})});
+  await p.exposeFunction('relay',async ({topic,pkt})=>{for(const other of pages)await other.evaluate(({topic,pkt})=>{
+    for(const c of [RoomHub.directory,CoopManager.mqttClient,CoopNodes.diagnostic])if(c&&!c.closed&&c.topic===topic)c.onMessage(CoopPoseWire.decode(pkt),{kind:'mqtt',url:'test'});
+   },{topic,pkt}).catch(()=>{})});
   await p.goto(url);
   await p.evaluate(()=>{
    LiteMQTTClient.prototype.startAllTransports=function(){this.activeSockets=[{_brokerUrl:'test',_isSubscribed:true,readyState:1,close(){}}]};
-   LiteMQTTClient.prototype.publish=function(pkt){window.relay(pkt);return true};
+   LiteMQTTClient.prototype.publishWire=function(pkt){if(!this.closed)window.relay({topic:this.topic,pkt});return !this.closed};
    CoopManager.createSafePeerConnection=()=>new RTCPeerConnection({iceServers:[]});
   });return p;
  }
  const host=await makePage(),guest=await makePage();
- await host.evaluate(()=>{document.getElementById('coop-my-name').value='房主';CoopManager.createRoom()});
+ await host.evaluate(()=>{document.getElementById('coop-my-name').value='房主';return CoopManager.createRoom()});
  const room=await host.evaluate(()=>CoopManager.roomCode);
- await guest.evaluate(room=>{document.getElementById('coop-my-name').value='队友';CoopManager.joinRoom(room)},room);
+ await guest.evaluate(room=>{document.getElementById('coop-my-name').value='队友';return CoopManager.joinRoom(room)},room);
  await Promise.all([host,guest].map(p=>p.waitForFunction(()=>CoopManager.allies.length===1&&CoopManager.routeFor(CoopManager.allies[0].id,true).kind==='rtc')));
  await host.evaluate(()=>WorldCoop.startOrResume());
  await guest.waitForFunction(()=>GameState.isStarted&&WorldCoop.active()&&WorldCoop.receivedFrame>0);
@@ -281,7 +283,7 @@ async function check(name,fn){await fn();results.push(name);console.log('PASS',n
   assert.equal(await solo.evaluate(()=>GameState.isOver),true);
  });
  await check('leaving during an upgrade retains a usable selection in solo mode',async()=>{
-  await guest.evaluate(()=>{player.pendingLevelUps=1;triggerLevelUp();CoopManager.leaveRoom()});
+  await guest.evaluate(()=>{player.pendingLevelUps=1;triggerLevelUp();return CoopManager.leaveRoom()});
   assert.equal(await guest.evaluate(()=>UpgradeChoice.active&&GameState.isPaused),true);
   await guest.evaluate(()=>document.querySelector('#upgrade-options .upgrade-card').click());
   assert.equal(await guest.evaluate(()=>!UpgradeChoice.active&&player.pendingLevelUps===0),true);

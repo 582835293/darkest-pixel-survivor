@@ -17,11 +17,13 @@ async function audioEvidence(page,id,timeout=12000){
  for(let i=0;i<3;i++){
   const ctx=await browser.newContext({viewport:{width:390,height:844},permissions:['microphone']});await ctx.addInitScript(()=>{window.BroadcastChannel=undefined});
   const p=await ctx.newPage();pages.push(p);p.on('pageerror',e=>{errors.push(e.message);console.log('PAGEERROR',e.message)});
-  await p.exposeFunction('relay',async pkt=>{for(const other of pages)if(other!==p)await other.evaluate(pkt=>CoopManager.onReceivePacket(pkt,{kind:'mqtt',url:'test'}),pkt).catch(()=>{})});
+  await p.exposeFunction('relay',async ({topic,pkt})=>{for(const other of pages)await other.evaluate(({topic,pkt})=>{
+    for(const c of [RoomHub.directory,CoopManager.mqttClient,CoopNodes.diagnostic])if(c&&!c.closed&&c.topic===topic)c.onMessage(CoopPoseWire.decode(pkt),{kind:'mqtt',url:'test'});
+   },{topic,pkt}).catch(()=>{})});
   await p.goto(`http://127.0.0.1:${server.address().port}`);
   await p.evaluate(i=>{
    LiteMQTTClient.prototype.startAllTransports=function(){this.activeSockets=[{_brokerUrl:'test',_isSubscribed:true,readyState:1,bufferedAmount:0,close(){}}]};
-   LiteMQTTClient.prototype.publish=function(pkt){if(!this.closed)window.relay(pkt);return !this.closed};
+   LiteMQTTClient.prototype.publishWire=function(pkt){if(!this.closed)window.relay({topic:this.topic,pkt});return !this.closed};
    CoopManager.createSafePeerConnection=()=>CoopDirect.track(new RTCPeerConnection({iceServers:[]}));
    CoopManager.myPeerId=['peer_m','peer_a','peer_z'][i];
    document.getElementById('coop-my-name').value=['房主','朋友甲','朋友乙'][i];CoopManager.myName=['房主','朋友甲','朋友乙'][i];

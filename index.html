@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R4 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R5 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1052,6 +1052,7 @@
     #coop-room-banner{margin-top:9px;color:#86efac;font-size:12px;line-height:1.6;overflow-wrap:anywhere;}#coop-member-list{display:grid;gap:5px;}.coop-member{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:7px 9px;background:#0b1322;border-left:3px solid var(--member-color,#334155);border-radius:5px;font-size:11px;}.coop-member>span{min-width:0;overflow-wrap:anywhere;}.coop-member>small{max-width:58%;color:#94a3b8;text-align:right;font-size:10px;}.coop-member-empty{color:#64748b;font-size:11px;padding:5px 9px;}
     .coop-fold{padding:0;}.coop-fold>summary{padding:11px 10px;cursor:pointer;font-size:12px;color:#cbd5e1;list-style:none;display:flex;align-items:center;gap:6px;}.coop-fold>summary::-webkit-details-marker{display:none;}.coop-fold>summary:before{content:'▸';color:#7dd3fc;}.coop-fold[open]>summary:before{content:'▾';}.coop-fold>summary>span{margin-left:auto;text-align:right;color:#7dd3fc;font-size:10px;max-width:65%;overflow-wrap:anywhere;}.coop-fold-body{padding:0 10px 11px;}
     .coop-picks-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;}.coop-picks-grid>.biome-card{padding:8px 3px;text-align:center;font-size:10.5px;}.coop-route-actions{display:flex;gap:6px;align-items:center;margin-top:8px;}.coop-route-actions>select{flex:1;min-width:0;background:#0b1322;color:#e2e8f0;border:1px solid #475569;border-radius:6px;padding:7px;font-size:11px;}
+    .coop-room-setup,.coop-password-row,.coop-match-actions{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;}.coop-room-setup select,.coop-password-row input{flex:1;min-width:0;}.coop-match-actions{flex-wrap:wrap;}.coop-match-actions button{font-size:12px;}#coop-room-status{padding:8px 0;color:#cbd5e1;line-height:1.6;}#coop-modal [hidden]{display:none!important;}#coop-modal button:disabled{opacity:.5;cursor:default;}
     .coop-route-row{display:grid;grid-template-columns:minmax(0,1fr) 76px 66px;align-items:center;gap:5px;padding:8px 0;border-bottom:1px solid #33415566;font-size:10.5px;line-height:1.5;}.coop-route-row>span:nth-child(n+2){text-align:right;font-variant-numeric:tabular-nums;}.coop-route-row small{display:block;color:#64748b;font-size:9px;}.coop-route-header{color:#94a3b8;margin-top:6px;}.coop-route-current{color:#86efac;font-weight:700;}.coop-route-badge{color:#86efac;border:1px solid #28634c;border-radius:5px;padding:2px 5px;display:inline-block;}.coop-invite-details{margin-top:12px;border-top:1px solid #334155;padding-top:9px;font-size:11px;color:#94a3b8;}.coop-invite-actions{display:flex;gap:5px;flex-wrap:wrap;}.coop-invite-actions>button{flex:1;}.coop-alpha-actions{display:flex;gap:4px;justify-content:space-between;}.coop-alpha-actions>.btn-secondary{padding:4px!important;font-size:9.5px!important;}
     .coop-lobby-footer{position:sticky;bottom:0;display:flex;justify-content:center;gap:8px;background:#0b1221f5;padding:12px 0;z-index:2;border-top:1px solid #334155;}.coop-lobby-footer>#btn-coop-start-now{flex:1;max-width:220px;background:linear-gradient(135deg,#0284c7,#0369a1);}
     #coop-danmaku{position:fixed;inset:0;overflow:hidden;z-index:2147483646;pointer-events:none;user-select:none;-webkit-user-select:none;contain:layout paint;}.coop-danmaku-message{position:absolute;left:0;top:calc(clamp(112px,20vh,180px) + var(--danmaku-lane)*31px);white-space:nowrap;font-size:14px;font-weight:700;line-height:25px;padding:0 10px;color:#fef3c7;background:#0b1221b3;border-radius:5px;border:1px solid #64748b66;text-shadow:1px 1px 2px #000,0 0 4px #000;will-change:transform;}.coop-danmaku-own{color:#a5f3fc;}
@@ -1327,11 +1328,16 @@
       <div class="modal-card coop-lobby-card">
         <button class="modal-close-x" id="btn-x-coop" title="关闭联机大厅">✕</button>
         <div class="modal-title" style="color:#38bdf8;text-align:center;">🌐 联机大厅</div>
-        <div class="modal-subtitle" style="text-align:center;">房主创建房间，朋友输入房号加入。</div>
+        <div class="modal-subtitle" style="text-align:center;">创建房间、输入房号，或快速匹配一起玩。</div>
 
         <div class="coop-lobby-block">
           <div class="coop-name-row"><label for="coop-my-name">你的名字</label><input id="coop-my-name" type="text" maxlength="12" placeholder="取一个名字" class="coop-field"><div id="coop-color-swatches"></div></div>
-          <div class="coop-room-actions"><button class="btn-primary" id="btn-coop-create-room">🏠 创建房间</button><div><input id="coop-room-input" type="text" inputmode="numeric" maxlength="8" placeholder="朋友的房号" class="coop-field"><button class="btn-primary" id="btn-coop-join-room">加入</button></div></div>
+          <div class="coop-room-setup"><label for="coop-room-mode">开房方式</label><select id="coop-room-mode" class="coop-field"><option value="public">无密码 · 公开房</option><option value="private">有密码 · 私密房</option></select></div>
+          <div id="coop-create-password-row" class="coop-password-row" hidden><label for="coop-create-password">房间密码</label><input id="coop-create-password" class="coop-field" type="password" minlength="4" maxlength="32" autocomplete="new-password" placeholder="4–32 个字符"></div>
+          <div class="coop-room-actions"><button class="btn-primary" id="btn-coop-create-room">🏠 创建房间</button><div><input id="coop-room-input" type="text" inputmode="numeric" maxlength="4" placeholder="朋友的房号" class="coop-field"><button class="btn-primary" id="btn-coop-join-room">加入</button></div></div>
+          <div id="coop-join-password-row" class="coop-password-row" hidden><label for="coop-join-password">入房密码</label><input id="coop-join-password" class="coop-field" type="password" maxlength="32" autocomplete="off" placeholder="填写后再点加入"></div>
+          <div class="coop-match-actions"><button class="btn-secondary" id="btn-coop-match">🎲 快速匹配公开房</button><button class="btn-secondary" id="btn-coop-cancel-match" hidden>取消</button><span class="social-note">无密码 · 有空位</span></div>
+          <div id="coop-room-status" class="social-note" role="status" aria-live="polite" hidden></div>
           <div id="coop-room-banner" role="status">尚未加入房间</div>
         </div>
 
@@ -1367,7 +1373,7 @@
             <div id="coop-node-metrics"></div>
             <div id="coop-node-status" class="social-note"></div>
             <button class="btn-secondary" id="btn-coop-direct-retry" style="margin-top:8px;">重新尝试直连</button>
-            <details id="coop-invite-details" class="coop-invite-details">
+            <details id="coop-invite-details" class="coop-invite-details" hidden>
               <summary>备用邀请码</summary>
               <div id="coop-p2p-box" style="display:block;margin-top:8px;">
                 <div id="coop-p2p-status" class="social-note">就绪</div>
@@ -10659,6 +10665,7 @@
     class LiteMQTTClient {
       constructor(topic, roomCode, onMessage, onStatusChange, options = {}) {
         this.probeOnly = Boolean(options.probeOnly);
+        this.hubDirectory = Boolean(options.hubDirectory);
         this.topic = topic;
         this.roomCode = roomCode;
         this.onMessage = onMessage;
@@ -10939,6 +10946,10 @@
       }
 
       publish(obj, isHighFreqState = false, brokerUrl = null, bufferLimit = null) {
+        return RoomHub.publish(this, obj, isHighFreqState, brokerUrl, bufferLimit);
+      }
+
+      publishWire(obj, isHighFreqState = false, brokerUrl = null, bufferLimit = null) {
         if (this.closed) return false;
         const target = obj.targetPeerId && CoopManager.allies.find(a => a.id === obj.targetPeerId);
         const compact = isHighFreqState && obj.type === 'PLAYER_STATE' &&
@@ -10977,10 +10988,10 @@
         }
 
         // HTTP is limited to discovery and handshake; never POST movement/attacks.
-        const httpSignal = ['HELLO_JOIN', 'HELLO_WELCOME', 'HELLO_PRESENCE', 'AUTO_RTC_OFFER', 'AUTO_RTC_ANS', 'AUTO_RTC_ICE', 'PEER_LEAVE'].includes(obj.type);
+        const httpSignal = ['HELLO_JOIN', 'HELLO_WELCOME', 'HELLO_PRESENCE', 'AUTO_RTC_OFFER', 'AUTO_RTC_ANS', 'AUTO_RTC_ICE', 'PEER_LEAVE'].includes(obj.relayType || obj.type) || (this.hubDirectory && obj.type.startsWith('ROOM_') && (obj.type!=='ROOM_AD'||obj.reply));
         if (!isHighFreqState && !brokerUrl && httpSignal && typeof fetch !== 'undefined') {
           const now = performance.now();
-          if (!this._lastNtfyPost || now - this._lastNtfyPost > 10000 || obj.type !== 'HELLO_PRESENCE') {
+          if (!this._lastNtfyPost || now - this._lastNtfyPost > (this.hubDirectory ? 4000 : 10000) || !['HELLO_PRESENCE','ROOM_AD'].includes(obj.relayType || obj.type)) {
             this._lastNtfyPost = now;
             try {
               fetch(`https://ntfy.sh/${this.ntfyTopic}`, {
@@ -11286,7 +11297,7 @@
       },
       receive(pkt,entry,channel) {
         if (!['DIRECT_PING','DIRECT_PONG'].includes(pkt.type)) return false;
-        if (pkt.protocol!==32 || pkt.roomCode!==CoopManager.roomCode || pkt.peerId!==entry.peerId || pkt.targetPeerId!==CoopManager.myPeerId) return true;
+        if (pkt.protocol!==32 || !RoomHub.same(pkt)||!RoomHub.members.has(pkt.peerId) || pkt.peerId!==entry.peerId || pkt.targetPeerId!==CoopManager.myPeerId) return true;
         if (pkt.type==='DIRECT_PING') {
           if (channel.readyState==='open' && channel.bufferedAmount<4096) try {
             channel.send(JSON.stringify(CoopManager.makePacket({type:'DIRECT_PONG',targetPeerId:pkt.peerId,token:pkt.token})));
@@ -11463,11 +11474,11 @@
           this.mic=!this.mic;for(const t of this.stream.getAudioTracks())t.enabled=this.mic;this.error='';this.announce();return;
         }
         const problem=this.capability();if(problem){this.explain(problem);return;}
-        const request=++this.mediaRequest,room=CoopManager.roomCode;this.busy=true;this.error='';this.help='';this.render();
+        const request=++this.mediaRequest,room=RoomHub.identity();this.busy=true;this.error='';this.help='';this.render();
         clearTimeout(this.permissionTimer);this.permissionTimer=setTimeout(()=>{if(request===this.mediaRequest&&this.busy)this.explain({error:'仍在等待浏览器的麦克风许可。',help:'请查看浏览器权限弹窗。若始终没有弹窗，可点“取消申请”；文件预览器请改用 HTTPS 网页版，正常浏览器请检查网站权限和安卓系统中的麦克风权限。'});},10000);
         try{
           const stream=await navigator.mediaDevices.getUserMedia({video:false,audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1}});
-          if(request!==this.mediaRequest||room!==CoopManager.roomCode){stream.getTracks().forEach(t=>t.stop());return;}
+          if(request!==this.mediaRequest||room!==RoomHub.identity()){stream.getTracks().forEach(t=>t.stop());return;}
           this.stream?.getTracks().forEach(t=>t.stop());this.stream=stream;this.mic=true;this.joined=true;this.epoch++;this.error='';this.help='';
           for(const t of stream.getAudioTracks())t.addEventListener('ended',()=>{if(this.stream===stream){this.mic=false;this.error='麦克风已停止，请重新开启；收听与文字仍可使用。';this.announce();}});
           for(const id of [...this.peers.keys()])this.drop(id);this.announce();this.sync();
@@ -11489,11 +11500,11 @@
         if(!keepChain){this.chains.delete(id);this.chainTokens.delete(id);}
         const e=this.peers.get(id);if(!e)return;this.peers.delete(id);try{e.pc.close()}catch(_){}if(e.audio){e.audio.pause();e.audio.srcObject=null;e.audio.remove();}
       },
-      valid(e){return this.joined&&this.peers.get(e.id)===e&&CoopManager.roomCode===e.room&&this.epoch===e.localEpoch&&CoopManager.allies.some(p=>p.id===e.id&&p.voiceOn&&p.voiceEpoch===e.remoteEpoch);},
+      valid(e){return this.joined&&this.peers.get(e.id)===e&&RoomHub.identity()===e.room&&this.epoch===e.localEpoch&&CoopManager.allies.some(p=>p.id===e.id&&p.voiceOn&&p.voiceEpoch===e.remoteEpoch);},
       signal(e,payload){if(this.valid(e))CoopManager.sendPacket({...payload,targetPeerId:e.id,call:e.call,fromEpoch:e.localEpoch,toEpoch:e.remoteEpoch});},
       create(peer,call){
         const pc=CoopManager.createSafePeerConnection();if(!pc){this.error='浏览器不支持语音直连，文字聊天仍可使用。';return null;}
-        const e={id:peer.id,pc,call,room:CoopManager.roomCode,localEpoch:this.epoch,remoteEpoch:peer.voiceEpoch,at:performance.now(),remoteSet:false,candidates:[],candidateKeys:new Set()};
+        const e={id:peer.id,pc,call,room:RoomHub.identity(),localEpoch:this.epoch,remoteEpoch:peer.voiceEpoch,at:performance.now(),remoteSet:false,candidates:[],candidateKeys:new Set()};
         this.peers.set(peer.id,e);
         const tracks=this.stream?.getAudioTracks().filter(t=>t.readyState==='live')||[];
         if(tracks.length)for(const track of tracks)pc.addTrack(track,this.stream);else pc.addTransceiver('audio',{direction:'recvonly'});
@@ -11618,12 +11629,12 @@
         const now=performance.now();if(now-(this.lastSend??-Infinity)<350)return false;this.lastSend=now;
         const seq=++this.sequence,id=CoopManager.myPeerId+':'+seq;
         const targets=new Set(CoopManager.allies.map(p=>p.id)),message={id,name:CoopManager.myName||'你',text,own:true,state:targets.size?'发送中':'当前只有你'};
-        this.add(message);if(targets.size)this.pending.set(id,{id,seq,text,targets,at:now,last:-Infinity,room:CoopManager.roomCode,message});
+        this.add(message);if(targets.size)this.pending.set(id,{id,seq,text,targets,at:now,last:-Infinity,room:RoomHub.identity(),message});
         el.value='';this.flush(now);return true;
       },
       flush(now){for(const [id,p] of this.pending){
         for(const peerId of [...p.targets])if(!CoopManager.allies.some(a=>a.id===peerId))p.targets.delete(peerId);
-        if(p.room!==CoopManager.roomCode||!p.targets.size||now-p.at>15000){p.message.state=!p.targets.size?'已送达':'未全部送达';this.pending.delete(id);this.renderMessages();continue;}
+        if(p.room!==RoomHub.identity()||!p.targets.size||now-p.at>15000){p.message.state=!p.targets.size?'已送达':'未全部送达';this.pending.delete(id);this.renderMessages();continue;}
         if(now-p.last<800)continue;p.last=now;for(const peerId of p.targets)CoopManager.sendPacket({type:'ROOM_CHAT',targetPeerId:peerId,id:p.id,seq:p.seq,text:p.text});
       }},
       receive(pkt){
@@ -12034,20 +12045,22 @@
         this.relayNode = this.isHost && this.relayMode !== 'auto' ? this.relayMode : 'cn';
         this.relayRevision = this.isHost ? 1 : 0; this.relayHostId = this.isHost ? this.myPeerId : null;
         const cleanCode = String(code || '').replace(/^[#\s]+|\s+$/g, '').toUpperCase();
-        const topic = 'pixel_survivor_v32_room_' + cleanCode;
+        const topic = 'pixel_survivor_v34_room_' + cleanCode;
 
         // 1. 同设备多窗口 BroadcastChannel + localStorage 毫秒级同步通道
         try {
           if (typeof BroadcastChannel !== 'undefined') {
             this.channel = new BroadcastChannel(topic);
             this.channel.onmessage = (ev) => this.onReceivePacket(ev.data, { kind: 'local' });
+            const localChannel=this.channel, send=localChannel.postMessage.bind(localChannel);localChannel._postWire=send;
+            localChannel.postMessage=pkt=>RoomHub.publishLocal(pkt,send);
           }
         } catch (e) {}
 
         if (!this._storageListenerBound) {
           this._storageListenerBound = true;
           window.addEventListener('storage', (ev) => {
-            if (this.roomCode && ev.key === 'ps_net_v32_' + this.roomCode && ev.newValue) {
+            if (this.roomCode && ev.key === 'ps_net_v34_' + RoomHub.identity() && ev.newValue) {
               try {
                 this.onReceivePacket(JSON.parse(ev.newValue), { kind: 'storage' });
               } catch (e) {}
@@ -12063,7 +12076,7 @@
         this.netStatusText = '🌐 正在连接多路联机通道...';
         renderCoopModalUI();
         this.mqttClient = new LiteMQTTClient(
-          'ps_darkest_v32/room/' + cleanCode,
+          'ps_darkest_v34/room/' + cleanCode,
           cleanCode,
           (pkt, source) => this.onReceivePacket(pkt, source),
           (statusKey, statusTxt) => {
@@ -12374,7 +12387,7 @@
             const pkt = JSON.parse(ev.data);
             if (entry.peerId && pkt.peerId !== entry.peerId) return;
             if (!entry.peerId) entry.peerId = pkt.peerId;
-            if (pkt.protocol === 32 && pkt.roomCode === this.roomCode && (!pkt.targetPeerId || pkt.targetPeerId === this.myPeerId)) entry.lastRtcReceiveAt = performance.now();
+            if (pkt.protocol === 32 && RoomHub.same(pkt) && RoomHub.members.has(pkt.peerId) && (!pkt.targetPeerId || pkt.targetPeerId === this.myPeerId)) entry.lastRtcReceiveAt = performance.now();
             if (!CoopDirect.receive(pkt, entry, channel)) this.onReceivePacket(pkt, { kind: 'rtc' });
           } catch (e) {}
         };
@@ -12386,7 +12399,7 @@
       },
 
       makePacket(payload) {
-        const pkt = { ...payload, roomCode: this.roomCode, peerId: this.myPeerId, protocol: 32,
+        const pkt = { ...payload, roomCode: RoomHub.identity(), peerId: this.myPeerId, protocol: 32,
           sentAt: performance.now(), msgId: this.myPeerId + '_' + (++this.packetSeq) };
         if (pkt.type === 'PLAYER_STATE' || pkt.type.startsWith('HELLO_')) {
           pkt.stateSeq = ++this.stateSeq;
@@ -12403,7 +12416,7 @@
         if (discovery) {
           if (this.channel) { try { this.channel.postMessage(pkt); } catch (e) {} }
           if (!this.channel && this.roomCode) {
-            try { localStorage.setItem('ps_net_v32_' + this.roomCode, JSON.stringify(pkt)); } catch (e) {}
+            try { RoomHub.publishLocal(pkt,box=>localStorage.setItem('ps_net_v34_' + RoomHub.identity(), JSON.stringify(box))); } catch (e) {}
           }
           const entries = [...this.autoRtcMap.values(), ...this.rtcPeers, this.pendingRtcConn].filter(Boolean);
           const sent = new Set();
@@ -12624,7 +12637,7 @@
 
       onReceivePacket(pkt, source = null) {
         if (!pkt || typeof pkt.type !== 'string' || !pkt.peerId || pkt.peerId === this.myPeerId) return;
-        if (!this.roomCode || pkt.roomCode !== this.roomCode || pkt.protocol !== 32) return;
+        if (!this.roomCode || !RoomHub.same(pkt) || pkt.protocol !== 32) return;
         if (pkt.targetPeerId && pkt.targetPeerId !== this.myPeerId) return;
         const now = performance.now();
         // Record alternate paths even for duplicate discovery; only apply a packet once.
@@ -13666,7 +13679,9 @@
       worldInterval(peer, route) {
         const compressed = peer.worldCodec === 1 && route.kind !== 'local';
         const bytes = peer.lastWorldBytes || (compressed ? 2000 : 6000);
-        return route.kind === 'mqtt' ? Math.max(100, bytes / 40000 * 1000) : Math.max(50, bytes / 100000 * 1000);
+        // Broker envelopes add base64/authentication overhead; keep the same
+        // actual bandwidth budget instead of creating an encryption backlog.
+        return route.kind === 'mqtt' ? Math.max(100, (bytes * 4 / 3 + 180) / 40000 * 1000) : Math.max(50, bytes / 100000 * 1000);
       },
       broadcastWorld(forcePeer = null) {
         if (forcePeer) this.requestedPeers.add(forcePeer);
@@ -14316,6 +14331,352 @@
         }
       }
     };
+
+    // Room numbers are discovery labels. A random room identity isolates the
+    // actual game even when disconnected directory networks choose the same code.
+    var RoomHub = {
+      version: 1, directory: null, local: null, ads: new Map(), claims: new Map(),
+      requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
+      hostId: null, roomKey: null, keyBytes: null, locked: false, busy: false,
+      epoch: 0, operation: 0, status: '', pending: null, claim: null,
+      leaseMs: 20000, probeMs: 2400, queryMs: 2200, joinMs: 12000,
+      bytes(n=16) { return crypto.getRandomValues(new Uint8Array(n)); },
+      hex(n=16) { return [...this.bytes(n)].map(v=>v.toString(16).padStart(2,'0')).join(''); },
+      b64(bytes) { let s='';for(let i=0;i<bytes.length;i+=8192)s+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(s); },
+      un64(s) { if(typeof s!=='string'||s.length>300000)throw Error('invalid data');return Uint8Array.from(atob(s),c=>c.charCodeAt(0)); },
+      text(s) { return new TextEncoder().encode(s); },
+      sleep(ms) { return new Promise(r=>setTimeout(r,ms)); },
+      assertOp(op) { if(op!==this.operation)throw Error('已取消'); },
+      available() { return Boolean(globalThis.crypto?.subtle); },
+      code() { return String(1000+Math.floor(Math.random()*9000)); },
+      identity() { return this.roomId || CoopManager.roomCode; },
+      same(pkt) { return Boolean(this.roomId && pkt.roomCode===this.roomId); },
+      message(s) { this.status=s;this.render(); },
+      render() {
+        const c=CoopManager,inside=Boolean(c.roomCode),el=id=>document.getElementById(id);
+        for(const id of ['btn-coop-create-room','btn-coop-join-room','btn-coop-match','coop-room-mode','coop-create-password','coop-room-input','coop-join-password'])el(id).disabled=this.busy||inside;
+        el('coop-create-password-row').hidden=el('coop-room-mode').value!=='private';
+        el('btn-coop-cancel-match').hidden=!this.busy;
+        el('coop-room-status').textContent=this.status;
+        el('coop-room-status').hidden=!this.status;
+        if(inside)el('coop-room-banner').textContent=(c.isHost?'房主 · ':'')+'房间 #'+c.roomCode+' · '+(this.locked?'🔒 密码房':'公开房')+' · '+c.getActivePlayerCount()+'/3人';
+      },
+      directoryOpen() {
+        if(this.directory&&!this.directory.closed)return;
+        this.directory=new LiteMQTTClient('ps_darkest_v34/lobby','directory_v34',(p)=>this.receive(p),()=>{},{hubDirectory:true});
+        try { this.local=new BroadcastChannel('ps_darkest_v34_lobby');this.local.onmessage=e=>this.receive(e.data); } catch(e) {}
+      },
+      directoryClose() { this.directory?.close();this.directory=null;this.local?.close();this.local=null; },
+      send(payload) {
+        if(!this.directory)return;
+        const p={...payload,hub:1,from:CoopManager.myPeerId,id:this.hex(8)};
+        this.directory.publish(p,false);try{this.local?.postMessage(p);}catch(e){}
+      },
+      async ready(op) {
+        this.directoryOpen();const until=performance.now()+9000;
+        while(performance.now()<until){
+          this.assertOp(op);
+          if(this.directory?.ntfyConnected||this.directory?.activeSockets.some(s=>s.readyState===1&&s._isSubscribed))return;
+          await this.sleep(120);
+        }
+        throw Error('房间目录暂未连通，无法确认房号是否占用，请稍后重试。');
+      },
+      liveAds() {
+        const now=performance.now();for(const [id,a]of this.ads)if(now-a.at>this.leaseMs)this.ads.delete(id);
+        return [...this.ads.values()];
+      },
+      advertisement() {
+        if(!this.roomId||!CoopManager.isHost)return null;
+        return {type:'ROOM_AD',roomId:this.roomId,code:CoopManager.roomCode,host:this.hostId,
+          name:CoopManager.myName.slice(0,12),locked:this.locked,count:this.members.size,max:3,started:Boolean(GameState.isStarted&&!GameState.isOver)};
+      },
+      advertise() { const ad=this.advertisement();if(ad){this.send(ad);this.lastAd=performance.now();} },
+      receive(p) {
+        if(!p||p.hub!==1||typeof p.type!=='string'||typeof p.from!=='string'||p.from.length>96||p.from===CoopManager.myPeerId||typeof p.id!=='string'||p.id.length>48)return;
+        if(p.target&&p.target!==CoopManager.myPeerId)return;
+        if(this.seen.has(p.id))return;this.seen.set(p.id,1);if(this.seen.size>512)this.seen.delete(this.seen.keys().next().value);
+        const now=performance.now();
+        if(p.type==='ROOM_QUERY'||p.type==='ROOM_PROBE'){
+          if(this.roomId&&CoopManager.isHost&&(!p.code||p.code===CoopManager.roomCode)&&now-(this.lastQueryReply||0)>180){this.lastQueryReply=now;this.send({...this.advertisement(),reply:true});}
+          if(this.claim&&(!p.code||p.code===this.claim.code))this.send({type:'ROOM_CLAIM',...this.claim});
+          return;
+        }
+        if(p.type==='ROOM_AD'||p.type==='ROOM_CLAIM'){
+          if(!/^[a-f0-9]{32}$/.test(p.roomId)||!/^\d{4}$/.test(p.code)||p.host!==p.from)return;
+          if(p.type==='ROOM_CLAIM'){this.claims.set(p.roomId,{...p,at:now});if(this.claims.size>256)this.claims.delete(this.claims.keys().next().value);return;}
+          if(typeof p.locked!=='boolean'||!Number.isInteger(p.count)||p.count<1||p.count>3||p.max!==3)return;
+          this.ads.set(p.roomId,{roomId:p.roomId,code:p.code,host:p.host,name:String(p.name||'房主').slice(0,12),locked:p.locked,count:p.count,max:3,started:Boolean(p.started),at:now});
+          if(this.ads.size>256)this.ads.delete(this.ads.keys().next().value);
+          // A late network merge must not leave two live hosts advertising one number.
+          if(CoopManager.isHost&&p.code===CoopManager.roomCode&&p.roomId!==this.roomId&&p.roomId<this.roomId)this.renumber();
+          return;
+        }
+        if(p.type==='ROOM_CLOSED'){const a=this.ads.get(p.roomId);if(a?.host===p.from)this.ads.delete(p.roomId);return;}
+        if(p.type==='ROOM_JOIN_REQUEST')this.challenge(p).catch(()=>{});
+        else if(p.type==='ROOM_JOIN_PROOF')this.admit(p).catch(()=>{});
+        else if(p.type==='ROOM_CHALLENGE'||p.type==='ROOM_GRANTED'||p.type==='ROOM_DENIED')this.response(p).catch(()=>{});
+      },
+      async passwordKey(password,salt) {
+        if(!password)return new Uint8Array(32);
+        const base=await crypto.subtle.importKey('raw',this.text(password),'PBKDF2',false,['deriveBits']);
+        return new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',salt:this.un64(salt),iterations:120000,hash:'SHA-256'},base,256));
+      },
+      async pair() { return crypto.subtle.generateKey({name:'ECDH',namedCurve:'P-256'},true,['deriveBits']); },
+      async publicKey(pair) { return this.b64(new Uint8Array(await crypto.subtle.exportKey('raw',pair.publicKey))); },
+      binding(p) { return JSON.stringify([p.roomId,p.host,p.guest,p.join,p.nonce,p.hp,p.gp]); },
+      async proof(secret,binding) {
+        const k=await crypto.subtle.importKey('raw',secret,{name:'HMAC',hash:'SHA-256'},false,['sign']);
+        return this.b64(new Uint8Array(await crypto.subtle.sign('HMAC',k,this.text(binding))));
+      },
+      async verify(secret,binding,proof) {
+        try {const k=await crypto.subtle.importKey('raw',secret,{name:'HMAC',hash:'SHA-256'},false,['verify']);return crypto.subtle.verify('HMAC',k,this.un64(proof),this.text(binding));}catch(e){return false;}
+      },
+      async exchange(pair,pub,secret,binding) {
+        const remote=await crypto.subtle.importKey('raw',this.un64(pub),{name:'ECDH',namedCurve:'P-256'},false,[]);
+        const bits=await crypto.subtle.deriveBits({name:'ECDH',public:remote},pair.privateKey,256);
+        const k=await crypto.subtle.importKey('raw',bits,'HKDF',false,['deriveKey']);
+        return crypto.subtle.deriveKey({name:'HKDF',hash:'SHA-256',salt:secret,info:this.text(binding)},k,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+      },
+      async encrypt(key,obj,aad) {
+        const iv=this.bytes(12),data=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:this.text(aad)},key,this.text(JSON.stringify(obj)));
+        return {iv:this.b64(iv),data:this.b64(new Uint8Array(data))};
+      },
+      async decrypt(key,box,aad) {
+        const data=await crypto.subtle.decrypt({name:'AES-GCM',iv:this.un64(box.iv),additionalData:this.text(aad)},key,this.un64(box.data));
+        return JSON.parse(new TextDecoder().decode(data));
+      },
+      begin(message) {
+        if(this.busy||CoopManager.roomCode)return null;
+        if(!this.available()){this.message('当前文件预览器不支持安全入房，请用正常浏览器打开 HTTPS 在线版。');return null;}
+        CoopManager.ensurePlayerName();this.busy=true;this.message(message);return ++this.operation;
+      },
+      finish(op) { if(op!==this.operation)return;this.busy=false;this.pending=null;this.claim=null;if(!CoopManager.isHost)this.directoryClose();this.render(); },
+      cancel() {
+        ++this.operation;this.pending?.reject(Error('已取消'));this.pending=null;this.claim=null;this.busy=false;
+        if(!CoopManager.roomCode)this.directoryClose();this.message('已取消。');
+      },
+      async chooseCode(op,roomId) {
+        for(let i=0;i<12;i++){
+          this.assertOp(op);const code=this.code();if(this.liveAds().some(a=>a.code===code))continue;
+          this.claim={code,roomId,host:CoopManager.myPeerId};
+          for(let n=0;n<3;n++){
+            this.send({type:'ROOM_PROBE',code});this.send({type:'ROOM_CLAIM',...this.claim});await this.sleep(this.probeMs/3);this.assertOp(op);
+          }
+          const occupied=this.liveAds().some(a=>a.code===code&&a.roomId!==roomId);
+          const lose=[...this.claims.values()].some(a=>performance.now()-a.at<this.leaseMs&&a.code===code&&a.roomId<roomId);
+          if(!occupied&&!lose){this.claim=null;return code;}
+        }
+        throw Error('暂未找到空闲房号，请稍后重试。');
+      },
+      async create() {
+        const password=document.getElementById('coop-room-mode').value==='private'?document.getElementById('coop-create-password').value:'';
+        if(document.getElementById('coop-room-mode').value==='private'&&(password.length<4||password.length>32)){this.message('房间密码需要 4–32 个字符。');return false;}
+        const op=this.begin('正在检查空闲房号…');if(op===null)return false;
+        try {
+          await this.ready(op);const roomId=this.hex();
+          const pair=await this.pair(),pub=await this.publicKey(pair),salt=this.b64(this.bytes());
+          const secret=await this.passwordKey(password,salt),keyBytes=this.bytes(32);
+          const key=await crypto.subtle.importKey('raw',keyBytes,'AES-GCM',false,['encrypt','decrypt']);
+          this.assertOp(op);const code=await this.chooseCode(op,roomId);this.assertOp(op);
+          this.hostPair=pair;this.hostPub=pub;this.salt=salt;this.secret=secret;this.keyBytes=keyBytes;
+          this.enter({code,roomId,host:CoopManager.myPeerId,locked:Boolean(password),key,members:[CoopManager.myPeerId]},true);
+          document.getElementById('coop-create-password').value='';this.advertise();this.message('已检查房号。'+(password?'🔒 密码房，仅凭房号与密码加入。':'公开房，可被快速匹配。'));
+          return true;
+        }catch(e){if(op===this.operation)this.message(e.message);return false;}finally{this.finish(op);}
+      },
+      enter(data,host) {
+        ++this.epoch;this.roomId=data.roomId;this.hostId=data.host;this.roomKey=data.key;this.locked=data.locked;this.members=new Set(data.members);
+        const c=CoopManager;c.roomCode=data.code;c.isHost=host;c.allies=[];c.connectRoomTransports(data.roomId);
+        c.syncDifficultyScaling();c.updateHUD();document.getElementById('coop-room-input').value=data.code;
+        document.getElementById('coop-join-password').value='';document.getElementById('coop-join-password-row').hidden=true;
+        renderCoopModalUI();audio.init();showToast((host?'🏠 已创建':'✅ 已加入')+'房间 #'+data.code);
+      },
+      async discover(op,code) {
+        await this.ready(op);for(let i=0;i<3;i++){this.send({type:'ROOM_QUERY',code:code||undefined});await this.sleep(this.queryMs/3);this.assertOp(op);}
+        return this.liveAds().filter(a=>!code||a.code===code);
+      },
+      async join(codeStr,match=false) {
+        const code=String(codeStr||'').replace(/[#\s]/g,'');
+        if(!match&&!/^\d{4}$/.test(code)){this.message('请输入朋友的 4 位房号。');return false;}
+        const op=this.begin(match?'正在寻找无密码的公开房间…':'正在查找房间…');if(op===null)return false;
+        try {
+          let ads=await this.discover(op,match?null:code);
+          if(!match&&ads.length>1)throw Error('检测到房号冲突，房主正在更换房号，请稍后重新输入。');
+          ads=ads.filter(a=>a.host!==CoopManager.myPeerId&&(!match||(!a.locked&&a.count<3))).sort((a,b)=>Number(a.started)-Number(b.started)||b.count-a.count);
+          if(!ads.length)throw Error(match?'暂时没有可加入的公开房间，可以自己开一个。':'未找到在线房间，请确认房号、双方版本及网络。');
+          let last='没有空位，请稍后重试。';
+          for(const ad of ads.slice(0,6)){
+            this.assertOp(op);if(ad.count>=3){last='房间已满（最多 3 人）。';continue;}
+            const input=document.getElementById('coop-join-password');
+            if(ad.locked&&!input.value){document.getElementById('coop-join-password-row').hidden=false;this.message('这是密码房，请填写密码后再点加入。');input.focus();return false;}
+            this.message((match?'匹配到 ':'正在加入 ')+'#'+ad.code+' · 等待房主确认…');
+            try {await this.request(ad,ad.locked?input.value:'',op);this.assertOp(op);this.message('已加入 #'+ad.code+'，正在连接队友。');return true;}
+            catch(e){this.assertOp(op);last=e.message;if(!match)throw e;}
+          }
+          throw Error(last);
+        }catch(e){if(op===this.operation)this.message(e.message);return false;}finally{this.finish(op);}
+      },
+      async request(ad,password,op) {
+        const pair=await this.pair(),pub=await this.publicKey(pair);this.assertOp(op);
+        return new Promise((resolve,reject)=>{
+          this.pending={ad,password,pair,pub,join:this.hex(),op,resolve,reject,until:performance.now()+this.joinMs,last:0};this.pulse();
+        });
+      },
+      pulse() {
+        const p=this.pending;if(!p)return;const now=performance.now();
+        if(now>p.until){this.pending=null;p.reject(Error('房主未及时响应，请稍后重试。'));return;}
+        if(now-p.last<700)return;p.last=now;
+        this.send(p.proof?{type:'ROOM_JOIN_PROOF',target:p.ad.host,roomId:p.ad.roomId,join:p.join,proof:p.proof}:{type:'ROOM_JOIN_REQUEST',target:p.ad.host,roomId:p.ad.roomId,join:p.join,gp:p.pub});
+      },
+      async challenge(p) {
+        if(!CoopManager.isHost||p.roomId!==this.roomId||typeof p.join!=='string'||!/^[a-f0-9]{32}$/.test(p.join)||typeof p.gp!=='string'||p.gp.length!==88)return;
+        const id=p.from+':'+p.join;let r=this.requests.get(id);
+        if(!r){
+          if(this.requests.size>=48)return;
+          const now=performance.now(),last=this.requestRate?.get(p.from)||0;if(now-last<800)return;
+          this.requestRate??=new Map();this.requestRate.set(p.from,now);if(this.requestRate.size>128)this.requestRate.delete(this.requestRate.keys().next().value);
+          if(this.members.size>=3&&!this.members.has(p.from)){this.deny(p,'房间已满（最多 3 人）。');return;}
+          r={roomId:this.roomId,host:this.hostId,guest:p.from,join:p.join,nonce:this.hex(),hp:this.hostPub,gp:p.gp,salt:this.salt,locked:this.locked,at:now};this.requests.set(id,r);
+        }
+        this.send({type:'ROOM_CHALLENGE',target:p.from,...r});
+      },
+      deny(p,reason) { this.send({type:'ROOM_DENIED',target:p.from,roomId:p.roomId,join:p.join,reason}); },
+      async admit(p) {
+        const r=this.requests.get(p.from+':'+p.join);if(!r||r.roomId!==this.roomId||!CoopManager.isHost||r.checking)return;
+        if(r.grant){this.send(r.grant);return;}r.checking=true;const epoch=this.epoch;
+        try {
+          if(!await this.verify(this.secret,this.binding(r),p.proof)){this.deny(p,'密码错误，请重新输入。');return;}
+          if(epoch!==this.epoch)return;
+          // Reserve synchronously before ECDH/encryption so concurrent proofs
+          // cannot both take the final slot.
+          if(this.members.size>=3&&!this.members.has(p.from)){this.deny(p,'房间已满（最多 3 人）。');return;}
+          this.members.add(p.from);r.reserved=true;r.admittedAt=performance.now();
+          const key=await this.exchange(this.hostPair,r.gp,this.secret,this.binding(r));
+          if(epoch!==this.epoch)return;
+          const box=await this.encrypt(key,{roomId:this.roomId,code:CoopManager.roomCode,host:this.hostId,locked:this.locked,key:this.b64(this.keyBytes),members:[...this.members]},this.binding(r));
+          if(epoch!==this.epoch)return;
+          r.grant={type:'ROOM_GRANTED',target:p.from,roomId:r.roomId,join:r.join,...box};
+          CoopManager.sendPacket({type:'HUB_ROSTER',members:[...this.members]});this.send(r.grant);this.advertise();
+        }catch(e){if(epoch===this.epoch&&r.reserved){this.members.delete(p.from);r.reserved=false;this.deny(p,'入房验证暂未完成，请重试。');}}
+        finally{r.checking=false;}
+      },
+      async response(p) {
+        const q=this.pending;if(!q||p.from!==q.ad.host||p.roomId!==q.ad.roomId||p.join!==q.join||q.op!==this.operation)return;
+        if(p.type==='ROOM_DENIED'){
+          this.pending=null;if(q.ad.locked)document.getElementById('coop-join-password-row').hidden=false;
+          q.reject(Error(String(p.reason||'房主未允许入房。').slice(0,90)));return;
+        }
+        if(p.type==='ROOM_CHALLENGE'){
+          if(q.working||q.proof||p.host!==q.ad.host||p.guest!==CoopManager.myPeerId||p.gp!==q.pub||p.locked!==q.ad.locked||typeof p.salt!=='string'||p.salt.length!==24||typeof p.nonce!=='string'||p.nonce.length!==32||typeof p.hp!=='string'||p.hp.length!==88)return;
+          q.working=true;
+          const secret=await this.passwordKey(q.password,p.salt);q.password='';
+          q.key=await this.exchange(q.pair,p.hp,secret,this.binding(p));q.binding=this.binding(p);q.proof=await this.proof(secret,q.binding);
+          if(this.pending===q){q.last=0;this.pulse();}return;
+        }
+        if(p.type==='ROOM_GRANTED'&&q.key&&!q.accepting){
+          q.accepting=true;
+          try {
+            const data=await this.decrypt(q.key,p,q.binding);this.assertOp(q.op);if(this.pending!==q)return;
+            if(data.roomId!==q.ad.roomId||data.host!==q.ad.host||!/^\d{4}$/.test(data.code)||!Array.isArray(data.members)||data.members.length>3||!data.members.includes(CoopManager.myPeerId)||!data.members.includes(data.host))throw Error('invalid grant');
+            data.key=await crypto.subtle.importKey('raw',this.un64(data.key),'AES-GCM',false,['encrypt','decrypt']);this.assertOp(q.op);
+            this.pending=null;this.enter(data,false);q.resolve(true);
+          }catch(e){q.accepting=false;}
+        }
+      },
+      async renumber() {
+        if(this.renumbering||this.busy||!CoopManager.isHost)return;this.renumbering=true;
+        const epoch=this.epoch,op=this.operation;
+        try {const code=await this.chooseCode(op,this.roomId);if(epoch!==this.epoch)return;CoopManager.roomCode=code;document.getElementById('coop-room-input').value=code;CoopManager.sendPacket({type:'HUB_RENUMBER',code});this.advertise();this.message('检测到房号冲突，已自动换为 #'+code+'，现有连接继续保持。');}
+        catch(e){}finally{this.renumbering=false;this.claim=null;}
+      },
+      observe(pkt) {
+        if(CoopManager.isHost){
+          const r=[...this.requests.values()].find(r=>r.guest===pkt.peerId&&r.reserved);
+          if(r)r.seen=performance.now();
+          if(pkt.type==='PEER_LEAVE'){this.members.delete(pkt.peerId);for(const [id,r]of this.requests)if(r.guest===pkt.peerId)this.requests.delete(id);CoopManager.sendPacket({type:'HUB_ROSTER',members:[...this.members]});this.advertise();}
+        }
+        if(pkt.peerId===this.hostId&&pkt.type==='HUB_ROSTER'){
+          if(Array.isArray(pkt.members)&&pkt.members.length<=3&&pkt.members.includes(this.hostId)&&pkt.members.includes(CoopManager.myPeerId))this.members=new Set(pkt.members.filter(id=>typeof id==='string'&&id.length<=96));return true;
+        }
+        if(pkt.peerId===this.hostId&&pkt.type==='HUB_RENUMBER'){
+          if(/^\d{4}$/.test(pkt.code)){CoopManager.roomCode=pkt.code;document.getElementById('coop-room-input').value=pkt.code;renderCoopModalUI();}return true;
+        }
+        return false;
+      },
+      tick() {
+        const now=performance.now();this.pulse();this.liveAds();
+        for(const [id,c]of this.claims)if(now-c.at>this.leaseMs)this.claims.delete(id);
+        if(CoopManager.isHost&&this.roomId){
+          let changed=false;
+          for(const [id,r]of this.requests){
+            if(r.reserved){if(now-(r.seen||r.admittedAt)>26000){this.members.delete(r.guest);this.requests.delete(id);changed=true;}}
+            else if(now-r.at>15000)this.requests.delete(id);
+          }
+          if(changed)CoopManager.sendPacket({type:'HUB_ROSTER',members:[...this.members]});
+          if(changed||now-(this.lastAd||0)>5000){this.advertise();CoopManager.sendPacket({type:'HUB_ROSTER',members:[...this.members]});}
+        }
+      },
+      publish(client,pkt,high,url,limit) {
+        if(client.hubDirectory||client.probeOnly||pkt.type==='NET_NODE_ECHO')return client.publishWire(pkt,high,url,limit);
+        if(!this.roomKey||!this.same(pkt)||client.closed||client._sealing>=(high?24:48))return false;
+        const socket=client.activeSockets.some(s=>s.readyState===1&&s._isSubscribed&&(!url||s._brokerUrl===url)&&s.bufferedAmount<=(limit||(high?4096:65536)));
+        const http=!high&&!url&&['HELLO_JOIN','HELLO_WELCOME','HELLO_PRESENCE','AUTO_RTC_OFFER','AUTO_RTC_ANS','AUTO_RTC_ICE','PEER_LEAVE'].includes(pkt.type);
+        if(!socket&&!http)return false;
+        const key=this.roomKey,epoch=this.epoch,roomId=this.roomId;client._sealing=(client._sealing||0)+1;
+        // Data channels already have transport encryption; only public brokers
+        // and HTTP fallback need this envelope. No PBKDF work occurs in battle.
+        const inner=high&&pkt.type==='PLAYER_STATE'?CoopPoseWire.encode(pkt):pkt;
+        this.encrypt(key,inner,roomId).then(box=>{
+          if(epoch===this.epoch&&!client.closed)client.publishWire({type:'ROOM_BOX',roomId,relayType:pkt.type,...box},high,url,limit);
+        }).catch(()=>{}).finally(()=>{client._sealing--;});return true;
+      },
+      publishLocal(pkt,send) {
+        if(!this.roomKey||!this.same(pkt))return;
+        const epoch=this.epoch,roomId=this.roomId;
+        this.encrypt(this.roomKey,pkt,roomId).then(box=>{if(epoch===this.epoch)send({type:'ROOM_BOX',roomId,...box});}).catch(()=>{});
+      },
+      async notifyLeave() {
+        if(!this.roomKey||!CoopManager.roomCode)return;
+        const roomId=this.roomId,epoch=this.epoch,c=CoopManager;
+        const box=await this.encrypt(this.roomKey,c.makePacket({type:'PEER_LEAVE'}),roomId);
+        if(epoch!==this.epoch)return;
+        const packet={type:'ROOM_BOX',roomId,relayType:'PEER_LEAVE',...box};
+        c.mqttClient?.publishWire(packet,false);
+        try{c.channel?._postWire?.(packet);}catch(e){}
+      },
+      async unbox(pkt,source) {
+        if(!this.roomKey||pkt.roomId!==this.roomId||(this._opening||0)>=64)return;
+        const epoch=this.epoch,key=this.roomKey;this._opening=(this._opening||0)+1;
+        try {const inner=CoopPoseWire.decode(await this.decrypt(key,pkt,this.roomId));if(epoch===this.epoch)CoopManager.onReceivePacket(inner,{...source,roomAuthenticated:true});}catch(e){}finally{this._opening--;}
+      },
+      reset() {
+        if(CoopManager.isHost&&this.roomId)this.send({type:'ROOM_CLOSED',roomId:this.roomId});
+        ++this.operation;++this.epoch;this.pending?.reject(Error('已离开房间'));this.pending=null;this.busy=false;this.claim=null;
+        this.directoryClose();this.roomId=null;this.roomKey=null;this.keyBytes=null;this.secret=null;this.hostPair=null;this.hostPub=null;this.hostId=null;this.locked=false;
+        this.requests.clear();this.members.clear();this.status='';
+      },
+      install() {
+        const c=CoopManager,receive=c.onReceivePacket,leave=c.leaveRoom,render=CoopLobby.render;
+        c.createRoom=()=>this.create();c.joinRoom=code=>this.join(code);
+        c.leaveRoom=async()=>{if(c.isHost&&this.roomId)this.send({type:'ROOM_CLOSED',roomId:this.roomId});try{await this.notifyLeave();}catch(e){}leave.call(c);this.reset();this.render();};
+        // Manual SDP codes predate authenticated admission and cannot bypass it.
+        for(const name of ['createP2POffer','acceptOfferAndCreateAnswer','acceptP2PAnswer'])c[name]=()=>showToast('请使用房号加入；直连仍会自动建立。');
+        c.onReceivePacket=(pkt,source)=>{
+          if(pkt?.type==='ROOM_BOX'){this.unbox(pkt,source);return;}
+          if(!pkt||!this.same(pkt)||!this.members.has(pkt.peerId)||!CoopManager.roomCode)return;
+          if(source?.kind!=='rtc'&&!source?.roomAuthenticated)return;
+          if(this.observe(pkt))return;receive.call(c,pkt,source);
+        };
+        CoopLobby.render=()=>{render.call(CoopLobby);this.render();};
+        document.getElementById('coop-room-mode').addEventListener('change',()=>this.render());
+        document.getElementById('btn-coop-match').addEventListener('click',()=>this.join('',true));
+        document.getElementById('btn-coop-cancel-match').addEventListener('click',()=>this.cancel());
+        document.getElementById('coop-join-password').addEventListener('keydown',e=>{if(e.key==='Enter')c.joinRoom(document.getElementById('coop-room-input').value);});
+        setInterval(()=>this.tick(),400);window.addEventListener('pagehide',()=>this.reset());this.render();
+      }
+    };
+    RoomHub.install();
+
 
     CoopSocial.init();
     CoopManager.loadSavedProfile();
