@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R7 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R8 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1059,6 +1059,15 @@
     #coop-danmaku{position:fixed;inset:0;overflow:hidden;z-index:2147483646;pointer-events:none;user-select:none;-webkit-user-select:none;contain:layout paint;}.coop-danmaku-message{position:absolute;left:0;top:calc(clamp(112px,20vh,180px) + var(--danmaku-lane)*31px);white-space:nowrap;font-size:14px;font-weight:700;line-height:25px;padding:0 10px;color:#fef3c7;background:#0b1221b3;border-radius:5px;border:1px solid #64748b66;text-shadow:1px 1px 2px #000,0 0 4px #000;will-change:transform;}.coop-danmaku-own{color:#a5f3fc;}
     .social-danmaku-setting{display:flex;align-items:center;gap:5px;font-size:10px;color:#94a3b8;margin-top:6px;}.voice-help{font-size:11px;line-height:1.7;color:#fcd34d;margin-top:7px;}.voice-help p{margin:6px 0;}.voice-help a{color:#7dd3fc;}.voice-help summary{cursor:pointer;}
     @media(max-width:420px){#coop-modal .coop-lobby-card{padding:17px 10px 0;}.coop-lobby-block{padding:9px;}.coop-route-row{grid-template-columns:minmax(0,1fr) 64px 60px;font-size:10px;}#coop-color-swatches>button{padding:3px 5px!important;}.coop-danmaku-message{font-size:13px;}}
+
+    #world-map-modal .modal-card {width:min(94vw,700px);max-width:700px;padding:14px;}
+    #world-map-canvas {display:block;width:min(100%,62vh,620px);height:auto;aspect-ratio:1;margin:0 auto;touch-action:none;border-radius:10px;}
+    .map-legend {display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-size:12px;line-height:1.5;margin:8px 0;}
+    .volume-row {display:grid;grid-template-columns:90px 1fr 44px;gap:10px;align-items:center;margin:18px 0;}
+    .volume-row input {width:100%;accent-color:#38bdf8;}
+    #dev-request-notice {position:absolute;top:180px;right:10px;max-width:85%;z-index:90;background:#312e81;color:#fff;border:1px solid #a5b4fc;border-radius:10px;padding:10px;}
+    .dev-request-row {display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:8px 0;}.dev-request-row span{flex:1;}
+    @media(max-height:500px){#world-map-modal .modal-card{max-height:96vh;}#world-map-canvas{width:min(100%,65vh);}#dev-request-notice{top:120px;}}
   </style>
 </head>
 <body>
@@ -1140,7 +1149,7 @@
           <span>🔢</span>
           <span id="dmg-mode-text">数字:合并</span>
         </div>
-        <div class="hud-badge hud-btn-interactive" id="btn-hud-dev" title="打开开发者模式控制台 (密码: 114514)" style="border-color:#a855f7; color:#e9d5ff;">
+        <div class="hud-badge hud-btn-interactive" id="btn-hud-dev" title="打开开发者模式；客机需要房主批准" style="border-color:#a855f7; color:#e9d5ff;">
           <span>🛠️</span>
           <span>开发者</span>
         </div>
@@ -1186,7 +1195,7 @@
     <div id="btn-pause">⏸</div>
 
     <!-- 右上角实时战术雷达小地图 (显示玩家、Boss方位、远方地图特殊装备星标) -->
-    <div id="minimap-box" title="点击打开地图秘宝图鉴 | 绿:我 彩:队友 菱形:地面道具 三角:神龛 红:Boss 金星:秘宝">
+    <div id="minimap-box" role="button" tabindex="0" aria-label="展开大地图" title="点击展开大地图：队友方向、距离和地图图例">
       <div class="minimap-legend">
         <span style="color:#4ade80;">●我/友</span>
         <span style="color:#34d399;">◆道具</span>
@@ -1279,7 +1288,8 @@
             <button class="btn-secondary" id="btn-lobby-coop" style="border-color:#38bdf8; color:#7dd3fc; font-weight:800;">🌐 稳定联机(2~3人)</button>
             <button class="btn-secondary" id="btn-lobby-skilltree">🌳 技能树图鉴</button>
             <button class="btn-secondary" id="btn-lobby-save" style="border-color:#34d399; color:#a7f3d0;">💾 存档/清除</button>
-            <button class="btn-secondary" id="btn-lobby-dev" style="border-color:#a855f7; color:#e9d5ff;">🛠️ 开发者</button>
+            <button class="btn-secondary" id="btn-lobby-settings">🔊 声音设置</button>
+          <button class="btn-secondary" id="btn-lobby-dev" style="border-color:#a855f7; color:#e9d5ff;">🛠️ 开发者</button>
           </div>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
             <button class="btn-primary" id="btn-lobby-resume" style="display:none; background:linear-gradient(135deg, #059669, #047857); border:1.5px solid #6ee7b7;">▶️ 继续上次战局</button>
@@ -1333,11 +1343,12 @@
 
         <div class="coop-lobby-block">
           <div class="coop-name-row"><label for="coop-my-name">你的名字</label><input id="coop-my-name" type="text" maxlength="12" placeholder="取一个名字" class="coop-field"><div id="coop-color-swatches"></div></div>
+          <div class="coop-password-row"><label for="coop-room-name">房间名称</label><input id="coop-room-name" class="coop-field" type="text" maxlength="40" placeholder="可选，最多20字"></div>
           <div class="coop-room-setup"><label for="coop-room-mode">开房方式</label><select id="coop-room-mode" class="coop-field"><option value="public">无密码 · 公开房</option><option value="private">有密码 · 私密房</option></select></div>
           <div id="coop-create-password-row" class="coop-password-row" hidden><label for="coop-create-password">房间密码</label><input id="coop-create-password" class="coop-field" type="password" minlength="4" maxlength="32" autocomplete="new-password" placeholder="4–32 个字符"></div>
           <div class="coop-room-actions"><button class="btn-primary" id="btn-coop-create-room">🏠 创建房间</button><div><input id="coop-room-input" type="text" inputmode="numeric" maxlength="4" placeholder="朋友的房号" class="coop-field"><button class="btn-primary" id="btn-coop-join-room">加入</button></div></div>
           <div id="coop-join-password-row" class="coop-password-row" hidden><label for="coop-join-password">入房密码</label><input id="coop-join-password" class="coop-field" type="password" maxlength="32" autocomplete="off" placeholder="填写后再点加入"></div>
-          <div class="coop-match-actions"><button class="btn-secondary" id="btn-coop-match">🎲 快速匹配公开房</button><button class="btn-secondary" id="btn-coop-cancel-match" hidden>取消</button><span class="social-note">无密码 · 有空位</span></div>
+          <div class="coop-match-actions"><button class="btn-secondary" id="btn-coop-match">🎲 快速匹配公开房</button><button class="btn-secondary" id="btn-coop-browse-rooms">📋 房间列表</button><button class="btn-secondary" id="btn-coop-cancel-match" hidden>取消</button><span class="social-note">无密码 · 有空位</span></div>
           <div id="coop-room-status" class="social-note" role="status" aria-live="polite" hidden></div>
           <div id="coop-room-banner" role="status">尚未加入房间</div>
         </div>
@@ -1459,6 +1470,7 @@
           <button class="btn-secondary" id="btn-pause-shop" style="border-color:#facc15; color:#fde047;">🏪 特权商店</button>
           <button class="btn-secondary" id="btn-pause-skilltree">🌳 技能树与流派</button>
           <button class="btn-secondary" id="btn-pause-save" style="border-color:#34d399; color:#a7f3d0;">💾 存档管理</button>
+          <button class="btn-secondary" id="btn-pause-settings">🔊 声音设置</button>
           <button class="btn-secondary" id="btn-pause-dev" style="border-color:#a855f7; color:#e9d5ff;">🛠️ 开发者模式</button>
           <button class="btn-secondary" id="btn-pause-lobby">🏕️ 返回营地</button>
           <button class="btn-primary" id="btn-resume">继续战斗</button>
@@ -1485,23 +1497,49 @@
       </div>
     </div>
 
+
+    <div id="world-map-modal" class="modal-overlay"><div class="modal-card">
+      <button class="modal-close-x" id="btn-close-map" aria-label="关闭大地图">✕</button>
+      <div class="modal-title">🧭 战术大地图</div>
+      <div class="modal-subtitle">以你的角色为中心 · 方向不变 · 越外圈代表的距离越大<br>刻度为游戏距离；超过 8000 的目标显示在边缘</div>
+      <canvas id="world-map-canvas" width="620" height="620" aria-label="以自己为中心的距离地图"></canvas>
+      <div class="map-legend"><span style="color:#4ade80">◎ 自己</span><span style="color:#c4b5fd">● 队友</span><span style="color:#fb7185">✚ 待救队友 / 自己</span><span style="color:#ef4444">· 怪物　☠ 首领</span><span style="color:#67e8f9">◆ 经验</span><span style="color:#facc15">● 金币</span><span style="color:#f0abfc">♦ 道具</span><span style="color:#38bdf8">▲ 神龛</span><span style="color:#fde047">★ 秘宝</span></div>
+      <div id="world-map-team" style="font-size:12px;line-height:1.6;margin:8px"></div>
+      <div style="font-size:11px;color:#94a3b8">地图实时更新，不暂停战斗；小地图边缘的队友点指向远方队友。</div>
+      <button class="btn-secondary" id="btn-map-relics">查看秘宝图鉴</button>
+    </div></div>
+    <div id="settings-modal" class="modal-overlay"><div class="modal-card" style="max-width:500px">
+      <button class="modal-close-x" id="btn-close-settings" aria-label="关闭声音设置">✕</button><div class="modal-title">🔊 声音设置</div>
+      <div class="modal-subtitle">仅影响你听到的声音 · 自动保存在当前浏览器</div>
+      <label class="volume-row">聊天语音<input id="volume-voice" type="range" min="0" max="100" step="1"><output id="volume-voice-value"></output></label>
+      <label class="volume-row">背景音乐<input id="volume-music" type="range" min="0" max="100" step="1"><output id="volume-music-value"></output></label>
+      <label class="volume-row">游戏音效<input id="volume-effects" type="range" min="0" max="100" step="1"><output id="volume-effects-value"></output></label>
+      <div style="font-size:12px;color:#94a3b8">0% 为静音；麦克风和停止收听开关仍在“交流”面板。</div>
+    </div></div>
+    <button id="dev-request-notice" hidden></button>
+
     <!-- 开发者模式弹窗 (#dev-modal，需输入密码 114514 解锁) -->
     <div id="dev-modal" class="modal-overlay">
       <div class="modal-card" style="max-width: 480px;">
         <button class="modal-close-x" id="btn-x-dev" title="关闭开发者模式">✕</button>
         <div class="modal-title" style="color:#c084fc;">🛠️ 开发者模式控制台</div>
-        <div class="modal-subtitle">内部调试与爽快测试工具箱</div>
+        <div class="modal-subtitle">单人 / 房主密码 114514；客机使用房主专用密码并申请批准</div>
 
         <!-- 密码验证区 -->
         <div id="dev-auth-box" style="background:#1e293b; padding:16px; border-radius:12px; border:1px solid #475569; margin-bottom:12px;">
           <div style="font-size:13px; font-weight:800; color:#e2e8f0; margin-bottom:8px;">🔒 请输入开发者授权密码进入：</div>
           <div style="display:flex; gap:8px; justify-content:center;">
-            <input id="dev-pwd-input" type="password" inputmode="numeric" placeholder="请输入密码..." style="background:#0f172a; border:1.5px solid #64748b; color:#fff; padding:8px 12px; border-radius:8px; font-size:14px; width:160px; text-align:center; user-select:text; -webkit-user-select:text;" />
+            <input id="dev-pwd-input" type="password" maxlength="32" placeholder="请输入密码..." style="background:#0f172a; border:1.5px solid #64748b; color:#fff; padding:8px 12px; border-radius:8px; font-size:14px; width:160px; text-align:center; user-select:text; -webkit-user-select:text;" />
             <button class="btn-primary" id="btn-dev-unlock" style="padding:8px 16px;">验证进入</button>
           </div>
           <div id="dev-auth-msg" style="font-size:11px; color:#f87171; margin-top:6px; min-height:16px;"></div>
         </div>
 
+<div id="dev-host-access" hidden style="background:#172033;padding:12px;border-radius:10px;margin-bottom:12px;text-align:left">
+          <strong>客机开发者权限</strong><div id="dev-host-state" style="font-size:12px;margin:8px 0"></div>
+          <input id="dev-guest-password" type="password" maxlength="32" placeholder="专用密码 4–32 位；留空关闭" autocomplete="new-password" style="width:100%;box-sizing:border-box;padding:10px;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px">
+          <button class="btn-secondary" id="btn-dev-guest-set">保存密码 / 撤销已有授权</button><div id="dev-requests"></div>
+        </div>
         <!-- 解锁后的功能面板 -->
         <div id="dev-controls-box" style="display:none; flex-direction:column; gap:8px; text-align:left; margin-bottom:12px;">
           <div style="background:#1e293b; padding:10px 12px; border-radius:10px; border:1px solid #a855f7; display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;">
@@ -1625,7 +1663,7 @@
       init() {
         if (!this.ctx) {
           const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) this.ctx = new AudioContext();
+          if (AudioContext) {this.ctx = new AudioContext();this.effectsBus=this.ctx.createGain();this.musicBus=this.ctx.createGain();this.effectsBus.connect(this.ctx.destination);this.musicBus.connect(this.ctx.destination);this.effectsBus.gain.value=AudioSettings.values.effects/100;this.musicBus.gain.value=AudioSettings.values.music/100;}
         }
         if (this.ctx && this.ctx.state === 'suspended') {
           this.ctx.resume();
@@ -1638,7 +1676,7 @@
         this.lastTimes[key] = now;
         return true;
       }
-      playTone(freq, type, duration, gainVal = 0.16) {
+      playTone(freq, type, duration, gainVal = 0.16, bus = 'effects') {
         if (!this.enabled || !this.ctx) return;
         const now = this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
@@ -1648,7 +1686,7 @@
         gain.gain.setValueAtTime(gainVal, now);
         gain.gain.exponentialRampToValueAtTime(0.008, now + duration);
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(bus === 'music' ? this.musicBus : this.effectsBus);
         osc.start(now);
         osc.stop(now + duration);
       }
@@ -1663,7 +1701,7 @@
         gain.gain.setValueAtTime(0.18, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(this.effectsBus);
         osc.start(now);
         osc.stop(now + 0.1);
       }
@@ -1678,7 +1716,7 @@
         gain.gain.setValueAtTime(0.15, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(this.effectsBus);
         osc.start(now);
         osc.stop(now + 0.08);
       }
@@ -1694,7 +1732,7 @@
         gain.gain.setValueAtTime(0.2, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.06);
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(this.effectsBus);
         osc.start(now);
         osc.stop(now + 0.06);
       }
@@ -1710,7 +1748,7 @@
         gain1.gain.setValueAtTime(0.36, now);
         gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.24);
         osc1.connect(gain1);
-        gain1.connect(this.ctx.destination);
+        gain1.connect(this.effectsBus);
         osc1.start(now);
         osc1.stop(now + 0.24);
 
@@ -1722,7 +1760,7 @@
         gain2.gain.setValueAtTime(0.24, now);
         gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.16);
         osc2.connect(gain2);
-        gain2.connect(this.ctx.destination);
+        gain2.connect(this.effectsBus);
         osc2.start(now);
         osc2.stop(now + 0.16);
       }
@@ -1757,7 +1795,7 @@
         gain.gain.setValueAtTime(0.28, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(this.effectsBus);
         osc.start(now);
         osc.stop(now + 0.28);
       }
@@ -1894,13 +1932,13 @@
           const bassFreq = track.bassNotes[s];
 
           if (leadFreq > 0) {
-            this.playTone(leadFreq, track.leadWave, (track.stepMs / 1000) * 0.88, track.leadGain);
+            this.playTone(leadFreq, track.leadWave, (track.stepMs / 1000) * 0.88, track.leadGain, 'music');
           }
           if (harmFreq > 0) {
-            this.playTone(harmFreq, track.harmWave, (track.stepMs / 1000) * 0.75, track.harmGain);
+            this.playTone(harmFreq, track.harmWave, (track.stepMs / 1000) * 0.75, track.harmGain, 'music');
           }
           if (bassFreq > 0) {
-            this.playTone(bassFreq, track.bassWave, (track.stepMs / 1000) * 1.75, track.bassGain);
+            this.playTone(bassFreq, track.bassWave, (track.stepMs / 1000) * 1.75, track.bassGain, 'music');
           }
         }, track.stepMs);
       }
@@ -3140,6 +3178,7 @@
 
     window.addEventListener('keydown', (e) => {
       if (e.target?.matches?.('input,textarea,select') || e.target?.isContentEditable) return;
+      if(typeof CoopMap!=='undefined'&&CoopMap.open){if(e.code==='Escape')CoopMap.toggle(false);e.preventDefault();return;}
       audio.init();
       const wasDown = input.keys[e.code];
       input.keys[e.code] = true;
@@ -3855,7 +3894,7 @@
 
       if (s2.timer > 0) return;
       s2.timer = s2.cd;
-      if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) CoopManager.broadcastSkill('s2', { angle: +player.aimAngle.toFixed(3), level: s2.level || 1, isEvolved: Boolean(s2.isEvolved) });
+      if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) CoopManager.broadcastSkill('s2', { angle: +player.aimAngle.toFixed(3), level: s2.level || 1, isEvolved: Boolean(s2.isEvolved), duration: hero==='warrior'?(s2.duration||4.5)+(s2.level||1)*.4:hero==='mage'?(s2.duration||3.5):2.8 });
 
       if (hero === 'warrior') {
         // 苍红剑客：多圈差速旋转重剑大阵（Lv.1~2单圈，Lv.3~4内外双圈，Lv.5/超武三圈同心剑狱！）
@@ -7272,6 +7311,7 @@
 
       // 绘制主角及分身
       drawPlayer();
+      CoopSkillVfx.draw(ctx);
 
       // 绘制剑客多圈剑狱引力环与旋转重剑
       if (orbitingBlades.length > 0) {
@@ -7811,6 +7851,7 @@
 
       // 实时刷新右上角战术雷达小地图
       drawMinimap();
+      CoopMap.indicators(ctx);CoopMap.draw();
     }
 
     function drawMinimap() {
@@ -7908,8 +7949,9 @@
       if (typeof CoopManager !== 'undefined' && CoopManager.allies && CoopManager.allies.length > 0) {
         for (let i = 0; i < CoopManager.allies.length; i++) {
           const al = CoopManager.allies[i];
-          const rawDx = (al.x - player.x) * scale;
-          const rawDy = (al.y - player.y) * scale;
+          const pos=CoopMap.allyPosition(al);
+          const rawDx = (pos.x - player.x) * scale;
+          const rawDy = (pos.y - player.y) * scale;
           const dist = Math.hypot(rawDx, rawDy);
           const maxR = cx - 5;
           const ax = cx + (dist > maxR ? (rawDx / dist) * maxR : rawDx);
@@ -7922,6 +7964,7 @@
           mctx.strokeStyle = '#ffffff';
           mctx.lineWidth = 1;
           mctx.stroke();
+          if(al.downed){mctx.strokeStyle='#fb7185';mctx.lineWidth=2;mctx.beginPath();mctx.moveTo(ax-3,ay);mctx.lineTo(ax+3,ay);mctx.moveTo(ax,ay-3);mctx.lineTo(ax,ay+3);mctx.stroke();}
         }
       }
 
@@ -9929,7 +9972,8 @@
 
     document.getElementById('btn-hud-skilltree').addEventListener('click', (e) => { e.stopPropagation(); openSkillTreeModal(); });
     document.getElementById('hud-loadout-bar').addEventListener('click', (e) => { e.stopPropagation(); openSkillTreeModal(); });
-    document.getElementById('minimap-box').addEventListener('click', (e) => { e.stopPropagation(); currentTreeTab = 'relic'; openSkillTreeModal(); });
+    document.getElementById('minimap-box').addEventListener('click', (e) => { e.stopPropagation(); CoopMap.toggle(); });
+    document.getElementById('minimap-box').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.stopPropagation();e.preventDefault();CoopMap.toggle();}});
     document.getElementById('btn-lobby-skilltree').addEventListener('click', () => openSkillTreeModal());
     document.getElementById('btn-pause-skilltree').addEventListener('click', () => openSkillTreeModal());
     document.getElementById('btn-close-skilltree').addEventListener('click', () => closeSkillTreeModal());
@@ -10187,6 +10231,7 @@
       document.getElementById('dev-controls-box').style.display = GameState.devUnlocked ? 'flex' : 'none';
       document.getElementById('dev-auth-msg').innerText = '';
       document.getElementById('dev-modal').style.display = 'flex';
+      CoopDev.render();
     }
     function closeDevModal() {
       document.getElementById('dev-modal').style.display = 'none';
@@ -10197,9 +10242,11 @@
       }
     }
     function verifyDevPassword() {
+      if(CoopDev.apply())return;
       const val = (document.getElementById('dev-pwd-input').value || '').trim();
       if (val === '114514') {
         GameState.devUnlocked = true;
+        CoopDev.render();
         document.getElementById('dev-auth-box').style.display = 'none';
         document.getElementById('dev-controls-box').style.display = 'flex';
         audio.init();
@@ -11444,6 +11491,203 @@
       }
     };
 
+    // Local presentation settings never change another player's volume.
+    var AudioSettings = {
+      values:{voice:100,music:65,effects:100},
+      init(){
+        try{const saved=JSON.parse(localStorage.getItem('ps_audio_levels')||'{}');for(const k of Object.keys(this.values))if(Number.isFinite(saved[k]))this.values[k]=Math.max(0,Math.min(100,saved[k]));}catch(e){}
+        for(const k of Object.keys(this.values)){const el=document.getElementById('volume-'+k);el.value=this.values[k];el.addEventListener('input',()=>this.set(k,el.value));}
+        this.apply();
+        for(const id of ['btn-pause-settings','btn-lobby-settings'])document.getElementById(id).onclick=()=>this.open();
+        document.getElementById('btn-close-settings').onclick=()=>this.close();
+      },
+      set(k,v){if(!(k in this.values))return;this.values[k]=Math.max(0,Math.min(100,Number(v)||0));try{localStorage.setItem('ps_audio_levels',JSON.stringify(this.values));}catch(e){}this.apply();},
+      apply(){for(const k of Object.keys(this.values)){document.getElementById('volume-'+k).value=this.values[k];document.getElementById('volume-'+k+'-value').textContent=Math.round(this.values[k])+'%';}if(audio.ctx){audio.effectsBus.gain.value=this.values.effects/100;audio.musicBus.gain.value=this.values.music/100;}CoopVoice.applyVolume();},
+      open(){this.paused=GameState.isPaused;GameState.isPaused=GameState.isStarted&&!GameState.isOver?true:GameState.isPaused;CoopSocial.clearInput();document.getElementById('settings-modal').style.display='flex';CoopManager.sendPresenceNow();},
+      close(){document.getElementById('settings-modal').style.display='none';GameState.isPaused=this.paused;CoopManager.sendPresenceNow();}
+    };
+
+    var CoopMap = {
+      open:false,lastDraw:0,rings:[100,250,500,1000,2000,4000,8000],
+      allyPosition(p){return {x:p.downed?(p.bodyX??p.x):p.x,y:p.downed?(p.bodyY??p.y):p.y};},
+      distance(p){const a=this.allyPosition(p);return Math.hypot(a.x-player.x,a.y-player.y);},
+      init(){document.getElementById('btn-close-map').onclick=()=>this.toggle(false);document.getElementById('btn-map-relics').onclick=()=>{this.toggle(false);currentTreeTab='relic';openSkillTreeModal();};},
+      toggle(on=!this.open){this.open=on;document.getElementById('world-map-modal').style.display=on?'flex':'none';CoopSocial.clearInput();this.draw(true);},
+      // Equal-width radial bands, increasing world-space intervals. No direction distortion.
+      radial(d,r){let previous=0;for(let i=0;i<this.rings.length;i++){const end=this.rings[i];if(d<=end)return r*(i+(d-previous)/(end-previous))/this.rings.length;previous=end;}return r;},
+      draw(force=false){
+        if(!this.open||(!force&&performance.now()-this.lastDraw<150))return;this.lastDraw=performance.now();
+        const el=document.getElementById('world-map-canvas'),size=Math.max(180,Math.min(620,el.clientWidth||300)),dpr=Math.min(devicePixelRatio||1,2);
+        if(el.width!==Math.round(size*dpr)){el.width=Math.round(size*dpr);el.height=el.width;}
+        const c=el.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,size,size);
+        const mid=size/2,r=mid-28;c.fillStyle='#0b1220';c.fillRect(0,0,size,size);c.font='10px sans-serif';c.textAlign='center';c.textBaseline='middle';
+        c.strokeStyle='#334155';c.lineWidth=1;c.beginPath();c.moveTo(mid,20);c.lineTo(mid,size-20);c.moveTo(20,mid);c.lineTo(size-20,mid);c.stroke();
+        for(let i=0;i<this.rings.length;i++){const rr=r*(i+1)/this.rings.length;c.strokeStyle='#334155';c.beginPath();c.arc(mid,mid,rr,0,Math.PI*2);c.stroke();const a=[-Math.PI/2,0,Math.PI/2,Math.PI][i%4],lx=mid+Math.cos(a)*rr,ly=mid+Math.sin(a)*rr,label=String(this.rings[i]);c.fillStyle='#0b1220';c.fillRect(lx-16,ly-6,32,12);c.fillStyle='#cbd5e1';c.fillText(label,lx,ly);}
+        let nearLabels=0;const point=(p,icon,color,label)=>{if(!Number.isFinite(p.x)||!Number.isFinite(p.y))return;const dx=p.x-player.x,dy=p.y-player.y,d=Math.hypot(dx,dy),rad=this.radial(d,r),x=mid+(d?dx/d*rad:0),y=mid+(d?dy/d*rad:0);c.fillStyle=color;c.font=label?'bold 14px sans-serif':'11px sans-serif';c.fillText(icon,x,y);if(label){const ly=Math.max(10,y+(label==='你'?-14:d<60?18+(nearLabels++)*13:-13));c.font='bold 10px sans-serif';c.strokeStyle='#020617';c.lineWidth=3;c.strokeText(label,x,ly);c.fillStyle=color;c.fillText(label,x,ly);}};
+        // Bounded markers keep large late-game maps cheap on phones.
+        for(const [list,icon,color,max]of [[gems,'◆','#67e8f9',120],[goldDrops,'●','#facc15',80],[fieldPickups,'♦','#f0abfc',40],[shrines.filter(s=>!s.used),'▲','#38bdf8',30],[mapRelicDrops,'★','#fde047',30]])for(const p of list.slice(0,max))point(p,icon,color);
+        for(const p of enemies.filter(e=>!e.isDead).slice(0,180))point(p,p.isBoss?'☠':'·',p.isBoss?'#fb7185':'#ef4444');
+        for(const p of CoopManager.allies){const d=Math.round(this.distance(p));point(this.allyPosition(p),p.downed?'✚':'●',p.downed?'#fb7185':(PLAYER_COLOR_THEMES[p.colorIdx]||PLAYER_COLOR_THEMES[1]).badge,(p.name||'队友')+' '+d+(d>8000?' ↑超出':''));}
+        point(player,player.isDowned?'✚':'◎','#4ade80','你');c.font='11px sans-serif';c.fillStyle='#94a3b8';c.fillText('北',mid,10);c.fillText('南',mid,size-10);c.fillText('西',10,mid);c.fillText('东',size-10,mid);
+        document.getElementById('world-map-team').textContent=CoopManager.allies.map(p=>(p.downed?'✚ ':'● ')+(p.name||'队友')+'：'+Math.round(this.distance(p))+' 距离'+(p.downed?' · 待救援':'')).join('　')||'当前没有队友';
+      },
+      indicators(c){
+        if(!GameState.isStarted||GameState.isOver)return;const W=camera.viewportWidth,H=camera.viewportHeight;
+        // Stay clear of top HUD, minimap and bottom touch controls.
+        const top=Math.min(H*.36,170),bottom=H-Math.min(H*.28,160),left=54,right=W-54,cx=W/2,cy=(top+bottom)/2;
+        c.save();c.font='bold 11px sans-serif';c.textAlign='center';c.textBaseline='middle';
+        for(const p of CoopManager.allies){const a=this.allyPosition(p),sx=a.x-camera.x,sy=a.y-camera.y;if(sx>30&&sx<W-30&&sy>top&&sy<bottom)continue;
+          const dx=sx-cx,dy=sy-cy,scale=Math.min((right-cx)/Math.max(.01,Math.abs(dx)),(bottom-cy)/Math.max(.01,Math.abs(dy)),1),x=cx+dx*scale,y=cy+dy*scale,angle=Math.atan2(dy,dx),color=p.downed?'#fb7185':(PLAYER_COLOR_THEMES[p.colorIdx]||PLAYER_COLOR_THEMES[1]).badge;
+          c.save();c.translate(x,y);c.rotate(angle);c.fillStyle=color;c.strokeStyle='#020617';c.lineWidth=2;c.beginPath();c.moveTo(12,0);c.lineTo(-6,-7);c.lineTo(-3,0);c.lineTo(-6,7);c.closePath();c.fill();c.stroke();c.restore();
+          const label=(p.downed?'✚ ':'')+(p.name||'队友')+' '+Math.round(this.distance(p));const tw=Math.min(W-12,c.measureText(label).width+10),tx=Math.max(tw/2+6,Math.min(W-tw/2-6,x)),ty=Math.min(bottom+16,y+19);c.fillStyle='rgba(2,6,23,.88)';c.fillRect(tx-tw/2,ty-8,tw,16);c.fillStyle=color;c.fillText(label,tx,ty);
+        }c.restore();
+      }
+    };
+
+    // Room-scoped guest developer approval. Never transmit the typed password.
+    var CoopDev = {
+      secret:null,salt:null,revision:0,pending:new Map(),approved:new Map(),challenges:new Map(),request:null,grant:null,lastTick:0,
+      guest(){return Boolean(CoopManager.roomCode&&!CoopManager.isHost);},
+      allowed(){return this.guest()?Boolean(this.grant&&this.grant.room===RoomHub.identity()&&this.grant.until>performance.now()):GameState.devUnlocked;},
+      binding(id,req,nonce){return JSON.stringify([RoomHub.identity(),RoomHub.hostId,id,req,nonce,this.revision]);},
+      send(id,p){CoopManager.sendPacket({...p,targetPeerId:id});},
+      reset(){this.revision++;this.secret=this.salt=null;this.pending.clear();this.approved.clear();this.challenges.clear();this.request=this.grant=null;GameState.devUnlocked=false;GameState.godMode=false;this.render();},
+      async configure(){
+        if(!CoopManager.isHost||!CoopManager.roomCode||!GameState.devUnlocked)return;
+        const field=document.getElementById('dev-guest-password'),pwd=field.value;field.value='';if(pwd&&(pwd.length<4||pwd.length>32)){showToast('客机开发者密码需要 4–32 个字符');return;}
+        const room=RoomHub.identity(),rev=++this.revision;this.secret=null;this.pending.clear();this.challenges.clear();for(const id of this.approved.keys())this.send(id,{type:'DEV_REVOKE'});this.approved.clear();
+        const salt=RoomHub.b64(RoomHub.bytes());const secret=pwd?await RoomHub.passwordKey(pwd,salt):null;
+        if(room!==RoomHub.identity()||rev!==this.revision)return;this.secret=secret;this.salt=salt;showToast(secret?'已设置客机开发者密码；每位客人仍需你批准':'已关闭客机开发者权限');this.render();
+      },
+      apply(){
+        if(!this.guest())return false;const password=document.getElementById('dev-pwd-input').value;document.getElementById('dev-pwd-input').value='';
+        if(password.length<4||password.length>32){this.message('请输入房主设置的 4–32 位开发者密码');return true;}
+        this.request={id:RoomHub.hex(10),password,at:performance.now(),last:-Infinity,stage:'start'};this.grant=null;this.message('正在验证密码，验证后等待房主批准…');this.tick(performance.now());return true;
+      },
+      message(t){document.getElementById('dev-auth-msg').textContent=t;},
+      receive(pkt){
+        if(!pkt.type.startsWith('DEV_'))return false;
+        if(!RoomHub.members.has(pkt.peerId))return true;const now=performance.now(),room=RoomHub.identity(),id=pkt.peerId;
+        if(CoopManager.isHost){
+          if(pkt.type==='DEV_REQUEST'&&typeof pkt.req==='string'&&pkt.req.length<=40){
+            if(!this.secret){this.send(id,{type:'DEV_RESULT',req:pkt.req,ok:false,message:'房主尚未开放客机开发者权限'});return true;}
+            const old=this.challenges.get(id);if(old&&now-old.at<1200&&old.req!==pkt.req)return true;
+            const q=old&&old.req===pkt.req?old:{req:pkt.req,nonce:RoomHub.hex(),at:now,revision:this.revision};this.challenges.set(id,q);
+            this.send(id,{type:'DEV_CHALLENGE',req:q.req,nonce:q.nonce,salt:this.salt,revision:q.revision});
+          }else if(pkt.type==='DEV_PROOF')this.verify(pkt,room).catch(()=>{});
+        }else if(id===RoomHub.hostId){
+          const q=this.request;
+          if(pkt.type==='DEV_REVOKE'){this.clearGrant();this.message('房主已撤销开发者权限');}
+          else if(pkt.type==='DEV_CHALLENGE'&&q&&q.id===pkt.req&&q.stage==='start'&&typeof pkt.nonce==='string'&&pkt.nonce.length<=64&&typeof pkt.salt==='string'&&pkt.salt.length<=80){
+            q.stage='deriving';q.nonce=pkt.nonce;q.revision=pkt.revision;const pwd=q.password;q.password='';
+            RoomHub.passwordKey(pwd,pkt.salt).then(secret=>RoomHub.proof(secret,JSON.stringify([room,RoomHub.hostId,CoopManager.myPeerId,q.id,q.nonce,q.revision]))).then(proof=>{if(room===RoomHub.identity()&&this.request===q){q.proof=proof;q.stage='proof';q.last=-Infinity;this.tick(performance.now());}}).catch(()=>{if(this.request===q){this.request=null;this.message('密码验证不可用，请使用正常浏览器 HTTPS 页面');}});
+          }else if(pkt.type==='DEV_RESULT'&&q?.id===pkt.req){if(!pkt.ok){this.request=null;this.message(String(pkt.message||'房主拒绝了申请').slice(0,80));}else this.message('密码正确，等待房主批准…');}
+          else if(pkt.type==='DEV_GRANT'&&typeof pkt.token==='string'&&((q&&q.id===pkt.req)||(this.grant?.token===pkt.token&&this.grant.req===pkt.req))){this.grant={token:pkt.token,req:pkt.req,room,until:now+16000};this.request=null;GameState.devUnlocked=true;this.message('房主已批准本房间的开发者权限');this.render();}
+        }return true;
+      },
+      async verify(pkt,room){
+        const q=this.challenges.get(pkt.peerId),secret=this.secret;if(!q||!secret||q.req!==pkt.req||performance.now()-q.at>60000||typeof pkt.proof!=='string'||pkt.proof.length>100||q.verifying)return;
+        q.verifying=true;let valid=false;try{const expected=await RoomHub.proof(secret,this.binding(pkt.peerId,q.req,q.nonce));valid=expected===pkt.proof;}finally{q.verifying=false;}
+        if(room!==RoomHub.identity()||this.challenges.get(pkt.peerId)!==q||q.revision!==this.revision)return;
+        if(!valid){this.send(pkt.peerId,{type:'DEV_RESULT',req:q.req,ok:false,message:'开发者密码错误'});this.challenges.delete(pkt.peerId);return;}
+        const approved=this.approved.get(pkt.peerId);if(approved?.req===q.req){this.sendGrant(pkt.peerId,approved);return;}
+        if(!this.pending.has(pkt.peerId)){this.pending.set(pkt.peerId,{req:q.req,at:performance.now()});showToast((CoopManager.allies.find(p=>p.id===pkt.peerId)?.name||'队友')+'申请开发者权限，请查看批准提示');}
+        this.send(pkt.peerId,{type:'DEV_RESULT',req:q.req,ok:true});this.render();
+      },
+      decide(id,allow){if(!CoopManager.isHost)return;const q=this.pending.get(id);if(!q)return;this.pending.delete(id);if(allow){const grant={req:q.req,token:RoomHub.hex(),last:0};this.approved.set(id,grant);this.sendGrant(id,grant);}else{this.challenges.delete(id);this.send(id,{type:'DEV_RESULT',req:q.req,ok:false,message:'房主拒绝了申请'});}this.render();},
+      sendGrant(id,g){g.last=performance.now();this.send(id,{type:'DEV_GRANT',req:g.req,token:g.token});},
+      clearGrant(){this.grant=this.request=null;GameState.devUnlocked=false;GameState.godMode=false;updateStatusTray();this.render();},
+      render(){
+        const box=document.getElementById('dev-host-access');if(!box)return;box.hidden=!(CoopManager.roomCode&&CoopManager.isHost&&GameState.devUnlocked);document.getElementById('dev-host-state').textContent=this.secret?'客机密码已设置；每次申请还需批准':'尚未开放；设置专用密码后客机才能申请';
+        const list=document.getElementById('dev-requests');list.replaceChildren();
+        for(const [id,q]of this.pending){const row=document.createElement('div');row.className='dev-request-row';const text=document.createElement('span');text.textContent=(CoopManager.allies.find(p=>p.id===id)?.name||'队友')+'申请开发者';row.append(text);for(const [label,ok]of [['同意',true],['拒绝',false]]){const b=document.createElement('button');b.className='btn-secondary';b.textContent=label;b.onclick=()=>this.decide(id,ok);row.append(b);}list.append(row);}
+        for(const [id]of this.approved){const row=document.createElement('div');row.className='dev-request-row';const t=document.createElement('span');t.textContent=(CoopManager.allies.find(p=>p.id===id)?.name||'队友')+' · 已批准';const b=document.createElement('button');b.className='btn-secondary';b.textContent='撤销';b.onclick=()=>{this.approved.delete(id);this.challenges.delete(id);this.send(id,{type:'DEV_REVOKE'});this.render();};row.append(t,b);list.append(row);}
+        document.getElementById('dev-request-notice').hidden=!(CoopManager.isHost&&this.pending.size);document.getElementById('dev-request-notice').textContent='🛠️ '+this.pending.size+' 位队友申请开发者 · 点击处理';
+        if(document.getElementById('dev-modal').style.display==='flex'){const unlocked=this.allowed();document.getElementById('dev-auth-box').style.display=unlocked?'none':'block';document.getElementById('dev-controls-box').style.display=unlocked?'flex':'none';document.getElementById('btn-dev-unlock').textContent=this.guest()?'验证并申请房主批准':'验证进入';}
+      },
+      tick(now){
+        if(now-this.lastTick<500)return;this.lastTick=now;
+        if(this.guest()&&this.grant&&now>this.grant.until){this.clearGrant();this.message('房主授权已失效，请重新申请');}
+        const q=this.request;if(q){if(now-q.at>60000){this.request=null;this.message('申请已超时，请重试');}else if(now-q.last>2000&&['start','proof'].includes(q.stage)){q.last=now;this.send(RoomHub.hostId,q.stage==='start'?{type:'DEV_REQUEST',req:q.id}:{type:'DEV_PROOF',req:q.id,proof:q.proof});}}
+        for(const [id,q]of this.pending)if(!RoomHub.members.has(id)||now-q.at>60000){this.pending.delete(id);this.challenges.delete(id);this.send(id,{type:'DEV_RESULT',req:q.req,ok:false,message:'申请超时，请重试'});}
+        for(const [id,g]of this.approved){if(!RoomHub.members.has(id)){this.approved.delete(id);this.challenges.delete(id);}else if(now-g.last>4000)this.sendGrant(id,g);}
+        this.render();
+      },
+      init(){document.getElementById('btn-dev-guest-set').onclick=()=>this.configure();document.getElementById('dev-request-notice').onclick=()=>openDevModal();
+        // Guard every actual control, including programmatic DOM clicks.
+        document.getElementById('dev-controls-box').addEventListener('click',e=>{if(e.target.closest('button')&&!this.allowed()){e.stopImmediatePropagation();this.message('客机需要密码验证和房主批准');}},true);
+      }
+    };
+
+    var CoopSkillVfx = {
+      effects:[],pending:new Map(),seen:new Map(),states:new Map(),seq:0,stateSeq:0,lastState:0,stateTail:0,animationTime:0,
+      broadcast(kind,params){
+        if(!['s1','s2','ult','item'].includes(kind))return null;
+        const id=CoopManager.myPeerId+':vfx:'+(++this.seq),packet={type:'SKILL_EVENT',skillKind:kind,hero:GameState.selectedHero,colorIdx:CoopManager.myColorIdx,x:player.x,y:player.y,...params,vfxId:id,session:WorldCoop.session};
+        const targets=new Set(CoopManager.allies.map(p=>p.id));if(targets.size)this.pending.set(id,{packet,targets,at:performance.now(),last:performance.now(),tries:1});CoopManager.sendPacket(packet);return true;
+      },
+      receive(pkt){
+        if(pkt.type==='SKILL_VFX_STATE'){
+          const old=this.states.get(pkt.peerId);if(!CoopManager.allies.some(p=>p.id===pkt.peerId)||pkt.session!==WorldCoop.session||!Number.isSafeInteger(pkt.seq)||pkt.seq<1||(old&&pkt.seq<=old.seq)||!Number.isSafeInteger(pkt.castSeq)||!Array.isArray(pkt.items)||pkt.items.length>16)return true;
+          const items=pkt.items.filter(a=>Array.isArray(a)&&['orbit','blackhole','trap','wheel'].includes(a[0])&&a.slice(1,4).every(Number.isFinite)&&Math.abs(a[1])<1e7&&Math.abs(a[2])<1e7&&a[3]>=0&&a[3]<=350);
+          this.states.set(pkt.peerId,{seq:pkt.seq,castSeq:pkt.castSeq,items,at:performance.now()});return true;
+        }
+        if(pkt.type==='SKILL_VFX_ACK'){this.pending.get(pkt.vfxId)?.targets.delete(pkt.peerId);return true;}
+        if(pkt.type!=='SKILL_EVENT'||!pkt.vfxId)return false;
+        const peer=CoopManager.allies.find(p=>p.id===pkt.peerId);if(!peer||!['s1','s2','ult','item'].includes(pkt.skillKind)||pkt.session!==WorldCoop.session||typeof pkt.vfxId!=='string'||!pkt.vfxId.startsWith(peer.id+':vfx:')||pkt.vfxId.length>120)return true;
+        CoopManager.sendPacket({type:'SKILL_VFX_ACK',targetPeerId:peer.id,vfxId:pkt.vfxId});if(this.seen.has(pkt.vfxId))return true;this.seen.set(pkt.vfxId,performance.now());this.replay(peer,pkt);return true;
+      },
+      replay(peer,p){
+        const hero=['warrior','mage','ranger'].includes(p.hero)?p.hero:peer.hero,kind=p.skillKind,ev={id:peer.id,seq:Number(String(p.vfxId||'').split(':').at(-1))||0,hero,kind,x:Number.isFinite(p.x)?p.x:peer.x,y:Number.isFinite(p.y)?p.y:peer.y,angle:Number.isFinite(p.angle)?p.angle:Math.atan2(Number(p.dirY)||0,Number(p.dirX)||1),level:Math.max(1,Math.min(5,Number(p.level)||1)),evolved:Boolean(p.isEvolved),time:0};
+        ev.duration=kind==='s2'?(hero==='warrior'?6:hero==='mage'?3.5:2.8):kind==='ult'?(hero==='warrior'?5.5:hero==='mage'?2:1.3):kind==='s1'?(hero==='ranger'?6:.7):.8;
+        if(Number.isFinite(p.duration)&&kind==='s2')ev.duration=Math.max(.2,Math.min(20,p.duration));if(ev.evolved&&kind==='ult'&&hero==='warrior')ev.duration=8;
+        if(kind==='s2')this.effects=this.effects.filter(e=>!(e.id===peer.id&&e.kind===kind));this.effects.push(ev);if(this.effects.length>48)this.effects.shift();
+      },
+      reset(){this.effects=[];this.pending.clear();this.seen.clear();this.states.clear();this.stateSeq=0;this.stateTail=0;this.lastState=0;},
+      syncState(now){
+        if(!WorldCoop.active()||!CoopManager.allies.length||now-this.lastState<350)return;this.lastState=now;const items=[];
+        if(!player.isDowned&&!UpgradeChoice.active){
+          if(orbitingBlades.length)items.push(['orbit',player.x,player.y,Math.max(...orbitingBlades.map(b=>b.dist)),orbitingBlades.some(b=>b.isEvolved)?1:0]);
+          for(const g of groundEffects)if(!g.isAlly&&['trap','blackhole'].includes(g.type)&&g.life>0&&items.length<12)items.push([g.type,Math.round(g.x),Math.round(g.y),Math.min(350,g.radius||25),player.skills[g.type==='trap'?'skill1':'skill2'].isEvolved?1:0]);
+          for(const b of boomerangs.slice(0,4))items.push(['wheel',Math.round(b.x),Math.round(b.y),b.radius,b.isEvolved?1:0]);
+        }
+        if(items.length)this.stateTail=3;else if(this.stateTail>0)this.stateTail--;else return;
+        CoopManager.sendPacket({type:'SKILL_VFX_STATE',session:WorldCoop.session,seq:++this.stateSeq,castSeq:this.seq,items});
+      },
+      tick(dt){
+        if(!GameState.isPaused&&!WorldCoop.paused()){this.animationTime+=dt;for(const e of this.effects)e.time+=dt;}this.effects=this.effects.filter(e=>e.time<e.duration&&CoopManager.allies.some(p=>p.id===e.id&&!p.downed));
+        const now=performance.now();this.syncState(now);for(const [id,p]of this.pending){for(const target of p.targets)if(!CoopManager.allies.some(a=>a.id===target))p.targets.delete(target);if(!p.targets.size||now-p.at>2500){this.pending.delete(id);continue;}if(now-p.last>600&&p.tries<4){p.last=now;p.tries++;for(const targetPeerId of p.targets)CoopManager.sendPacket({...p.packet,targetPeerId});}}
+        for(const [id,at]of this.seen)if(now-at>15000)this.seen.delete(id);
+        for(const id of this.states.keys())if(!CoopManager.allies.some(p=>p.id===id))this.states.delete(id);
+      },
+      draw(c){
+        if(!CoopManager.allyVfxAlpha)return;
+        const now=performance.now(),effects=this.effects.filter(e=>{const s=this.states.get(e.id);return !(s&&(GameState.isPaused||now-s.at<2500)&&s.castSeq>=e.seq&&(e.kind==='s2'||(e.kind==='s1'&&e.hero==='ranger')));});
+        for(const [id,s]of this.states)if(GameState.isPaused||WorldCoop.paused()||now-s.at<2500)for(const a of s.items)effects.push({id,hero:{orbit:'warrior',blackhole:'mage',trap:'ranger',wheel:'ranger'}[a[0]],kind:a[0]==='trap'?'s1':'s2',stateful:true,x:a[1],y:a[2],radius:a[3],evolved:Boolean(a[4]),level:a[0]==='orbit'?Math.max(1,Math.ceil((a[3]-50)/20)):1,time:this.animationTime,duration:Infinity});
+        for(const e of effects){const peer=CoopManager.allies.find(p=>p.id===e.id);if(!peer||peer.downed)continue;
+          const follow=(e.kind==='s2'&&e.hero==='warrior')||(e.kind==='ult'&&e.hero==='warrior'),x=follow?peer.x:e.x,y=follow?peer.y:e.y,t=e.time,color=(PLAYER_COLOR_THEMES[peer.colorIdx]||PLAYER_COLOR_THEMES[1]).primary;
+          c.save();c.globalAlpha=CoopManager.allyVfxAlpha*Math.min(1,(e.duration-t)*3);c.strokeStyle=color;c.fillStyle=color;c.lineWidth=3;c.translate(x,y);
+          const ring=r=>{c.beginPath();c.arc(0,0,Math.max(1,r),0,Math.PI*2);c.stroke();};
+          if(e.kind==='s2'&&e.hero==='warrior'){
+            const layers=e.evolved?3:Math.ceil(e.level/2);for(let j=0;j<layers;j++){const radius=65+j*28;ring(radius);for(let i=0;i<4+j;i++){const a=t*(j%2?-3:3)+i*Math.PI*2/(4+j);c.save();c.rotate(a);c.translate(radius,0);c.rotate(.6);c.fillStyle=e.evolved?'#fb923c':color;c.fillRect(-4,-22,8,37);c.fillStyle='#fff';c.fillRect(-1,-20,2,30);c.restore();}}
+          }else if(e.kind==='s2'&&e.hero==='mage'){
+            if(!e.stateful)c.translate(Math.cos(e.angle)*Math.min(190,t*80),Math.sin(e.angle)*Math.min(190,t*80));c.rotate(t*2);for(let j=0;j<4;j++){c.beginPath();c.ellipse(0,0,100-j*20,25+j*8,j*.8,0,Math.PI*2);c.stroke();}c.fillStyle=e.evolved?'#e9d5ff':'#1e1b4b';c.beginPath();c.arc(0,0,30,0,Math.PI*2);c.fill();
+          }else if(e.kind==='s2'&&e.hero==='ranger'){
+            if(!e.stateful){const travel=Math.sin(Math.min(1,t/e.duration)*Math.PI)*270;c.translate(Math.cos(e.angle)*travel,Math.sin(e.angle)*travel);}c.rotate(t*12);ring(e.evolved?38:25);c.fillRect(-4,-43,8,86);c.fillRect(-43,-4,86,8);
+          }else if(e.kind==='s1'){
+            if(e.hero==='ranger'){for(let j=0;j<(e.stateful?1:e.evolved?4:2);j++){c.save();if(!e.stateful)c.translate((j-1)*30,0);ring(20);c.beginPath();c.moveTo(-14,-14);c.lineTo(14,14);c.moveTo(14,-14);c.lineTo(-14,14);c.stroke();c.restore();}}
+            else if(e.hero==='mage'){ring(20+t*140);for(let i=0;i<8;i++){c.rotate(Math.PI/4);c.beginPath();c.moveTo(0,0);c.lineTo(0,25+t*135);c.stroke();}}
+            else{c.rotate(e.angle);for(let i=0;i<5;i++){c.globalAlpha*=.87;c.strokeRect(t*210-i*25,-14,34,28);}}
+          }else if(e.kind==='ult'){
+            if(e.hero==='warrior'){ring(37+Math.sin(t*8)*5);if(t<1.2)for(let i=1;i<=5;i++){c.save();c.translate(Math.cos(e.angle)*i*70,Math.sin(e.angle)*i*70);c.fillRect(-8,-190,16,210);c.fillRect(-22,-25,44,7);c.restore();}}
+            else if(e.hero==='mage'){for(let i=0;i<5;i++){const a=i*Math.PI*2/5;c.save();c.translate(Math.cos(a)*120,Math.sin(a)*120);ring(15+(t%1)*55);c.beginPath();c.moveTo(-60,-130+(t%1)*130);c.lineTo(0,0);c.stroke();c.restore();}}
+            else for(let i=0;i<16;i++){c.save();c.rotate(i*Math.PI*2/16);c.fillRect(25+t*280,-3,30,6);c.restore();}
+          }else{ring(24+t*55);}
+          c.restore();
+        }
+      }
+    };
+
     var CoopSpectate = {
       id:null, lastOptions:'', obstacleKey:'', cachedObstacles:[],
       available(){ return WorldCoop.active() && player.isDowned && !GameState.isOver; },
@@ -11459,7 +11703,7 @@
       },
       tick(){
         const box=document.getElementById('coop-spectate');if(!box)return;
-        const active=this.available();box.style.display=active?'block':'none';
+        const active=this.available(),covered=[...document.querySelectorAll('.modal-overlay')].some(el=>getComputedStyle(el).display!=='none')||CoopSocial.open;box.style.display=active&&!covered?'block':'none';
         if(!active){this.id=null;this.lastOptions='';return;}
         const living=this.living();if(this.id&&!living.some(p=>p.id===this.id))this.id=living[0]?.id||null;
         const signature=JSON.stringify(living.map(p=>[p.id,p.name])),select=document.getElementById('spectate-target');
@@ -11531,23 +11775,23 @@
         // Closing an RTC operation can leave its promise unresolved. A new
         // media session must never queue behind the cancelled connection.
         if(!keepChain){this.chains.delete(id);this.chainTokens.delete(id);}
-        const e=this.peers.get(id);if(!e)return;this.peers.delete(id);try{e.pc.close()}catch(_){}if(e.audio){e.audio.pause();e.audio.srcObject=null;e.audio.remove();}
+        const e=this.peers.get(id);if(!e)return;this.peers.delete(id);try{e.pc.close()}catch(_){}for(const a of [e.audio,e.relayAudio])if(a){a.pause();a.srcObject=null;a.remove();}this.syncRelays();this.refreshAudio();
       },
       valid(e){return this.joined&&this.peers.get(e.id)===e&&RoomHub.identity()===e.room&&this.epoch===e.localEpoch&&CoopManager.allies.some(p=>p.id===e.id&&p.voiceOn&&p.voiceEpoch===e.remoteEpoch);},
       signal(e,payload){if(this.valid(e))CoopManager.sendPacket({...payload,targetPeerId:e.id,call:e.call,fromEpoch:e.localEpoch,toEpoch:e.remoteEpoch});},
-      create(peer,call){
+      create(peer,call,answering=false){
         const pc=CoopManager.createSafePeerConnection();if(!pc){this.error='浏览器不支持语音直连，文字聊天仍可使用。';return null;}
         const e={id:peer.id,pc,call,room:RoomHub.identity(),localEpoch:this.epoch,remoteEpoch:peer.voiceEpoch,at:performance.now(),remoteSet:false,candidates:[],candidateKeys:new Set()};
         this.peers.set(peer.id,e);
         const tracks=this.stream?.getAudioTracks().filter(t=>t.readyState==='live')||[];
-        if(tracks.length)for(const track of tracks)pc.addTrack(track,this.stream);else pc.addTransceiver('audio',{direction:'recvonly'});
+        e.expectRelay=CoopManager.isHost||peer.isHost;
+        if(!answering){
+          if(tracks.length)for(const track of tracks)pc.addTrack(track,this.stream);else pc.addTransceiver('audio',{direction:'recvonly'});
+          e.primarySlot=pc.getTransceivers()[0];
+          if(e.expectRelay)e.relaySlot=pc.addTransceiver('audio',{direction:CoopManager.isHost?'sendonly':'recvonly'});
+        }
         pc.onicecandidate=event=>{if(event.candidate)this.signal(e,{type:'VOICE_ICE',candidate:event.candidate.toJSON?event.candidate.toJSON():{candidate:event.candidate.candidate,sdpMid:event.candidate.sdpMid,sdpMLineIndex:event.candidate.sdpMLineIndex}});};
-        pc.ontrack=event=>{
-          if(!this.valid(e)||event.track.kind!=='audio')return;
-          if(!e.audio){e.audio=document.createElement('audio');e.audio.autoplay=true;e.audio.setAttribute('playsinline','');document.getElementById('voice-audio-elements').append(e.audio);}
-          e.audio.srcObject=event.streams[0]||new MediaStream([event.track]);e.audio.muted=this.deaf;e.audio.volume=1;
-          e.audio.play().catch(()=>{if(this.valid(e)){this.blocked=true;this.render();}});
-        };
+        pc.ontrack=event=>{if(answering){e.primarySlot=pc.getTransceivers()[0];if(e.expectRelay)e.relaySlot=pc.getTransceivers()[1];}this.receiveTrack(e,event);};
         pc.onconnectionstatechange=()=>{
           if(!this.valid(e))return;
           if(pc.connectionState==='connected'){
@@ -11578,11 +11822,16 @@
       async handle(pkt,peer){
         if(!this.joined||pkt.toEpoch!==this.epoch||!peer.voiceOn||pkt.fromEpoch!==peer.voiceEpoch)return;
         let e=this.peers.get(peer.id);
+        if(pkt.type==='VOICE_RELAY'){this.acceptRelay(pkt,e,peer);return;}
         if(pkt.type==='VOICE_OFFER'){
           if(peer.id>CoopManager.myPeerId||!pkt.sdp||pkt.sdp.type!=='offer')return;
           if(e?.call===pkt.call){if(e.last)this.signal(e,e.last);return;}
-          this.drop(peer.id,true);e=this.create(peer,pkt.call);if(!e)return;
+          this.drop(peer.id,true);e=this.create(peer,pkt.call,true);if(!e)return;
           await e.pc.setRemoteDescription(pkt.sdp);if(!this.valid(e))return;e.remoteSet=true;await this.drain(e);
+          e.primarySlot=e.pc.getTransceivers()[0];if(e.expectRelay)e.relaySlot=e.pc.getTransceivers()[1];
+          const track=this.stream?.getAudioTracks().find(t=>t.readyState==='live');
+          if(e.primarySlot){e.primarySlot.direction=track?'sendrecv':'recvonly';await e.primarySlot.sender.replaceTrack(track||null);}
+          if(e.relaySlot)e.relaySlot.direction=CoopManager.isHost?'sendonly':'recvonly';
           await e.pc.setLocalDescription(await e.pc.createAnswer());await CoopManager.waitIceGathering(e.pc,500);if(!this.valid(e))return;
           e.last={type:'VOICE_ANSWER',sdp:CoopManager.serializeSdp(e.pc.localDescription)};e.lastAt=performance.now();this.signal(e,e.last);
         }else if(pkt.type==='VOICE_ANSWER'){
@@ -11593,6 +11842,76 @@
           const key=pkt.candidate.candidate;if(e.candidateKeys.has(key)||e.candidateKeys.size>=64)return;e.candidateKeys.add(key);e.candidates.push(pkt.candidate);await this.drain(e);
         }
       },
+      voicePeers(){
+        const peers=new Map(CoopManager.allies.map(p=>[p.id,p]));
+        for(const e of this.peers.values())if(e.id===RoomHub.hostId&&e.relaySource&&RoomHub.members.has(e.relaySource.id)){
+          const r=e.relaySource,old=peers.get(r.id);
+          if(!old||(r.voice.rev>(old.voiceRevision??-1)))peers.set(r.id,{id:r.id,name:r.name,voiceOn:r.voice.on,voiceMic:r.voice.mic,voiceRevision:r.voice.rev,voiceEpoch:r.voice.epoch});
+        }
+        return [...peers.values()];
+      },
+      directReady(id){
+        const e=this.peers.get(id);return Boolean(e&&this.valid(e)&&e.pc.connectionState==='connected'&&e.remoteTrack?.readyState==='live'&&!e.remoteTrack.muted);
+      },
+      relayFor(id){
+        if(CoopManager.isHost||!RoomHub.members.has(id))return null;
+        const e=this.peers.get(RoomHub.hostId),p=this.voicePeers().find(p=>p.id===id);
+        return e&&this.valid(e)&&e.pc.connectionState==='connected'&&e.relaySource?.id===id&&p?.voiceOn&&p.voiceEpoch===e.relaySource.voice.epoch&&e.relayTrack?.readyState==='live'&&!e.relayTrack.muted?e:null;
+      },
+      refreshAudio(){
+        for(const e of this.peers.values()){
+          if(e.audio)e.audio.muted=this.deaf||(!this.directReady(e.id)&&Boolean(this.relayFor(e.id)));
+          if(e.relayAudio)e.relayAudio.muted=this.deaf||!e.relaySource||this.directReady(e.relaySource.id)||this.relayFor(e.relaySource.id)!==e;
+        }
+        this.applyVolume?.();
+      },
+      receiveTrack(e,event){
+        if(!this.valid(e)||event.track.kind!=='audio')return;
+        const relay=event.transceiver===e.relaySlot;
+        if(relay&&(CoopManager.isHost||e.id!==RoomHub.hostId))return;
+        const field=relay?'relayAudio':'audio';e[relay?'relayTrack':'remoteTrack']=event.track;
+        if(!e[field]){e[field]=document.createElement('audio');e[field].autoplay=true;e[field].setAttribute('playsinline','');document.getElementById('voice-audio-elements').append(e[field]);}
+        e[field].srcObject=new MediaStream([event.track]);e[field].muted=true;
+        const update=()=>{if(this.valid(e)){this.refreshAudio();this.syncRelays();this.render();}};
+        event.track.addEventListener('unmute',update);event.track.addEventListener('mute',update);event.track.addEventListener('ended',update);
+        this.refreshAudio();e[field].play().catch(()=>{if(this.valid(e)){this.blocked=true;this.render();}});this.syncRelays();
+      },
+      syncRelays(){
+        if(!this.joined||!CoopManager.isHost)return;
+        for(const e of this.peers.values()){
+          if(!this.valid(e)||!e.relaySlot)continue;
+          // Three-player rooms have exactly one other guest to forward. Never
+          // return a recipient's own track or re-forward a received relay track.
+          const peer=CoopManager.allies.find(p=>p.id!==e.id&&p.voiceOn&&RoomHub.members.has(p.id));
+          const source=peer&&this.peers.get(peer.id);
+          const track=source&&this.valid(source)&&source.remoteTrack?.readyState==='live'?source.remoteTrack:null;
+          e.relayDesired={track,source:peer?{id:peer.id,name:String(peer.name||'队友').slice(0,12),voice:{on:true,mic:peer.voiceMic,rev:peer.voiceRevision,epoch:peer.voiceEpoch}}:null};
+          this.updateRelay(e);
+        }
+      },
+      async updateRelay(e){
+        if(e.relayBusy)return;e.relayBusy=true;
+        try{
+          while(this.valid(e)){
+            const wanted=e.relayDesired;if(!wanted)break;
+            if(e.relaySlot.sender.track!==wanted.track)await e.relaySlot.sender.replaceTrack(wanted.track);
+            if(!this.valid(e))return;
+            if(wanted!==e.relayDesired)continue;
+            const signature=JSON.stringify(wanted.source),now=performance.now();
+            if(signature!==e.relaySent||now-(e.relaySentAt||0)>3000){e.relaySent=signature;e.relaySentAt=now;this.signal(e,{type:'VOICE_RELAY',source:wanted.source});}
+            try{const p=e.relaySlot.sender.getParameters();if(p.encodings?.length){p.encodings[0].maxBitrate=32000;e.relaySlot.sender.setParameters(p).catch(()=>{});}}catch(_){}
+            break;
+          }
+        }catch(_){}finally{e.relayBusy=false;}
+      },
+      acceptRelay(pkt,e,peer){
+        if(!e||e.call!==pkt.call||peer.id!==RoomHub.hostId||CoopManager.isHost)return;
+        const r=pkt.source;
+        if(r===null){e.relaySource=null;this.refreshAudio();return;}
+        if(!r||typeof r.id!=='string'||r.id===CoopManager.myPeerId||r.id===RoomHub.hostId||!RoomHub.members.has(r.id)||typeof r.voice?.on!=='boolean'||!Number.isSafeInteger(r.voice.rev)||!Number.isSafeInteger(r.voice.epoch))return;
+        e.relaySource={id:r.id,name:String(r.name||'队友').slice(0,12),voice:{on:r.voice.on,mic:Boolean(r.voice.mic),rev:r.voice.rev,epoch:r.voice.epoch}};
+        this.refreshAudio();this.render();
+      },
       sync(){if(this.joined)for(const peer of CoopManager.allies)if(peer.voiceOn)this.offer(peer);},
       tick(now){
         if(now-this.lastTick<1500)return;this.lastTick=now;
@@ -11601,13 +11920,14 @@
           if(!this.valid(e)){this.drop(id);continue;}
           if((e.badSince&&now-e.badSince>6000)||(now-e.at>30000&&e.pc.connectionState!=='connected')){this.drop(id);continue;}
           if(e.last&&e.pc.connectionState!=='connected'&&now-(e.lastAt||0)>2000){e.lastAt=now;this.signal(e,e.last);}
-        }this.sync();
+        }this.sync();this.syncRelays();this.refreshAudio();
       },
+      applyVolume(){for(const e of this.peers.values())for(const a of [e.audio,e.relayAudio])if(a)a.volume=AudioSettings.values.voice/100;},
       resume(){
-        this.blocked=false;for(const e of this.peers.values())if(e.audio){e.audio.muted=this.deaf;if(!this.deaf)e.audio.play().catch(()=>{this.blocked=true;this.render();});}this.render();
+        this.blocked=false;this.refreshAudio();for(const e of this.peers.values())for(const a of [e.audio,e.relayAudio])if(a&&!this.deaf)a.play().catch(()=>{this.blocked=true;this.render();});this.render();
       },
       render(){
-        const status=document.getElementById('voice-status');if(!status)return;const room=Boolean(CoopManager.roomCode);
+        const status=document.getElementById('voice-status');if(!status)return;this.refreshAudio();const room=Boolean(CoopManager.roomCode);
         document.getElementById('voice-listen').disabled=!room||this.busy;document.getElementById('voice-mic').disabled=!room||this.busy;
         document.getElementById('voice-mic').textContent=this.busy?'等待麦克风权限…':this.mic?'麦克风：开（点此静音）':this.stream?'麦克风：静音':'开启麦克风';
         document.getElementById('voice-mic').setAttribute('aria-pressed',String(this.mic));document.getElementById('voice-listen').setAttribute('aria-pressed',String(this.joined&&!this.mic));
@@ -11616,8 +11936,8 @@
         document.getElementById('voice-cancel').style.display=this.busy?'inline-block':'none';
         document.getElementById('voice-help').hidden=!this.help;document.getElementById('voice-help-text').textContent=this.help;
         const web=document.getElementById('voice-web-open');web.href=this.webUrl;web.hidden=!this.help||(location.protocol==='https:'&&window.top===window);
-        status.textContent=this.error||(this.joined?(this.mic?'已开启麦克风':'仅收听 / 麦克风静音')+' · '+([...this.peers.values()].filter(e=>e.pc.connectionState==='connected').length)+'名队友语音已连接':'语音未加入；开启麦克风时才申请权限。');
-        document.getElementById('voice-members').textContent=CoopManager.allies.map(p=>p.name+'：'+(!p.voiceOn?'未加入语音':this.peers.get(p.id)?.pc.connectionState==='connected'?(p.voiceMic?'麦克风开启':'仅收听 / 已静音'):'等待语音直连')).join(' · ');
+        status.textContent=this.error||(this.joined?(this.mic?'已开启麦克风':'仅收听 / 麦克风静音')+' · '+(this.voicePeers().filter(p=>this.directReady(p.id)||this.relayFor(p.id)||this.peers.get(p.id)?.pc.connectionState==='connected').length)+'名队友语音已连接':'语音未加入；开启麦克风时才申请权限。');
+        document.getElementById('voice-members').textContent=this.voicePeers().map(p=>p.name+'：'+(!p.voiceOn?'未加入语音':!this.directReady(p.id)&&this.relayFor(p.id)?'房主转发'+(p.voiceMic?'':' / 已静音'):this.peers.get(p.id)?.pc.connectionState==='connected'?(p.voiceMic?'语音直连':'仅收听 / 已静音'):'连接中，等待直连或房主转发')).join(' · ');
       }
     };
 
@@ -11692,10 +12012,10 @@
         document.getElementById('social-input').disabled=!room;document.getElementById('social-send').disabled=!room;CoopVoice.render();
       },
       cleanup(){this.pending.clear();this.seen.clear();this.messages=[];this.unread=0;this.open=false;document.getElementById('coop-social-panel').style.display='none';CoopDanmaku.clear();CoopVoice.leave(false);this.renderMessages();this.render();},
-      tick(now){CoopSpectate.tick();if(now-this.lastTick<500)return;this.lastTick=now;this.flush(now);CoopVoice.tick(now);this.render();if(document.getElementById('coop-modal').style.display==='flex')CoopLobby.renderRoutes();},
+      tick(now){CoopSpectate.tick();CoopDev.tick(now);CoopSkillVfx.tick(Math.min(.1,(now-(this.fxLast??now))/1000));this.fxLast=now;if(now-this.lastTick<500)return;this.lastTick=now;this.flush(now);CoopVoice.tick(now);this.render();if(document.getElementById('coop-modal').style.display==='flex')CoopLobby.renderRoutes();},
       init(){
         // The button stays below game dialogs; messages float above the UI.
-        document.getElementById('game-container').append(document.getElementById('coop-social-float'));
+        document.getElementById('game-container').append(document.getElementById('coop-social-float'),document.getElementById('coop-spectate'));
         document.body.append(document.getElementById('coop-danmaku'));
         const bind=(id,fn)=>document.getElementById(id).addEventListener('click',e=>{e.stopPropagation();fn();});
         bind('coop-social-float',()=>this.toggle());bind('btn-coop-social-open',()=>{closeCoopModal();this.toggle(true);});bind('social-close',()=>this.toggle(false));
@@ -12128,7 +12448,7 @@
       },
 
       disconnectTransports() {
-        CoopSocial.cleanup(); CoopSpectate.id = null;
+        CoopSocial.cleanup(); CoopSpectate.id = null;CoopDev.reset();CoopSkillVfx.reset();CoopMap.toggle(false);
         CoopNodes.detach();
         if (typeof WorldCoop !== 'undefined' && WorldCoop) WorldCoop.reset();
         this.joinBurstTimers.forEach(t => clearTimeout(t));
@@ -12686,7 +13006,7 @@
         if (WorldCoop.receive(pkt)) return;
         const knownPeer = this.allies.find(a => a.id === pkt.peerId);
         if (knownPeer) knownPeer.lastSeen = now;
-        if (CoopSocial.receive(pkt)) return;
+        if (CoopDev.receive(pkt)||CoopSkillVfx.receive(pkt)||CoopSocial.receive(pkt)) return;
         if (pkt.type === 'DIRECT_RETRY') { if (knownPeer) CoopDirect.retryPeer(pkt.peerId); return; }
         if (pkt.type === 'NET_ROUTE_PING') {
           if (knownPeer && source?.kind === 'mqtt' && this.mqttClient?.activeSockets.some(s=>s._brokerUrl===pkt.broker && s._isSubscribed && s.readyState===1)) {
@@ -12859,6 +13179,7 @@
       },
 
       broadcastSkill(skillKind, params = {}) {
+        if(CoopSkillVfx.broadcast(skillKind,params))return;
         if (this.allies.length === 0 && !this.roomCode && this.rtcPeers.length === 0) return;
         this.sendPacket({
           type: 'SKILL_EVENT',
@@ -13075,7 +13396,7 @@
           ctx.drawImage(coloredImg, -coloredImg.width / 2, -coloredImg.height / 2 - 2);
           ctx.restore();
 
-          const labelStr = `[${theme.tag}] ${al.name} Lv.${al.level || 1}`;
+          const labelStr = `[${theme.tag}] ${al.name} Lv.${al.level || 1} · ${Math.round(CoopMap.distance(al))}`;
           ctx.font = 'bold 10px sans-serif';
           ctx.textAlign = 'center';
           const tw = ctx.measureText(labelStr).width + 10;
@@ -13363,7 +13684,7 @@
       authority() { return !CoopManager.roomCode || CoopManager.isHost; },
       reset() {
         this.startRequestToken = (this.startRequestToken || 0) + 1;
-        UpgradeChoice.reset(); CoopLoot.reset(); this.rewardCarry = { xp: 0, gold: 0 };
+        UpgradeChoice.reset(); CoopLoot.reset(); CoopSkillVfx.reset(); this.rewardCarry = { xp: 0, gold: 0 };
         document.getElementById('level-modal').style.display = 'none';
         this.session = null; this.hostId = null; this.frame = 0; this.receivedFrame = -1;
         this.sendJob = null; this.requestedPeers.clear(); this.pendingDecode = this.decodeJob = null; this.decodeGeneration++;
@@ -14396,9 +14717,9 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 7, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 8, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
-      hostId: null, roomKey: null, keyBytes: null, locked: false, busy: false,
+      hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
       leaseMs: 20000, probeMs: 2400, queryMs: 2200, joinMs: 12000,
       bytes(n=16) { return crypto.getRandomValues(new Uint8Array(n)); },
@@ -14415,13 +14736,13 @@
       message(s) { this.status=s;this.render(); },
       render() {
         const c=CoopManager,inside=Boolean(c.roomCode),el=id=>document.getElementById(id);
-        for(const id of ['btn-coop-create-room','btn-coop-join-room','btn-coop-match','coop-room-mode','coop-create-password','coop-room-input','coop-join-password'])el(id).disabled=this.busy||inside;
+        for(const id of ['btn-coop-create-room','btn-coop-join-room','btn-coop-match','coop-room-name','coop-room-mode','coop-create-password','coop-room-input','coop-join-password'])el(id).disabled=this.busy||inside;
         el('coop-create-password-row').hidden=el('coop-room-mode').value!=='private';
         el('btn-coop-cancel-match').hidden=!this.busy;
         el('coop-room-status').textContent=this.status;
         el('coop-room-status').hidden=!this.status;
         this.renderPublicRooms();
-        if(inside)el('coop-room-banner').textContent=(c.isHost?'房主 · ':'')+'房间 #'+c.roomCode+' · '+(this.locked?'🔒 密码房':'公开房')+' · '+c.getActivePlayerCount()+'/3人';
+        if(inside)el('coop-room-banner').textContent=(c.isHost?'房主 · ':'')+'房间 #'+c.roomCode+' · '+this.roomName+' · '+(this.locked?'🔒 密码房':'公开房')+' · '+c.getActivePlayerCount()+'/3人';
       },
       directoryOpen() {
         if(this.directory&&!this.directory.closed)return;
@@ -14447,10 +14768,11 @@
         const now=performance.now();for(const [id,a]of this.ads)if(now-a.at>this.leaseMs)this.ads.delete(id);
         return [...this.ads.values()];
       },
+      cleanRoomName(value) {return Array.from(String(value||'').replace(/[\u0000-\u001f\u007f]/g,' ').trim()).slice(0,20).join('');},
       advertisement() {
         if(!this.roomId||!CoopManager.isHost)return null;
         return {type:'ROOM_AD',build:this.build,roomId:this.roomId,code:CoopManager.roomCode,host:this.hostId,
-          name:CoopManager.myName.slice(0,12),locked:this.locked,count:this.members.size,max:3,started:Boolean(GameState.isStarted&&!GameState.isOver)};
+          name:CoopManager.myName.slice(0,12),roomName:this.roomName,locked:this.locked,count:this.members.size,max:3,started:Boolean(GameState.isStarted&&!GameState.isOver)};
       },
       advertise() { const ad=this.advertisement();if(ad){this.send(ad);this.lastAd=performance.now();} },
       receive(p) {
@@ -14467,7 +14789,7 @@
           if(!/^[a-f0-9]{32}$/.test(p.roomId)||!/^\d{4}$/.test(p.code)||p.host!==p.from)return;
           if(p.type==='ROOM_CLAIM'){this.claims.set(p.roomId,{...p,at:now});if(this.claims.size>256)this.claims.delete(this.claims.keys().next().value);return;}
           if(typeof p.locked!=='boolean'||!Number.isInteger(p.count)||p.count<1||p.count>3||p.max!==3)return;
-          this.ads.set(p.roomId,{roomId:p.roomId,code:p.code,host:p.host,name:String(p.name||'房主').slice(0,12),build:p.build||5,locked:p.locked,count:p.count,max:3,started:Boolean(p.started),at:now});
+          this.ads.set(p.roomId,{roomId:p.roomId,code:p.code,host:p.host,name:String(p.name||'房主').slice(0,12),roomName:this.cleanRoomName(p.roomName)||String(p.name||'房主').slice(0,12)+'的房间',build:p.build||5,locked:p.locked,count:p.count,max:3,started:Boolean(p.started),at:now});
           if(this.ads.size>256)this.ads.delete(this.ads.keys().next().value);
           // A late network merge must not leave two live hosts advertising one number.
           if(CoopManager.isHost&&p.code===CoopManager.roomCode&&p.roomId!==this.roomId&&p.roomId<this.roomId)this.renumber();
@@ -14494,11 +14816,11 @@
         document.getElementById('coop-public-count').textContent=rooms.length+' 间';
         const refresh=document.getElementById('btn-coop-refresh-rooms');refresh.disabled=this.busy||this.browsing||inside;refresh.textContent=this.browsing?'查找中…':'刷新列表';
         document.getElementById('coop-public-status').textContent=inside?'已在房间中，退出后可选择其他房间。':this.browsing?'正在查找在线房间…':this.browseStatus||(rooms.length?'房间状态实时更新；也可以点击刷新。':'暂无同版本公开房间，可以自己创建一个。');
-        const signature=JSON.stringify([inside,this.busy,rooms.map(a=>[a.roomId,a.code,a.name,a.count,a.started])]);if(signature===this.listSignature)return;this.listSignature=signature;list.replaceChildren();
+        const signature=JSON.stringify([inside,this.busy,rooms.map(a=>[a.roomId,a.code,a.name,a.roomName,a.count,a.started])]);if(signature===this.listSignature)return;this.listSignature=signature;list.replaceChildren();
         for(const ad of rooms.slice(0,100)){
           const row=document.createElement('div');row.className='coop-public-room';row.dataset.roomId=ad.roomId;
           const info=document.createElement('div'),name=document.createElement('strong'),detail=document.createElement('small'),join=document.createElement('button');
-          name.textContent='#'+ad.code+' · '+ad.name;detail.textContent=ad.count+'/3 人 · '+(ad.started?'游戏中':'待出征');info.append(name,detail);
+          name.textContent='#'+ad.code+' · '+(ad.roomName||ad.name+'的房间');detail.textContent='房主：'+ad.name+' · '+ad.count+'/3 人 · '+(ad.started?'游戏中':'待出征');info.append(name,detail);
           join.className='btn-secondary';join.textContent=ad.roomId===this.roomId?'当前':ad.count>=3?'已满':'加入';join.disabled=inside||this.busy||ad.count>=3;
           join.addEventListener('click',()=>this.joinListed(ad.roomId));row.append(info,join);list.append(row);
         }
@@ -14582,19 +14904,19 @@
         if(document.getElementById('coop-room-mode').value==='private'&&(password.length<4||password.length>32)){this.message('房间密码需要 4–32 个字符。');return false;}
         const op=this.begin('正在检查空闲房号…');if(op===null)return false;
         try {
-          await this.ready(op);const roomId=this.hex();
+          await this.ready(op);const roomId=this.hex(),roomName=this.cleanRoomName(document.getElementById('coop-room-name').value)||CoopManager.myName+'的房间';
           const pair=await this.pair(),pub=await this.publicKey(pair),salt=this.b64(this.bytes());
           const secret=await this.passwordKey(password,salt),keyBytes=this.bytes(32);
           const key=await crypto.subtle.importKey('raw',keyBytes,'AES-GCM',false,['encrypt','decrypt']);
           this.assertOp(op);const code=await this.chooseCode(op,roomId);this.assertOp(op);
           this.hostPair=pair;this.hostPub=pub;this.salt=salt;this.secret=secret;this.keyBytes=keyBytes;
-          this.enter({code,roomId,host:CoopManager.myPeerId,locked:Boolean(password),key,members:[CoopManager.myPeerId]},true);
+          this.enter({code,roomId,roomName,host:CoopManager.myPeerId,locked:Boolean(password),key,members:[CoopManager.myPeerId]},true);
           document.getElementById('coop-create-password').value='';this.advertise();this.message('已检查房号。'+(password?'🔒 密码房，仅凭房号与密码加入。':'公开房，可被快速匹配。'));
           return true;
         }catch(e){if(op===this.operation)this.message(e.message);return false;}finally{this.finish(op);}
       },
       enter(data,host) {
-        ++this.epoch;this.roomId=data.roomId;this.hostId=data.host;this.roomKey=data.key;this.locked=data.locked;this.members=new Set(data.members);
+        ++this.epoch;this.roomId=data.roomId;this.roomName=this.cleanRoomName(data.roomName)||'联机房间';this.hostId=data.host;this.roomKey=data.key;this.locked=data.locked;this.members=new Set(data.members);
         const c=CoopManager;c.roomCode=data.code;c.isHost=host;c.allies=[];c.connectRoomTransports(data.roomId);
         c.syncDifficultyScaling();c.updateHUD();document.getElementById('coop-room-input').value=data.code;
         document.getElementById('coop-join-password').value='';document.getElementById('coop-join-password-row').hidden=true;
@@ -14665,7 +14987,7 @@
           this.members.add(p.from);r.reserved=true;r.admittedAt=performance.now();
           const key=await this.exchange(this.hostPair,r.gp,this.secret,this.binding(r));
           if(epoch!==this.epoch)return;
-          const box=await this.encrypt(key,{roomId:this.roomId,code:CoopManager.roomCode,host:this.hostId,locked:this.locked,key:this.b64(this.keyBytes),members:[...this.members]},this.binding(r));
+          const box=await this.encrypt(key,{roomId:this.roomId,code:CoopManager.roomCode,roomName:this.roomName,host:this.hostId,locked:this.locked,key:this.b64(this.keyBytes),members:[...this.members]},this.binding(r));
           if(epoch!==this.epoch)return;
           r.grant={type:'ROOM_GRANTED',target:p.from,roomId:r.roomId,join:r.join,...box};
           CoopManager.sendPacket({type:'HUB_ROSTER',members:[...this.members]});this.send(r.grant);this.advertise();
@@ -14768,7 +15090,7 @@
       reset() {
         if(CoopManager.isHost&&this.roomId)this.send({type:'ROOM_CLOSED',roomId:this.roomId});
         ++this.operation;++this.epoch;this.pending?.reject(Error('已离开房间'));this.pending=null;this.busy=false;this.claim=null;
-        this.directoryClose();this.roomId=null;this.roomKey=null;this.keyBytes=null;this.secret=null;this.hostPair=null;this.hostPub=null;this.hostId=null;this.locked=false;
+        this.directoryClose();this.roomId=null;this.roomKey=null;this.keyBytes=null;this.secret=null;this.hostPair=null;this.hostPub=null;this.hostId=null;this.roomName='';this.locked=false;
         this.requests.clear();this.members.clear();this.status='';this.browseToken++;this.browsing=false;this.browseStatus='';this.listSignature='';
       },
       install() {
@@ -14785,6 +15107,7 @@
         };
         CoopLobby.render=()=>{render.call(CoopLobby);this.render();};
         document.getElementById('coop-room-mode').addEventListener('change',()=>this.render());
+        document.getElementById('btn-coop-browse-rooms').addEventListener('click',()=>{const panel=document.getElementById('coop-public-rooms');panel.open=true;panel.scrollIntoView({block:'nearest',behavior:'smooth'});});
         document.getElementById('btn-coop-match').addEventListener('click',()=>this.join('',true));
         document.getElementById('btn-coop-cancel-match').addEventListener('click',()=>this.cancel());
         document.getElementById('coop-join-password').addEventListener('keydown',e=>{if(e.key==='Enter')c.joinRoom(document.getElementById('coop-room-input').value);});
@@ -14799,7 +15122,7 @@
     RoomHub.install();
 
 
-    CoopSocial.init();
+    CoopSocial.init();CoopMap.init();AudioSettings.init();CoopDev.init();
     CoopManager.loadSavedProfile();
 
     let pausedBeforeCoop = false;
