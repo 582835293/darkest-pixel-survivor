@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R5 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R6 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -755,7 +755,7 @@
 
     #toast-msg {
       position: fixed;
-      top: 14px;
+      top: clamp(128px, 24vh, 220px);
       left: 50%;
       transform: translateX(-50%);
       background: rgba(15, 23, 42, 0.96);
@@ -1053,6 +1053,7 @@
     .coop-fold{padding:0;}.coop-fold>summary{padding:11px 10px;cursor:pointer;font-size:12px;color:#cbd5e1;list-style:none;display:flex;align-items:center;gap:6px;}.coop-fold>summary::-webkit-details-marker{display:none;}.coop-fold>summary:before{content:'▸';color:#7dd3fc;}.coop-fold[open]>summary:before{content:'▾';}.coop-fold>summary>span{margin-left:auto;text-align:right;color:#7dd3fc;font-size:10px;max-width:65%;overflow-wrap:anywhere;}.coop-fold-body{padding:0 10px 11px;}
     .coop-picks-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;}.coop-picks-grid>.biome-card{padding:8px 3px;text-align:center;font-size:10.5px;}.coop-route-actions{display:flex;gap:6px;align-items:center;margin-top:8px;}.coop-route-actions>select{flex:1;min-width:0;background:#0b1322;color:#e2e8f0;border:1px solid #475569;border-radius:6px;padding:7px;font-size:11px;}
     .coop-room-setup,.coop-password-row,.coop-match-actions{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;}.coop-room-setup select,.coop-password-row input{flex:1;min-width:0;}.coop-match-actions{flex-wrap:wrap;}.coop-match-actions button{font-size:12px;}#coop-room-status{padding:8px 0;color:#cbd5e1;line-height:1.6;}#coop-modal [hidden]{display:none!important;}#coop-modal button:disabled{opacity:.5;cursor:default;}
+    #coop-public-list{max-height:250px;overflow-y:auto;}.coop-public-room{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #334155;font-size:12px;}.coop-public-room>div{min-width:0;}.coop-public-room strong,.coop-public-room small{display:block;overflow-wrap:anywhere;}.coop-public-room small{margin-top:4px;color:#94a3b8;font-size:11px;}.coop-public-room button{flex-shrink:0;font-size:11px;}#coop-public-status{padding-top:8px;line-height:1.6;}
     .coop-route-row{display:grid;grid-template-columns:minmax(0,1fr) 76px 66px;align-items:center;gap:5px;padding:8px 0;border-bottom:1px solid #33415566;font-size:10.5px;line-height:1.5;}.coop-route-row>span:nth-child(n+2){text-align:right;font-variant-numeric:tabular-nums;}.coop-route-row small{display:block;color:#64748b;font-size:9px;}.coop-route-header{color:#94a3b8;margin-top:6px;}.coop-route-current{color:#86efac;font-weight:700;}.coop-route-badge{color:#86efac;border:1px solid #28634c;border-radius:5px;padding:2px 5px;display:inline-block;}.coop-invite-details{margin-top:12px;border-top:1px solid #334155;padding-top:9px;font-size:11px;color:#94a3b8;}.coop-invite-actions{display:flex;gap:5px;flex-wrap:wrap;}.coop-invite-actions>button{flex:1;}.coop-alpha-actions{display:flex;gap:4px;justify-content:space-between;}.coop-alpha-actions>.btn-secondary{padding:4px!important;font-size:9.5px!important;}
     .coop-lobby-footer{position:sticky;bottom:0;display:flex;justify-content:center;gap:8px;background:#0b1221f5;padding:12px 0;z-index:2;border-top:1px solid #334155;}.coop-lobby-footer>#btn-coop-start-now{flex:1;max-width:220px;background:linear-gradient(135deg,#0284c7,#0369a1);}
     #coop-danmaku{position:fixed;inset:0;overflow:hidden;z-index:2147483646;pointer-events:none;user-select:none;-webkit-user-select:none;contain:layout paint;}.coop-danmaku-message{position:absolute;left:0;top:calc(clamp(112px,20vh,180px) + var(--danmaku-lane)*31px);white-space:nowrap;font-size:14px;font-weight:700;line-height:25px;padding:0 10px;color:#fef3c7;background:#0b1221b3;border-radius:5px;border:1px solid #64748b66;text-shadow:1px 1px 2px #000,0 0 4px #000;will-change:transform;}.coop-danmaku-own{color:#a5f3fc;}
@@ -1104,9 +1105,9 @@
           <span>❄️</span>
           <span id="curse-down-text">降难:0次</span>
         </div>
-        <div class="hud-badge hud-btn-interactive" id="btn-hud-coop" title="打开稳定联机房间大厅：支持2~3人联机(每多1人怪仅血量+60%，不加伤害)" style="border-color:#38bdf8; color:#7dd3fc;">
+        <div class="hud-badge hud-btn-interactive" id="btn-hud-coop" aria-label="打开联机大厅" style="border-color:#38bdf8; color:#7dd3fc;">
           <span>🌐</span>
-          <span id="hud-coop-text">稳定联机(1人)</span>
+          <span id="hud-coop-text">联机 1/3</span>
         </div>
         <div class="hud-badge hud-btn-interactive" id="btn-hud-shop" title="打开军需特权商店：使用金币解锁连发、倍速、提难/降难、召唤阵型等实用功能" style="border-color:#facc15; color:#fde047;">
           <span>🏪</span>
@@ -1344,7 +1345,17 @@
         <div class="coop-lobby-block">
           <div class="coop-block-heading"><strong>队伍 <span id="coop-party-count">1</span>/3</strong><button class="btn-secondary" id="btn-coop-leave-room">退出房间</button></div>
           <div id="coop-member-list"></div>
+          <div class="social-note" style="margin-top:8px">每多1人：怪物血量、金币与经验 +60%；怪物伤害不增加。</div>
         </div>
+
+        <details class="coop-fold" id="coop-public-rooms">
+          <summary>公开房间 <span id="coop-public-count">点击查看</span></summary>
+          <div class="coop-fold-body">
+            <div class="coop-block-heading"><span class="social-note">无密码房 · 最多3人</span><button class="btn-secondary" id="btn-coop-refresh-rooms">刷新列表</button></div>
+            <div id="coop-public-status" class="social-note" role="status" aria-live="polite"></div>
+            <div id="coop-public-list"></div>
+          </div>
+        </details>
 
         <details class="coop-fold" id="coop-picks-details">
           <summary>角色与地图 <span id="coop-picks-summary"></span></summary>
@@ -1403,6 +1414,7 @@
       <div class="modal-card">
         <div class="modal-title">✨ 等级突破 · 招式改造与流派共鸣</div>
         <div class="modal-subtitle" id="level-modal-subtitle">每升2级可存1次刷新机会 | 所有技能与配件满级后统一开启【界限突破】</div>
+        <div id="upgrade-draft-hint" class="social-note" style="text-align:center;margin:8px 0;line-height:1.6"></div>
         <div class="upgrade-list" id="upgrade-options"></div>
         <div style="margin-top: 12px; display: flex; justify-content: center; align-items: center; gap: 10px;">
           <button class="btn-secondary" id="btn-reroll-upgrades" style="border-color: #fbbf24; color: #fde047; font-weight: 800; padding: 8px 18px;">
@@ -2692,7 +2704,7 @@
           name: `猩红血棘 Lv.${pass.bloodPact + 1}/3`,
           type: 'passive',
           icon: '🩸',
-          desc: '最大生命+15，击杀回血，满血溢出转护盾。',
+          desc: '最大生命+15，每亲自击杀10只怪回血，满血溢出转护盾。',
           apply: () => { pass.bloodPact++; player.maxHp += 15; healPlayer(15); updateLoadoutHUD(); }
         });
       }
@@ -3208,7 +3220,7 @@
               const dmg = Math.round(atk.damage * (isThird ? 1.25 : 1.0));
               damageEnemy(en, dmg, attackAngle, isThird ? 95 : 42);
               en.bleedStacks = Math.min(5, (en.bleedStacks || 0) + 1);
-              en.bleedTimer = 4.0;
+              en.bleedTimer = 4.0; WorldCoop.markBleed(en);
               meleeHitSet.add(en);
             }
           }
@@ -3348,7 +3360,7 @@
           enemies.forEach(en => {
             if (!en.isDead && Math.hypot(en.x - player.x, en.y - player.y) <= chargeRange * 1.25 + en.radius) {
               damageEnemy(en, heavyDmg, Math.atan2(en.y - player.y, en.x - player.x), 180);
-              en.bleedStacks = 5; en.bleedTimer = 5.0;
+              en.bleedStacks = 5; en.bleedTimer = 5.0; WorldCoop.markBleed(en);
             }
           });
           showToast(`🗡️ 八荒万剑流 Lv.${chg.branchLv}：【万剑归宗·八方次元斩】！`);
@@ -3366,7 +3378,7 @@
             if (!en.isDead && Math.hypot(en.x - player.x, en.y - player.y) <= chargeRange + en.radius) {
               const bossBonus = (en.isBoss || en.isElite) ? 1.35 : 1.10;
               damageEnemy(en, Math.round(heavyDmg * bossBonus), attackAngle, 220);
-              en.bleedStacks = 5; en.bleedTimer = 6.0;
+              en.bleedStacks = 5; en.bleedTimer = 6.0; WorldCoop.markBleed(en);
             }
           });
           showToast(`👹 鬼神一刀流 Lv.${chg.branchLv}：【瞬狱·阿修罗断头斩】！`);
@@ -3425,7 +3437,7 @@
                 }
                 damageEnemy(en, hitDmg, attackAngle, 150);
                 en.bleedStacks = Math.min(5, (en.bleedStacks || 0) + 2 + Math.floor(clv / 2));
-                en.bleedTimer = 5.0;
+                en.bleedTimer = 5.0; WorldCoop.markBleed(en);
               }
             }
           });
@@ -4681,7 +4693,7 @@
       return closest;
     }
 
-    function damageEnemy(en, baseDmg, pushAngle, pushForce, isSecondary = false) {
+    function damageEnemy(en, baseDmg, pushAngle, pushForce, isSecondary = false, killerId = CoopManager.myPeerId, killEpoch = player.lifeEpoch || 0) {
       if (!en || en.isDead || (WorldCoop.active() && (((player.isDowned || UpgradeChoice.active) && !WorldCoop.simulatingDot) || WorldCoop.replaying || WorldCoop.paused() || GameState.isPaused || WorldCoop.ended))) return { isCrit: false, finalDmg: 0 };
 
       // 极寒碎冰流派：对被冻结/减速的敌人暴击率提高 20%
@@ -4756,7 +4768,7 @@
         }
       }
 
-      if (en.hp <= 0 && !en.isDead) killEnemy(en);
+      if (en.hp <= 0 && !en.isDead) killEnemy(en, killerId, killEpoch);
       return { isCrit, finalDmg };
     }
 
@@ -4812,15 +4824,17 @@
       if (hits > 0) addCombo(hits);
     }
 
-    function killEnemy(en) {
+    function killEnemy(en, killerId = CoopManager.myPeerId, killEpoch = null) {
       if (!en || en.isDead || WorldCoop.guest()) return;
       en.isDead = true;
       en.activeFloatText = null;
       GameState.kills++;
       document.getElementById('kill-count').innerText = GameState.kills;
 
-      // 猩红圣杯流派：每击杀 10 只怪回复生命
-      if (WorldCoop.canAct() && player.passives.bloodPact > 0 && GameState.kills % 10 === 0) {
+      // Team kills drive the HUD; only the actual killer earns personal healing.
+      // Use the existing reliable grant log so loss/retries cannot duplicate it.
+      if (WorldCoop.active()) WorldCoop.creditKill(killerId, killEpoch);
+      else if (WorldCoop.canAct() && player.passives.bloodPact > 0 && GameState.kills % 10 === 0) {
         healPlayer(4 * player.passives.bloodPact);
       }
 
@@ -5573,6 +5587,40 @@
       document.getElementById('exp-text').innerText = `等级 ${player.level} [${player.exp} / ${player.expToNext}]`;
     }
 
+    // Draw without replacement across paid rerolls. Priorities help only the
+    // first offer; an awakening or limit-break card cannot pin all three slots.
+    var UpgradeDraft = {
+      deck: [], known: new Set(),
+      reset() { this.deck=[];this.known.clear(); },
+      key(card) { return card.id+'|'+card.name; },
+      shuffle(values) {
+        const out=[...values];for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]];}return out;
+      },
+      draw(pool,previous=[]) {
+        const reroll=previous.length>0;if(!reroll)this.reset();
+        const unique=[...new Map(pool.map(c=>[c.id,c])).values()],byKey=new Map(unique.map(c=>[this.key(c),c]));
+        const keys=[...byKey.keys()],added=keys.filter(k=>!this.known.has(k));
+        this.deck=this.deck.filter(k=>byKey.has(k));if(added.length)this.deck=this.shuffle([...this.deck,...added]);
+        this.known=new Set(keys);
+        const selected=[],ids=new Set(),wanted=Math.min(3,unique.length);
+        const take=card=>{const key=this.key(card),i=this.deck.indexOf(key);if(i>=0)this.deck.splice(i,1);selected.push(card);ids.add(card.id);};
+        if(!reroll){
+          const supers=this.shuffle(unique.filter(c=>c.isTrueSuper));
+          const branches=supers.filter(c=>c.id.startsWith('charge_branch_'));
+          for(const card of (branches.length>1?branches.slice(0,2):supers.slice(0,1)))if(selected.length<wanted)take(card);
+          const attack=unique.find(c=>c.id==='atk_up');if(attack&&selected.length<wanted)take(attack);
+        }
+        while(selected.length<wanted){
+          let candidates=this.deck.filter(k=>!ids.has(byKey.get(k).id));
+          if(!candidates.length){this.deck=this.shuffle(keys);candidates=this.deck.filter(k=>!ids.has(byKey.get(k).id));}
+          if(!candidates.length)break;
+          const fresh=candidates.filter(k=>!previous.includes(byKey.get(k).id));
+          take(byKey.get((fresh.length?fresh:candidates)[0]));
+        }
+        return selected;
+      }
+    };
+
     let lastShownUpgradeIds = [];
 
     function renderUpgradeCards(excludeIds = []) {
@@ -5589,28 +5637,11 @@
       }
 
       const pool = generateUpgradePool();
-      // 1. 真正满足合成条件的【超武/蓄力流派觉醒卡 (isTrueSuper)】置顶必出
-      const trueSuperCards = pool.filter(c => c.isTrueSuper);
-      const otherSuperCards = pool.filter(c => c.type === 'super' && !c.isTrueSuper);
-      let normalCards = pool.filter(c => c.type !== 'super');
-      if (excludeIds.length > 0 && pool.length > 3) {
-        const filtered = normalCards.filter(c => !excludeIds.includes(c.id));
-        if (filtered.length >= 2) normalCards = filtered;
-      }
-      // 标准无偏洗牌 (Fisher-Yates Shuffle)，彻底修复旧版 sort 导致首项【普通攻击】被吞掉的问题！
-      for (let i = normalCards.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const tmp = normalCards[i];
-        normalCards[i] = normalCards[j];
-        normalCards[j] = tmp;
-      }
-      // 2. 保底机制：只要【普通攻击】未满级且非刷新排除，优先保底出现在升级候选中，绝不消失！
-      const atkCardIdx = normalCards.findIndex(c => c.id === 'atk_up');
-      if (atkCardIdx > 0 && !excludeIds.includes('atk_up')) {
-        const [atkCard] = normalCards.splice(atkCardIdx, 1);
-        normalCards.unshift(atkCard);
-      }
-      const selected = [...trueSuperCards, ...otherSuperCards, ...normalCards].slice(0, 3);
+      const selected = UpgradeDraft.draw(pool, excludeIds);
+      const synergyCount=['thunderChain','iceShatter','bloodPact','fireTrail'].filter(k=>player.passives[k]>0).length;
+      const equipCount=['critGlove','swiftBoots','lavaHeart','frostAura','pierceQuiver'].filter(k=>player.passives[k]>0).length;
+      const locks=[];if(synergyCount>=2)locks.push('流派已满，未学的新流派不会出现');if(equipCount>=3)locks.push('配件已满，只能升级已有配件');
+      document.getElementById('upgrade-draft-hint').textContent=(pool.length<=3?'已显示全部可选项':'刷新优先换成未出现的选项')+' · 流派 '+synergyCount+'/2 · 配件 '+equipCount+'/3'+(locks.length?'。'+locks.join('；'):'');
       if (!selected.length) selected.push({id:'fallback',type:'passive',icon:'💪',name:'坚韧成长',desc:'最大生命 +5',apply:()=>{player.maxHp+=5;updateHpUI();}});
       const generation = ++UpgradeChoice.generation; let chosen = false;
       lastShownUpgradeIds = selected.map(c => c.id);
@@ -5618,6 +5649,7 @@
       selected.forEach(card => {
         const item = document.createElement('div');
         item.className = 'upgrade-card' + (card.type === 'super' ? ' super-weapon' : '');
+        item.dataset.upgradeId = card.id;
 
         let tagClass = 'tag-active';
         let tagText = '主动招式';
@@ -5657,8 +5689,8 @@
       const rerollTxt = document.getElementById('reroll-count-text');
       if (rerollTxt) rerollTxt.innerText = player.rerolls || 0;
       if (rerollBtn) {
-        rerollBtn.disabled = (player.rerolls || 0) <= 0;
-        rerollBtn.style.opacity = (player.rerolls || 0) > 0 ? '1' : '0.45';
+        rerollBtn.disabled = (player.rerolls || 0) <= 0 || pool.length <= selected.length;
+        rerollBtn.style.opacity = rerollBtn.disabled ? '0.45' : '1';
       }
     }
 
@@ -5940,7 +5972,7 @@
               const tangentAngle = blade.angle + (blade.spinSpeed >= 0 ? Math.PI / 2 : -Math.PI / 2);
               damageEnemy(en, blade.damage, tangentAngle, 0, true);
               en.bleedStacks = Math.min(5, (en.bleedStacks || 0) + 1);
-              en.bleedTimer = 3.5;
+              en.bleedTimer = 3.5; WorldCoop.markBleed(en);
             }
           });
         }
@@ -6106,7 +6138,7 @@
           if (en.dotTickTimer <= 0) {
             en.dotTickTimer = 0.5;
             WorldCoop.simulatingDot = true;
-            try { damageEnemy(en, en.bleedStacks * 8, 0, 0, true); } finally { WorldCoop.simulatingDot = false; }
+            try { damageEnemy(en, en.bleedStacks * 8, 0, 0, true, en.bleedOwnerId || CoopManager.myPeerId, en.bleedOwnerEpoch ?? (player.lifeEpoch || 0)); } finally { WorldCoop.simulatingDot = false; }
             if (en.isDead) { enemies.splice(i, 1); continue; }
           }
         }
@@ -6327,7 +6359,7 @@
             if (!en.isDead && !p.hitEnemies.has(en) && Math.hypot(p.x - en.x, p.y - en.y) < p.radius + en.radius) {
               p.hitEnemies.add(en);
               damageEnemy(en, p.damage, Math.atan2(p.vy, p.vx), 110, Boolean(p.isSecondary));
-              if (p.applyBleed) { en.bleedStacks = Math.min(5, (en.bleedStacks || 0) + 1); en.bleedTimer = 4.0; }
+              if (p.applyBleed) { en.bleedStacks = Math.min(5, (en.bleedStacks || 0) + 1); en.bleedTimer = 4.0; WorldCoop.markBleed(en); }
               if (p.applyPoison) { en.poisonStacks = Math.min(4, (en.poisonStacks || 0) + 1); }
               if (p.isFreeze) { en.freezeTimer = 1.5; }
 
@@ -9396,9 +9428,10 @@
 
     function showToast(msg) {
       const el = document.getElementById('toast-msg');
+      clearTimeout(showToast.timer);
       el.innerText = msg;
       el.style.opacity = '1';
-      setTimeout(() => { el.style.opacity = '0'; }, 1800);
+      showToast.timer = setTimeout(() => { el.style.opacity = '0'; }, 1800);
     }
 
     // 16. 游戏启动、选人与大厅逻辑
@@ -9902,7 +9935,7 @@
     document.getElementById('btn-close-skilltree').addEventListener('click', () => closeSkillTreeModal());
     document.getElementById('btn-reroll-upgrades').addEventListener('click', (e) => {
       e.stopPropagation();
-      if ((player.rerolls || 0) <= 0) return;
+      if (!UpgradeChoice.active || (player.rerolls || 0) <= 0 || document.getElementById('btn-reroll-upgrades').disabled) return;
       player.rerolls--;
       audio.init();
       audio.playCoin();
@@ -11994,7 +12027,7 @@
         return {
           type: typeStr,
           name: this.myName || '猎魔人',
-          voice: CoopVoice.presence(),
+          voice: CoopVoice.presence(), bloodPact: player.passives.bloodPact || 0,
           hero: GameState.selectedHero,
           colorIdx: this.myColorIdx,
           biome: GameState.activeBiome,
@@ -12607,7 +12640,7 @@
           renderCoopModalUI();
           audio.init();
           audio.playSuperWeapon();
-          showToast(`🌐 真人玩家【${peer.name}】已进入房间！当前 ${this.getActivePlayerCount()}/3 人 (怪血量/掉落+${(this.getActivePlayerCount() - 1) * 60}%)！`);
+          showToast(`🌐 真人玩家【${peer.name}】已进入房间！当前 ${this.getActivePlayerCount()}/3 人！`);
           this.tryAutoWebRTC(pkt.peerId);
         } else {
           const metaChanged = (pkt.name && pkt.name !== peer.name) || (pkt.hero && pkt.hero !== peer.hero) || (pkt.colorIdx !== undefined && pkt.colorIdx !== peer.colorIdx);
@@ -12989,16 +13022,15 @@
 
       updateHUD() {
         const count = this.getActivePlayerCount();
-        const extraPct = (count - 1) * 60;
         const hudTxt = document.getElementById('hud-coop-text');
         const hudBtn = document.getElementById('btn-hud-coop');
         if (hudTxt) {
           if (count > 1) {
-            hudTxt.innerText = `联机(${count}人·怪血/掉落+${extraPct}%)`;
+            hudTxt.innerText = `联机 ${count}/3`;
           } else if (this.roomCode) {
-            hudTxt.innerText = `房间#${this.roomCode}(等友)`;
+            hudTxt.innerText = `房间 ${this.roomCode}`;
           } else {
-            hudTxt.innerText = '稳定联机(1人)';
+            hudTxt.innerText = '联机 1/3';
           }
         }
         if (hudBtn) {
@@ -13360,7 +13392,7 @@
         return { x: player.x, y: player.y, hp: player.hp, maxHp: player.maxHp, radius: player.radius,
           isStarted: GameState.isStarted, paused: GameState.isPaused,
           upgrading: UpgradeChoice.active, upgradeToken: UpgradeChoice.token, upgradeRemaining: UpgradeChoice.remaining(),
-          magnetRange: player.magnetRange, relicIds: player.mapRelics.map(r => r.id),
+          magnetRange: player.magnetRange, relicIds: player.mapRelics.map(r => r.id), bloodPact: player.passives.bloodPact || 0,
           downed: Boolean(player.isDowned), lifeEpoch: player.lifeEpoch || 0 };
       },
       observe(id, pkt) {
@@ -13375,6 +13407,7 @@
         rec.radius = Math.max(8, Math.min(32, pkt.radius || 12));
         rec.magnetRange = Math.max(0, Math.min(2000, Number(pkt.magnetRange) || 85));
         rec.relicIds = Array.isArray(pkt.relicIds) ? pkt.relicIds.slice(0, 2) : [];
+        if (Number.isFinite(pkt.bloodPact)) rec.bloodPact = Math.max(0, Math.min(1000, Math.floor(pkt.bloodPact)));
         if (pkt.upgrading && (!rec.upgrading || rec.upgradeToken !== pkt.upgradeToken)) {
           rec.upgradeUntil = performance.now() + Math.min(20, Math.max(0, Number(pkt.upgradeRemaining) || 0)) * 1000;
         }
@@ -13421,6 +13454,21 @@
         if (!this.hostId || !this.active()) return;
         CoopManager.sendPacket(this.packet({ ...payload, targetPeerId: this.hostId }));
       },
+      markBleed(en) {
+        if (this.replaying || en.isDead) return;
+        en.bleedOwnerId = CoopManager.myPeerId; en.bleedOwnerEpoch = player.lifeEpoch || 0;
+        const hit=this.pendingHits.get(en.netId);
+        if(hit){hit.bleedApplied=true;hit.bleedEpoch=en.bleedOwnerEpoch;}
+      },
+      creditKill(id, lifeEpoch = null) {
+        if (!this.active() || !CoopManager.isHost) return;
+        const actor = this.participants.get(id); if (!actor) return;
+        actor.personalKills = (actor.personalKills || 0) + 1;
+        const level = id === CoopManager.myPeerId ? player.passives.bloodPact : actor.bloodPact || 0;
+        if (actor.personalKills % 10 || level <= 0 || actor.downed || this.phased(actor) || this.ended || this.paused() || GameState.isPaused ||
+            (lifeEpoch !== null && lifeEpoch !== actor.epoch)) return;
+        CoopLoot.grant(actor, 'killHeal', { amount: 4 * level, lifeEpoch: actor.epoch });
+      },
       reportHit(en, damage, angle, force) {
         if (!en.netId || !this.active() || player.isDowned || UpgradeChoice.active || this.replaying) return;
         let hit = this.pendingHits.get(en.netId);
@@ -13432,10 +13480,11 @@
         if (this.pendingHits.size && now - this.lastHitAt >= 50) {
           this.lastHitAt = now;
           const hits = [...this.pendingHits.values()].map(h => [h.en.netId, Math.round(h.damage), h.angle, h.force,
-            h.en.bleedStacks || 0, h.en.bleedTimer || 0, h.en.poisonStacks || 0, h.en.freezeTimer || 0, h.en.isChilled ? 1 : 0]);
+            h.en.bleedStacks || 0, h.en.bleedTimer || 0, h.en.poisonStacks || 0, h.en.freezeTimer || 0, h.en.isChilled ? 1 : 0,
+            h.bleedApplied ? 1 : 0, h.bleedEpoch ?? -1]);
           this.pendingHits.clear();
           for (let i = 0; i < hits.length; i += 32) {
-            const pkt = { type: 'WORLD_HITS', seq: ++this.hitSeq, lifeEpoch: player.lifeEpoch || 0, hits: hits.slice(i, i + 32) };
+            const pkt = { type: 'WORLD_HITS', seq: ++this.hitSeq, lifeEpoch: player.lifeEpoch || 0, bloodPact: player.passives.bloodPact || 0, hits: hits.slice(i, i + 32) };
             this.hitBatches.set(pkt.seq, { pkt, deadline: now + 5000, sentAt: -Infinity });
           }
         }
@@ -13454,6 +13503,7 @@
         if (this.paused() || GameState.isPaused) return;
         history.max = Math.max(history.max, pkt.seq); history.seen.add(pkt.seq);
         for (const seq of history.seen) if (seq <= history.max - 1024) history.seen.delete(seq);
+        if (Number.isFinite(pkt.bloodPact)) actor.bloodPact = Math.max(0, Math.min(1000, Math.floor(pkt.bloodPact)));
         const byId = new Map(enemies.map(e => [e.netId, e]));
         for (const h of pkt.hits.slice(0, 32)) {
           const en = byId.get(h[0]);
@@ -13461,7 +13511,10 @@
               Math.hypot(actor.x - en.x, actor.y - en.y) > 2200) continue;
           en.hp -= h[1]; en.hitTimer = 0.12;
           en.bleedStacks = Math.max(en.bleedStacks || 0, Math.min(5, Number(h[4]) || 0));
-          en.bleedTimer = Math.max(en.bleedTimer || 0, Math.min(4, Number(h[5]) || 0));
+          en.bleedTimer = Math.max(en.bleedTimer || 0, Math.min(6, Number(h[5]) || 0));
+          if (h[9] === 1 && h[10] === actor.epoch && h[4] > 0 && h[5] > 0) {
+            en.bleedOwnerId = pkt.peerId; en.bleedOwnerEpoch = actor.epoch;
+          }
           en.poisonStacks = Math.max(en.poisonStacks || 0, Math.min(4, Number(h[6]) || 0));
           if (!en.isBoss) en.freezeTimer = Math.max(en.freezeTimer || 0, Math.min(2, Number(h[7]) || 0));
           if (h[8]) en.isChilled = true;
@@ -13471,7 +13524,7 @@
           }
           spawnMergedFloatingText(en, h[1], false, false);
           if (en.isBoss && en.hp < en.maxHp * 0.5 && !en.isPhase2) { en.isPhase2 = true; en.speed *= 1.3; }
-          if (en.hp <= 0) killEnemy(en);
+          if (en.hp <= 0) killEnemy(en, pkt.peerId, pkt.lifeEpoch);
         }
         ack();
       },
@@ -13968,7 +14021,7 @@
             else if (this.paused()) this.setNotice('⏸ 队友已手动暂停，战场已暂停');
             else {
               const body = [...this.participants.values()].find(p => p.downed);
-              this.setNotice(body ? '💚 队友倒地！靠近墓碑并停留10秒救援（离开重置）' : '⚔️ 共享战场 · 战利品先到先得 · 救援10秒');
+              this.setNotice(body ? '💚 队友倒地！靠近墓碑并停留10秒救援（离开重置）' : '');
             }
           } else this.setNotice('');
         }
@@ -13977,7 +14030,7 @@
         let el = document.getElementById('coop-battle-notice');
         if (!el) {
           el = document.createElement('div'); el.id = 'coop-battle-notice';
-          el.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);top:100px;max-width:92vw;padding:6px 12px;background:rgba(7,16,27,.86);border:1px solid #4ade80;border-radius:10px;color:#bbf7d0;font-size:12px;text-align:center;z-index:18;pointer-events:none;';
+          el.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 160px);max-width:92vw;padding:6px 12px;background:rgba(7,16,27,.86);border:1px solid #4ade80;border-radius:10px;color:#bbf7d0;font-size:12px;text-align:center;z-index:18;pointer-events:none;';
           document.body.appendChild(el);
         }
         el.textContent = text; el.style.display = text ? 'block' : 'none';
@@ -14204,10 +14257,12 @@
         for (;;) {
           const grant = this.inbox.get(this.received + 1); if (!grant) break;
           const [seq, kind, value] = grant;
-          if (kind !== 'xp' && kind !== 'gold' && (UpgradeChoice.active || player.isDowned || GameState.isPaused || WorldCoop.paused())) break;
+          const staleHeal = kind === 'killHeal' && (player.isDowned || value.lifeEpoch !== (player.lifeEpoch || 0));
+          if (!staleHeal && kind !== 'xp' && kind !== 'gold' && (UpgradeChoice.active || player.isDowned || GameState.isPaused || WorldCoop.paused())) break;
           this.inbox.delete(seq); this.received = seq;
           if (kind === 'xp') addExp(value);
           else if (kind === 'gold') { SaveManager.addGold(value); audio.playCoin(); }
+          else if (kind === 'killHeal' && !staleHeal) healPlayer(value.amount);
           else if (kind === 'item') triggerPickupEffect({ ...value, worldApplied: true });
           else if (kind === 'relic') equipMapRelic({ ...value });
           else if (kind === 'shrine') triggerShrineEffect({ ...value, worldApplied: true });
@@ -14310,7 +14365,7 @@
           en.hp -= en.isBoss ? Math.max(1, Math.round(en.maxHp * .2)) : (en.isShiny ? Math.max(1, Math.round(en.maxHp * .5)) : en.hp);
           en.hitTimer = .2;
           if (en.isBoss && en.hp < en.maxHp * .5 && !en.isPhase2) { en.isPhase2 = true; en.speed *= 1.3; }
-          if (en.hp <= 0) killEnemy(en);
+          if (en.hp <= 0) killEnemy(en, actor.id, actor.epoch);
         }
       },
       spawnShrineGold(s) { for (let i=0;i<12;i++) goldDrops.push({x:s.x+(Math.random()-.5)*65,y:s.y+(Math.random()-.5)*65,val:6}); },
@@ -14335,7 +14390,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 6, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
@@ -14359,6 +14414,7 @@
         el('btn-coop-cancel-match').hidden=!this.busy;
         el('coop-room-status').textContent=this.status;
         el('coop-room-status').hidden=!this.status;
+        this.renderPublicRooms();
         if(inside)el('coop-room-banner').textContent=(c.isHost?'房主 · ':'')+'房间 #'+c.roomCode+' · '+(this.locked?'🔒 密码房':'公开房')+' · '+c.getActivePlayerCount()+'/3人';
       },
       directoryOpen() {
@@ -14369,7 +14425,7 @@
       directoryClose() { this.directory?.close();this.directory=null;this.local?.close();this.local=null; },
       send(payload) {
         if(!this.directory)return;
-        const p={...payload,hub:1,from:CoopManager.myPeerId,id:this.hex(8)};
+        const p={...payload,build:this.build,hub:1,from:CoopManager.myPeerId,id:this.hex(8)};
         this.directory.publish(p,false);try{this.local?.postMessage(p);}catch(e){}
       },
       async ready(op) {
@@ -14387,7 +14443,7 @@
       },
       advertisement() {
         if(!this.roomId||!CoopManager.isHost)return null;
-        return {type:'ROOM_AD',roomId:this.roomId,code:CoopManager.roomCode,host:this.hostId,
+        return {type:'ROOM_AD',build:this.build,roomId:this.roomId,code:CoopManager.roomCode,host:this.hostId,
           name:CoopManager.myName.slice(0,12),locked:this.locked,count:this.members.size,max:3,started:Boolean(GameState.isStarted&&!GameState.isOver)};
       },
       advertise() { const ad=this.advertisement();if(ad){this.send(ad);this.lastAd=performance.now();} },
@@ -14405,7 +14461,7 @@
           if(!/^[a-f0-9]{32}$/.test(p.roomId)||!/^\d{4}$/.test(p.code)||p.host!==p.from)return;
           if(p.type==='ROOM_CLAIM'){this.claims.set(p.roomId,{...p,at:now});if(this.claims.size>256)this.claims.delete(this.claims.keys().next().value);return;}
           if(typeof p.locked!=='boolean'||!Number.isInteger(p.count)||p.count<1||p.count>3||p.max!==3)return;
-          this.ads.set(p.roomId,{roomId:p.roomId,code:p.code,host:p.host,name:String(p.name||'房主').slice(0,12),locked:p.locked,count:p.count,max:3,started:Boolean(p.started),at:now});
+          this.ads.set(p.roomId,{roomId:p.roomId,code:p.code,host:p.host,name:String(p.name||'房主').slice(0,12),build:p.build||5,locked:p.locked,count:p.count,max:3,started:Boolean(p.started),at:now});
           if(this.ads.size>256)this.ads.delete(this.ads.keys().next().value);
           // A late network merge must not leave two live hosts advertising one number.
           if(CoopManager.isHost&&p.code===CoopManager.roomCode&&p.roomId!==this.roomId&&p.roomId<this.roomId)this.renumber();
@@ -14415,6 +14471,53 @@
         if(p.type==='ROOM_JOIN_REQUEST')this.challenge(p).catch(()=>{});
         else if(p.type==='ROOM_JOIN_PROOF')this.admit(p).catch(()=>{});
         else if(p.type==='ROOM_CHALLENGE'||p.type==='ROOM_GRANTED'||p.type==='ROOM_DENIED')this.response(p).catch(()=>{});
+      },
+      listOpen() { return Boolean(document.getElementById('coop-public-rooms')?.open && document.getElementById('coop-modal')?.style?.display==='flex'); },
+      stopBrowsing() {
+        ++this.browseToken;this.browsing=false;
+        if(!CoopManager.isHost&&!this.busy)this.directoryClose();
+      },
+      publicRooms() {
+        const rooms=this.liveAds().filter(a=>!a.locked&&a.build===this.build);
+        const own=this.advertisement();if(own&&!own.locked)rooms.push(own);
+        return rooms.sort((a,b)=>Number(a.count>=3)-Number(b.count>=3)||Number(a.started)-Number(b.started)||a.code.localeCompare(b.code));
+      },
+      renderPublicRooms() {
+        const panel=document.getElementById('coop-public-rooms');if(!panel?.open)return;
+        const rooms=this.publicRooms(),inside=Boolean(CoopManager.roomCode),list=document.getElementById('coop-public-list');
+        document.getElementById('coop-public-count').textContent=rooms.length+' 间';
+        const refresh=document.getElementById('btn-coop-refresh-rooms');refresh.disabled=this.busy||this.browsing||inside;refresh.textContent=this.browsing?'查找中…':'刷新列表';
+        document.getElementById('coop-public-status').textContent=inside?'已在房间中，退出后可选择其他房间。':this.browsing?'正在查找在线房间…':this.browseStatus||(rooms.length?'房间状态实时更新；也可以点击刷新。':'暂无同版本公开房间，可以自己创建一个。');
+        const signature=JSON.stringify([inside,this.busy,rooms.map(a=>[a.roomId,a.code,a.name,a.count,a.started])]);if(signature===this.listSignature)return;this.listSignature=signature;list.replaceChildren();
+        for(const ad of rooms.slice(0,100)){
+          const row=document.createElement('div');row.className='coop-public-room';row.dataset.roomId=ad.roomId;
+          const info=document.createElement('div'),name=document.createElement('strong'),detail=document.createElement('small'),join=document.createElement('button');
+          name.textContent='#'+ad.code+' · '+ad.name;detail.textContent=ad.count+'/3 人 · '+(ad.started?'游戏中':'待出征');info.append(name,detail);
+          join.className='btn-secondary';join.textContent=ad.roomId===this.roomId?'当前':ad.count>=3?'已满':'加入';join.disabled=inside||this.busy||ad.count>=3;
+          join.addEventListener('click',()=>this.joinListed(ad.roomId));row.append(info,join);list.append(row);
+        }
+      },
+      async refreshRooms() {
+        if(this.busy||this.browsing||CoopManager.roomCode)return false;
+        const token=++this.browseToken,op=this.operation;this.browsing=true;this.browseStatus='';this.renderPublicRooms();
+        try {
+          await this.ready(op);
+          for(let i=0;i<3;i++){
+            if(token!==this.browseToken||op!==this.operation)return false;
+            this.send({type:'ROOM_QUERY'});this.lastBrowseQuery=performance.now();await this.sleep(this.queryMs/3);
+          }
+          if(token===this.browseToken)this.browseStatus='';return true;
+        }catch(e){if(token===this.browseToken&&op===this.operation)this.browseStatus=e.message;return false;}
+        finally{
+          if(token===this.browseToken){this.browsing=false;this.renderPublicRooms();}
+          if(!CoopManager.isHost&&!this.busy&&(!this.listOpen()||CoopManager.roomCode))this.directoryClose();
+        }
+      },
+      joinListed(id) {
+        const ad=this.liveAds().find(a=>a.roomId===id&&!a.locked&&a.build===this.build);
+        if(!ad){this.message('该房间已离线，请刷新列表。');this.renderPublicRooms();return Promise.resolve(false);}
+        document.getElementById('coop-room-input').value=ad.code;
+        return this.join(ad.code,false,id);
       },
       async passwordKey(password,salt) {
         if(!password)return new Uint8Array(32);
@@ -14450,10 +14553,10 @@
         if(!this.available()){this.message('当前文件预览器不支持安全入房，请用正常浏览器打开 HTTPS 在线版。');return null;}
         CoopManager.ensurePlayerName();this.busy=true;this.message(message);return ++this.operation;
       },
-      finish(op) { if(op!==this.operation)return;this.busy=false;this.pending=null;this.claim=null;if(!CoopManager.isHost)this.directoryClose();this.render(); },
+      finish(op) { if(op!==this.operation)return;this.busy=false;this.pending=null;this.claim=null;if(!CoopManager.isHost && (CoopManager.roomCode || !this.listOpen()))this.directoryClose();this.render(); },
       cancel() {
         ++this.operation;this.pending?.reject(Error('已取消'));this.pending=null;this.claim=null;this.busy=false;
-        if(!CoopManager.roomCode)this.directoryClose();this.message('已取消。');
+        if(!CoopManager.roomCode&&!this.listOpen())this.directoryClose();this.message('已取消。');
       },
       async chooseCode(op,roomId) {
         for(let i=0;i<12;i++){
@@ -14495,14 +14598,16 @@
         await this.ready(op);for(let i=0;i<3;i++){this.send({type:'ROOM_QUERY',code:code||undefined});await this.sleep(this.queryMs/3);this.assertOp(op);}
         return this.liveAds().filter(a=>!code||a.code===code);
       },
-      async join(codeStr,match=false) {
+      async join(codeStr,match=false,expectedId=null) {
         const code=String(codeStr||'').replace(/[#\s]/g,'');
         if(!match&&!/^\d{4}$/.test(code)){this.message('请输入朋友的 4 位房号。');return false;}
         const op=this.begin(match?'正在寻找无密码的公开房间…':'正在查找房间…');if(op===null)return false;
         try {
           let ads=await this.discover(op,match?null:code);
+          if(expectedId)ads=ads.filter(a=>a.roomId===expectedId);
+          if(!match&&ads.length===1&&ads[0].build!==this.build)throw Error('房间版本不同，请所有玩家刷新到 R6 后重新开房。');
           if(!match&&ads.length>1)throw Error('检测到房号冲突，房主正在更换房号，请稍后重新输入。');
-          ads=ads.filter(a=>a.host!==CoopManager.myPeerId&&(!match||(!a.locked&&a.count<3))).sort((a,b)=>Number(a.started)-Number(b.started)||b.count-a.count);
+          ads=ads.filter(a=>a.host!==CoopManager.myPeerId&&(!match||(!a.locked&&a.count<3&&a.build===this.build))).sort((a,b)=>Number(a.started)-Number(b.started)||b.count-a.count);
           if(!ads.length)throw Error(match?'暂时没有可加入的公开房间，可以自己开一个。':'未找到在线房间，请确认房号、双方版本及网络。');
           let last='没有空位，请稍后重试。';
           for(const ad of ads.slice(0,6)){
@@ -14530,6 +14635,7 @@
       },
       async challenge(p) {
         if(!CoopManager.isHost||p.roomId!==this.roomId||typeof p.join!=='string'||!/^[a-f0-9]{32}$/.test(p.join)||typeof p.gp!=='string'||p.gp.length!==88)return;
+        if(p.build!==this.build){this.deny(p,'房间已更新，请刷新到 R6 后重新加入。');return;}
         const id=p.from+':'+p.join;let r=this.requests.get(id);
         if(!r){
           if(this.requests.size>=48)return;
@@ -14605,6 +14711,10 @@
       },
       tick() {
         const now=performance.now();this.pulse();this.liveAds();
+        if(this.listOpen()){
+          if(!CoopManager.roomCode&&!this.busy&&!this.browsing&&this.directory&&now-(this.lastBrowseQuery||0)>12000){this.send({type:'ROOM_QUERY'});this.lastBrowseQuery=now;}
+          this.renderPublicRooms();
+        }
         for(const [id,c]of this.claims)if(now-c.at>this.leaseMs)this.claims.delete(id);
         if(CoopManager.isHost&&this.roomId){
           let changed=false;
@@ -14653,7 +14763,7 @@
         if(CoopManager.isHost&&this.roomId)this.send({type:'ROOM_CLOSED',roomId:this.roomId});
         ++this.operation;++this.epoch;this.pending?.reject(Error('已离开房间'));this.pending=null;this.busy=false;this.claim=null;
         this.directoryClose();this.roomId=null;this.roomKey=null;this.keyBytes=null;this.secret=null;this.hostPair=null;this.hostPub=null;this.hostId=null;this.locked=false;
-        this.requests.clear();this.members.clear();this.status='';
+        this.requests.clear();this.members.clear();this.status='';this.browseToken++;this.browsing=false;this.browseStatus='';this.listSignature='';
       },
       install() {
         const c=CoopManager,receive=c.onReceivePacket,leave=c.leaveRoom,render=CoopLobby.render;
@@ -14672,6 +14782,11 @@
         document.getElementById('btn-coop-match').addEventListener('click',()=>this.join('',true));
         document.getElementById('btn-coop-cancel-match').addEventListener('click',()=>this.cancel());
         document.getElementById('coop-join-password').addEventListener('keydown',e=>{if(e.key==='Enter')c.joinRoom(document.getElementById('coop-room-input').value);});
+        document.getElementById('btn-coop-refresh-rooms').addEventListener('click',()=>this.refreshRooms());
+        document.getElementById('coop-public-rooms').addEventListener('toggle',()=>{
+          if(this.listOpen()){this.listSignature='';if(!CoopManager.roomCode)this.refreshRooms();else this.renderPublicRooms();}
+          else {this.browseToken++;this.browsing=false;if(!CoopManager.isHost&&!this.busy)this.directoryClose();}
+        });
         setInterval(()=>this.tick(),400);window.addEventListener('pagehide',()=>this.reset());this.render();
       }
     };
@@ -14692,11 +14807,13 @@
       if (GameState.isStarted && !GameState.isOver) GameState.isPaused = true;
       renderCoopModalUI();
       document.getElementById('coop-modal').style.display = 'flex';
+      if(RoomHub.listOpen()&&!CoopManager.roomCode)RoomHub.refreshRooms();
       if (!CoopNodes.running && performance.now() - CoopNodes.lastScanAt > 15000) CoopNodes.startScan();
     }
 
     function closeCoopModal() {
       document.getElementById('coop-modal').style.display = 'none';
+      RoomHub.stopBrowsing();
       if (pausePanelBeforeCoop) { document.getElementById('pause-modal').style.display = 'flex'; pausePanelBeforeCoop = false; }
       const pauseOpen = document.getElementById('pause-modal').style.display === 'flex';
       const levelOpen = !WorldCoop.active() && document.getElementById('level-modal').style.display === 'flex';

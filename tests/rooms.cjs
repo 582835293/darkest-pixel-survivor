@@ -84,6 +84,23 @@ async function state(p){return p.evaluate(()=>({code:CoopManager.roomCode,id:Roo
  });
  await check('public room appears in quick match while password rooms are excluded',async()=>{
   assert.equal(await publicHost.evaluate(()=>CoopManager.createRoom()),true);
+  await check('public list displays names, occupancy and state, excludes private/old/stale rooms and joins by click',async()=>{
+   const roomId=(await state(publicHost)).id;
+   await b.locator('#coop-public-rooms>summary').click();await b.waitForFunction(()=>!RoomHub.browsing&&RoomHub.publicRooms().length===1);
+   assert((await b.locator('#coop-public-list').textContent()).includes('1/3 人'));
+   await b.evaluate(()=>{
+    const now=performance.now();
+    for(const [id,extra]of [['1'.repeat(32),{count:3,name:'<img src=x onerror=alert(1)>'}],['2'.repeat(32),{locked:true}],['3'.repeat(32),{at:now-RoomHub.leaseMs-1}],['4'.repeat(32),{build:5}]])RoomHub.ads.set(id,{roomId:id,code:'9876',host:id,name:'other',locked:false,build:6,count:1,max:3,started:false,at:now,...extra});
+    RoomHub.renderPublicRooms();
+   });
+   assert.equal(await b.locator('.coop-public-room').count(),2);assert.equal(await b.locator('#coop-public-list img').count(),0);
+   assert(await b.locator('[data-room-id="'+ '1'.repeat(32)+'"] button').isDisabled());
+   await b.locator('#coop-public-rooms').screenshot({path:'test-results/public-rooms.png'});
+   await b.locator('[data-room-id="'+roomId+'"] button').click();await b.waitForFunction(()=>Boolean(CoopManager.roomCode)&&!RoomHub.busy);
+   assert.equal((await state(b)).id,roomId);await publicHost.waitForFunction(()=>CoopManager.allies.length===1);
+   await b.evaluate(()=>CoopManager.leaveRoom());await publicHost.waitForFunction(()=>RoomHub.members.size===1);
+   await b.locator('#coop-public-rooms>summary').click();
+  });
   assert.equal(await b.evaluate(()=>RoomHub.join('',true)),true);assert.equal((await state(b)).id,(await state(publicHost)).id);
   assert.notEqual((await state(b)).id,(await state(host)).id);
   await publicHost.waitForFunction(()=>CoopManager.allies.length===1);
@@ -115,6 +132,12 @@ async function state(p){return p.evaluate(()=>({code:CoopManager.roomCode,id:Roo
   assert.equal(await publicHost.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   assert(!await publicHost.locator('#coop-create-password').isVisible());
   await publicHost.locator('#coop-modal .modal-card').screenshot({path:'test-results/room-match-lobby.png'});
+ });
+ await check('closing the lobby stops room browsing and reopening resumes the visible list',async()=>{
+  await publicHost.locator('#coop-public-rooms>summary').click();await publicHost.waitForFunction(()=>!RoomHub.browsing&&Boolean(RoomHub.directory));
+  await publicHost.evaluate(()=>closeCoopModal());assert(await publicHost.evaluate(()=>!RoomHub.directory&&!RoomHub.browsing&&!RoomHub.listOpen()));
+  await publicHost.evaluate(()=>openCoopModal());await publicHost.waitForFunction(()=>!RoomHub.browsing&&Boolean(RoomHub.directory));
+  await publicHost.locator('#coop-public-rooms>summary').click();
  });
  await check('same-browser local BroadcastChannel stays usable through authenticated room envelopes',async()=>{
   const ctx=await browser.newContext(),local=[];
