@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R6 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R7 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1601,7 +1601,7 @@
     <div id="voice-members" class="social-note"></div><div id="voice-audio-elements" hidden></div>
   </section>
   <section id="coop-spectate" aria-label="倒地观战" style="display:none;">
-    <div style="font-weight:800;color:#fbbf24;">💀 倒地观战 · 尸体留在原地等待10秒救援</div>
+    <div style="font-weight:800;color:#fbbf24;">💀 倒地观战 · 单人救援6秒，多人协作更快</div>
     <div style="display:flex;gap:6px;margin-top:7px;"><button id="spectate-prev" class="social-button" aria-label="上一位队友">◀</button><select id="spectate-target" aria-label="选择观战玩家"></select><button id="spectate-next" class="social-button" aria-label="下一位队友">▶</button></div>
     <div id="spectate-status" class="social-note"></div>
   </section>
@@ -9967,7 +9967,7 @@
         else WorldCoop.reset();
       }
       UpgradeChoice.reset();
-      player.isDowned = false; player.lifeEpoch = 0; player.rescueProgress = 0;
+      player.isDowned = false; player.lifeEpoch = 0; player.rescueProgress = 0; player.rescueHelpers = 0;
       enemies.length = 0;
       particles.length = 0;
       floatingTexts.length = 0;
@@ -11464,7 +11464,7 @@
         const living=this.living();if(this.id&&!living.some(p=>p.id===this.id))this.id=living[0]?.id||null;
         const signature=JSON.stringify(living.map(p=>[p.id,p.name])),select=document.getElementById('spectate-target');
         if(signature!==this.lastOptions){this.lastOptions=signature;select.replaceChildren();for(const p of [{id:'',name:'留在自己尸体视角'},...living]){const o=document.createElement('option');o.value=p.id;o.textContent=p.name;select.append(o);}}
-        select.value=this.id||'';const watched=living.find(p=>p.id===this.id);document.getElementById('spectate-status').textContent=(watched?'正在观看：'+watched.name+' · 生命 '+Math.round(watched.hp||0)+'/'+Math.round(watched.maxHp||0)+' · ':'')+'救援进度：'+Math.round((player.rescueProgress||0)/10*100)+'%';
+        select.value=this.id||'';const watched=living.find(p=>p.id===this.id);document.getElementById('spectate-status').textContent=(watched?'正在观看：'+watched.name+' · 生命 '+Math.round(watched.hp||0)+'/'+Math.round(watched.maxHp||0)+' · ':'')+WorldCoop.rescueStatus(player.rescueProgress,player.rescueHelpers);
         const target=this.target();camera.x=target.x-camera.viewportWidth/2;camera.y=target.y-camera.viewportHeight/2;
       }
     };
@@ -13351,7 +13351,7 @@
       session: null, hostId: null, frame: 0, receivedFrame: -1,
       entitySeq: 0, hitSeq: 0, participants: new Map(), pendingHits: new Map(),
       receivedHits: new Map(), hitBatches: new Map(), assemblies: new Map(), lastWorldAt: 0, lastSendAt: -Infinity,
-      lastHitAt: 0, lastRequestAt: -Infinity, lastUiAt: 0, corpseTime: 10,
+      lastHitAt: 0, lastRequestAt: -Infinity, lastUiAt: 0, corpseTime: 6,
       rescueRadius: 42, totals: { xp: 0, gold: 0 }, credited: { xp: 0, gold: 0 },
       ended: null, teamPaused: false, finishing: false, replaying: false,
       lastStartTime: -Infinity, rewardCarry: { xp: 0, gold: 0 },
@@ -13373,7 +13373,7 @@
         this.receivedHits.clear(); this.hitBatches.clear(); this.assemblies.clear(); this.lastWorldAt = 0; this.lastStartTime = -Infinity;
         this.lastSendAt = this.lastRequestAt = -Infinity; this.ended = null;
         this.teamPaused = false; this.wipeAt = null; this.totals = { xp: 0, gold: 0 };
-        this.credited = { xp: 0, gold: 0 }; player.isDowned = false; player.lifeEpoch = 0;
+        this.credited = { xp: 0, gold: 0 }; player.isDowned = false; player.lifeEpoch = 0; player.rescueProgress = 0; player.rescueHelpers = 0;
         this.setNotice('');
       },
       beginHost() {
@@ -13640,20 +13640,21 @@
         if (CoopManager.isHost) this.observe(CoopManager.myPeerId, this.localProfile());
         else this.toHost({ type: 'WORLD_DOWN', ...this.localProfile() });
         CoopManager.sendPresenceNow(); updateHpUI();
-        showToast('💀 已倒地！队友在你身旁停留 10 秒即可救起');
+        showToast(`💀 已倒地！单人救援${this.corpseTime}秒，多人同时救援更快`);
         return true;
       },
       rescue(dt) {
         const active = [...this.participants.values()].filter(p => p.started && performance.now() - p.seen < 6000);
         const living = active.filter(p => !p.downed);
         for (const body of active.filter(p => p.downed)) {
-          const helper = living.find(p => !this.phased(p) && Math.hypot(p.x - body.x, p.y - body.y) <= this.rescueRadius);
-          body.progress = helper ? Math.min(this.corpseTime, body.progress + Math.min(dt, 0.1)) : 0;
-          body.helper = helper?.id || null;
+          const helpers = living.filter(p => !this.phased(p) && Math.hypot(p.x - body.x, p.y - body.y) <= this.rescueRadius);
+          body.helpers = helpers.length;
+          body.progress = helpers.length ? Math.min(this.corpseTime, (body.progress || 0) + Math.max(0, Math.min(dt, 0.1)) * helpers.length) : 0;
+          body.helper = helpers[0]?.id || null;
           this.applyLife(body);
-          if (body.progress >= this.corpseTime) {
+          if (body.progress >= this.corpseTime - 1e-6) {
             body.downed = false; body.epoch++; body.hp = Math.max(1, Math.round(body.maxHp * 0.4));
-            body.progress = 0; body.protectedUntil = performance.now() + 3000;
+            body.progress = 0; body.helpers = 0; body.helper = null; body.protectedUntil = performance.now() + 3000;
             this.applyLife(body);
             CoopManager.sendPacket(this.packet({ type: 'WORLD_REVIVE', life: this.packLife(body) }));
           }
@@ -13663,8 +13664,12 @@
           if (performance.now() - this.wipeAt > 500) this.finish(false);
         } else this.wipeAt = null;
       },
-      packLife(p) { return [p.id, p.x, p.y, p.downed ? 1 : 0, p.epoch, p.hp, p.maxHp, +(p.progress || 0).toFixed(2), this.phased(p) ? Math.max(0,(p.upgradeUntil-performance.now())/1000) : 0]; },
-      unpackLife(a) { return { id: a[0], x: a[1], y: a[2], downed: Boolean(a[3]), epoch: a[4], hp: a[5], maxHp: a[6], progress: a[7], upgrading: a[8] > 0, upgradeUntil: performance.now() + (a[8] || 0) * 1000 }; },
+      rescueStatus(progress = 0, helpers = 0) {
+        const percent = Math.min(100, Math.max(0, Math.round(progress / this.corpseTime * 100)));
+        return '救援进度：'+percent+'%'+(helpers > 0 ? ' · '+helpers+'人救援 · 约'+Math.max(0, Math.ceil((this.corpseTime-progress)/helpers))+'秒' : ' · 等待队友');
+      },
+      packLife(p) { return [p.id, p.x, p.y, p.downed ? 1 : 0, p.epoch, p.hp, p.maxHp, +(p.progress || 0).toFixed(2), this.phased(p) ? Math.max(0,(p.upgradeUntil-performance.now())/1000) : 0, p.helpers || 0]; },
+      unpackLife(a) { return { id: a[0], x: a[1], y: a[2], downed: Boolean(a[3]), epoch: a[4], hp: a[5], maxHp: a[6], progress: a[7], upgrading: a[8] > 0, upgradeUntil: performance.now() + (a[8] || 0) * 1000, helpers: Math.max(0, Math.min(2, Number(a[9]) || 0)) }; },
       applyLife(p) {
         if (p.id === CoopManager.myPeerId) {
           if (p.epoch > (player.lifeEpoch || 0)) {
@@ -13675,9 +13680,10 @@
             if (player.pendingLevelUps > 0) triggerLevelUp();
           }
           player.rescueProgress = p.progress;
+          player.rescueHelpers = p.helpers || 0;
         } else {
           const peer = CoopManager.allies.find(a => a.id === p.id);
-          if (peer) { peer.upgrading = p.upgrading; peer.upgradeUntil = p.upgradeUntil; peer.downed = p.downed; peer.rescueProgress = p.progress; peer.bodyX = p.x; peer.bodyY = p.y; }
+          if (peer) { peer.upgrading = p.upgrading; peer.upgradeUntil = p.upgradeUntil; peer.downed = p.downed; peer.rescueProgress = p.progress; peer.rescueHelpers = p.helpers || 0; peer.bodyX = p.x; peer.bodyY = p.y; }
         }
       },
       finish(victory) {
@@ -14017,11 +14023,11 @@
           this.lastUiAt = now;
           if (this.active() && !this.ended) {
             if (this.guest() && now - this.lastWorldAt > 2000) this.setNotice('📡 房主战场同步中断，等待恢复…');
-            else if (player.isDowned) this.setNotice(`💀 你已倒地 · 等待队友靠近救援 ${Math.round((player.rescueProgress || 0) / this.corpseTime * 100)}%`);
+            else if (player.isDowned) this.setNotice('💀 你已倒地 · '+this.rescueStatus(player.rescueProgress,player.rescueHelpers));
             else if (this.paused()) this.setNotice('⏸ 队友已手动暂停，战场已暂停');
             else {
               const body = [...this.participants.values()].find(p => p.downed);
-              this.setNotice(body ? '💚 队友倒地！靠近墓碑并停留10秒救援（离开重置）' : '');
+              this.setNotice(body ? '💚 队友倒地！单人救援6秒，多人更快（全员离开重置）' : '');
             }
           } else this.setNotice('');
         }
@@ -14390,7 +14396,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 6, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 7, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
@@ -14605,7 +14611,7 @@
         try {
           let ads=await this.discover(op,match?null:code);
           if(expectedId)ads=ads.filter(a=>a.roomId===expectedId);
-          if(!match&&ads.length===1&&ads[0].build!==this.build)throw Error('房间版本不同，请所有玩家刷新到 R6 后重新开房。');
+          if(!match&&ads.length===1&&ads[0].build!==this.build)throw Error('房间版本不同，请所有玩家刷新到 R'+this.build+' 后重新开房。');
           if(!match&&ads.length>1)throw Error('检测到房号冲突，房主正在更换房号，请稍后重新输入。');
           ads=ads.filter(a=>a.host!==CoopManager.myPeerId&&(!match||(!a.locked&&a.count<3&&a.build===this.build))).sort((a,b)=>Number(a.started)-Number(b.started)||b.count-a.count);
           if(!ads.length)throw Error(match?'暂时没有可加入的公开房间，可以自己开一个。':'未找到在线房间，请确认房号、双方版本及网络。');
@@ -14635,7 +14641,7 @@
       },
       async challenge(p) {
         if(!CoopManager.isHost||p.roomId!==this.roomId||typeof p.join!=='string'||!/^[a-f0-9]{32}$/.test(p.join)||typeof p.gp!=='string'||p.gp.length!==88)return;
-        if(p.build!==this.build){this.deny(p,'房间已更新，请刷新到 R6 后重新加入。');return;}
+        if(p.build!==this.build){this.deny(p,'房间已更新，请刷新到 R'+this.build+' 后重新加入。');return;}
         const id=p.from+':'+p.join;let r=this.requests.get(id);
         if(!r){
           if(this.requests.size>=48)return;

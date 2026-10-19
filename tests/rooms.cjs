@@ -90,7 +90,7 @@ async function state(p){return p.evaluate(()=>({code:CoopManager.roomCode,id:Roo
    assert((await b.locator('#coop-public-list').textContent()).includes('1/3 人'));
    await b.evaluate(()=>{
     const now=performance.now();
-    for(const [id,extra]of [['1'.repeat(32),{count:3,name:'<img src=x onerror=alert(1)>'}],['2'.repeat(32),{locked:true}],['3'.repeat(32),{at:now-RoomHub.leaseMs-1}],['4'.repeat(32),{build:5}]])RoomHub.ads.set(id,{roomId:id,code:'9876',host:id,name:'other',locked:false,build:6,count:1,max:3,started:false,at:now,...extra});
+    for(const [id,extra]of [['1'.repeat(32),{count:3,name:'<img src=x onerror=alert(1)>'}],['2'.repeat(32),{locked:true}],['3'.repeat(32),{at:now-RoomHub.leaseMs-1}],['4'.repeat(32),{build:RoomHub.build-1}]])RoomHub.ads.set(id,{roomId:id,code:'9876',host:id,name:'other',locked:false,build:RoomHub.build,count:1,max:3,started:false,at:now,...extra});
     RoomHub.renderPublicRooms();
    });
    assert.equal(await b.locator('.coop-public-room').count(),2);assert.equal(await b.locator('#coop-public-list img').count(),0);

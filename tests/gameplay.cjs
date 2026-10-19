@@ -217,7 +217,7 @@ async function check(name,fn){await fn();results.push(name);console.log('PASS',n
   assert.equal(await host.evaluate(()=>UpgradeChoice.active),true);
  });
  await clean();
- await check('revive requires ten continuous seconds, leaving resets, upgrade cannot rescue',async()=>{
+ await check('revive requires six continuous seconds, leaving resets, upgrade cannot rescue',async()=>{
   await host.evaluate(()=>{player.x=400;player.pendingLevelUps=1;triggerLevelUp();CoopManager.sendPresenceNow()});
   await guest.evaluate(()=>{player.x=400;GameState.godMode=false;player.reviveLeft=0;player.invulnerableTimer=0;damagePlayer(100000)});
   await host.waitForFunction(()=>WorldCoop.participants.get(CoopManager.allies[0].id)?.downed);
@@ -228,7 +228,7 @@ async function check(name,fn){await fn();results.push(name);console.log('PASS',n
   await host.waitForFunction(()=>WorldCoop.participants.get(CoopManager.allies[0].id).progress===0);
   await host.evaluate(()=>{player.x=400;CoopManager.sendPresenceNow()});
   const start=Date.now();await pause(3500);assert.equal(await guest.evaluate(()=>player.isDowned),true);
-  await guest.waitForFunction(()=>!player.isDowned,null,{timeout:9000});assert(Date.now()-start>=9500);
+  await guest.waitForFunction(()=>!player.isDowned,null,{timeout:5000});assert(Date.now()-start>=5700);
   assert.equal(await guest.evaluate(()=>player.hp),await guest.evaluate(()=>Math.round(player.maxHp*.4)));
  });
  await clean();
