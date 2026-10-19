@@ -56,7 +56,7 @@ const tail=String.raw`
   await host.evaluate(()=>{GameState.godMode=true;player.x=0;player.y=0;CoopManager.allies[0].x=1000;CoopManager.allies[0].y=0;CoopManager.allies[0].targetX=1000;CoopManager.allies[0].targetY=0;CoopMap.toggle(true)});
   const map=await host.evaluate(()=>({rings:CoopMap.rings,positions:[100,250,500,1000,2000,4000,8000].map(d=>CoopMap.radial(d,140)),distance:CoopMap.distance({x:3,y:4}),body:CoopMap.distance({x:0,y:0,downed:true,bodyX:30,bodyY:40}),paused:GameState.isPaused}));
   assert.deepEqual(map.positions,[20,40,60,80,100,120,140]);assert.equal(map.distance,5);assert.equal(map.body,50);assert.equal(map.paused,false);
-  assert(await host.locator('#world-map-canvas').isVisible());assert((await host.locator('.map-legend').textContent()).includes('经验'));assert.equal(await host.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  assert(await host.locator('#world-map-canvas').isVisible());assert(!(await host.locator('.map-legend').textContent()).includes('经验'));assert(!(await host.locator('.map-legend').textContent()).includes('金币'));assert.equal(await host.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   await host.locator('#world-map-modal .modal-card').screenshot({path:'test-results/r8-map-portrait.png'});await host.locator('#btn-close-map').click();
   await host.locator('#minimap-box').click();assert(await host.locator('#world-map-canvas').isVisible());await host.locator('#btn-close-map').click();
  });

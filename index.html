@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R9 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R10 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -722,7 +722,7 @@
 
     #corner-controls {
       position:absolute;top:calc(env(safe-area-inset-top, 0px) + 4px);right:8px;
-      width:84px;height:36px;display:flex;gap:6px;z-index:20;
+      width:84px;height:36px;display:flex;justify-content:flex-end;gap:6px;z-index:20;
     }
     #corner-controls button {
       position:static;width:39px;height:36px;padding:2px;border:1px solid #64748b;border-radius:7px;
@@ -730,7 +730,8 @@
       justify-content:center;font-size:14px;line-height:15px;cursor:pointer;pointer-events:auto;touch-action:manipulation;
     }
     #corner-controls button span {font-size:9px;line-height:11px;pointer-events:none;}
-    #btn-lobby-settings-top {display:block;margin:0 auto 12px;padding:8px 14px;}
+    .system-section-title{font-size:14px;color:#7dd3fc;text-align:left;margin:16px 0 6px;border-top:1px solid #334155;padding-top:12px;}
+    .system-visual-row{display:grid;grid-template-columns:1fr 44px;gap:8px;font-size:12px;text-align:left;align-items:center;margin:14px 0 6px;}.system-visual-row input{grid-column:1/-1;width:100%;accent-color:#fbbf24;}
 
     #combo-badge {
       position: absolute;
@@ -1090,10 +1091,7 @@
           <span>💀</span>
           <span id="kill-count">0</span>
         </div>
-        <div class="hud-badge hud-btn-interactive active-toggle" id="btn-bgm-toggle" title="开关当前关卡背景音乐 (每关专属BGM)">
-          <span>🎵</span>
-          <span id="bgm-toggle-text">音乐:开</span>
-        </div>
+
         <!-- 连发功能免费自带且默认开启，玩家可随时点击关闭或开启 -->
         <div class="hud-badge hud-btn-interactive active-toggle" id="btn-auto-atk" title="免费自带功能：默认开启自动释放普通攻击，点击可随时关闭/开启">
           <span>⚡</span>
@@ -1186,7 +1184,6 @@
 
     <!-- 暂停按钮 -->
     <div id="corner-controls" aria-label="游戏快捷设置">
-      <button id="btn-hud-settings" type="button" aria-label="声音设置" title="调整语音、音乐与音效">🔊<span>声音</span></button>
       <button id="btn-pause" type="button" aria-label="暂停游戏" title="暂停游戏">⏸<span>暂停</span></button>
     </div>
 
@@ -1246,9 +1243,8 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R9</span></div>
+        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R10</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
-        <button class="btn-secondary" id="btn-lobby-settings-top" type="button">🔊 声音设置 · 音乐 / 音效 / 语音</button>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
         <div class="hero-grid">
@@ -1283,7 +1279,6 @@
             <button class="btn-secondary" id="btn-lobby-coop" style="border-color:#38bdf8; color:#7dd3fc; font-weight:800;">🌐 稳定联机(2~3人)</button>
             <button class="btn-secondary" id="btn-lobby-skilltree">🌳 技能树图鉴</button>
             <button class="btn-secondary" id="btn-lobby-save" style="border-color:#34d399; color:#a7f3d0;">💾 存档/清除</button>
-            <button class="btn-secondary" id="btn-lobby-settings">🔊 声音设置</button>
           <button class="btn-secondary" id="btn-lobby-dev" style="border-color:#a855f7; color:#e9d5ff;">🛠️ 开发者</button>
           </div>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
@@ -1401,14 +1396,7 @@
           </div>
         </details>
 
-        <details class="coop-fold" id="coop-effects-details">
-          <summary>队友特效 <span>透明度 <output id="coop-alpha-value">70%</output></span></summary>
-          <div class="coop-fold-body">
-            <input id="coop-alpha-slider" aria-label="队友技能透明度" type="range" min="0" max="100" step="1" value="70" list="coop-alpha-ticks" style="width:100%;accent-color:#fbbf24;">
-            <datalist id="coop-alpha-ticks"><option value="0"></option><option value="50"></option><option value="70"></option><option value="100"></option></datalist>
-            <div class="coop-alpha-actions"><button class="btn-secondary coop-alpha-preset" data-value="0">0% 不透明</button><button class="btn-secondary coop-alpha-preset" data-value="50">50% 半透</button><button class="btn-secondary coop-alpha-preset" data-value="70">70% 推荐</button><button class="btn-secondary coop-alpha-preset" data-value="100">100% 隐藏</button></div>
-          </div>
-        </details>
+
 
         <div class="coop-lobby-footer"><button class="btn-secondary" id="btn-close-coop">返回</button><button class="btn-secondary" id="btn-coop-social-open">💬 交流</button><button class="btn-primary" id="btn-coop-start-now">⚔️ 出征</button></div>
       </div>
@@ -1465,7 +1453,7 @@
           <button class="btn-secondary" id="btn-pause-shop" style="border-color:#facc15; color:#fde047;">🏪 特权商店</button>
           <button class="btn-secondary" id="btn-pause-skilltree">🌳 技能树与流派</button>
           <button class="btn-secondary" id="btn-pause-save" style="border-color:#34d399; color:#a7f3d0;">💾 存档管理</button>
-          <button class="btn-secondary" id="btn-pause-settings">🔊 声音设置</button>
+          <button class="btn-secondary" id="btn-pause-settings">⚙️ 系统设置</button>
           <button class="btn-secondary" id="btn-pause-dev" style="border-color:#a855f7; color:#e9d5ff;">🛠️ 开发者模式</button>
           <button class="btn-secondary" id="btn-pause-lobby">🏕️ 返回营地</button>
           <button class="btn-primary" id="btn-resume">继续战斗</button>
@@ -1498,18 +1486,37 @@
       <div class="modal-title">🧭 战术大地图</div>
       <div class="modal-subtitle">以你的角色为中心 · 方向不变 · 越外圈代表的距离越大<br>刻度为游戏距离；超过 8000 的目标显示在边缘</div>
       <canvas id="world-map-canvas" width="620" height="620" aria-label="以自己为中心的距离地图"></canvas>
-      <div class="map-legend"><span style="color:#4ade80">◎ 自己</span><span style="color:#c4b5fd">● 队友</span><span style="color:#fb7185">✚ 待救队友 / 自己</span><span style="color:#ef4444">· 怪物　☠ 首领</span><span style="color:#67e8f9">◆ 经验</span><span style="color:#facc15">● 金币</span><span style="color:#f0abfc">♦ 道具</span><span style="color:#38bdf8">▲ 神龛</span><span style="color:#fde047">★ 秘宝</span></div>
+      <div class="map-legend"><span style="color:#4ade80">◎ 自己</span><span style="color:#c4b5fd">● 队友</span><span style="color:#fb7185">✚ 待救队友 / 自己</span><span style="color:#ef4444">· 怪物　☠ 首领</span><span style="color:#38bdf8">▲ 神龛</span><span style="color:#fde047">★ 秘宝</span></div>
       <div id="world-map-team" style="font-size:12px;line-height:1.6;margin:8px"></div>
       <div style="font-size:11px;color:#94a3b8">地图实时更新，不暂停战斗；小地图边缘的队友点指向远方队友。</div>
       <button class="btn-secondary" id="btn-map-relics">查看秘宝图鉴</button>
     </div></div>
     <div id="settings-modal" class="modal-overlay"><div class="modal-card" style="max-width:500px">
-      <button class="modal-close-x" id="btn-close-settings" aria-label="关闭声音设置">✕</button><div class="modal-title">🔊 声音设置</div>
-      <div class="modal-subtitle">仅影响你听到的声音 · 自动保存在当前浏览器</div>
+      <button class="modal-close-x" id="btn-close-settings" aria-label="返回暂停菜单">✕</button><div class="modal-title">⚙️ 系统设置</div>
+      <div class="modal-subtitle">声音与技能特效 · 仅影响自己的画面和收听 · 自动保存在当前浏览器</div>
+      <h3 class="system-section-title">声音</h3>
       <label class="volume-row">聊天语音<input id="volume-voice" type="range" min="0" max="100" step="1"><output id="volume-voice-value"></output></label>
       <label class="volume-row">背景音乐<input id="volume-music" type="range" min="0" max="100" step="1"><output id="volume-music-value"></output></label>
       <label class="volume-row">游戏音效<input id="volume-effects" type="range" min="0" max="100" step="1"><output id="volume-effects-value"></output></label>
-      <div style="font-size:12px;color:#94a3b8">0% 为静音；麦克风和停止收听开关仍在“交流”面板。</div>
+      <div style="display:flex;justify-content:center;margin:8px">        <div class="hud-badge hud-btn-interactive active-toggle" id="btn-bgm-toggle" title="开关当前关卡背景音乐 (每关专属BGM)">
+          <span>🎵</span>
+          <span id="bgm-toggle-text">音乐:开</span>
+        </div></div>
+      <div style="font-size:11px;color:#94a3b8">音量 0% 为静音；麦克风开关在“交流”面板。</div>
+      <h3 class="system-section-title">技能特效透明度</h3>
+      <div style="font-size:11px;text-align:left;color:#94a3b8">0% 不透明，100% 隐藏特效。</div>
+      <label class="system-visual-row">队友技能特效<output id="coop-alpha-value">70%</output>
+            <input id="coop-alpha-slider" aria-label="队友技能透明度" type="range" min="0" max="100" step="1" value="70" list="coop-alpha-ticks" style="width:100%;accent-color:#fbbf24;">
+      </label>
+            <datalist id="coop-alpha-ticks"><option value="0"></option><option value="50"></option><option value="70"></option><option value="100"></option></datalist>
+            <div class="coop-alpha-actions"><button class="btn-secondary coop-alpha-preset" data-value="0">0% 不透明</button><button class="btn-secondary coop-alpha-preset" data-value="50">50% 半透</button><button class="btn-secondary coop-alpha-preset" data-value="70">70% 推荐</button><button class="btn-secondary coop-alpha-preset" data-value="100">100% 隐藏</button></div>
+      <label class="system-visual-row">自身技能特效<output id="self-alpha-value">0%</output>
+        <input id="self-alpha-slider" aria-label="自身技能特效透明度" type="range" min="0" max="100" step="1" value="0" list="self-alpha-ticks">
+      </label>
+      <datalist id="self-alpha-ticks"><option value="0"></option><option value="50"></option><option value="70"></option><option value="100"></option></datalist>
+      <div class="coop-alpha-actions"><button class="btn-secondary self-alpha-preset" data-value="0">0% 不透明</button><button class="btn-secondary self-alpha-preset" data-value="50">50% 推荐</button><button class="btn-secondary self-alpha-preset" data-value="70">70% 较淡</button><button class="btn-secondary self-alpha-preset" data-value="100">100% 隐藏</button></div>
+      <div style="font-size:11px;color:#94a3b8;margin:12px 0">透明度只改变显示，不改变伤害；敌方弹道与危险预警保持显示。</div>
+      <button class="btn-secondary" id="btn-settings-back">返回暂停菜单</button>
     </div></div>
     <button id="dev-request-notice" hidden></button>
 
@@ -3173,6 +3180,7 @@
 
     window.addEventListener('keydown', (e) => {
       if (e.target?.matches?.('input,textarea,select') || e.target?.isContentEditable) return;
+      if(typeof AudioSettings!=='undefined'&&document.getElementById('settings-modal').style.display==='flex'){if(e.code==='Escape')AudioSettings.close();e.preventDefault();return;}
       if(typeof CoopMap!=='undefined'&&CoopMap.open){if(e.code==='Escape')CoopMap.toggle(false);e.preventDefault();return;}
       audio.init();
       const wasDown = input.keys[e.code];
@@ -6662,7 +6670,7 @@
       for (let i = 0; i < groundEffects.length; i++) {
         const ge = groundEffects[i];
         const pulse = 0.92 + Math.sin(GameState.gameTime * 10 + i) * 0.08;
-        const allyMul = ge.isAlly ? (CoopManager.allyVfxAlpha ?? 0.30) : 1.0;
+        const allyMul = VisualSettings.effectAlpha(ge);
         const fadeAlpha = Math.min(1, ge.life / Math.min(0.6, ge.maxLife * 0.3)) * allyMul;
         if (ge.type === 'lava') {
           ctx.save();
@@ -7262,7 +7270,7 @@
       for (let i = 0; i < afterimages.length; i++) {
         const ai = afterimages[i];
         ctx.save();
-        ctx.globalAlpha = (ai.life / ai.maxLife) * 0.55;
+        ctx.globalAlpha = (ai.life / ai.maxLife) * 0.55 * VisualSettings.selfAlpha;
         ctx.translate(ai.x, ai.y);
         ctx.scale(ai.facing, 1);
         if (ai.img) ctx.drawImage(ai.img, -ai.img.width / 2, -ai.img.height / 2 - 2);
@@ -7308,6 +7316,7 @@
       drawPlayer();
       CoopSkillVfx.draw(ctx);
 
+      ctx.save();ctx.globalAlpha *= VisualSettings.selfAlpha;
       // 绘制剑客多圈剑狱引力环与旋转重剑
       if (orbitingBlades.length > 0) {
         const ringDists = [...new Set(orbitingBlades.map(b => b.dist))];
@@ -7399,11 +7408,12 @@
         ctx.restore();
       }
 
+      ctx.restore();
       // 绘制定制化形态弹道与流光拖尾 (剑气弯月波 / 星芒魔弹 / 羽尾利箭 / 邪火骷髅弹)
       for (let i = 0; i < projectiles.length; i++) {
         const p = projectiles[i];
         const ang = Math.atan2(p.vy, p.vx);
-        const pAllyMul = p.isAlly ? (CoopManager.allyVfxAlpha ?? 0.30) : 1.0;
+        const pAllyMul = VisualSettings.effectAlpha(p);
 
         // 绘制渐变流光尾迹
         if (p.trail && p.trail.length > 1) {
@@ -7480,6 +7490,7 @@
       // 绘制5段分叉锯齿闪电链电弧 (外层电光蓝 + 内芯炽白)
       for (let i = 0; i < lightningArcs.length; i++) {
         const arc = lightningArcs[i];
+        ctx.save();ctx.globalAlpha=VisualSettings.effectAlpha(arc);
         const segs = 5;
         const pts = [{ x: arc.x1, y: arc.y1 }];
         for (let s = 1; s < segs; s++) {
@@ -7500,14 +7511,14 @@
 
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 1.8;
-        ctx.stroke();
+        ctx.stroke();ctx.restore();
       }
 
       // 绘制三层复合动态刀光弧线 (外层烈焰光晕 + 中层主刃 + 内层炽白剑锋)
       for (let i = 0; i < slashVisuals.length; i++) {
         const s = slashVisuals[i];
         const progress = 1 - (s.life / s.maxLife);
-        const alpha = Math.max(0, 1 - progress) * (s.isAlly ? (CoopManager.allyVfxAlpha ?? 0.30) : 1.0);
+        const alpha = Math.max(0, 1 - progress) * VisualSettings.effectAlpha(s);
         const arcSpan = s.arc || player.skills.attack.arc;
         const curRad = s.radius * (0.8 + progress * 0.28);
 
@@ -7557,9 +7568,9 @@
       // 绘制天降光柱、坠落陨石、居合十字裂隙、一刀两断斩杀线与升腾魂火 (skyBeams)
       for (let i = 0; i < skyBeams.length; i++) {
         const sb = skyBeams[i];
-        const ratio = Math.max(0, sb.life / sb.maxLife) * (sb.isAlly ? (CoopManager.allyVfxAlpha ?? 0.30) : 1.0);
+        const ratio = Math.max(0, sb.life / sb.maxLife), effectAlpha=VisualSettings.effectAlpha(sb);
         ctx.save();
-        if (sb.isAlly) ctx.globalAlpha = ratio;
+        ctx.globalAlpha = effectAlpha;
         if (sb.type === 'sword_pillar') {
           // 断界天陨斩：贯穿天地的黄金巨剑光柱
           const w = sb.width * ratio;
@@ -7577,7 +7588,7 @@
         } else if (sb.type === 'frost_nova_matrix') {
           // 法师【极寒冰闪】专属特效：双层旋转六芒星冰晶法阵 + 6根突起冰川棱柱！
           ctx.translate(sb.x, sb.y);
-          ctx.globalAlpha = ratio;
+          ctx.globalAlpha = ratio * effectAlpha;
           const curR = sb.radius * (0.45 + (1 - ratio) * 0.62);
           const fGrad = ctx.createRadialGradient(0, 0, curR * 0.1, 0, 0, curR);
           fGrad.addColorStop(0, 'rgba(224, 242, 254, 0.65)');
@@ -7630,7 +7641,7 @@
           }
         } else if (sb.type === 'blink_rift') {
           // 法师【极寒冰闪】折跃通道：双螺旋次元裂隙 + 悬浮冰晶星尘
-          ctx.globalAlpha = ratio;
+          ctx.globalAlpha = ratio * effectAlpha;
           const dx = sb.x2 - sb.x1, dy = sb.y2 - sb.y1;
           const dist = Math.hypot(dx, dy) || 1;
           const ang = Math.atan2(dy, dx);
@@ -7716,7 +7727,7 @@
           ctx.stroke();
         } else if (sb.type === 'soul_wisp') {
           // 怪物死亡升起的幽冥魂火
-          ctx.globalAlpha = ratio * 0.85;
+          ctx.globalAlpha = ratio * 0.85 * effectAlpha;
           ctx.fillStyle = sb.color;
           ctx.fillRect(sb.x - 3, sb.y - 3, 6, 6);
           ctx.fillStyle = '#ffffff';
@@ -7729,7 +7740,7 @@
       for (let i = 0; i < particles.length; i++) {
         const pt = particles[i];
         if (pt.isShockwave) {
-          const alpha = Math.max(0, pt.life / pt.maxLife) * (pt.isAlly ? (CoopManager.allyVfxAlpha ?? 0.30) : 1.0);
+          const alpha = Math.max(0, pt.life / pt.maxLife) * VisualSettings.effectAlpha(pt);
           ctx.save();
           ctx.translate(pt.x, pt.y);
           ctx.globalAlpha = alpha;
@@ -7768,8 +7779,10 @@
           }
           ctx.restore();
         } else {
+          ctx.save();ctx.globalAlpha=VisualSettings.effectAlpha(pt);
           ctx.fillStyle = pt.color;
           ctx.fillRect(pt.x - pt.size / 2, pt.y - pt.size / 2, pt.size, pt.size);
+          ctx.restore();
         }
       }
 
@@ -9058,7 +9071,7 @@
       // 游侠幻影分身绘制
       if (GameState.phantomCloneTimer > 0) {
         ctx.save();
-        ctx.globalAlpha = 0.55;
+        ctx.globalAlpha = 0.55 * VisualSettings.selfAlpha;
         ctx.drawImage(spriteSet.ice, player.x - 42, player.y - 26);
         ctx.drawImage(spriteSet.ice, player.x + 14, player.y + 4);
         ctx.restore();
@@ -9068,6 +9081,7 @@
       if (player.passives.frostAura) {
         const auraR = 75 + (player.passives.frostAura || 1) * 10;
         ctx.save();
+        ctx.globalAlpha *= VisualSettings.selfAlpha;
         ctx.translate(player.x, player.y);
         const fGrad = ctx.createRadialGradient(0, 0, auraR * 0.2, 0, 0, auraR);
         fGrad.addColorStop(0, 'rgba(56, 189, 248, 0.04)');
@@ -9102,6 +9116,7 @@
       // 法师大招【群星坠落阵列】开启期间：脚下展开巨型双环逆旋黄金星象仪法阵！
       if (GameState.starfallTimer > 0) {
         ctx.save();
+        ctx.globalAlpha *= VisualSettings.selfAlpha;
         ctx.translate(player.x, player.y);
         ctx.rotate(GameState.gameTime * 2.2);
         const astR = 64;
@@ -9135,6 +9150,7 @@
         ctx.globalAlpha = 0.45;
       }
 
+      ctx.save();ctx.globalAlpha *= VisualSettings.selfAlpha;
       if (GameState.berserkTimer > 0 || GameState.starfallTimer > 0) {
         ctx.strokeStyle = '#facc15';
         ctx.lineWidth = 2.5;
@@ -9151,6 +9167,7 @@
         ctx.stroke();
       }
 
+      ctx.restore();
       ctx.scale(player.facing, 1);
       if (player.swingAnimTimer > 0) {
         ctx.rotate(0.18);
@@ -11485,6 +11502,14 @@
       }
     };
 
+    var VisualSettings = {
+      selfTransparency:0,
+      get selfAlpha(){return 1-this.selfTransparency/100;},
+      effectAlpha(effect){return effect?.isEnemy?1:effect?.isAlly?(CoopManager.allyVfxAlpha??.3):this.selfAlpha;},
+      setSelf(value){this.selfTransparency=Math.max(0,Math.min(100,Math.round(Number(value)||0)));const slider=document.getElementById('self-alpha-slider');slider.value=this.selfTransparency;slider.setAttribute('aria-valuetext',this.selfTransparency+'% 透明');document.getElementById('self-alpha-value').textContent=this.selfTransparency+'%';document.querySelectorAll('.self-alpha-preset').forEach(b=>b.classList.toggle('active-toggle',Number(b.dataset.value)===this.selfTransparency));try{localStorage.setItem('ps_self_vfx_transparency',String(this.selfTransparency));}catch(e){}},
+      init(){let value=0;try{const stored=localStorage.getItem('ps_self_vfx_transparency');if(stored!==null&&Number.isFinite(Number(stored)))value=Number(stored);}catch(e){}this.setSelf(value);document.getElementById('self-alpha-slider').addEventListener('input',e=>this.setSelf(e.target.value));document.querySelectorAll('.self-alpha-preset').forEach(b=>b.onclick=()=>this.setSelf(b.dataset.value));}
+    };
+
     // Local presentation settings never change another player's volume.
     var AudioSettings = {
       values:{voice:100,music:65,effects:100},
@@ -11492,12 +11517,14 @@
         try{const saved=JSON.parse(localStorage.getItem('ps_audio_levels')||'{}');for(const k of Object.keys(this.values))if(Number.isFinite(saved[k]))this.values[k]=Math.max(0,Math.min(100,saved[k]));}catch(e){}
         for(const k of Object.keys(this.values)){const el=document.getElementById('volume-'+k);el.value=this.values[k];el.addEventListener('input',()=>this.set(k,el.value));}
         this.apply();
-        for(const id of ['btn-pause-settings','btn-lobby-settings','btn-lobby-settings-top','btn-hud-settings'])document.getElementById(id).onclick=()=>this.open();
+        document.getElementById('btn-pause-settings').onclick=()=>this.open();
+        document.getElementById('btn-settings-back').onclick=()=>this.close();
+        VisualSettings.init();
         document.getElementById('btn-close-settings').onclick=()=>this.close();
       },
       set(k,v){if(!(k in this.values))return;this.values[k]=Math.max(0,Math.min(100,Number(v)||0));try{localStorage.setItem('ps_audio_levels',JSON.stringify(this.values));}catch(e){}this.apply();},
       apply(){for(const k of Object.keys(this.values)){document.getElementById('volume-'+k).value=this.values[k];document.getElementById('volume-'+k+'-value').textContent=Math.round(this.values[k])+'%';}if(audio.ctx){audio.effectsBus.gain.value=this.values.effects/100;audio.musicBus.gain.value=this.values.music/100;}CoopVoice.applyVolume();},
-      open(){this.paused=GameState.isPaused;GameState.isPaused=GameState.isStarted&&!GameState.isOver?true:GameState.isPaused;CoopSocial.clearInput();document.getElementById('settings-modal').style.display='flex';CoopManager.sendPresenceNow();},
+      open(){if(document.getElementById('settings-modal').style.display==='flex')return;this.paused=GameState.isPaused;GameState.isPaused=GameState.isStarted&&!GameState.isOver?true:GameState.isPaused;CoopSocial.clearInput();document.getElementById('settings-modal').style.display='flex';CoopManager.sendPresenceNow();},
       close(){document.getElementById('settings-modal').style.display='none';GameState.isPaused=this.paused;CoopManager.sendPresenceNow();}
     };
 
@@ -11519,7 +11546,7 @@
         for(let i=0;i<this.rings.length;i++){const rr=r*(i+1)/this.rings.length;c.strokeStyle='#334155';c.beginPath();c.arc(mid,mid,rr,0,Math.PI*2);c.stroke();const a=[-Math.PI/2,0,Math.PI/2,Math.PI][i%4],lx=mid+Math.cos(a)*rr,ly=mid+Math.sin(a)*rr,label=String(this.rings[i]);c.fillStyle='#0b1220';c.fillRect(lx-16,ly-6,32,12);c.fillStyle='#cbd5e1';c.fillText(label,lx,ly);}
         let nearLabels=0;const point=(p,icon,color,label)=>{if(!Number.isFinite(p.x)||!Number.isFinite(p.y))return;const dx=p.x-player.x,dy=p.y-player.y,d=Math.hypot(dx,dy),rad=this.radial(d,r),x=mid+(d?dx/d*rad:0),y=mid+(d?dy/d*rad:0);c.fillStyle=color;c.font=label?'bold 14px sans-serif':'11px sans-serif';c.fillText(icon,x,y);if(label){const ly=Math.max(10,y+(label==='你'?-14:d<60?18+(nearLabels++)*13:-13));c.font='bold 10px sans-serif';c.strokeStyle='#020617';c.lineWidth=3;c.strokeText(label,x,ly);c.fillStyle=color;c.fillText(label,x,ly);}};
         // Bounded markers keep large late-game maps cheap on phones.
-        for(const [list,icon,color,max]of [[gems,'◆','#67e8f9',120],[goldDrops,'●','#facc15',80],[fieldPickups,'♦','#f0abfc',40],[shrines.filter(s=>!s.used),'▲','#38bdf8',30],[mapRelicDrops,'★','#fde047',30]])for(const p of list.slice(0,max))point(p,icon,color);
+        for(const [list,icon,color,max]of [[shrines.filter(s=>!s.used),'▲','#38bdf8',30],[mapRelicDrops,'★','#fde047',30]])for(const p of list.slice(0,max))point(p,icon,color);
         for(const p of enemies.filter(e=>!e.isDead).slice(0,180))point(p,p.isBoss?'☠':'·',p.isBoss?'#fb7185':'#ef4444');
         for(const p of CoopManager.allies){const d=Math.round(this.distance(p));point(this.allyPosition(p),p.downed?'✚':'●',p.downed?'#fb7185':(PLAYER_COLOR_THEMES[p.colorIdx]||PLAYER_COLOR_THEMES[1]).badge,(p.name||'队友')+' '+d+(d>8000?' ↑超出':''));}
         point(player,player.isDowned?'✚':'◎','#4ade80','你');c.font='11px sans-serif';c.fillStyle='#94a3b8';c.fillText('北',mid,10);c.fillText('南',mid,size-10);c.fillText('西',10,mid);c.fillText('东',size-10,mid);
@@ -14711,7 +14738,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 9, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 10, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,

@@ -256,9 +256,8 @@ async function check(name,fn){await fn();results.push(name);console.log('PASS',n
  });
  await check('0-100 slider is continuous, presets work, 100% persists after reload',async()=>{
   const mobile=await makePage({width:390,height:844});
-  await mobile.evaluate(()=>{document.getElementById('coop-modal').style.display='flex';setAllyTransparency(37)});
+  await mobile.evaluate(()=>{document.getElementById('lobby-modal').style.display='none';AudioSettings.open();setAllyTransparency(37)});
   assert.equal(await mobile.evaluate(()=>CoopManager.allyVfxAlpha),.63);
-  if(await mobile.locator('#coop-effects-details').count())await mobile.locator('#coop-effects-details>summary').click();
   await mobile.locator('.coop-alpha-preset[data-value="100"]').click();
   assert.equal(await mobile.evaluate(()=>CoopManager.allyVfxAlpha),0);
   await mobile.screenshot({path:'test-results/v32-mobile-slider.png'});
