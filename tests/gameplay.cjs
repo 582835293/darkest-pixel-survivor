@@ -208,11 +208,13 @@ async function check(name,fn){await fn();results.push(name);console.log('PASS',n
   assert.equal(await guest.evaluate(()=>document.getElementById('level-modal').style.display),'none');
  });
  await clean();
- await check('manual pause freezes everyone, including while host upgrades',async()=>{
+ await check('guest menu keeps battle running during host upgrade; only explicit host pause freezes everyone',async()=>{
   await host.evaluate(()=>{player.pendingLevelUps=1;triggerLevelUp()});
-  await guest.evaluate(()=>togglePause());await host.waitForFunction(()=>WorldCoop.paused());
+  await guest.evaluate(()=>togglePause());await pause(150);assert.equal(await host.evaluate(()=>WorldCoop.paused()),false);
+  const running=await host.evaluate(()=>GameState.gameTime);await pause(200);assert((await host.evaluate(()=>GameState.gameTime))>running);
+  await host.evaluate(()=>WorldCoop.toggleTeamPause());await guest.waitForFunction(()=>WorldCoop.teamPaused);
   const time=await host.evaluate(()=>GameState.gameTime);await pause(300);assert.equal(await host.evaluate(()=>GameState.gameTime),time);
-  await guest.evaluate(()=>togglePause());await host.waitForFunction(()=>!WorldCoop.paused());
+  await host.evaluate(()=>WorldCoop.toggleTeamPause());await guest.waitForFunction(()=>!WorldCoop.teamPaused);await guest.evaluate(()=>togglePause());
   await pause(150);assert((await host.evaluate(()=>GameState.gameTime))>time);
   assert.equal(await host.evaluate(()=>UpgradeChoice.active),true);
  });

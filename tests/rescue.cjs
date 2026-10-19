@@ -52,8 +52,8 @@ const tail=String.raw`
  await check('manual team pause freezes collaborative rescue progress',async()=>{
   await helpers(400,400);await down();
   const progress=await host.evaluate(id=>{
-   WorldCoop.rescue=rescueStep;GameState.isPaused=true;for(let i=0;i<30;i++)WorldCoop.tick(.1);
-   const progress=WorldCoop.participants.get(id).progress;WorldCoop.rescue=()=>{};GameState.isPaused=false;WorldCoop.observe(CoopManager.myPeerId,WorldCoop.localProfile());return progress;
+   WorldCoop.rescue=rescueStep;WorldCoop.manualPaused=true;for(let i=0;i<30;i++)WorldCoop.tick(.1);
+   const progress=WorldCoop.participants.get(id).progress;WorldCoop.rescue=()=>{};WorldCoop.manualPaused=false;WorldCoop.observe(CoopManager.myPeerId,WorldCoop.localProfile());return progress;
   },bodyId);assert.equal(progress,0);
  });
  await check('collaborative revival clears progress and repeated life packets cannot heal twice',async()=>{

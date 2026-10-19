@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R11 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R12 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1184,7 +1184,7 @@
 
     <!-- 暂停按钮 -->
     <div id="corner-controls" aria-label="游戏快捷设置">
-      <button id="btn-pause" type="button" aria-label="暂停游戏" title="暂停游戏">⏸<span>暂停</span></button>
+      <button id="btn-pause" type="button" aria-label="游戏菜单" title="游戏菜单">☰<span>菜单</span></button>
     </div>
 
     <!-- 右上角实时战术雷达小地图 (显示玩家、Boss方位、远方地图特殊装备星标) -->
@@ -1243,7 +1243,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R11</span></div>
+        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R12</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -1441,8 +1441,8 @@
     <div id="pause-modal" class="modal-overlay">
       <div class="modal-card">
         <button class="modal-close-x" id="btn-x-pause" title="继续战斗">✕</button>
-        <div class="modal-title">⏸ 游戏暂停</div>
-        <div class="modal-subtitle">战斗机制与性能优化说明</div>
+        <div class="modal-title">☰ 游戏菜单</div>
+        <div class="modal-subtitle" id="menu-mode-hint">单人打开菜单会暂停；多人仅停止自己的操作，获得最多 10 秒无敌。房主可单独暂停全队。</div>
         <div style="text-align: left; font-size: 12px; color: #cbd5e1; line-height: 1.65; margin-bottom: 14px; background: #1f2937; padding: 12px; border-radius: 8px;">
           <div>🔥 <strong>性能防卡死引擎</strong>: 已启用同怪伤害数字动态合并（0.25秒内多次受击累加为1个跳动数字）与音效节流池。顶部可随时切换【数字:合并 / 仅暴击 / 关闭】。</div>
           <div>⚡ <strong>职业专属连携(百分比回CD·不含圣盾)</strong>: 剑客冲刺引爆【流血】按比例恢复突袭CD(Lv.1上限22%➔满级55%/超武68%)；法师发射【引力黑洞】聚怪坍缩；游侠走位接住【回旋镖】按百分比恢复战技CD(Lv.1恢复12%➔满级32%/超武40%，绝不缩减圣盾CD)！</div>
@@ -1456,7 +1456,8 @@
           <button class="btn-secondary" id="btn-pause-settings">⚙️ 系统设置</button>
           <button class="btn-secondary" id="btn-pause-dev" style="border-color:#a855f7; color:#e9d5ff;">🛠️ 开发者模式</button>
           <button class="btn-secondary" id="btn-pause-lobby">🏕️ 返回营地</button>
-          <button class="btn-primary" id="btn-resume">继续战斗</button>
+          <button class="btn-secondary" id="btn-team-pause" style="display:none;border-color:#fbbf24;color:#fde68a">⏸ 暂停全队游戏</button>
+          <button class="btn-primary" id="btn-resume">关闭菜单</button>
         </div>
       </div>
     </div>
@@ -1492,7 +1493,7 @@
       <button class="btn-secondary" id="btn-map-relics">查看秘宝图鉴</button>
     </div></div>
     <div id="settings-modal" class="modal-overlay"><div class="modal-card" style="max-width:500px">
-      <button class="modal-close-x" id="btn-close-settings" aria-label="返回暂停菜单">✕</button><div class="modal-title">⚙️ 系统设置</div>
+      <button class="modal-close-x" id="btn-close-settings" aria-label="返回游戏菜单">✕</button><div class="modal-title">⚙️ 系统设置</div>
       <div class="modal-subtitle">声音与技能特效 · 仅影响自己的画面和收听 · 自动保存在当前浏览器</div>
       <h3 class="system-section-title">声音</h3>
       <label class="volume-row">聊天语音<input id="volume-voice" type="range" min="0" max="100" step="1"><output id="volume-voice-value"></output></label>
@@ -1516,7 +1517,7 @@
       <datalist id="self-alpha-ticks"><option value="0"></option><option value="50"></option><option value="70"></option><option value="100"></option></datalist>
       <div class="coop-alpha-actions"><button class="btn-secondary self-alpha-preset" data-value="0">0% 不透明</button><button class="btn-secondary self-alpha-preset" data-value="50">50% 推荐</button><button class="btn-secondary self-alpha-preset" data-value="70">70% 较淡</button><button class="btn-secondary self-alpha-preset" data-value="100">100% 隐藏</button></div>
       <div style="font-size:11px;color:#94a3b8;margin:12px 0">透明度只改变显示，不改变伤害；敌方弹道与危险预警保持显示。</div>
-      <button class="btn-secondary" id="btn-settings-back">返回暂停菜单</button>
+      <button class="btn-secondary" id="btn-settings-back">返回游戏菜单</button>
     </div></div>
     <button id="dev-request-notice" hidden></button>
 
@@ -4736,7 +4737,7 @@
     }
 
     function damageEnemy(en, baseDmg, pushAngle, pushForce, isSecondary = false, killerId = CoopManager.myPeerId, killEpoch = player.lifeEpoch || 0) {
-      if (!en || en.isDead || (WorldCoop.active() && (((player.isDowned || UpgradeChoice.active) && !WorldCoop.simulatingDot) || WorldCoop.replaying || WorldCoop.paused() || GameState.isPaused || WorldCoop.ended))) return { isCrit: false, finalDmg: 0 };
+      if (!en || en.isDead || (WorldCoop.active() && (((player.isDowned || UpgradeChoice.active || MenuPause.blocked()) && !WorldCoop.simulatingDot) || WorldCoop.replaying || WorldCoop.paused() || WorldCoop.ended))) return { isCrit: false, finalDmg: 0 };
 
       // 极寒碎冰流派：对被冻结/减速的敌人暴击率提高 20%
       const bonusCrit = (player.passives.iceShatter > 0 && (en.freezeTimer > 0 || en.isChilled)) ? 0.20 : 0;
@@ -5749,7 +5750,7 @@
     let lavaHeartTimer = 0;
 
     function update(dt) {
-      if (!GameState.isStarted || GameState.isPaused || GameState.isOver || WorldCoop.paused() || (WorldCoop.guest() && !WorldCoop.active())) return;
+      if (!GameState.isStarted || WorldCoop.simulationPaused() || GameState.isOver || (WorldCoop.guest() && !WorldCoop.active())) return;
 
       GameState.gameTime += dt;
       GameState.autoSaveTick = (GameState.autoSaveTick || 0) + dt;
@@ -5896,7 +5897,7 @@
       if (input.keys['KeyW'] || input.keys['ArrowUp']) moveY -= 1;
       if (input.keys['KeyS'] || input.keys['ArrowDown']) moveY += 1;
 
-      if (player.isDowned || UpgradeChoice.active) { moveX = moveY = 0; player.vx = player.vy = 0; }
+      if (!WorldCoop.canAct()) { moveX = moveY = 0; player.vx = player.vy = 0; player.skills.skill1.isDashing = false; }
       const moveLen = Math.hypot(moveX, moveY);
       let curSpeed = player.speed;
       if (GameState.berserkTimer > 0) curSpeed *= 1.4;
@@ -6217,7 +6218,7 @@
             });
             const enemyRound = WorldCoop.session;
             setTimeout(() => {
-              if (WorldCoop.session === enemyRound && enemies.includes(en) && !en.isDead && !GameState.isPaused && !WorldCoop.paused() && !GameState.isOver) {
+              if (WorldCoop.session === enemyRound && enemies.includes(en) && !en.isDead && !WorldCoop.simulationPaused() && !GameState.isOver) {
                 const ang = Math.atan2(aimY - en.y, aimX - en.x);
                 projectiles.push({
                   isEnemy: true,
@@ -6248,7 +6249,7 @@
             const warning = WorldCoop.warn({ type: 'circle', x: targetX, y: targetY, radius: warnRad, life: 0.85, maxLife: 0.85, damage: Math.round(en.damage * 1.15) });
             const enemyRound = WorldCoop.session;
             setTimeout(() => {
-              if (WorldCoop.session === enemyRound && enemies.includes(en) && !en.isDead && !GameState.isPaused && !WorldCoop.paused() && !GameState.isOver) {
+              if (WorldCoop.session === enemyRound && enemies.includes(en) && !en.isDead && !WorldCoop.simulationPaused() && !GameState.isOver) {
                 createShockwave(targetX, targetY, warnRad, en.color || '#ef4444');
                 if (en.bossSkill === 'butcher') {
                   // 05m 缝合屠夫：冲锋重劈跳跃至目标点
@@ -6307,7 +6308,7 @@
           const overlap = pMinDist - dist;
           en.x -= (dx / dist) * overlap * 0.82;
           en.y -= (dy / dist) * overlap * 0.82;
-          if (target.id === CoopManager.myPeerId && !player.isDowned && player.invulnerableTimer <= 0 && !player.skills.skill1.isDashing) {
+          if (target.id === CoopManager.myPeerId && WorldCoop.canAct() && player.invulnerableTimer <= 0 && !player.skills.skill1.isDashing) {
             player.x += (dx / dist) * overlap * 0.18;
             player.y += (dy / dist) * overlap * 0.18;
           }
@@ -6504,7 +6505,7 @@
     }
 
     function damagePlayer(dmg) {
-      if (GameState.isOver || GameState.godMode || player.invulnerableTimer > 0 || player.isDowned || UpgradeChoice.active || WorldCoop.paused()) return;
+      if (GameState.isOver || GameState.godMode || player.invulnerableTimer > 0 || player.isDowned || UpgradeChoice.active || WorldCoop.simulationPaused() || MenuPause.remaining() > 0) return;
       const rawDmg = Number(dmg) || 0;
       if (rawDmg <= 0) return;
 
@@ -10167,12 +10168,18 @@
 
     function togglePause() {
       if (!GameState.isStarted || GameState.isOver) return;
+      for(const [id,close] of [['settings-modal',()=>AudioSettings.close()],['skilltree-modal',closeSkillTreeModal],['dev-modal',closeDevModal],['save-modal',closeSaveModal],['shop-modal',closeShopModal],['coop-modal',closeCoopModal]]) {
+        if(document.getElementById(id).style.display==='flex'){close();return;}
+      }
+      if(CoopMap.open){CoopMap.toggle(false);return;}
       GameState.isPaused = !GameState.isPaused;
       document.getElementById('pause-modal').style.display = GameState.isPaused ? 'flex' : 'none';
+      MenuPause.render();
       CoopManager.sendPresenceNow();
     }
     document.getElementById('btn-pause').addEventListener('click',e=>{e.stopPropagation();togglePause();});
     document.getElementById('btn-resume').addEventListener('click', togglePause);
+    document.getElementById('btn-team-pause').addEventListener('click', () => WorldCoop.toggleTeamPause());
     document.getElementById('btn-restart').addEventListener('click', () => { if(CoopManager.roomCode)WorldCoop.startOrResume();else resetGameSession(false); });
     document.getElementById('btn-over-lobby').addEventListener('click', returnToCampOrParty);
     document.getElementById('btn-pause-lobby').addEventListener('click', () => { SaveManager.saveBattleSnapshot(false); returnToCampOrParty(); });
@@ -11320,7 +11327,7 @@
     const CoopPoseWire = {
       keys: ['msgId','peerId','targetPeerId','sentAt','stateSeq','motionEpoch','name','hero','colorIdx','biome','isHost','isStarted',
         'worldSession','worldCodec','netFeedback','paused','downed','lifeEpoch','radius','magnetRange','relicIds','upgrading',
-        'upgradeToken','upgradeRemaining','x','y','vx','vy','facing','aimAngle','hp','maxHp','level','shield'],
+        'upgradeToken','upgradeRemaining','menuToken','menuRemaining','x','y','vx','vy','facing','aimAngle','hp','maxHp','level','shield'],
       encode(pkt) { return ['ps32pose', pkt.roomCode, ...this.keys.map(k => pkt[k] ?? null)]; },
       decode(data) {
         if (!Array.isArray(data) || data[0] !== 'ps32pose') return data;
@@ -11700,15 +11707,15 @@
         CoopManager.sendPacket({type:'SKILL_VFX_STATE',session:WorldCoop.session,seq:++this.stateSeq,castSeq:this.seq,items});
       },
       tick(dt){
-        if(!GameState.isPaused&&!WorldCoop.paused()){this.animationTime+=dt;for(const e of this.effects)e.time+=dt;}this.effects=this.effects.filter(e=>e.time<e.duration&&CoopManager.allies.some(p=>p.id===e.id&&!p.downed));
+        if(!WorldCoop.simulationPaused()){this.animationTime+=dt;for(const e of this.effects)e.time+=dt;}this.effects=this.effects.filter(e=>e.time<e.duration&&CoopManager.allies.some(p=>p.id===e.id&&!p.downed));
         const now=performance.now();this.syncState(now);for(const [id,p]of this.pending){for(const target of p.targets)if(!CoopManager.allies.some(a=>a.id===target))p.targets.delete(target);if(!p.targets.size||now-p.at>2500){this.pending.delete(id);continue;}if(now-p.last>600&&p.tries<4){p.last=now;p.tries++;for(const targetPeerId of p.targets)CoopManager.sendPacket({...p.packet,targetPeerId});}}
         for(const [id,at]of this.seen)if(now-at>15000)this.seen.delete(id);
         for(const id of this.states.keys())if(!CoopManager.allies.some(p=>p.id===id))this.states.delete(id);
       },
       draw(c){
         if(!CoopManager.allyVfxAlpha)return;
-        const now=performance.now(),effects=this.effects.filter(e=>{const s=this.states.get(e.id);return !(s&&(GameState.isPaused||now-s.at<2500)&&s.castSeq>=e.seq&&(e.kind==='s2'||(e.kind==='s1'&&e.hero==='ranger')));});
-        for(const [id,s]of this.states)if(GameState.isPaused||WorldCoop.paused()||now-s.at<2500)for(const a of s.items)effects.push({id,hero:{orbit:'warrior',blackhole:'mage',trap:'ranger',wheel:'ranger'}[a[0]],kind:a[0]==='trap'?'s1':'s2',stateful:true,x:a[1],y:a[2],radius:a[3],evolved:Boolean(a[4]),level:a[0]==='orbit'?Math.max(1,Math.ceil((a[3]-50)/20)):1,time:this.animationTime,duration:Infinity});
+        const now=performance.now(),effects=this.effects.filter(e=>{const s=this.states.get(e.id);return !(s&&(WorldCoop.simulationPaused()||now-s.at<2500)&&s.castSeq>=e.seq&&(e.kind==='s2'||(e.kind==='s1'&&e.hero==='ranger')));});
+        for(const [id,s]of this.states)if(WorldCoop.simulationPaused()||now-s.at<2500)for(const a of s.items)effects.push({id,hero:{orbit:'warrior',blackhole:'mage',trap:'ranger',wheel:'ranger'}[a[0]],kind:a[0]==='trap'?'s1':'s2',stateful:true,x:a[1],y:a[2],radius:a[3],evolved:Boolean(a[4]),level:a[0]==='orbit'?Math.max(1,Math.ceil((a[3]-50)/20)):1,time:this.animationTime,duration:Infinity});
         for(const e of effects){const peer=CoopManager.allies.find(p=>p.id===e.id);if(!peer||peer.downed)continue;
           const follow=(e.kind==='s2'&&e.hero==='warrior')||(e.kind==='ult'&&e.hero==='warrior'),x=follow?peer.x:e.x,y=follow?peer.y:e.y,t=e.time,color=(PLAYER_COLOR_THEMES[peer.colorIdx]||PLAYER_COLOR_THEMES[1]).primary;
           c.save();c.globalAlpha=CoopManager.allyVfxAlpha*Math.min(1,(e.duration-t)*3);c.strokeStyle=color;c.fillStyle=color;c.lineWidth=3;c.translate(x,y);
@@ -12400,7 +12407,7 @@
           isStarted: GameState.isStarted && !GameState.isOver,
           worldSession: WorldCoop?.session || null,
           worldCodec: CoopWorldCodec.available() ? 1 : 0, netFeedback: 2, poseCodec: 1,
-          paused: GameState.isPaused,
+          paused: MenuPause.blocked(), menuRemaining: MenuPause.remaining(), menuToken: MenuPause.token,
           downed: Boolean(player.isDowned), lifeEpoch: player.lifeEpoch || 0,
           radius: player.radius, magnetRange: player.magnetRange, relicIds: player.mapRelics.map(r => r.id),
           upgrading: UpgradeChoice.active, upgradeToken: UpgradeChoice.token, upgradeRemaining: UpgradeChoice.remaining(),
@@ -13714,13 +13721,42 @@
 
     // Shared battle authority. Clients own their input/build and report hits;
     // only the host owns enemy health, AI, spawn/death, rescue and team results.
+    const MenuPause = {
+      open:false, token:0, deadline:0,
+      reset() { this.open=false; this.deadline=0; const el=document.getElementById('menu-protection-status');if(el)el.style.display='none';document.getElementById('btn-team-pause').style.display='none'; },
+      blocked() { return GameState.isPaused || Boolean(WorldCoop?.active() && CoopMap.open); },
+      sync() {
+        const open=Boolean(WorldCoop?.active() && GameState.isStarted && !GameState.isOver && !player.isDowned && this.blocked());
+        if(open && !this.open) {
+          this.deadline=performance.now()+10000; this.token++;
+          CoopSocial.clearInput(); player.vx=player.vy=0; player.skills.skill1.isDashing=false;
+        }
+        if(!open)this.deadline=0;
+        this.open=open;
+      },
+      remaining() { this.sync(); return this.open?Math.max(0,(this.deadline-performance.now())/1000):0; },
+      render() {
+        const active=Boolean(WorldCoop?.active()&&!WorldCoop.ended),host=active&&CoopManager.isHost;
+        const btn=document.getElementById('btn-team-pause');
+        btn.style.display=host?'':'none'; btn.textContent=WorldCoop?.manualPaused?'▶ 恢复全队游戏':'⏸ 暂停全队游戏';
+        const hint=document.getElementById('menu-mode-hint');
+        hint.textContent=active?'多人菜单不暂停战斗；自身停止操作，10 秒无敌到期后仍会受伤。仅房主可另行暂停全队。':'单人打开菜单会暂停游戏。';
+        let status=document.getElementById('menu-protection-status');
+        if(!status){status=document.createElement('div');status.id='menu-protection-status';status.style.cssText='position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translateX(-50%);z-index:110000;pointer-events:none;border-radius:8px;padding:5px 10px;background:#111827ee;color:#a7f3d0;font-size:12px;text-align:center;max-width:85vw;';document.body.appendChild(status);}
+        const remaining=this.remaining();
+        status.style.display=this.open?'block':'none';
+        status.textContent=WorldCoop?.paused()?'⏸ 全队游戏已暂停':remaining>0?'🛡 菜单无敌 '+Math.ceil(remaining)+' 秒 · 战场继续':'⚠ 菜单无敌已结束 · 战场继续';
+        status.style.color=remaining>0?'#a7f3d0':'#fca5a5';
+      }
+    };
+
     var WorldCoop = {
       session: null, hostId: null, frame: 0, receivedFrame: -1, retiredSessions:new Set(),
       entitySeq: 0, hitSeq: 0, participants: new Map(), pendingHits: new Map(),
       receivedHits: new Map(), hitBatches: new Map(), assemblies: new Map(), lastWorldAt: 0, lastSendAt: -Infinity,
       lastHitAt: 0, lastRequestAt: -Infinity, lastUiAt: 0, corpseTime: 6,
       rescueRadius: 42, totals: { xp: 0, gold: 0 }, credited: { xp: 0, gold: 0 },
-      ended: null, teamPaused: false, finishing: false, replaying: false,
+      ended: null, teamPaused: false, manualPaused: false, pauseRevision: 0, finishing: false, replaying: false,
       lastStartTime: -Infinity, rewardCarry: { xp: 0, gold: 0 },
       sendJob: null, requestedPeers: new Set(), decodeJob: null, pendingDecode: null, decodeGeneration: 0,
       motionSamples: new Map(), spentProjectiles: new Set(), resolvedWarnings: new Set(), arrivals: [],
@@ -13731,7 +13767,7 @@
       reset() {
         if(this.session){this.retiredSessions.add(this.session);if(this.retiredSessions.size>24)this.retiredSessions.delete(this.retiredSessions.values().next().value);}
         this.startRequestToken = (this.startRequestToken || 0) + 1;
-        UpgradeChoice.reset(); CoopLoot.reset(); CoopSkillVfx.reset(); this.rewardCarry = { xp: 0, gold: 0 };
+        UpgradeChoice.reset(); CoopMap.toggle(false); MenuPause.reset(); CoopLoot.reset(); CoopSkillVfx.reset(); this.rewardCarry = { xp: 0, gold: 0 };
         document.getElementById('level-modal').style.display = 'none';
         this.session = null; this.hostId = null; this.frame = 0; this.receivedFrame = -1;
         this.sendJob = null; this.requestedPeers.clear(); this.pendingDecode = this.decodeJob = null; this.decodeGeneration++;
@@ -13740,7 +13776,7 @@
         this.entitySeq = 0; this.hitSeq = 0; this.participants.clear(); this.pendingHits.clear();
         this.receivedHits.clear(); this.hitBatches.clear(); this.assemblies.clear(); this.lastWorldAt = 0; this.lastStartTime = -Infinity;
         this.lastSendAt = this.lastRequestAt = -Infinity; this.ended = null;
-        this.teamPaused = false; this.wipeAt = null; this.totals = { xp: 0, gold: 0 };
+        this.teamPaused = this.manualPaused = false; this.pauseRevision = 0; this.wipeAt = null; this.totals = { xp: 0, gold: 0 };
         this.credited = { xp: 0, gold: 0 }; player.isDowned = false; player.lifeEpoch = 0; player.rescueProgress = 0; player.rescueHelpers = 0;
         this.setNotice('');
       },
@@ -13758,7 +13794,7 @@
       identify(en) { if (!en.netId) en.netId = ++this.entitySeq; return en.netId; },
       localProfile() {
         return { x: player.x, y: player.y, hp: player.hp, maxHp: player.maxHp, radius: player.radius,
-          isStarted: GameState.isStarted && !GameState.isOver, paused: GameState.isPaused,
+          isStarted: GameState.isStarted && !GameState.isOver, paused: MenuPause.blocked(), menuRemaining: MenuPause.remaining(), menuToken: MenuPause.token,
           upgrading: UpgradeChoice.active, upgradeToken: UpgradeChoice.token, upgradeRemaining: UpgradeChoice.remaining(),
           magnetRange: player.magnetRange, relicIds: player.mapRelics.map(r => r.id), bloodPact: player.passives.bloodPact || 0,
           downed: Boolean(player.isDowned), lifeEpoch: player.lifeEpoch || 0 };
@@ -13772,6 +13808,11 @@
         }
         rec.seen = performance.now(); rec.started = pkt.isStarted !== false;
         rec.localFeedback = pkt.netFeedback === 2; rec.paused = Boolean(pkt.paused); rec.maxHp = Math.max(1, pkt.maxHp || rec.maxHp);
+        if (pkt.paused && pkt.menuToken !== rec.menuToken) {
+          rec.menuUntil = performance.now() + Math.min(10, Math.max(0, Number(pkt.menuRemaining) || 0)) * 1000;
+        }
+        rec.menuToken = pkt.menuToken;
+        if (!pkt.paused) rec.menuUntil = 0;
         rec.radius = Math.max(8, Math.min(32, pkt.radius || 12));
         rec.magnetRange = Math.max(0, Math.min(2000, Number(pkt.magnetRange) || 85));
         rec.relicIds = Array.isArray(pkt.relicIds) ? pkt.relicIds.slice(0, 2) : [];
@@ -13812,11 +13853,25 @@
       paused() {
         if (!this.active()) return false;
         if (CoopManager.isHost) {
-          return [...this.participants.values()].some(p => p.started && !p.downed && p.paused && performance.now() - p.seen < 6000);
+          return this.manualPaused;
         }
         return this.teamPaused || performance.now() - this.lastWorldAt > 2000;
       },
-      canAct() { return !UpgradeChoice.active && !player.isDowned && !(this.active() && (this.ended || this.paused())); },
+      simulationPaused() { return (!this.active() && GameState.isPaused) || this.paused(); },
+      canAct() { return !MenuPause.blocked() && !UpgradeChoice.active && !player.isDowned && !(this.active() && (this.ended || this.paused())); },
+      canTakeDamage() { return !UpgradeChoice.active && !player.isDowned && !this.ended && !this.simulationPaused(); },
+      toggleTeamPause() {
+        if (!this.active() || !CoopManager.isHost || this.ended) return false;
+        this.manualPaused = !this.manualPaused; this.pauseRevision++;
+        CoopSocial.clearInput();
+        CoopManager.sendPacket(this.packet({type:'WORLD_PAUSE', paused:this.manualPaused, pauseRevision:this.pauseRevision}));
+        this.broadcastWorld(); MenuPause.render(); return true;
+      },
+      receivePause(paused, revision) {
+        if (!Number.isSafeInteger(revision) || revision < this.pauseRevision) return;
+        const changed=this.teamPaused!==Boolean(paused);
+        this.pauseRevision = revision; this.teamPaused = Boolean(paused); if(changed)MenuPause.render();
+      },
       packet(payload) { return { ...payload, session: this.session }; },
       toHost(payload) {
         if (!this.hostId || !this.active()) return;
@@ -13833,7 +13888,7 @@
         const actor = this.participants.get(id); if (!actor) return;
         actor.personalKills = (actor.personalKills || 0) + 1;
         const level = id === CoopManager.myPeerId ? player.passives.bloodPact : actor.bloodPact || 0;
-        if (actor.personalKills % 10 || level <= 0 || actor.downed || this.phased(actor) || this.ended || this.paused() || GameState.isPaused ||
+        if (actor.personalKills % 10 || level <= 0 || actor.downed || this.phased(actor) || this.ended || this.paused() ||
             (lifeEpoch !== null && lifeEpoch !== actor.epoch)) return;
         CoopLoot.grant(actor, 'killHeal', { amount: 4 * level, lifeEpoch: actor.epoch });
       },
@@ -13868,7 +13923,7 @@
         let history = this.receivedHits.get(pkt.peerId);
         if (!history) { history = { max: 0, seen: new Set() }; this.receivedHits.set(pkt.peerId, history); }
         if (history.seen.has(pkt.seq) || pkt.seq <= history.max - 1024 || actor.downed || this.phased(actor) || pkt.lifeEpoch !== actor.epoch || this.ended) { ack(); return; }
-        if (this.paused() || GameState.isPaused) return;
+        if (this.paused()) return;
         history.max = Math.max(history.max, pkt.seq); history.seen.add(pkt.seq);
         for (const seq of history.seen) if (seq <= history.max - 1024) history.seen.delete(seq);
         if (Number.isFinite(pkt.bloodPact)) actor.bloodPact = Math.max(0, Math.min(1000, Math.floor(pkt.bloodPact)));
@@ -13915,7 +13970,7 @@
       hurtActor(id, dmg) {
         if (!this.active() || id === CoopManager.myPeerId) { damagePlayer(dmg); return; }
         const p = this.participants.get(id);
-        if (!p || p.localFeedback || p.downed || this.phased(p) || performance.now() < (p.protectedUntil || 0)) return;
+        if (!p || p.localFeedback || p.downed || this.phased(p) || performance.now() < Math.max(p.protectedUntil || 0, p.menuUntil || 0)) return;
         CoopManager.sendPacket(this.packet({ type: 'WORLD_HURT', targetPeerId: id, damage: dmg }));
       },
       areaHit(x, y, radius, damage, warningId = null) {
@@ -13939,14 +13994,14 @@
         }
       },
       localCombat(dt) {
-        if (!this.active() || !GameState.isStarted || GameState.isPaused || GameState.isOver || this.paused()) return;
+        if (!this.active() || !GameState.isStarted || GameState.isOver || this.paused()) return;
         const scaled = dt * (GameState.timeScale || 1);
         if (this.guest()) for (const en of enemies) {
           en.hitTimer = Math.max(0, (en.hitTimer || 0) - scaled);
           en.freezeTimer = Math.max(0, (en.freezeTimer || 0) - scaled);
         }
         for (const en of enemies) en.localMeleeCd = Math.max(0, (en.localMeleeCd || 0) - scaled);
-        if (!this.canAct() || GameState.globalFreezeTimer > 0) return;
+        if (!this.canTakeDamage() || GameState.globalFreezeTimer > 0) return;
         // Health already belongs to each player. Contact damage must use the
         // monster the player can actually see, not an old pose on the host.
         for (const en of enemies) {
@@ -13957,7 +14012,7 @@
         }
       },
       localProjectileHit(projectile) {
-        if (!this.active() || !this.canAct() || GameState.isPaused || this.paused() || projectile.localSpent) return;
+        if (!this.active() || !this.canTakeDamage() || projectile.localSpent) return;
         if (Math.hypot(player.x - projectile.x, player.y - projectile.y) < player.radius + projectile.radius) {
           projectile.localSpent = true; projectile.life = 0;
           if (projectile.netId) this.spentProjectiles.add(projectile.netId);
@@ -13969,7 +14024,7 @@
       acceptBulletTouch(pkt) {
         const actor = this.participants.get(pkt.peerId);
         if (!actor || !actor.started || actor.downed || this.phased(actor) || this.paused() ||
-            GameState.isPaused || pkt.lifeEpoch !== actor.epoch || !Number.isFinite(pkt.x) || !Number.isFinite(pkt.y)) return;
+            pkt.lifeEpoch !== actor.epoch || !Number.isFinite(pkt.x) || !Number.isFinite(pkt.y)) return;
         const p = projectiles.find(p => p.isEnemy && p.netId === pkt.id);
         if (p && Math.hypot(actor.x - pkt.x, actor.y - pkt.y) <= 360 &&
             Math.hypot(p.x - pkt.x, p.y - pkt.y) <= 240 + p.radius) p.life = 0;
@@ -13984,7 +14039,7 @@
         if (this.resolvedWarnings.size > 2048) this.resolvedWarnings.delete(this.resolvedWarnings.values().next().value);
         if (!warning.damage) return;
         createShockwave(warning.x, warning.y, warning.radius, '#ef4444');
-        if (this.canAct() && !GameState.isPaused && !this.paused() &&
+        if (this.canTakeDamage() &&
             Math.hypot(player.x - warning.x, player.y - warning.y) <= warning.radius + player.radius) damagePlayer(warning.damage);
       },
       receiveArea(pkt) {
@@ -14004,7 +14059,7 @@
         player.isDowned = true; player.hp = 0; player.vx = player.vy = 0;
         player.skills.skill1.isDashing = false; player.chargeTimer = 0; player.isCharging = false;
         GameState.isPaused = false;
-        for (const id of ['pause-modal', 'level-modal', 'skilltree-modal', 'coop-modal']) document.getElementById(id).style.display = 'none';
+        for (const el of document.querySelectorAll('.modal-overlay')) el.style.display = 'none'; CoopMap.toggle(false); MenuPause.reset();
         if (CoopManager.isHost) this.observe(CoopManager.myPeerId, this.localProfile());
         else this.toHost({ type: 'WORLD_DOWN', ...this.localProfile() });
         CoopManager.sendPresenceNow(); updateHpUI();
@@ -14015,7 +14070,7 @@
         const active = [...this.participants.values()].filter(p => p.started && performance.now() - p.seen < 6000);
         const living = active.filter(p => !p.downed);
         for (const body of active.filter(p => p.downed)) {
-          const helpers = living.filter(p => !this.phased(p) && Math.hypot(p.x - body.x, p.y - body.y) <= this.rescueRadius);
+          const helpers = living.filter(p => !p.paused && !this.phased(p) && Math.hypot(p.x - body.x, p.y - body.y) <= this.rescueRadius);
           body.helpers = helpers.length;
           body.progress = helpers.length ? Math.min(this.corpseTime, (body.progress || 0) + Math.max(0, Math.min(dt, 0.1)) * helpers.length) : 0;
           body.helper = helpers[0]?.id || null;
@@ -14062,7 +14117,8 @@
         this.finishing = true;
         try { if (victory) triggerVictory(); else gameOver(); } finally { this.finishing = false; }
         if (!victory) document.getElementById('over-summary').innerText = '全队倒地，本次协作战斗结束。可以由房主重新出征。';
-        document.getElementById('level-modal').style.display = 'none';
+        for(const el of document.querySelectorAll('.modal-overlay')) if(el.id!=='over-modal')el.style.display='none';
+        GameState.isPaused=false; CoopMap.toggle(false); MenuPause.reset();
         this.setNotice('');updatePartyReturnUI();
         if(CoopManager.isHost)RoomHub.advertise();
       },
@@ -14070,7 +14126,7 @@
         const q = n => Math.round((Number(n) || 0) * 10) / 10;
         const timestamp = performance.now(), liveMotion = new Set();
         const types = new Map(), defs = [], rows = [];
-        const stopped = GameState.isPaused || this.paused() || this.ended ||
+        const stopped = this.paused() || this.ended ||
           (this.active() && !this.actors().length) || GameState.globalFreezeTimer > 0;
         for (const en of enemies) {
           if (en.isDead) continue;
@@ -14099,7 +14155,7 @@
         });
         return { session: this.session, seq: ++this.frame, t: timestamp, time: GameState.gameTime,
           biome: GameState.activeBiome, scale: GameState.timeScale || 1, kills: GameState.kills,
-          paused: GameState.isPaused || this.paused(), end: this.ended, loot: CoopLoot.snapshot(), rewards: CoopLoot.rewardSnapshot(),
+          paused: this.paused(), pauseRevision: this.pauseRevision, end: this.ended, loot: CoopLoot.snapshot(), rewards: CoopLoot.rewardSnapshot(),
           freeze: GameState.globalFreezeTimer, curse: GameState.curseLevel, curseExp: GameState.curseExpStacks,
           players: [...this.participants.values()].map(p => this.packLife(p)), defs, rows, bullets,
           warnings: telegraphs.map(t => ({ netId: t.netId, damage: t.damage, type: t.type, x: t.x, y: t.y, x1: t.x1, y1: t.y1, x2: t.x2, y2: t.y2, radius: t.radius, life: t.life, maxLife: t.maxLife })) };
@@ -14229,7 +14285,7 @@
         this.lastStartTime = Math.max(this.lastStartTime, data.t);
         const now = performance.now(); this.lastWorldAt = now; this.receivedFrame = data.seq;
         this.arrivals.push(now); if (this.arrivals.length > 32) this.arrivals.shift();
-        this.teamPaused = Boolean(data.paused); GameState.gameTime = Math.max(GameState.gameTime || 0, data.time);
+        this.receivePause(data.paused, data.pauseRevision); GameState.gameTime = Math.max(GameState.gameTime || 0, data.time);
         GameState.timeScale = data.scale; GameState.kills = data.kills;
         GameState.globalFreezeTimer = data.freeze || 0;
         GameState.curseLevel = data.curse || 0; GameState.curseExpStacks = data.curseExp || 0;
@@ -14321,6 +14377,7 @@
           if (pkt.type === 'WORLD_REQUEST') this.broadcastWorld(pkt.peerId);
 
         } else if (pkt.peerId === this.hostId) {
+          if (pkt.type === 'WORLD_PAUSE') this.receivePause(pkt.paused, pkt.pauseRevision);
           if (pkt.type === 'WORLD_LOOT_GRANT') CoopLoot.receiveRewards(pkt.rewards, pkt.frame);
           if (pkt.type === 'WORLD_LOOT_TAKEN' && Array.isArray(pkt.items)) for (const [id] of pkt.items.slice(0, 2048)) CoopLoot.markTaken(id, pkt.frame);
           if (pkt.type === 'WORLD_LOOT_GONE') CoopLoot.markTaken(pkt.id, pkt.frame);
@@ -14373,7 +14430,7 @@
         if (this.active() && CoopManager.isHost) {
           this.observe(CoopManager.myPeerId, this.localProfile());
           for (const id of [...this.participants.keys()]) if (id !== CoopManager.myPeerId && !CoopManager.allies.some(p => p.id === id)) this.participants.delete(id);
-          if (!this.ended && !GameState.isPaused && !this.paused()) this.rescue(dt);
+          if (!this.ended && !this.paused()) this.rescue(dt);
 
           if (now - this.lastSendAt >= 50 - .5) {
             this.lastSendAt = Number.isFinite(this.lastSendAt) && now - this.lastSendAt < 100 ? this.lastSendAt + 50 : now;
@@ -14392,11 +14449,11 @@
         }
         this.localCombat(dt);
         if (now - this.lastUiAt > 150) {
-          this.lastUiAt = now;
+          this.lastUiAt = now; MenuPause.render();
           if (this.active() && !this.ended) {
             if (this.guest() && now - this.lastWorldAt > 2000) this.setNotice('📡 房主战场同步中断，等待恢复…');
             else if (player.isDowned) this.setNotice('💀 你已倒地 · '+this.rescueStatus(player.rescueProgress,player.rescueHelpers));
-            else if (this.paused()) this.setNotice('⏸ 队友已手动暂停，战场已暂停');
+            else if (this.paused()) this.setNotice('⏸ 房主已暂停全队游戏，等待房主恢复');
             else {
               const body = [...this.participants.values()].find(p => p.downed);
               this.setNotice(body ? '💚 队友倒地！单人救援6秒，多人更快（全员离开重置）' : '');
@@ -14497,7 +14554,7 @@
       snapshot() {
         return this.groups().map((group, index) => group.map(item => {
           const q = n => Math.round(n * 10) / 10;
-          if (index === 0) return [this.id(item), q(item.x), q(item.y), item.expValue, item.tier];
+          if (index === 0) return [this.id(item), q(item.x), q(item.y), item.expValue, item.tier, ...(item.magnetOwner ? [item.magnetOwner] : [])];
           if (index === 1) return [this.id(item), q(item.x), q(item.y), item.val];
           const row = { ...item, lootId: this.id(item), x: Math.round(item.x * 10) / 10, y: Math.round(item.y * 10) / 10 };
           delete row.floatY; delete row.mergePopTimer; delete row._targetX; delete row._targetY;
@@ -14521,7 +14578,7 @@
       },
       tryPickup(pkt) {
         const actor = WorldCoop.participants.get(pkt.peerId);
-        if (!actor || !actor.started || !this.eligible(actor) || WorldCoop.paused() || GameState.isPaused ||
+        if (!actor || !actor.started || !this.eligible(actor) || WorldCoop.paused() ||
             pkt.lifeEpoch !== actor.epoch || !Number.isSafeInteger(pkt.id) || ![pkt.x,pkt.y].every(Number.isFinite)) return;
         const settled = this.settled.get(pkt.id);
         if (settled) { this.takenQueue.set(pkt.id, settled.owner); this.flushNeeded = true; return; }
@@ -14593,7 +14650,7 @@
           const rows = groups[index]; if (!Array.isArray(rows) || rows.length > 20000) return;
           const previous = new Map(group.map(item => [item.lootId, item])); group.length = 0;
           for (const packed of rows) {
-            const row = index === 0 ? {lootId:packed[0],x:packed[1],y:packed[2],expValue:packed[3],tier:packed[4]} :
+            const row = index === 0 ? {lootId:packed[0],x:packed[1],y:packed[2],expValue:packed[3],tier:packed[4],magnetOwner:packed[5]} :
               index === 1 ? {lootId:packed[0],x:packed[1],y:packed[2],val:packed[3]} : packed;
             if (this.pendingPickups.has(row.lootId) || this.taken.has(row.lootId)) continue;
             const item = previous.get(row.lootId);
@@ -14663,7 +14720,7 @@
         } else this.flush(performance.now());
       },
       eligible(actor) {
-        return !actor.downed && !WorldCoop.phased(actor) && !(actor.id === CoopManager.myPeerId && UpgradeChoice.active);
+        return !actor.paused && !actor.downed && !WorldCoop.phased(actor) && !(actor.id === CoopManager.myPeerId && UpgradeChoice.active);
       },
       nearest(item, actors, magnetic) {
         let best = null, bestDist = Infinity;
@@ -14748,7 +14805,7 @@
       },
       spawnShrineGold(s) { for (let i=0;i<12;i++) goldDrops.push({x:s.x+(Math.random()-.5)*65,y:s.y+(Math.random()-.5)*65,val:6}); },
       breakObject(id, actor, x, y, radius) {
-        if (!actor || !this.eligible(actor) || WorldCoop.paused() || GameState.isPaused || !Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(radius)) return;
+        if (!actor || !this.eligible(actor) || WorldCoop.paused() || !Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(radius)) return;
         const index = destructibles.findIndex(d => this.id(d) === id); if (index < 0) return;
         const d = destructibles[index];
         if (Math.hypot(actor.x-x,actor.y-y) > 2400 || Math.hypot(d.x-x,d.y-y) > Math.min(500,Math.max(0,radius))+d.radius) return;
@@ -14768,7 +14825,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 11, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 12, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
@@ -15335,6 +15392,7 @@
     SaveManager.updateLobbyResumeBtn();
 
     function gameLoop(now) {
+      MenuPause.sync();
       const dt = Math.min(0.05, (now - lastTime) / 1000);
       lastTime = now;
       // 全局真实倍速引擎 (1x / 2x / 3x)：按倍速执行物理与战斗子步，使移动速度、攻速、冷却与怪物速度同步真实加速！
