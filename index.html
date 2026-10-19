@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R10 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R11 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1243,7 +1243,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R10</span></div>
+        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R11</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -9547,7 +9547,7 @@
 
     document.querySelectorAll('#lobby-modal .biome-card').forEach(card => {
       card.addEventListener('click', () => {
-        if (CoopManager.roomCode && (!CoopManager.isHost || GameState.isStarted)) { showToast('地图由房主在出征前选择'); return; }
+        if (CoopManager.roomCode && (!CoopManager.isHost || (GameState.isStarted && !GameState.isOver))) { showToast('地图由房主在出征前选择'); return; }
         GameState.activeBiome = card.dataset.biome;
         syncHeroAndBiomeSelectionUI();
         if (typeof CoopManager !== 'undefined' && CoopManager.roomCode) {
@@ -10125,6 +10125,7 @@
         document.getElementById('lobby-modal').style.display = 'flex';
         showToast('🏕️ 已安全返回战前营地，可前往圣殿强化永久天赋！');
       } else {
+        document.querySelectorAll('.modal-overlay').forEach(el=>el.style.display='none');
         GameState.isStarted = true;
         GameState.isPaused = false;
         audio.startBGM(GameState.activeBiome);
@@ -10141,6 +10142,29 @@
       document.getElementById('talent-modal').style.display = 'none';
     });
 
+    // Returning to the party preserves its identity, members and transports.
+    // The finished world stays retired in place until the next shared start.
+    function updatePartyReturnUI() {
+      const inside=Boolean(CoopManager.roomCode);
+      document.getElementById('btn-over-lobby').textContent=inside?'返回队伍房间':'返回营地';
+      document.getElementById('btn-pause-lobby').textContent=inside?'🏠 返回队伍房间':'🏕️ 返回营地';
+      document.getElementById('btn-restart').textContent=inside&&!CoopManager.isHost?'请求再次出征':'再次出征';
+      const back=document.getElementById('btn-close-coop');back.textContent=inside&&GameState.isOver?'返回营地':'返回';
+      back.title=inside&&GameState.isOver?'返回营地调整天赋，保留房间和队友':'关闭联机大厅';
+    }
+    function returnToCampOrParty() {
+      if(!CoopManager.roomCode){resetGameSession(true);SaveManager.updateLobbyResumeBtn();return;}
+      if(GameState.isOver||WorldCoop.ended){
+        for(const id of ['over-modal','pause-modal','level-modal','skilltree-modal','settings-modal','dev-modal','save-modal','shop-modal','talent-modal'])document.getElementById(id).style.display='none';
+        document.getElementById('lobby-modal').style.display='flex';
+        audio.stopBGM();GameState.isPaused=false;CoopSocial.clearInput();
+        SaveManager.updateUI();SaveManager.updateLobbyResumeBtn();
+      }
+      openCoopModal();updatePartyReturnUI();CoopManager.sendPresenceNow();
+      if(CoopManager.isHost)RoomHub.advertise();
+      showToast(GameState.isOver?'🏠 已回到原队伍，房号、队友和语音已保留，可继续出征':'🏠 队伍房间已打开，本局保留，出征可继续战斗');
+    }
+
     function togglePause() {
       if (!GameState.isStarted || GameState.isOver) return;
       GameState.isPaused = !GameState.isPaused;
@@ -10149,9 +10173,9 @@
     }
     document.getElementById('btn-pause').addEventListener('click',e=>{e.stopPropagation();togglePause();});
     document.getElementById('btn-resume').addEventListener('click', togglePause);
-    document.getElementById('btn-restart').addEventListener('click', () => { resetGameSession(false); });
-    document.getElementById('btn-over-lobby').addEventListener('click', () => { resetGameSession(true); });
-    document.getElementById('btn-pause-lobby').addEventListener('click', () => { SaveManager.saveBattleSnapshot(false); resetGameSession(true); SaveManager.updateLobbyResumeBtn(); });
+    document.getElementById('btn-restart').addEventListener('click', () => { if(CoopManager.roomCode)WorldCoop.startOrResume();else resetGameSession(false); });
+    document.getElementById('btn-over-lobby').addEventListener('click', returnToCampOrParty);
+    document.getElementById('btn-pause-lobby').addEventListener('click', () => { SaveManager.saveBattleSnapshot(false); returnToCampOrParty(); });
 
     document.getElementById('btn-bgm-toggle').addEventListener('click', (e) => {
       e.stopPropagation();
@@ -12105,7 +12129,7 @@
         document.getElementById('btn-coop-direct-retry').disabled=!c.roomCode||!c.allies.length;
       },
       render(){
-        this.renderRoutes();syncHeroAndBiomeSelectionUI();
+        this.renderRoutes();syncHeroAndBiomeSelectionUI();updatePartyReturnUI();
         const c=CoopManager,themes=PLAYER_COLOR_THEMES,swatches=document.getElementById('coop-color-swatches');swatches.replaceChildren();
         for(const theme of themes){const button=document.createElement('button');button.type='button';button.title=theme.name;button.textContent=theme.tag;button.style.cssText='padding:3px 7px;border-radius:8px;font-size:10px;color:white;background:'+theme.primary+';border:2px solid '+(c.myColorIdx===theme.idx?'white':'transparent')+';cursor:pointer;';button.addEventListener('click',()=>{c.myColorIdx=theme.idx;c.saveProfile();if(c.roomCode)c.sendPresenceNow('HELLO_WELCOME');this.render();});swatches.append(button);}
         const count=c.getActivePlayerCount(),heroNames={warrior:'苍红剑客',mage:'星界魔导',ranger:'暗夜巡林'},biomeNames={dungeon:'熔火地牢',tundra:'永冬冻原',graveyard:'血月墓园'};
@@ -12373,7 +12397,7 @@
           colorIdx: this.myColorIdx,
           biome: GameState.activeBiome,
           isHost: this.isHost,
-          isStarted: GameState.isStarted,
+          isStarted: GameState.isStarted && !GameState.isOver,
           worldSession: WorldCoop?.session || null,
           worldCodec: CoopWorldCodec.available() ? 1 : 0, netFeedback: 2, poseCodec: 1,
           paused: GameState.isPaused,
@@ -12471,7 +12495,7 @@
       disconnectTransports() {
         CoopSocial.cleanup(); CoopSpectate.id = null;CoopDev.reset();CoopSkillVfx.reset();CoopMap.toggle(false);
         CoopNodes.detach();
-        if (typeof WorldCoop !== 'undefined' && WorldCoop) WorldCoop.reset();
+        if (typeof WorldCoop !== 'undefined' && WorldCoop) {WorldCoop.reset();WorldCoop.retiredSessions.clear();}
         this.joinBurstTimers.forEach(t => clearTimeout(t));
         this.joinBurstTimers = [];
         if (this.channel) {
@@ -13081,7 +13105,7 @@
         }
 
         if (pkt.type === 'ROOM_BIOME') {
-          if (CoopManager.isHost || GameState.isStarted || !this.allies.some(p => p.id === pkt.peerId && p.isHost)) return;
+          if (CoopManager.isHost || (GameState.isStarted && !GameState.isOver) || !this.allies.some(p => p.id === pkt.peerId && p.isHost)) return;
           if (pkt.biome && ['dungeon', 'tundra', 'graveyard'].includes(pkt.biome)) {
             GameState.activeBiome = pkt.biome;
             syncHeroAndBiomeSelectionUI();
@@ -13363,6 +13387,7 @@
       },
 
       updateHUD() {
+        updatePartyReturnUI();
         const count = this.getActivePlayerCount();
         const hudTxt = document.getElementById('hud-coop-text');
         const hudBtn = document.getElementById('btn-hud-coop');
@@ -13690,7 +13715,7 @@
     // Shared battle authority. Clients own their input/build and report hits;
     // only the host owns enemy health, AI, spawn/death, rescue and team results.
     var WorldCoop = {
-      session: null, hostId: null, frame: 0, receivedFrame: -1,
+      session: null, hostId: null, frame: 0, receivedFrame: -1, retiredSessions:new Set(),
       entitySeq: 0, hitSeq: 0, participants: new Map(), pendingHits: new Map(),
       receivedHits: new Map(), hitBatches: new Map(), assemblies: new Map(), lastWorldAt: 0, lastSendAt: -Infinity,
       lastHitAt: 0, lastRequestAt: -Infinity, lastUiAt: 0, corpseTime: 6,
@@ -13704,6 +13729,7 @@
       guest() { return Boolean(CoopManager.roomCode && !CoopManager.isHost); },
       authority() { return !CoopManager.roomCode || CoopManager.isHost; },
       reset() {
+        if(this.session){this.retiredSessions.add(this.session);if(this.retiredSessions.size>24)this.retiredSessions.delete(this.retiredSessions.values().next().value);}
         this.startRequestToken = (this.startRequestToken || 0) + 1;
         UpgradeChoice.reset(); CoopLoot.reset(); CoopSkillVfx.reset(); this.rewardCarry = { xp: 0, gold: 0 };
         document.getElementById('level-modal').style.display = 'none';
@@ -13732,7 +13758,7 @@
       identify(en) { if (!en.netId) en.netId = ++this.entitySeq; return en.netId; },
       localProfile() {
         return { x: player.x, y: player.y, hp: player.hp, maxHp: player.maxHp, radius: player.radius,
-          isStarted: GameState.isStarted, paused: GameState.isPaused,
+          isStarted: GameState.isStarted && !GameState.isOver, paused: GameState.isPaused,
           upgrading: UpgradeChoice.active, upgradeToken: UpgradeChoice.token, upgradeRemaining: UpgradeChoice.remaining(),
           magnetRange: player.magnetRange, relicIds: player.mapRelics.map(r => r.id), bloodPact: player.passives.bloodPact || 0,
           downed: Boolean(player.isDowned), lifeEpoch: player.lifeEpoch || 0 };
@@ -14037,7 +14063,8 @@
         try { if (victory) triggerVictory(); else gameOver(); } finally { this.finishing = false; }
         if (!victory) document.getElementById('over-summary').innerText = '全队倒地，本次协作战斗结束。可以由房主重新出征。';
         document.getElementById('level-modal').style.display = 'none';
-        this.setNotice('');
+        this.setNotice('');updatePartyReturnUI();
+        if(CoopManager.isHost)RoomHub.advertise();
       },
       encodeWorld() {
         const q = n => Math.round((Number(n) || 0) * 10) / 10;
@@ -14078,6 +14105,7 @@
           warnings: telegraphs.map(t => ({ netId: t.netId, damage: t.damage, type: t.type, x: t.x, y: t.y, x1: t.x1, y1: t.y1, x2: t.x2, y2: t.y2, radius: t.radius, life: t.life, maxLife: t.maxLife })) };
       },
       worldInterval(peer, route) {
+        if(this.ended)return 1000;
         const compressed = peer.worldCodec === 1 && route.kind !== 'local';
         const bytes = peer.lastWorldBytes || (compressed ? 2000 : 6000);
         // Broker envelopes add base64/authentication overhead; keep the same
@@ -14089,6 +14117,7 @@
         if (this.sendJob || !this.session || !CoopManager.isHost || !CoopManager.allies.length) return;
         const now = performance.now();
         const targets = CoopManager.allies.filter(peer => {
+          if(this.ended&&!this.participants.has(peer.id))return false;
           const route = CoopManager.routeFor(peer.id, true);
           return route.kind !== 'signal' && (this.requestedPeers.has(peer.id) ||
             now - (peer.lastWorldSend ?? -Infinity) >= this.worldInterval(peer, route) - 1);
@@ -14270,6 +14299,7 @@
           return true;
         }
         if (['WORLD_START', 'WORLD_CHUNK'].includes(pkt.type) && this.guest()) {
+          if(this.retiredSessions.has(pkt.session))return true;
           const host = CoopManager.allies.find(a => a.id === pkt.peerId && a.isHost);
           if (!host || (this.hostId && this.hostId !== pkt.peerId)) return true;
           this.hostId = pkt.peerId;
@@ -14738,7 +14768,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 10, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 11, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
@@ -15117,7 +15147,7 @@
       install() {
         const c=CoopManager,receive=c.onReceivePacket,leave=c.leaveRoom,render=CoopLobby.render;
         c.createRoom=()=>this.create();c.joinRoom=code=>this.join(code);
-        c.leaveRoom=async()=>{if(c.isHost&&this.roomId)this.send({type:'ROOM_CLOSED',roomId:this.roomId});try{await this.notifyLeave();}catch(e){}leave.call(c);this.reset();this.render();};
+        c.leaveRoom=async()=>{const finished=GameState.isOver;if(c.isHost&&this.roomId)this.send({type:'ROOM_CLOSED',roomId:this.roomId});try{await this.notifyLeave();}catch(e){}leave.call(c);this.reset();this.render();if(finished){document.getElementById('coop-modal').style.display='none';resetGameSession(true);}};
         // Manual SDP codes predate authenticated admission and cannot bypass it.
         for(const name of ['createP2POffer','acceptOfferAndCreateAnswer','acceptP2PAnswer'])c[name]=()=>showToast('请使用房号加入；直连仍会自动建立。');
         c.onReceivePacket=(pkt,source)=>{
@@ -15204,7 +15234,7 @@
       card.addEventListener('click', () => {
         const biomeKey = card.dataset.biome;
         if (!biomeKey) return;
-        if (CoopManager.roomCode && (!CoopManager.isHost || GameState.isStarted)) { showToast('地图由房主在出征前选择'); return; }
+        if (CoopManager.roomCode && (!CoopManager.isHost || (GameState.isStarted && !GameState.isOver))) { showToast('地图由房主在出征前选择'); return; }
         GameState.activeBiome = biomeKey;
         syncHeroAndBiomeSelectionUI();
         renderCoopModalUI();
