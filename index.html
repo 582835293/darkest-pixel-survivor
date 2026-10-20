@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R19 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R20 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1268,7 +1268,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R19</span></div>
+        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R20</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -2702,7 +2702,7 @@
     };
 
     var EngineerKit={
-      reset(){this.heat=0;this.heatGate=0;this.lock=null;this.lockTime=0;this.lockVisual=null;this.combo=0;this.strikes=[];this.strikeTimer=0;this.netTimer=0;this.cannonTimer=0;},
+      reset(){this.heat=0;this.heatGate=0;this.lock=null;this.lockTime=0;this.lockVisual=null;this.combo=0;this.strikes=[];this.strikeTimer=0;this.netTimer=0;this.cannonTimer=0;this.cannonSeq=this.cannonSeq||0;this.cannonMask=0;this.rig=Array.from({length:4},()=>[0,0]);},
       normalizeSkills(){const defaults=HERO_CONFIGS.engineer.initSkills();for(const [key,sk]of Object.entries(player.skills))if(defaults[key])sk.name=defaults[key].name;Object.assign(player.skills.charge,{branchAName:defaults.charge.branchAName,branchBName:defaults.charge.branchBName});},
       turrets(){return groundEffects.filter(g=>g.type==='turret'&&g.life>0);},
       cap(){const s=player.skills.skill2;return s.isEvolved?6:s.level>=5?5:s.level>=3?4:2;},
@@ -2796,26 +2796,40 @@
         const u=player.skills.ult;GameState.forgeOverdriveTimer=u.isEvolved?9:6;player.invulnerableTimer=Math.max(player.invulnerableTimer,1.2);
         for(const g of this.turrets().filter(g=>g.temporary))g.life=0;
         const n=u.isEvolved?4:2;for(let i=0;i<n;i++){const a=player.aimAngle+Math.PI/4+i*Math.PI*2/n;this.place(player.x+Math.cos(a)*210,player.y+Math.sin(a)*210,true);}
-        this.strikeTimer=.12;this.cannonTimer=0;this.cannons();this.command(3);this.visual('forge_blast',{x:player.x,y:player.y,radius:200,color:'#fbbf24'},.65);damageInRadius(player.x,player.y,180,u.damage,120);
+        this.rig=Array.from({length:4},(_,i)=>{const a=this.rigPort(player,GameState.gameTime,i).orbit;return[Math.atan2(Math.sin(a),Math.cos(a)),0];});this.strikeTimer=.12;this.cannonTimer=0;this.cannons();this.command(3);this.visual('forge_blast',{x:player.x,y:player.y,radius:200,color:'#fbbf24'},.65);damageInRadius(player.x,player.y,180,u.damage,120);
         showToast(u.isEvolved?'[px:gear] 日冕工厂：四座重装支援 · 炮网齐射 · 巡航轰炸！':'[px:gear] 熔星过载：双支援炮台 · 火力全开！');audio.playExplosion();
       },
+      rigPort(p,time,index){
+        const orbit=index*Math.PI/2+Math.PI/4+time*.25;
+        return{x:p.x+Math.cos(orbit)*58,y:p.y+Math.sin(orbit)*58,orbit};
+      },
+      rigView(){return{evolved:Boolean(player.skills.ult.isEvolved),ports:this.rig||[]};},
+      rigPacket(){return[this.cannonSeq||0,this.cannonMask||0,player.skills.ult.isEvolved?1:0,...Array.from({length:4},(_,i)=>Math.round((this.rig?.[i]?.[0]||0)*1000)/1000)];},
       cannons(){
         if(!WorldCoop.canAct()||GameState.forgeOverdriveTimer<=0)return;
-        const u=player.skills.ult,n=u.isEvolved?2:1;
+        const u=player.skills.ult,n=u.isEvolved?2:1;let fired=false,mask=0;
         for(let port=0;port<4;port++){
-          const a=port*Math.PI/2+GameState.gameTime*.25,x=player.x+Math.cos(a)*115,y=player.y+Math.sin(a)*115;
-          for(let i=0;i<n;i++){const side=n===1?0:(i?7:-7);this.shoot(x-Math.sin(a)*side,y+Math.cos(a)*side,a+(i-(n-1)/2)*.06,u.damage*.30,u.isEvolved,true,{forgeCannon:true,isSecondary:true});}
-          this.visual('forge_muzzle',{x,y,angle:a,radius:38,color:'#fde047'},.18);
+          const g=this.rigPort(player,GameState.gameTime,port),target=this.target(g.x,g.y,540);
+          if(!target)continue;
+          const a=Math.round(Math.atan2(target.y-g.y,target.x-g.x)*1000)/1000,x=g.x+Math.cos(a)*31,y=g.y+Math.sin(a)*31;
+          let shots=0;
+          for(let i=0;i<n;i++){
+            const side=n===1?0:(i?4:-4);
+            if(this.shoot(x-Math.sin(a)*side,y+Math.cos(a)*side,a+(i-(n-1)/2)*.035,u.damage*.30,u.isEvolved,true,{forgeCannon:true,isSecondary:true}))shots++;
+          }
+          if(shots){this.rig[port]=[a,.18];mask|=1<<port;fired=true;this.visual('forge_cannon_flash',{x,y,angle:a,radius:23,color:'#fde047'},.16);}
         }
-        this.cannonTimer=.45;audio.playShoot();
+        this.cannonMask=mask;if(fired){this.cannonSeq++;audio.playShoot();}
+        this.cannonTimer=.45;
       },
-      explode(x,y,radius,damage,except=null){
-        this.visual('forge_blast',{x,y,radius,color:'#fb923c'},.42);audio.playExplosion();
+      explode(x,y,radius,damage,except=null,cannon=false){
+        this.visual(cannon?'forge_cannon_blast':'forge_blast',{x,y,radius,color:'#fb923c'},.42);audio.playExplosion();
         for(const e of [...enemies])if(e!==except&&!e.isDead&&Math.hypot(e.x-x,e.y-y)<=radius+e.radius)damageEnemy(e,damage,Math.atan2(e.y-y,e.x-x),90,true);
       },
       tick(dt){
         if(GameState.selectedHero!=='engineer')return;
-        if(!WorldCoop.canAct()){this.strikes=[];if(this.lockVisual)this.lockVisual.life=0;if(player.isDowned){this.heat=0;this.lockTime=0;}for(const g of this.turrets())g.burstLeft=0;return;}
+        for(const pose of this.rig)pose[1]=Math.max(0,pose[1]-dt);
+        if(!WorldCoop.canAct()){this.strikes=[];for(const pose of this.rig)pose[1]=0;if(this.lockVisual)this.lockVisual.life=0;if(player.isDowned){this.heat=0;this.lockTime=0;}for(const g of this.turrets())g.burstLeft=0;return;}
         this.heatGate=Math.max(0,(this.heatGate||0)-dt);this.lockTime=Math.max(0,(this.lockTime||0)-dt);
         if(this.lockTime>0&&this.lock&&!this.lock.isDead){const v=this.lockVisual;if(v&&skyBeams.includes(v)){v.x=this.lock.x;v.y=this.lock.y;v.life=.4;}else this.mark(this.lock);}
         else if(this.lockVisual)this.lockVisual.life=0;
@@ -2874,20 +2888,55 @@
           const strike=s.type==='forge_strike',rr=strike?r*(.45+.55*ratio):r;c.strokeStyle=strike?'#f97316':'#67e8f9';c.lineWidth=2;c.save();c.rotate(t*(strike?-2:1));for(let i=0;i<4;i++){c.rotate(Math.PI/2);c.beginPath();c.moveTo(rr,-12);c.lineTo(rr,12);c.lineTo(rr-10,12);c.stroke();}c.restore();c.beginPath();c.arc(0,0,rr*.65,0,Math.PI*2);c.moveTo(-rr*.3,0);c.lineTo(rr*.3,0);c.moveTo(0,-rr*.3);c.lineTo(0,rr*.3);c.stroke();
           if(strike){const y=-240*ratio;c.strokeStyle='rgba(251,146,60,.5)';c.lineWidth=6;c.beginPath();c.moveTo(-80*ratio,y-45);c.lineTo(0,0);c.stroke();c.fillStyle='#fbbf24';c.save();c.translate(-80*ratio,y);c.rotate(-.32);c.fillRect(-7,-23,14,28);c.fillStyle='#fff7ae';c.fillRect(-3,5,6,24);c.restore();}return;
         }
+        if(s.type==='forge_cannon_flash'){
+          c.rotate(s.angle||0);const f=ratio;c.fillStyle='#f97316';c.fillRect(-3,-8*f,23*f,16*f);c.fillRect(13,-3*f,22*f,6*f);c.fillStyle='#fde047';c.fillRect(-3,-4*f,24*f,8*f);c.fillStyle='#fffde7';c.fillRect(-3,-2,20*f,4);return;
+        }
+        if(s.type==='forge_cannon_blast'){
+          const rr=r*(.35+.65*(1-ratio));c.strokeStyle='#f59e0b';c.lineWidth=3;c.beginPath();c.moveTo(-rr,0);c.lineTo(0,-rr);c.lineTo(rr,0);c.lineTo(0,rr);c.closePath();c.stroke();
+          c.fillStyle=ratio>.6?'#fff7cf':'#fb923c';c.fillRect(-rr*.28,-rr*.28,rr*.56,rr*.56);
+          for(let i=0;i<8;i++){c.save();c.rotate(i*Math.PI/4);c.fillStyle=i%2?'#fbbf24':'#f97316';c.fillRect(rr*.7,-3,12+10*ratio,6);c.restore();}return;
+        }
         if(s.type==='forge_muzzle'){c.rotate(s.angle||0);c.fillStyle='#f97316';c.beginPath();c.moveTo(14,-r*.35);c.lineTo(r*1.5,0);c.lineTo(14,r*.35);c.fill();c.fillStyle='#fff7ae';c.fillRect(13,-3,r,6);return;}
         const size=r*(1.1-ratio*.7),gradient=c.createRadialGradient(0,0,0,0,0,size);gradient.addColorStop(0,'rgba(255,247,174,.6)');gradient.addColorStop(.45,'rgba(249,115,22,.28)');gradient.addColorStop(1,'rgba(249,115,22,0)');c.fillStyle=gradient;c.fillRect(-size,-size,size*2,size*2);
         c.rotate((1-ratio)*1.3);c.strokeStyle=s.color||'#fb923c';c.lineWidth=3;c.beginPath();for(let i=0;i<48;i++){const a=i*Math.PI/24,rr=size*(i%4<2?1:.86);if(i)c.lineTo(Math.cos(a)*rr,Math.sin(a)*rr);else c.moveTo(Math.cos(a)*rr,Math.sin(a)*rr);}c.closePath();c.stroke();c.strokeStyle='#fff7ae';c.lineWidth=1.5;c.beginPath();c.arc(0,0,size*.65,0,Math.PI*2);c.stroke();
         for(let i=0;i<12;i++){c.save();c.rotate(i*Math.PI/6);c.fillStyle=i%2?'#fef3c7':'#f97316';c.fillRect(size*.7,-3,size*.35,6);c.restore();}
       },
       drawRig(c,p,state){
-        if(state.selectedHero!=='engineer')return;const active=state.forgeOverdriveTimer>0,t=state.gameTime||0;
-        c.save();c.translate(p.x,p.y);c.strokeStyle=active?'#fbbf24':'#fb923c';c.lineWidth=2;
+        if(state.selectedHero!=='engineer')return;
+        const active=state.forgeOverdriveTimer>0,t=state.gameTime||0;
+        c.save();c.translate(p.x,p.y);
         if(active){
-          c.save();c.rotate(t*.4);c.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3;if(i)c.lineTo(Math.cos(a)*102,Math.sin(a)*102);else c.moveTo(102,0);}c.closePath();c.stroke();for(let i=0;i<12;i++){c.rotate(Math.PI/6);c.fillStyle='#f59e0b';c.fillRect(95,-4,13,8);}c.restore();
-          for(let i=0;i<4;i++){const a=i*Math.PI/2+t*.25,x=Math.cos(a)*69,y=Math.sin(a)*69;c.strokeStyle='#64748b';c.lineWidth=7;c.beginPath();c.moveTo(0,0);c.lineTo(x,y);c.stroke();c.save();c.translate(x,y);c.rotate(a);c.fillStyle='#0f172a';c.fillRect(-24,-18,48,36);c.fillStyle='#b45309';c.fillRect(-18,-14,32,28);c.fillStyle='#fbbf24';c.fillRect(-10,-10,12,20);c.fillStyle='#94a3b8';c.fillRect(8,-11,33,7);c.fillRect(8,4,33,7);c.fillStyle='#fff7ae';c.fillRect(40,-10,8+Math.sin(t*24+i)*6,5);c.fillRect(40,5,8+Math.sin(t*24+i)*6,5);c.restore();}
-        }else{for(const side of [-1,1]){c.fillStyle='#334155';c.fillRect(side*29-8,-8,16,22);c.fillStyle='#fb923c';c.fillRect(side*29-5,-5,10,5);c.fillStyle='#94a3b8';c.fillRect(side*29-3,-20,6,15);}}
+          const rig=state.forgeRig||(p===player?this.rigView():null),evolved=Boolean(rig?.evolved);
+          // Compact floating pods; the middle remains open for the player and nearby enemies.
+          c.strokeStyle='#7c582a';c.lineWidth=1;c.setLineDash([7,17]);c.beginPath();c.arc(0,0,54,0,Math.PI*2);c.stroke();c.setLineDash([]);
+          c.fillStyle='#fbbf24';for(const side of [-1,1]){c.fillRect(side*22-3,-22,6,2);c.fillRect(side*22-3,20,6,2);}
+          for(let i=0;i<4;i++){
+            const g=this.rigPort(p,t,i),pose=rig?.ports?.[i],a=Number.isFinite(pose?.[0])?pose[0]:g.orbit;
+            const flash=Math.max(0,Math.min(1,(pose?.[1]||0)/.18)),kick=6*flash;
+            c.save();c.translate(g.x-p.x,g.y-p.y);
+            c.fillStyle='rgba(2,6,23,.45)';c.fillRect(-18,15,36,5);
+            c.rotate(a);c.fillStyle='#225867';c.fillRect(-22,-6,8,12);c.fillStyle='#67e8f9';c.fillRect(-27,-3,6,6);c.fillStyle='#e0f2fe';c.fillRect(-25,-1,4,2);
+            c.translate(-kick,0);
+            c.fillStyle='#070c15';c.fillRect(-17,-15,36,30);c.fillRect(12,-12,22,24);
+            c.fillStyle='#263345';c.fillRect(-15,-13,32,26);c.fillStyle='#a25418';c.fillRect(-11,-11,25,22);
+            c.fillStyle=evolved?'#fbbf24':'#d99026';c.fillRect(-10,-10,15,5);c.fillRect(-10,5,15,5);c.fillStyle='#ffdf86';c.fillRect(-7,-8,8,2);
+            c.fillStyle='#17202c';c.fillRect(-8,-3,14,6);c.fillStyle=flash?'#fff7cf':'#4b8393';c.fillRect(-6,-2,9,4);
+            for(const side of evolved?[-5,5]:[0]){
+              c.fillStyle='#5a6879';c.fillRect(8,side-4,23,8);c.fillStyle='#b5c6cc';c.fillRect(10,side-3,19,2);c.fillStyle='#14202c';c.fillRect(27,side-3,7,6);
+              c.fillStyle=flash?'#fff7cf':'#586575';c.fillRect(31,side-2,3,4);
+            }
+            if(flash){
+              c.globalAlpha*=flash;c.fillStyle='#f97316';c.fillRect(34,-9,12,18);c.fillRect(46,-4,10,8);c.fillStyle='#fbbf24';c.fillRect(34,-5,14,10);c.fillStyle='#fffde7';c.fillRect(33,-2,17,4);
+              c.fillStyle='#cbd5e1';c.fillRect(-1,-20-(1-flash)*9,5,4);c.fillRect(-8,17+(1-flash)*8,4,3);
+            }
+            c.restore();
+          }
+        }else{
+          for(const side of [-1,1]){c.fillStyle='#334155';c.fillRect(side*29-8,-8,16,22);c.fillStyle='#fb923c';c.fillRect(side*29-5,-5,10,5);c.fillStyle='#94a3b8';c.fillRect(side*29-3,-20,6,15);}
+        }
         c.restore();
       }
+
     };
 
 
@@ -7174,7 +7223,7 @@
               p.hitEnemies.add(en);
               damageEnemy(en, p.damage, Math.atan2(p.vy, p.vx), 110, Boolean(p.isSecondary));
               if(p.forgeHand)EngineerKit.onHit(en,p);
-              if(p.isGrenade&&!p.hasExploded){p.hasExploded=true;EngineerKit.explode(en.x,en.y,p.color==='#fde047'?95:70,Math.round(p.damage*.65),en);p.life=0;}
+              if(p.isGrenade&&!p.hasExploded){p.hasExploded=true;EngineerKit.explode(en.x,en.y,p.color==='#fde047'?95:70,Math.round(p.damage*.65),en,Boolean(p.forgeCannon));p.life=0;}
               if (p.applyBleed) { en.bleedStacks = Math.min(5, (en.bleedStacks || 0) + 1); en.bleedTimer = 4.0; WorldCoop.markBleed(en); }
               if (p.applyPoison) { en.poisonStacks = Math.min(4, (en.poisonStacks || 0) + 1); }
               if (p.isFreeze) { en.freezeTimer = 1.5; }
@@ -7190,7 +7239,7 @@
             }
           }
         }
-        if(p.life<=0&&p.isGrenade&&!p.hasExploded&&WorldCoop.canAct()){p.hasExploded=true;EngineerKit.explode(p.x,p.y,p.color==='#fde047'?95:70,Math.round(p.damage*.65));}
+        if(p.life<=0&&p.isGrenade&&!p.hasExploded&&WorldCoop.canAct()){p.hasExploded=true;EngineerKit.explode(p.x,p.y,p.color==='#fde047'?95:70,Math.round(p.damage*.65),null,Boolean(p.forgeCannon));}
         if (p.life <= 0) projectiles.splice(i, 1);
       }
 
@@ -7718,7 +7767,9 @@
         ctx.translate(p.x, p.y);
         ctx.rotate(ang);
 
-        if(p.healerBolt){
+        if(p.forgeCannon){
+          ctx.fillStyle='rgba(249,115,22,.42)';ctx.fillRect(-55,-5,59,10);ctx.fillStyle='#fb923c';ctx.fillRect(-39,-3,42,6);ctx.fillStyle='#fff7cf';ctx.fillRect(-23,-1,34,2);ctx.fillStyle='#131d2a';ctx.fillRect(-12,-7,23,14);ctx.fillStyle=p.color;ctx.fillRect(-8,-5,21,10);ctx.fillStyle='#fffde7';ctx.fillRect(6,-3,10,6);
+        }else if(p.healerBolt){
           ctx.fillStyle='rgba(110,231,183,.28)';ctx.fillRect(-28,-5,42,10);ctx.fillStyle='#a7f3d0';ctx.fillRect(-21,-2,30,4);ctx.fillStyle='#fde68a';ctx.beginPath();ctx.moveTo(19,0);ctx.lineTo(5,-8);ctx.lineTo(-1,0);ctx.lineTo(5,8);ctx.closePath();ctx.fill();ctx.fillStyle='#fffde7';ctx.fillRect(-8,-2,23,4);ctx.fillRect(-19,-6,5,12);
         }else if(p.isRivet){
           if(p.forgeRocket){ctx.fillStyle='rgba(249,115,22,.45)';ctx.beginPath();ctx.moveTo(-10,-6);ctx.lineTo(-48,0);ctx.lineTo(-10,6);ctx.fill();ctx.fillStyle='#fff7ae';ctx.fillRect(-30,-2,20,4);}
@@ -10649,7 +10700,7 @@
               notes.push('治疗只作用于范围内存活且可参与战斗的玩家。溢疗的一半转盾，最多目标生命上限35%，不会降低已有更高护盾。');
             }else if(hero==='engineer'&&key==='skill2'){
               add('炮台上限',s.isEvolved?6:lv>=5?5:lv>=3?4:2);add('每次部署',s.isEvolved?3:lv>=3?2:1);add('炮台寿命',n(16+.8*lv)+' 秒');add('炮台射程',(s.radius||280)+60+' px');
-            }else if(hero==='engineer'&&key==='ult'){add('机甲炮口','4 个旋转炮口');add('机甲炮击',`${s.isEvolved?8:4} 枚炮弹 / 每0.45秒`);add('每枚直击基数',n(s.damage*.3));add('大招持续',`${s.isEvolved?9:6} 秒`);add('普攻 / 蓄力','普攻间隔×0.65 / 蓄满时间×0.70');
+            }else if(hero==='engineer'&&key==='ult'){add('机甲炮口','4 门自动瞄准浮游炮');add('浮游炮索敌距离','540 px（从炮座计算）');add('机甲炮击',`${s.isEvolved?8:4} 枚炮弹 / 每0.45秒`);add('每枚直击基数',n(s.damage*.3));add('大招持续',`${s.isEvolved?9:6} 秒`);add('普攻 / 蓄力','普攻间隔×0.65 / 蓄满时间×0.70');
             }else if(hero==='mage'&&key==='skill1') {add('位移距离',145+15*lv+' px');add('冻结时间',(s.freezeDuration||2.5)+' 秒');notes.push('起点与终点各触发一次冰霜新星。');}
             else if(hero==='warrior'&&key==='skill2')add('持续时间',n((s.duration||4.5)+.4*lv)+' 秒');
             if(key!=='item'&&lv<(s.maxLevel||5)){
@@ -12703,6 +12754,9 @@
           if(old&&pkt.seq<=old.seq)return true;
           const state=old||{visuals:new Map(),seen:new Map(),items:[]};state.seq=pkt.seq;state.castSeq=pkt.castSeq;state.at=performance.now();
           if(Array.isArray(pkt.look)&&(pkt.look.length===7||pkt.look.length===8)&&pkt.look.every(Number.isFinite))state.look=pkt.look.map((v,i)=>Math.max(0,Math.min(i===5?40:30,v)));
+          if(Array.isArray(pkt.rig)&&pkt.rig.length===7&&Number.isSafeInteger(pkt.rig[0])&&pkt.rig[0]>=0&&Number.isInteger(pkt.rig[1])&&pkt.rig[1]>=0&&pkt.rig[1]<=15&&[0,1].includes(pkt.rig[2])&&pkt.rig.slice(3).every(a=>Number.isFinite(a)&&Math.abs(a)<=Math.PI+.01)){
+            const fresh=pkt.rig[0]>(state.rigSeq??0);state.rigSeq=Math.max(state.rigSeq||0,pkt.rig[0]);state.rig={evolved:Boolean(pkt.rig[2]),ports:pkt.rig.slice(3).map((a,i)=>[a,fresh&&(pkt.rig[1]&(1<<i)) ? .18 : (state.rig?.ports?.[i]?.[1]||0)])};
+          }
           if(Array.isArray(pkt.items)&&pkt.items.length<=16)state.items=pkt.items.filter(a=>Array.isArray(a)&&['orbit','blackhole','trap','wheel'].includes(a[0])&&a.slice(1,4).every(Number.isFinite));
           if(Array.isArray(pkt.alive)&&pkt.alive.length<=320){const alive=new Set(pkt.alive);for(const [id,v]of state.visuals)if((['ground','orbit','wheel','projectile'].includes(v.kind)||['healer_sanctuary','healer_wings'].includes(v.obj.type))&&!alive.has(id))state.visuals.delete(id);}
           const ack=[];
@@ -12737,6 +12791,7 @@
         }
         for(const id of this.records.keys())if(!alive.has(id))this.records.delete(id);
       },
+      rigPayload(){return EngineerKit.rigPacket();},
       syncState(now){
         if(!WorldCoop.active()||WorldCoop.ended||!CoopManager.allies.length||now-this.lastState<75)return;this.lastState=now;this.capture();
         const items=[];if(orbitingBlades.length)items.push(['orbit',player.x,player.y,Math.max(...orbitingBlades.map(b=>b.dist)),orbitingBlades.some(b=>b.isEvolved)?1:0]);
@@ -12756,10 +12811,11 @@
           const b=this.budgets.get(peer.id)||{at:now,credit:burst,meta:-Infinity,motion:-Infinity};b.credit=Math.min(burst,b.credit+Math.max(0,now-b.at)*rate/1000);b.at=now;this.budgets.set(peer.id,b);
           if(!['rtc','local','mqtt'].includes(route.kind)||route.dc?.bufferedAmount>4096)continue;
           const meta=now-b.meta>=350,packet={type:'SKILL_VFX_STATE',session:WorldCoop.session,targetPeerId:peer.id,seq:++this.stateSeq,castSeq:this.seq,visuals:[]};
-          const motion=updates.length&&now-b.motion>=150;
+          const motion=(updates.length||(GameState.selectedHero==='engineer'&&GameState.forgeOverdriveTimer>0))&&now-b.motion>=150;
           if(meta)Object.assign(packet,{items:items.slice(0,16),look,alive});if(motion)packet.updates=updates;
+          if((motion||meta)&&GameState.selectedHero==='engineer'&&GameState.forgeOverdriveTimer>0)packet.rig=this.rigPayload();
           const chosen=[];let bytes=JSON.stringify(packet).length+240;
-          const visualPriority=v=>v.kind==='ground'||v.kind==='orbit'||v.kind==='wheel'?0:v.kind==='beam'?1:v.obj.forgeRocket?2:v.kind==='particle'?4:3;
+          const visualPriority=v=>v.kind==='ground'||v.kind==='orbit'||v.kind==='wheel'?0:v.kind==='beam'?1:(v.obj.forgeRocket||v.obj.forgeCannon)?2:v.kind==='particle'?4:3;
           for(const [id,v]of [...this.records].sort((a,b)=>visualPriority(a[1])-visualPriority(b[1]))){
             if(v.acked.has(peer.id)||now-(v.sent.get(peer.id)??-Infinity)<450)continue;
             const row=this.pack(v.kind,id,v.obj),size=JSON.stringify(row).length+1;
@@ -12783,6 +12839,7 @@
           const peer=CoopManager.allies.find(p=>p.id===id);if(!peer||peer.downed||(!paused&&now-s.at>2500)){this.states.delete(id);continue;}
           for(const [id,at]of s.seen)if(now-at>15000)s.seen.delete(id);
           if(paused)continue;const frozen=Boolean(s.look?.[6]);
+          if(s.rig)for(const pose of s.rig.ports)pose[1]=Math.max(0,pose[1]-scaled);
           if(s.look)for(const k of [1,2,3,7])if(Number.isFinite(s.look[k]))s.look[k]=Math.max(0,s.look[k]-scaled);
           for(const [key,v]of s.visuals){const o=v.obj,d=scaled;
             if(['orbit','wheel'].includes(v.kind)&&frozen)continue;
@@ -12807,7 +12864,7 @@
       },
       drawAuras(c,peer){
         const s=this.states.get(peer.id),v=s?.look,alpha=CoopManager.allyVfxAlpha;if(!v||!alpha)return;
-        drawNativeAuras(c,{...peer,radius:v[5]||12,shield:v[4],passives:{frostAura:v[0]}},{selectedHero:peer.hero,berserkTimer:v[1],starfallTimer:v[2],phantomCloneTimer:v[3],forgeOverdriveTimer:v[7]||0,gameTime:GameState.gameTime},alpha);
+        drawNativeAuras(c,{...peer,radius:v[5]||12,shield:v[4],passives:{frostAura:v[0]}},{selectedHero:peer.hero,berserkTimer:v[1],starfallTimer:v[2],phantomCloneTimer:v[3],forgeOverdriveTimer:v[7]||0,forgeRig:s.rig,gameTime:GameState.gameTime},alpha);
       },
       draw(c,kind){
         const alpha=CoopManager.allyVfxAlpha;if(!alpha)return;
@@ -15786,7 +15843,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 19, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 20, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
