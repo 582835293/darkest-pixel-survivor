@@ -52,10 +52,11 @@ const tail=String.raw`
   await host.locator('#btn-pause').click();await host.locator('#btn-pause-lobby').click();assert(await host.locator('#coop-modal').isVisible());await sameParty();assert.equal(await host.evaluate(()=>WorldCoop.session),second);assert.equal(await host.evaluate(()=>GameState.isPaused),true);
   await host.locator('#btn-coop-start-now').click();await host.waitForFunction(()=>!GameState.isPaused);assert.equal(await host.evaluate(()=>WorldCoop.session),second);
  });
+ const beforeAwards=await Promise.all(pages.map(p=>p.evaluate(()=>Campaign.achievements().filter(a=>Campaign.permanent().achievements[a.id]).reduce((n,a)=>n+a.reward,0))));
  const beforeGold=await Promise.all(pages.map(p=>p.evaluate(()=>SaveManager.data.gold)));
  await check('victory awards once and returning to the party does not pay or end the run again',async()=>{
   await ended(true);await returnAll();await sameParty();
-  const after=await Promise.all(pages.map(p=>p.evaluate(()=>SaveManager.data.gold)));for(let i=0;i<3;i++)assert.equal(after[i]-beforeGold[i],500);
+  const after=await Promise.all(pages.map(p=>p.evaluate(()=>SaveManager.data.gold)));for(let i=0;i<3;i++){const awards=await pages[i].evaluate(()=>Campaign.achievements().filter(a=>Campaign.permanent().achievements[a.id]).reduce((n,a)=>n+a.reward,0));assert.equal(after[i]-beforeGold[i],500+awards-beforeAwards[i]);}
   await a.evaluate(()=>{WorldCoop.finish(true);returnToCampOrParty()});assert.equal(await a.evaluate(()=>SaveManager.data.gold),after[1]);
  });
  await check('a new participant enters the waiting party without receiving the previous victory or its world',async()=>{

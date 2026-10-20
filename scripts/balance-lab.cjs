@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),
 const arg=(key,fallback)=>process.argv.find(v=>v.startsWith('--'+key+'='))?.split('=').slice(1).join('=')||fallback;
 const repo=path.resolve(__dirname,'..'),source=path.resolve(arg('source',path.join(repo,'index.html'))),label=arg('label','current'),seeds=Number(arg('seeds','2')),scenes=arg('scenes','boss,crowd').split(',');
 const html=fs.readFileSync(source),server=http.createServer((q,r)=>{r.setHeader('content-type','text/html;charset=utf-8');r.end(html)});let browser;const errors=[],rows=[];
-const stages=[{id:'early',minute:2,level:6},{id:'middle',minute:10,level:20},{id:'late',minute:22,level:36},{id:'complete',minute:28,level:47}];
+const stages=[{id:'early',minute:2,level:6},{id:'middle',minute:10,level:20},{id:'late',minute:22,level:38},{id:'complete',minute:28,level:49}];
 (async()=>{
  await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH||undefined,headless:true});const page=await browser.newPage();page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{requestAnimationFrame=()=>0});await page.goto('http://127.0.0.1:'+server.address().port);
  await page.evaluate(()=>{
@@ -24,7 +24,7 @@ const stages=[{id:'early',minute:2,level:6},{id:'middle',minute:10,level:20},{id
    else if(stage.id==='middle'){
     many('atk_up',4);many('charge_base_up',3);many('s1_up',2);many('s2_up',3);pick('ult_up');for(const id of gear)pick(id);pick('syn_thunder');pick('syn_ice');const c=generateUpgradePool().find(c=>c.isTrueSuper&&c.id.includes(hero==='warrior'?'blade':hero==='mage'?'missile':hero==='ranger'?'bow':hero==='engineer'?'rivet':'healer_atk'));if(!c)throw new Error('Missing attack awakening '+hero);pick(c.id);
    }else{
-    for(const [id,n]of [['atk_up',4],['charge_base_up',4],['s1_up',4],['s2_up',4],['ult_up',2]])many(id,n);
+    for(const [id,n]of [['atk_up',4],['charge_base_up',4],['s1_up',4],['s2_up',4],['ult_up',4]])many(id,n);
     for(const id of gear)many(id,stage.id==='complete'?5:3);many('syn_thunder',stage.id==='complete'?3:2);many('syn_ice',stage.id==='complete'?3:2);
     for(let i=0;i<4;i++){const c=generateUpgradePool().find(c=>c.isTrueSuper);if(!c)throw new Error('Missing awakening '+hero);pick(c.id);}
     if(stage.id==='complete'){pick(build==='A'?'charge_branch_a':'charge_branch_b');many('charge_branch_up',2);}
@@ -53,4 +53,4 @@ const stages=[{id:'early',minute:2,level:6},{id:'middle',minute:10,level:20},{id
  });
  for(const stage of stages)for(const scene of scenes)for(const build of (stage.id==='complete'?['A','B']:['A']))for(let seed=1;seed<=seeds;seed++)for(const hero of ['warrior','mage','ranger','engineer','healer']){const row=await page.evaluate(p=>labRun(p),{hero,stage,scene,build,seed:seed*1879});rows.push(row);console.log(label,stage.id,scene,build,seed,hero,scene==='skirmish'?JSON.stringify(row.encounter):'DPS '+row.dps);}
  assert.deepEqual(errors,[]);
-})().catch(e=>{errors.push(String(e));console.error(e);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close();fs.mkdirSync(path.join(repo,'test-results'),{recursive:true});fs.writeFileSync(path.join(repo,'test-results','balance-'+label+'.json'),JSON.stringify({label,source,rows,errors,scope:'20-second fixed-position high-HP boss/25-target combat lab, deterministic virtual timers and seeds, no talents/relics/curse, equal actual upgrade-card budgets at levels 6/20/36/47. Real combat code and mixed primary/charge/active-skill rotation. Lab DPS is not a claim about live clear speed or human survival.'},null,2));});
+})().catch(e=>{errors.push(String(e));console.error(e);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close();fs.mkdirSync(path.join(repo,'test-results'),{recursive:true});fs.writeFileSync(path.join(repo,'test-results','balance-'+label+'.json'),JSON.stringify({label,source,sourceHash:require('node:crypto').createHash('sha256').update(html).digest('hex'),rows,errors,scope:'20-second fixed-position high-HP boss/25-target combat lab, deterministic virtual timers and seeds, no talents/relics/curse, equal actual upgrade-card budgets at levels 6/20/38/49. Real combat code and mixed primary/charge/active-skill rotation. Lab DPS is not a claim about live clear speed or human survival.'},null,2));});

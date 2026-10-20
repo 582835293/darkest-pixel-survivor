@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R21 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R22 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1268,7 +1268,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R21</span></div>
+        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R22</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -1518,7 +1518,7 @@
       <div class="modal-title">[px:compass] 战术大地图</div>
       <div class="modal-subtitle">以你的角色为中心 · 方向不变 · 越外圈代表的距离越大<br>刻度为游戏距离；超过 8000 的目标显示在边缘</div>
       <canvas id="world-map-canvas" width="620" height="620" aria-label="以自己为中心的距离地图"></canvas>
-      <div id="world-map-shape" style="font-size:11px;color:#94a3b8;text-align:center"></div><div class="map-legend"><span style="color:#93c5d5">墙线 / 阴影为墙外</span><span style="color:#4ade80">[px:self] 自己</span><span style="color:#c4b5fd">[px:ally] 队友</span><span style="color:#fb7185">[px:rescue] 待救队友 / 自己</span><span style="color:#ef4444">[px:enemy-dot] 怪物　[px:boss] 首领</span><span style="color:#38bdf8">[px:shrine] 神龛</span><span style="color:#fde047">[px:chest] 秘宝</span></div>
+      <div id="world-map-shape" style="font-size:11px;color:#94a3b8;text-align:center"></div><div class="map-legend"><span style="color:#93c5d5">墙线 / 阴影为墙外</span><span style="color:#4ade80">[px:self] 自己</span><span style="color:#c4b5fd">[px:ally] 队友</span><span style="color:#fb7185">[px:rescue] 待救队友 / 自己</span><span style="color:#ef4444">[px:enemy-dot] 怪物　[px:boss] 首领</span><span style="color:#38bdf8">[px:shrine] 神龛</span><span style="color:#fde047">[px:chest] 秘宝</span><span style="color:#fde68a">[px:shop] 商人</span><span style="color:#86efac">[px:ally] 友军首领</span></div>
       <div id="world-map-team" style="font-size:12px;line-height:1.6;margin:8px"></div>
       <div style="font-size:11px;color:#94a3b8">地图实时更新，不暂停战斗；小地图边缘的队友点指向远方队友。</div>
       <button class="btn-secondary" id="btn-map-relics">查看秘宝图鉴</button>
@@ -1819,7 +1819,7 @@
         add('turret','哨戒炮台',({rect,poly,line})=>{rect(1,11,14,4,'d');rect(2,14,3,2,'s');rect(11,14,3,2,'s');poly([[3,6],[5,4],[11,4],[13,6],[13,11],[3,11]],'g');rect(6,7,5,3,'c');rect(8,2,7,4,'s');line(8,2,14,2,'l');rect(3,3,5,4,'b');});
         add('magnetic-mine','牵引磁雷',g=>{g.line(1,7,14,7,'c');g.line(7,1,7,14,'c');g.disk(7,7,6,'d');g.disk(7,7,3,'g');g.rect(6,6,3,3,'y');for(const [x,y]of [[0,5],[13,5],[5,0],[5,13]])g.rect(x,y,3,3,'s');});
         add('reactor','熔星过载',g=>{this.defs.get('gear').paint(g);g.disk(7,7,4,'R');g.poly([[7,3],[11,10],[4,10]],'g');g.rect(7,6,2,3,'w');});
-        add('crosier','流辉圣矢',g=>{g.line(5,14,10,3,'g',2);g.disk(10,3,3,'y');g.disk(10,3,1,'k',null);g.line(2,7,7,7,'i');g.rect(0,8,4,2,'c');});
+        add('crosier','降辉圣光',g=>{g.line(5,14,10,3,'g',2);g.disk(10,3,3,'y');g.disk(10,3,1,'k',null);g.line(2,7,7,7,'i');g.rect(0,8,4,2,'c');});
         add('mending','回春祷言',g=>{g.rect(6,2,4,12,'i');g.rect(2,6,12,4,'i');g.rect(7,3,2,10,'w');g.rect(3,7,10,2,'w');g.line(1,4,3,2,'g');g.line(12,13,14,11,'g');});
         add('sanctuary','庇护圣域',g=>{g.poly([[1,5],[7,0],[14,5]],'g');g.rect(2,5,12,9,'c');g.rect(4,5,8,9,'d');g.rect(6,7,4,7,'g');g.rect(0,14,16,2,'s');g.rect(7,3,2,4,'w');});
         add('seraph','六翼曙光',g=>{for(const y of [3,6,9]){g.poly([[7,y+3],[0,y],[2,y+4],[6,y+5]],'i');g.poly([[8,y+3],[15,y],[13,y+4],[9,y+5]],'y');}g.rect(6,4,4,9,'g');g.rect(7,5,2,6,'w');g.line(5,1,10,1,'g');});
@@ -2276,7 +2276,7 @@
             speed: player.speed, critChance: player.critChance,
             critMultiplier: player.critMultiplier, armor: player.armor,
             magnetRange: player.magnetRange, reviveLeft: player.reviveLeft,
-            chargeMax: player.chargeMax, chargeRulesVersion: 2, balanceRulesVersion: 1,
+            chargeMax: player.chargeMax, chargeRulesVersion: 2, balanceRulesVersion: 1, campaignRulesVersion: 1,
             skills: JSON.parse(JSON.stringify(player.skills)),
             passives: JSON.parse(JSON.stringify(player.passives)),
             mapRelics: JSON.parse(JSON.stringify(player.mapRelics || []))
@@ -2399,7 +2399,7 @@
           charge: { name: '蓄力·居合斩', level: 1, maxLevel: 5, branch: null, branchLv: 0, maxBranchLv: 3, branchAName: '八荒万剑流', branchBName: '鬼神一刀流' },
           skill1: { name: '血影突袭', level: 1, maxLevel: 5, damage: 38, cd: 5.0, timer: 0, isDashing: false, dashDuration: 0.18, dashTimer: 0, isEvolved: false },
           skill2: { name: '剑狱回旋', level: 1, maxLevel: 5, damage: 22, cd: 8.2, timer: 0, radius: 76, duration: 4.2, isEvolved: false },
-          ult: { name: '断界天陨斩', level: 1, maxLevel: 3, damage: 145, cd: 20.0, timer: 0, isEvolved: false },
+          ult: { name: '断界天陨斩', level: 1, maxLevel: 5, damage: 145, cd: 20.0, timer: 0, isEvolved: false },
           item: { name: '神圣壁障', level: 1, cd: 18.0, timer: 0, duration: 2.8, activeTimer: 0 }
         })
       },
@@ -2417,7 +2417,7 @@
           charge: { name: '蓄力·星界激光', level: 1, maxLevel: 5, branch: null, branchLv: 0, maxBranchLv: 3, branchAName: '三棱圣光流', branchBName: '超新星核爆流' },
           skill1: { name: '极寒冰闪', level: 1, maxLevel: 5, damage: 34, cd: 5.2, timer: 0, radius: 92, freezeDuration: 2.2, isEvolved: false },
           skill2: { name: '引力坍缩球', level: 1, maxLevel: 5, damage: 62, cd: 8.5, timer: 0, radius: 138, isEvolved: false },
-          ult: { name: '群星坠落阵列', level: 1, maxLevel: 3, damage: 90, cd: 21.0, timer: 0, isEvolved: false },
+          ult: { name: '群星坠落阵列', level: 1, maxLevel: 5, damage: 90, cd: 21.0, timer: 0, isEvolved: false },
           item: { name: '虚空护盾', level: 1, cd: 18.0, timer: 0, duration: 2.8, activeTimer: 0 }
         })
       },
@@ -2435,7 +2435,7 @@
           charge: { name: '蓄力·龙息穿云箭', level: 1, maxLevel: 5, branch: null, branchLv: 0, maxBranchLv: 3, branchAName: '天穹万箭流', branchBName: '弑神电磁炮' },
           skill1: { name: '钩爪后跃', level: 1, maxLevel: 5, damage: 38, cd: 4.8, timer: 0, isDashing: false, dashDuration: 0.18, dashTimer: 0, isEvolved: false },
           skill2: { name: '呼啸回旋镖', level: 1, maxLevel: 5, damage: 36, cd: 6.8, timer: 0, count: 1, isEvolved: false },
-          ult: { name: '暗影幻象齐射', level: 1, maxLevel: 3, damage: 98, cd: 20.0, timer: 0, isEvolved: false },
+          ult: { name: '暗影幻象齐射', level: 1, maxLevel: 5, damage: 98, cd: 20.0, timer: 0, isEvolved: false },
           item: { name: '灵狐庇护', level: 1, cd: 18.0, timer: 0, duration: 2.8, activeTimer: 0 }
         })
       }
@@ -2449,7 +2449,7 @@
         charge:{name:'蓄力·磁暴重炮',level:1,maxLevel:5,branch:null,branchLv:0,maxBranchLv:3,branchAName:'炮网贯穿齐射',branchBName:'追踪火箭弹幕'},
         skill1:{name:'震荡磁雷',level:1,maxLevel:5,damage:46,cd:5.5,timer:0,isDashing:false,dashTimer:0,isEvolved:false},
         skill2:{name:'哨戒炮台',level:1,maxLevel:5,damage:16,cd:6.5,timer:0,radius:280,isEvolved:false},
-        ult:{name:'熔星过载',level:1,maxLevel:3,damage:105,cd:24,timer:0,isEvolved:false},
+        ult:{name:'熔星过载',level:1,maxLevel:5,damage:105,cd:24,timer:0,isEvolved:false},
         item:{name:'合金壁障',level:1,cd:18,timer:0,duration:2.8,activeTimer:0}
       })
     };
@@ -2457,13 +2457,13 @@
     HERO_CONFIGS.healer={
       name:'曙光祷师',color:'#a7f3d0',speed:150,maxHp:92,critChance:.08,armor:.04,
       icons:{atk:'[px:crosier]',s1:'[px:mending]',s2:'[px:sanctuary]',ult:'[px:seraph]',item:'[px:shield]'},
-      labels:{atk:'流辉圣矢',s1:'回春祷言',s2:'庇护圣域',ult:'六翼曙光'},
+      labels:{atk:'降辉圣光',s1:'回春祷言',s2:'庇护圣域',ult:'六翼曙光'},
       initSkills:()=>({
-        attack:{name:'流辉圣矢',level:1,maxLevel:5,damage:17,cd:.48,timer:0,range:310,isEvolved:false},
+        attack:{name:'降辉圣光',level:1,maxLevel:5,damage:17,cd:.48,timer:0,range:310,isEvolved:false},
         charge:{name:'蓄力·祷光绽放',level:1,maxLevel:5,branch:null,branchLv:0,maxBranchLv:3,branchAName:'救赎圣歌',branchBName:'审判光轮'},
         skill1:{name:'回春祷言',level:1,maxLevel:5,damage:28,cd:8,timer:0,isDashing:false,isEvolved:false},
         skill2:{name:'庇护圣域',level:1,maxLevel:5,damage:18,cd:10,timer:0,radius:168,isEvolved:false},
-        ult:{name:'六翼曙光',level:1,maxLevel:3,damage:100,cd:26,timer:0,isEvolved:false},
+        ult:{name:'六翼曙光',level:1,maxLevel:5,damage:100,cd:26,timer:0,isEvolved:false},
         item:{name:'晨星壁障',level:1,cd:18,timer:0,duration:2.8,activeTimer:0}
       })
     };
@@ -2474,7 +2474,11 @@
       reset(){this.resetLocal();this.seen.clear();this.gates.clear();this.zones.clear();},
       visual(type,data,life=.6){const own=skyBeams.filter(v=>v.type?.startsWith('healer_'));if(own.length>=70)own[0].life=0;const v={type:'healer_'+type,life,maxLife:life,...data};skyBeams.push(v);return v;},
       bolt(angle,damage){if(projectiles.filter(p=>p.healerBolt).length>=90)return;projectiles.push({x:player.x,y:player.y,vx:Math.cos(angle)*650,vy:Math.sin(angle)*650,radius:7,damage,life:.8,pierce:player.skills.attack.isEvolved?4:2,color:'#fef3c7',healerBolt:true});},
-      attack(angle){const a=player.skills.attack,n=a.isEvolved?7:a.level>=5?5:a.level>=3?3:2;for(let i=0;i<n;i++)this.bolt(angle+(i-(n-1)/2)*.1,a.damage*(1+.10*(a.level-1)));this.prayer=Math.min(100,this.prayer+10);this.visual('halo',{x:player.x,y:player.y,radius:28,color:'#a7f3d0'},.2);audio.playShoot();},
+      attack(angle){
+        const a=player.skills.attack,n=a.isEvolved?7:Math.max(1,a.level),targets=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<=a.range+40).sort((x,y)=>Math.hypot(x.x-player.x,x.y-player.y)-Math.hypot(y.x-player.x,y.y-player.y)).slice(0,n);
+        for(const e of targets){this.visual('smite',{x:e.x,y:e.y,radius:22+a.level*3,width:6+a.level*2,stage:a.level,isSuper:a.isEvolved,color:'#fff4b8'},.46);damageEnemy(e,a.damage*(1+.12*(a.level-1))*1.65,Math.atan2(e.y-player.y,e.x-player.x),35);if(a.isEvolved)for(const o of enemies)if(o!==e&&!o.isDead&&Math.hypot(o.x-e.x,o.y-e.y)<38)damageEnemy(o,a.damage*.25,0,0,true);}
+        this.prayer=Math.min(100,this.prayer+10);this.visual('halo',{x:player.x,y:player.y,radius:28,color:'#a7f3d0'},.2);audio.playShoot();
+      },
       chargeInterval(level,talent=0,lb=0){const base=Math.max(.34,.70*Math.pow(.94,talent)*Math.pow(.9,level-1));return Math.max(.32,Math.max(.30,base*Math.pow(.95,lb))*1.05);},
       charge(angle){
         if(this.chargeCd>0)return false;this.chargeCd=this.chargeInterval(player.skills.charge.level,SaveManager.data.talents.charge||0,player.skills.charge.limitBreak||0);
@@ -2504,9 +2508,9 @@
       skill1(){const s=player.skills.skill1;this.submit('s1',s.level,s.isEvolved);damageInRadius(player.x,player.y,210+s.level*10,s.damage,90);this.visual('mending',{x:player.x,y:player.y,radius:220+s.level*10,color:'#a7f3d0',isSuper:s.isEvolved},.85);audio.playHeal();},
       field(kind,skill){
         for(const f of this.localFields.filter(f=>f.kind===kind))f.visual.life=0;this.localFields=this.localFields.filter(f=>f.kind!==kind);
-        const radius=kind==='s2'?skill.radius+(skill.isEvolved?40:0):350+skill.level*30,life=kind==='s2'?7:skill.isEvolved?9:6;
-        const visual=this.visual(kind==='s2'?'sanctuary':'wings',{x:player.x,y:player.y,radius,color:kind==='s2'?'#6ee7b7':'#fde68a',isSuper:skill.isEvolved},life);
-        this.localFields.push({kind,x:player.x,y:player.y,radius,life,tick:0,damage:skill.damage,visual,evolved:skill.isEvolved});this.submit(kind,skill.level,skill.isEvolved);
+        const radius=kind==='s2'?skill.radius+(skill.isEvolved?40:0):250+skill.level*25+(skill.isEvolved?40:0),life=kind==='s2'?7:4+skill.level*.5+(skill.isEvolved?2:0);
+        const visual=this.visual(kind==='s2'?'sanctuary':'wings',{x:player.x,y:player.y,radius,color:kind==='s2'?'#6ee7b7':'#fde68a',isSuper:skill.isEvolved,stage:skill.level},life);
+        this.localFields.push({kind,x:player.x,y:player.y,radius,life,tick:0,damage:skill.damage,level:skill.level,visual,evolved:skill.isEvolved});this.submit(kind,skill.level,skill.isEvolved);
       },
       skill2(){this.field('s2',player.skills.skill2);},
       ult(){this.field('ult',player.skills.ult);damageInRadius(player.x,player.y,380,player.skills.ult.damage,160);this.visual('mending',{x:player.x,y:player.y,radius:380,color:'#fef3c7',isSuper:true},1);},
@@ -2514,7 +2518,7 @@
         if(kind==='charge')return{radius:evolved?360:220,heal:Math.round((8+level*2)*Math.min(1,power/100)*(evolved?1.5:1)),shield:0,cd:this.chargeInterval(level)};
         if(kind==='s1')return{radius:220+level*10,heal:16+level*6+(evolved?10:0),shield:4+level*2+(evolved?12:0),cd:Math.max(1.8,8*Math.pow(.84,level-1))};
         if(kind==='s2')return{radius:168+(level-1)*18+(evolved?40:0),heal:3+level+(evolved?2:0),shield:0,cd:Math.max(3.2,10*Math.pow(.86,level-1)),duration:7};
-        return{radius:350+level*30,heal:35+level*10,shield:20+level*10,cd:Math.max(9,26-(level-1)*3),duration:evolved?9:6};
+        return{radius:250+level*25+(evolved?40:0),heal:35+level*8,shield:10+level*6,cd:Math.max(12,26-(level-1)*1.5-(evolved?2:0)),duration:4+level*.5+(evolved?2:0)};
       },
       submit(kind,level,evolved=false,power=0){
         const skill=player.skills[{s1:'skill1',s2:'skill2',ult:'ult',charge:'charge'}[kind]],prism=player.mapRelics.find(r=>r.id==='tundra_prism');
@@ -2531,7 +2535,7 @@
         const ack=ok=>{if(!solo&&pkt.peerId!==CoopManager.myPeerId)CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_SUPPORT_ACK',targetPeerId:pkt.peerId,castId:pkt.castId,ok}));return ok;};
         if(typeof pkt.castId!=='string'||!pkt.castId.startsWith(pkt.peerId+':heal:')||pkt.castId.length>120)return false;
         if(this.seen.has(pkt.castId))return ack(true);
-        if(hero!=='healer'||!this.available(actor)||pkt.lifeEpoch!==actor.epoch||!['charge','s1','s2','ult'].includes(pkt.kind)||!Number.isInteger(pkt.level)||pkt.level<1||pkt.level>(pkt.kind==='ult'?3:5)||!Number.isFinite(pkt.power)||pkt.power<0||pkt.power>100)return ack(false);
+        if(hero!=='healer'||!this.available(actor)||pkt.lifeEpoch!==actor.epoch||!['charge','s1','s2','ult'].includes(pkt.kind)||!Number.isInteger(pkt.level)||pkt.level<1||pkt.level>5||!Number.isFinite(pkt.power)||pkt.power<0||pkt.power>100)return ack(false);
         const spec=this.spec(pkt.kind,pkt.level,Boolean(pkt.evolved),pkt.power),gate=actor.id+':'+pkt.kind;
         if((this.gates.get(gate)??-Infinity)>GameState.gameTime+.05)return ack(false);
         const lb=pkt.limitBreak??0,prism=pkt.prismLevel??0,chargeTalent=pkt.chargeTalent??0;
@@ -2545,7 +2549,7 @@
       groupHeal(center,radius,heal,shield,solo=false){
         const actors=solo?[this.localActor()]:[...WorldCoop.participants.values()];
         for(const p of actors)if(this.available(p)&&Math.hypot(p.x-center.x,p.y-center.y)<=radius){
-          const value={amount:heal,shield,lifeEpoch:p.epoch};
+          Campaign?.ensure();const value={amount:heal,shield,lifeEpoch:p.epoch,sourceId:center.owner||center.id,supportId:(WorldCoop.session||'solo')+':support:'+(++Campaign.sequence)};
           if(solo)this.applyGrant(value);else CoopLoot.grant(p,'support',value);
         }
       },
@@ -2571,7 +2575,7 @@
         if(GameState.selectedHero!=='healer')return;this.chargeCd=Math.max(0,this.chargeCd-dt);this.reflectCd=Math.max(0,this.reflectCd-dt);
         if(!WorldCoop.canAct()){for(const f of this.localFields)f.visual.life=0;this.localFields=[];for(const [id,z]of this.zones)if(z.owner===CoopManager.myPeerId)this.zones.delete(id);return;}
         for(const f of this.localFields){f.life-=dt;f.tick-=dt;if(f.tick<=0){f.tick=.7;if(f.kind==='s2')damageInRadius(f.x,f.y,f.radius,f.damage*.65,20);else{
-          const targets=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-f.x,e.y-f.y)<f.radius).slice(0,f.evolved?8:5);
+          const targets=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-f.x,e.y-f.y)<f.radius).slice(0,2+(f.level||1)+(f.evolved?1:0));
           for(const [i,e]of targets.entries()){this.visual('lance',{x:e.x,y:e.y,x1:e.x-35,y1:e.y-170,x2:e.x,y2:e.y,width:14,color:'#fde68a'},.4);damageEnemy(e,f.damage*.48,0,20,true);}
         }}}
         this.localFields=this.localFields.filter(f=>f.life>0);if(!WorldCoop.active())this.authorityTick(dt,true);
@@ -2579,6 +2583,10 @@
       networkTick(){const now=performance.now();for(const [id,p]of this.pending){if(now-p.at>4000||!WorldCoop.canAct()){this.pending.delete(id);continue;}if(now-p.last>450){p.last=now;WorldCoop.toHost(p.packet);}}},
       draw(c,s,ratio){
         const t=GameState.gameTime,r=s.radius||120;c.globalAlpha*=Math.min(1,ratio*4);
+        if(s.type==='healer_smite'){
+          c.translate(s.x,s.y);const w=(s.width||8)*Math.min(1,ratio*3),h=170+(s.stage||1)*12;c.fillStyle='rgba(255,226,129,.15)';c.fillRect(-w*2,-h,w*4,h);c.fillStyle='#e8bf56';c.fillRect(-w,-h,w*2,h);c.fillStyle='#fff9d8';c.fillRect(-w*.4,-h,w*.8,h);c.fillStyle='#ffffff';c.fillRect(-2,-h,4,h);c.fillStyle='#fde68a';c.fillRect(-14,-h+20,28,4);c.fillRect(-2,-h+9,4,26);
+          c.strokeStyle='#fff2ad';c.lineWidth=2;c.save();c.scale(1,.5);c.rotate(t*.6);c.strokeRect(-r*.6,-r*.6,r*1.2,r*1.2);for(let i=0;i<(s.stage||1)+2;i++){c.rotate(Math.PI*2/((s.stage||1)+2));c.fillRect(r,-2,5,4);}c.restore();return;
+        }
         if(s.type==='healer_lance'){c.translate(s.x1,s.y1);c.rotate(Math.atan2(s.y2-s.y1,s.x2-s.x1));const len=Math.hypot(s.x2-s.x1,s.y2-s.y1),w=(s.width||18)*ratio;c.fillStyle='rgba(167,243,208,.28)';c.fillRect(0,-w,len,w*2);c.fillStyle='#fcd34d';c.fillRect(0,-w*.35,len,w*.7);c.fillStyle='#fffde7';c.fillRect(0,-2,len,4);return;}
         c.translate(s.x,s.y);const persistent=['healer_sanctuary','healer_wings'].includes(s.type),rr=persistent?r:r*(1.15-ratio*.8);
         c.fillStyle=s.type==='healer_wings'?'rgba(252,211,77,.065)':'rgba(110,231,183,.07)';c.beginPath();c.arc(0,0,rr,0,Math.PI*2);c.fill();c.strokeStyle=s.color||'#a7f3d0';c.lineWidth=2;c.save();c.rotate(t*.18);c.setLineDash([14,7]);c.beginPath();c.arc(0,0,rr,0,Math.PI*2);c.stroke();c.setLineDash([]);c.beginPath();c.arc(0,0,rr*.82,0,Math.PI*2);c.stroke();
@@ -2658,11 +2666,37 @@
     const NEW_SYNERGIES = [
       {key:'emberEcho',icon:'[px:burst]',name:'余烬回响',nodes:['每4次主命中引发64半径爆破（0.8秒间隔）','爆破伤害提高，半径扩大至72','爆破伤害提高，半径扩大至80']},
       {key:'stellarBastion',icon:'[px:sparkles]',name:'星辉壁垒',nodes:['每6秒获得10护盾（有上限）','每6秒获得20护盾，提高上限','每6秒获得30护盾，提高上限']},
-      {key:'huntPulse',icon:'[px:diamond-core]',name:'追猎脉冲',nodes:['移动180距离，脉冲击中1名敌人','移动160距离，脉冲击中2名敌人','移动140距离，脉冲击中3名敌人']}
+      {key:'huntPulse',icon:'[px:diamond-core]',name:'追猎脉冲',nodes:['沿行走方向释放电流锥刺；移速越快越强，闪现也生效','锥刺伤害、长度与宽度提升，触发距离缩短','大幅强化高速锥刺，可击中前方区域内全部敌人']}
     ];
     const SYNERGY_KEYS=['thunderChain','iceShatter','bloodPact','fireTrail',...NEW_SYNERGIES.map(s=>s.key)];
+    // Travel-driven, caster-owned electric thrust. Only skill paths may count as instant travel.
+    var HuntPulse={
+      reset(){this.x=player.x;this.y=player.y;this.distance=0;this.cooldown=0;this.speed=0;this.angle=0;},
+      spec(lv,speed){const ratio=Math.max(.5,Math.min(3.5,speed/180));return{need:Math.max(70,180-20*lv),cd:.8/Math.pow(ratio,.8),damage:(20+10*lv)*(.65+.35*ratio),len:100+25*lv+40*ratio,width:22+6*lv+12*ratio,ratio};},
+      tick(dt){const dx=player.x-(this.x??player.x),dy=player.y-(this.y??player.y),d=Math.hypot(dx,dy);this.x=player.x;this.y=player.y;this.cooldown=Math.max(0,(this.cooldown||0)-dt);this.speed=0;
+        if(!player.passives.huntPulse||!WorldCoop.canAct()){this.distance=0;return;}
+        // Ordinary locomotion must fit one simulation step; restore/teleport coordinates do not count.
+        if(!Number.isFinite(d)||d>Math.max(45,player.speed*dt*5)){this.distance=0;return;}if(d<.01||dt<=0)return;
+        const speed=d/dt;this.speed=speed;this.angle=Math.atan2(dy,dx);const s=this.spec(player.passives.huntPulse,speed);this.distance=Math.min(s.need*2,(this.distance||0)+d);
+        if(this.distance>=s.need&&this.cooldown<=0){this.distance%=s.need;this.emit(player.x,player.y,this.angle,s);}
+      },
+      blink(x1,y1,x2,y2){this.x=x2;this.y=y2;const d=Math.hypot(x2-x1,y2-y1);if(!player.passives.huntPulse||!WorldCoop.canAct()||!Number.isFinite(d)||d<10||d>512)return;
+        this.speed=d/.14;this.angle=Math.atan2(y2-y1,x2-x1);const s=this.spec(player.passives.huntPulse,this.speed);this.distance=(this.distance||0)+d;
+        if(this.distance>=s.need||d>=40){this.distance%=s.need;s.len=Math.min(560,Math.max(s.len,d+65));this.emit(x1,y1,this.angle,s);}
+      },
+      emit(x,y,angle,s){this.cooldown=s.cd;const lv=player.passives.huntPulse,c=Math.cos(angle),n=Math.sin(angle);skyBeams.push({type:'hunt_thrust',x,y,angle,len:s.len,width:s.width,stage:lv,life:.28,maxLife:.28,color:'#67e8f9'});
+        for(const e of [...enemies]){if(e.isDead)continue;const dx=e.x-x,dy=e.y-y,along=dx*c+dy*n,side=Math.abs(-dx*n+dy*c),radius=e.radius||12;
+          if(along>=-radius&&along<=s.len+radius&&side<=8+s.width*Math.max(0,along)/s.len+radius)damageEnemy(e,s.damage,0,25,true);}
+      },
+      draw(ctx,s,ratio){ctx.translate(s.x,s.y);ctx.rotate(s.angle);ctx.globalAlpha*=ratio;const len=s.len,w=s.width,lv=Math.min(8,s.stage||1);ctx.fillStyle='#22d3ee';ctx.save();ctx.globalAlpha*=.13;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(len*.8,-w);ctx.lineTo(len+16,0);ctx.lineTo(len*.8,w);ctx.closePath();ctx.fill();ctx.restore();
+        ctx.strokeStyle='#22d3ee';ctx.lineWidth=2;for(const sign of [-1,1]){ctx.beginPath();ctx.moveTo(0,0);for(let i=1;i<=8;i++)ctx.lineTo(len*i/10,sign*(w*i/8+(i%2?7:-4)));ctx.lineTo(len+16,0);ctx.stroke();}
+        for(let ray=0;ray<lv+1;ray++){ctx.strokeStyle=ray===0?'#ecfeff':'#67e8f9';ctx.lineWidth=ray===0?4:1.5;ctx.beginPath();ctx.moveTo(0,0);for(let i=1;i<=10;i++){const side=ray===0?0:(ray%2?1:-1)*w*(ray/(lv+1))*.45*Math.sin(i*Math.PI/10);ctx.lineTo(len*i/10,side+(i===10?0:(i%2?1:-1)*(3+lv)));}ctx.lineTo(len+16,0);ctx.stroke();}
+        ctx.fillStyle='#e0faff';for(let i=1;i<=lv+2;i++){const at=len*i/(lv+3),spread=w*at/len*.8;ctx.fillRect(at-2,-spread-2,4,4);ctx.fillRect(at-2,spread-2,4,4);}ctx.fillRect(len+10,-3,10,6);ctx.fillRect(len+14,-7,3,14);
+      }
+    };
+
     var NewSynergies={
-      reset(){this.hits=0;this.echoCd=0;this.shieldTime=0;this.distance=0;this.pulseCd=0;this.x=player.x;this.y=player.y;},
+      reset(){HuntPulse?.reset();this.hits=0;this.echoCd=0;this.shieldTime=0;this.distance=0;this.pulseCd=0;this.x=player.x;this.y=player.y;},
       hit(en){
         const lv=player.passives.emberEcho||0;if(!lv||!WorldCoop.canAct())return;
         this.hits=Math.min(4,(this.hits||0)+1);if(this.hits<4||this.echoCd>0)return;
@@ -2671,12 +2705,12 @@
         for(const e of [...enemies])if(!e.isDead&&Math.hypot(e.x-en.x,e.y-en.y)<=radius+e.radius)damageEnemy(e,12+8*lv,0,25,true);
       },
       tick(dt){
-        const moved=Math.min(40,Math.hypot(player.x-(this.x??player.x),player.y-(this.y??player.y)));this.x=player.x;this.y=player.y;
+        HuntPulse.tick(dt);
         if(!WorldCoop.canAct())return;
         this.echoCd=Math.max(0,(this.echoCd||0)-dt);this.pulseCd=Math.max(0,(this.pulseCd||0)-dt);
         const p=player.passives,shieldLv=p.stellarBastion||0,huntLv=p.huntPulse||0;
         if(shieldLv){this.shieldTime=(this.shieldTime||0)+dt;if(this.shieldTime>=6-1e-6){this.shieldTime=Math.max(0,this.shieldTime-6);const cap=Math.round(player.maxHp*.3)+shieldLv*10;player.shield=Math.max(player.shield,Math.min(cap,player.shield+shieldLv*10));player.shieldMax=Math.max(player.shieldMax,player.shield);createShockwave(player.x,player.y,35,'#fef08a');updateHpUI();}}
-        if(huntLv){this.distance=(this.distance||0)+moved;const need=Math.max(90,200-huntLv*20);if(this.distance>=need&&this.pulseCd<=0){const targets=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<=340).sort((a,b)=>Math.hypot(a.x-player.x,a.y-player.y)-Math.hypot(b.x-player.x,b.y-player.y)).slice(0,Math.min(4,huntLv));if(targets.length){this.distance%=need;this.pulseCd=.9;for(const e of targets){lightningArcs.push({x1:player.x,y1:player.y,x2:e.x,y2:e.y,color:'#67e8f9',life:.22});damageEnemy(e,22+10*huntLv,0,15,true);}}}}
+
       }
     };
     // Combat stays with the caster. Remote peers receive only these renderable descriptors.
@@ -2689,6 +2723,7 @@
         groundEffects.push({type:'lava',fireTrail:true,x,y,radius:36,damage:14*player.passives.fireTrail,life:2.2,maxLife:2.2,tickTimer:0});
       },
       move(x1,y1,x2,y2,dt=0){
+        if(dt===0)HuntPulse.blink(x1,y1,x2,y2);
         if(!player.passives.fireTrail||!WorldCoop.canAct()){this.reset();return;}
         const d=Math.hypot(x2-x1,y2-y1);if(!Number.isFinite(d)||d>512){this.reset();return;}if(d<.01)return;
         this.elapsed+=dt;
@@ -2794,22 +2829,24 @@
         this.links();audio.playShoot();
       },
       ult(){
-        const u=player.skills.ult;GameState.forgeOverdriveTimer=u.isEvolved?9:6;player.invulnerableTimer=Math.max(player.invulnerableTimer,1.2);
+        const u=player.skills.ult;GameState.forgeOverdriveTimer=4+u.level*.6+(u.isEvolved?2:0);player.invulnerableTimer=Math.max(player.invulnerableTimer,1.2);
         for(const g of this.turrets().filter(g=>g.temporary))g.life=0;
-        const n=u.isEvolved?4:2;for(let i=0;i<n;i++){const a=player.aimAngle+Math.PI/4+i*Math.PI*2/n;this.place(player.x+Math.cos(a)*210,player.y+Math.sin(a)*210,true);}
+        const n=this.supportCount(u);for(let i=0;i<n;i++){const a=player.aimAngle+Math.PI/4+i*Math.PI*2/n;this.place(player.x+Math.cos(a)*210,player.y+Math.sin(a)*210,true);}
         this.rig=Array.from({length:4},(_,i)=>{const a=this.rigPort(player,GameState.gameTime,i).orbit;return[Math.atan2(Math.sin(a),Math.cos(a)),0];});this.strikeTimer=.12;this.cannonTimer=0;this.cannons();this.command(3);this.visual('forge_blast',{x:player.x,y:player.y,radius:200,color:'#fbbf24'},.65);damageInRadius(player.x,player.y,180,u.damage,120);
-        showToast(u.isEvolved?'[px:gear] 日冕工厂：四座重装支援 · 炮网齐射 · 巡航轰炸！':'[px:gear] 熔星过载：双支援炮台 · 火力全开！');audio.playExplosion();
+        showToast('[px:gear] 过载 Lv.'+u.level+'：'+this.cannonCount(u)+'门浮游炮 · '+n+'座支援炮台');audio.playExplosion();
       },
-      rigPort(p,time,index){
-        const orbit=index*Math.PI/2+Math.PI/4+time*.25;
+      cannonCount(u=player.skills.ult){return Math.min(4,1+Math.floor(((u.level||1)-1)*.75));},
+      supportCount(u=player.skills.ult){return [0,0,1,1,2,3][u.level||1]+(u.isEvolved?1:0);},
+      rigPort(p,time,index,count=this.cannonCount()){
+        const orbit=index*Math.PI*2/count+Math.PI/4+time*.25;
         return{x:p.x+Math.cos(orbit)*58,y:p.y+Math.sin(orbit)*58,orbit};
       },
-      rigView(){return{evolved:Boolean(player.skills.ult.isEvolved),ports:this.rig||[]};},
-      rigPacket(){return[this.cannonSeq||0,this.cannonMask||0,player.skills.ult.isEvolved?1:0,...Array.from({length:4},(_,i)=>Math.round((this.rig?.[i]?.[0]||0)*1000)/1000)];},
+      rigView(){return{evolved:Boolean(player.skills.ult.isEvolved),count:this.cannonCount(),ports:this.rig||[]};},
+      rigPacket(){return[this.cannonSeq||0,this.cannonMask||0,player.skills.ult.isEvolved?1:0,this.cannonCount(),...Array.from({length:4},(_,i)=>Math.round((this.rig?.[i]?.[0]||0)*1000)/1000)];},
       cannons(){
         if(!WorldCoop.canAct()||GameState.forgeOverdriveTimer<=0)return;
         const u=player.skills.ult,n=u.isEvolved?2:1;let fired=false,mask=0;
-        for(let port=0;port<4;port++){
+        for(let port=0;port<this.cannonCount(u);port++){
           const g=this.rigPort(player,GameState.gameTime,port),target=this.target(g.x,g.y,540);
           if(!target)continue;
           const a=Math.round(Math.atan2(target.y-g.y,target.x-g.x)*1000)/1000,x=g.x+Math.cos(a)*31,y=g.y+Math.sin(a)*31;
@@ -2907,12 +2944,12 @@
         const active=state.forgeOverdriveTimer>0,t=state.gameTime||0;
         c.save();c.translate(p.x,p.y);
         if(active){
-          const rig=state.forgeRig||(p===player?this.rigView():null),evolved=Boolean(rig?.evolved);
+          const rig=state.forgeRig||(p===player?this.rigView():null),evolved=Boolean(rig?.evolved),count=rig?.count||1;
           // Compact floating pods; the middle remains open for the player and nearby enemies.
           c.strokeStyle='#7c582a';c.lineWidth=1;c.setLineDash([7,17]);c.beginPath();c.arc(0,0,54,0,Math.PI*2);c.stroke();c.setLineDash([]);
           c.fillStyle='#fbbf24';for(const side of [-1,1]){c.fillRect(side*22-3,-22,6,2);c.fillRect(side*22-3,20,6,2);}
-          for(let i=0;i<4;i++){
-            const g=this.rigPort(p,t,i),pose=rig?.ports?.[i],a=Number.isFinite(pose?.[0])?pose[0]:g.orbit;
+          for(let i=0;i<count;i++){
+            const g=this.rigPort(p,t,i,count),pose=rig?.ports?.[i],a=Number.isFinite(pose?.[0])?pose[0]:g.orbit;
             const flash=Math.max(0,Math.min(1,(pose?.[1]||0)/.18)),kick=6*flash;
             c.save();c.translate(g.x-p.x,g.y-p.y);
             c.fillStyle='rgba(2,6,23,.45)';c.fillRect(-18,15,36,5);
@@ -2999,7 +3036,7 @@
             }
           });
         }
-        if (skills.ult.level >= 3 && !skills.ult.isEvolved) {
+        if (skills.ult.level >= 5 && !skills.ult.isEvolved) {
           pool.push({
             id: 'super_warrior_ult',
             isTrueSuper: true,
@@ -3009,7 +3046,7 @@
             desc: '三向劈出18道巨剑光柱，无敌金身延长至8秒。',
             apply: () => {
               skills.ult.isEvolved = true;
-              skills.ult.cd = Math.max(9.0, skills.ult.cd - 3.5);
+              skills.ult.cd = Math.max(9.0, skills.ult.cd - 2.0);
               skills.ult.damage = Math.round(skills.ult.damage * 1.65);
               showSuperWeaponFanfare('大招超武觉醒：万古断界·神魔陨灭！');
             }
@@ -3067,7 +3104,7 @@
             }
           });
         }
-        if (skills.ult.level >= 3 && !skills.ult.isEvolved) {
+        if (skills.ult.level >= 5 && !skills.ult.isEvolved) {
           pool.push({
             id: 'super_mage_ult',
             isTrueSuper: true,
@@ -3077,7 +3114,7 @@
             desc: '持续9秒，每0.32秒砸下3颗彗星并留雷池；重叠雷池不重复灼烧。',
             apply: () => {
               skills.ult.isEvolved = true;
-              skills.ult.cd = Math.max(9.5, skills.ult.cd - 3.5);
+              skills.ult.cd = Math.max(9.5, skills.ult.cd - 2.0);
               skills.ult.damage = Math.round(skills.ult.damage * 1.30);
               showSuperWeaponFanfare('大招超武觉醒：诸神黄昏·星河崩陨！');
             }
@@ -3123,7 +3160,7 @@
             name: '【2技能超武】日月乾坤圣轮',
             type: 'super',
             icon: '[px:boomerang]',
-            desc: '飞轮化为巨型圣轮，每轮首次接住恢复40%战技CD并回血12点。',
+            desc: '飞轮化为巨型圣轮，每枚接取恢复40%战技CD并回血12点，熟练接轮可持续刷新。',
             apply: () => {
               skills.skill2.isEvolved = true;
               skills.skill2.count = Math.max(2, (skills.skill2.count || 1) + 1);
@@ -3132,7 +3169,7 @@
             }
           });
         }
-        if (skills.ult.level >= 3 && !skills.ult.isEvolved) {
+        if (skills.ult.level >= 5 && !skills.ult.isEvolved) {
           pool.push({
             id: 'super_ranger_ult',
             isTrueSuper: true,
@@ -3142,7 +3179,7 @@
             desc: '召唤4具分身协同齐射11秒，爆发32向黄金箭雨。',
             apply: () => {
               skills.ult.isEvolved = true;
-              skills.ult.cd = Math.max(9.5, skills.ult.cd - 3.5);
+              skills.ult.cd = Math.max(9.5, skills.ult.cd - 2.0);
               skills.ult.damage = Math.round(skills.ult.damage * 1.30);
               showSuperWeaponFanfare('大招超武觉醒：森罗万象·百影诛神！');
             }
@@ -3152,14 +3189,14 @@
 
       if(hero==='engineer'){
         const forms=[['attack','critGlove','super_rivet','磁轨蜂群','6枚金色锁定钉，三连击追踪火箭；每次贯穿3个目标。'],['skill1','swiftBoots','super_mine','日冕磁雷阵','布设4枚聚怪磁雷，牵引后132半径爆破。'],['skill2','lavaHeart','super_turret','六联重装哨戒','常规炮台上限6座，每次部署3座；三管连射附带导弹。'],['ult',null,'super_forge','日冕工厂','过载9秒，4座支援炮台、巡航轰炸与重装机甲展开。']];
-        for(const [key,equip,id,name,desc]of forms){const sk=skills[key];if(!sk.isEvolved&&sk.level>=(key==='ult'?3:4)&&(!equip||pass[equip]>0))pool.push({id,name:'【超武】'+name,desc,type:'super',icon:'[px:gear]',isTrueSuper:true,apply:()=>{sk.isEvolved=true;sk.damage=Math.round(sk.damage*1.25);showSuperWeaponFanfare('机匠觉醒：'+name+'！');}});}
+        for(const [key,equip,id,name,desc]of forms){const sk=skills[key];if(!sk.isEvolved&&sk.level>=(key==='ult'?5:4)&&(!equip||pass[equip]>0))pool.push({id,name:'【超武】'+name,desc,type:'super',icon:'[px:gear]',isTrueSuper:true,apply:()=>{sk.isEvolved=true;sk.damage=Math.round(sk.damage*1.25);showSuperWeaponFanfare('机匠觉醒：'+name+'！');}});}
       }
 
       if(hero==='healer')for(const [key,equip,id,name,desc]of [
-        ['attack','critGlove','super_healer_atk','七曜圣矢','七枚贯穿圣矢，快速积攒祷光。'],
+        ['attack','critGlove','super_healer_atk','七曜圣裁','七道圣光直接审判魔物，快速积攒祷光。'],
         ['skill1','swiftBoots','super_healer_s1','不灭回春','群疗提高10点，并额外施加12点护盾。'],
         ['skill2','lavaHeart','super_healer_s2','常青圣殿','圣域半径+40，脉冲治疗提高2点。'],
-        ['ult',null,'super_healer_ult','炽天使降临','六翼阵延长至9秒，同时审判8个目标。']]){const sk=skills[key];if(!sk.isEvolved&&sk.level>=(key==='ult'?3:4)&&(!equip||pass[equip]>0))pool.push({id,name:'【超武】'+name,desc,type:'super',icon:HERO_CONFIGS.healer.icons[key==='attack'?'atk':key==='skill1'?'s1':key==='skill2'?'s2':'ult'],isTrueSuper:true,apply:()=>{sk.isEvolved=true;sk.damage=Math.round(sk.damage*1.25);showSuperWeaponFanfare('祷师觉醒：'+name+'！');}});}
+        ['ult',null,'super_healer_ult','炽天使降临','六翼阵延长至9秒，同时审判8个目标。']]){const sk=skills[key];if(!sk.isEvolved&&sk.level>=(key==='ult'?5:4)&&(!equip||pass[equip]>0))pool.push({id,name:'【超武】'+name,desc,type:'super',icon:HERO_CONFIGS.healer.icons[key==='attack'?'atk':key==='skill1'?'s1':key==='skill2'?'s2':'ult'],isTrueSuper:true,apply:()=>{sk.isEvolved=true;sk.damage=Math.round(sk.damage*1.25);showSuperWeaponFanfare('祷师觉醒：'+name+'！');}});}
 
       // --- 1. 普通攻击升级 (Lv.1 -> Lv.5，明确标注【普通攻击】且保证优先刷新) ---
       if (skills.attack.level < skills.attack.maxLevel) {
@@ -3366,14 +3403,14 @@
         const nextLv = skills.ult.level + 1;
         pool.push({
           id: 'ult_up',
-          name: `【大招】${skills.ult.name} Lv.${nextLv}/3`,
+          name: `【大招】${skills.ult.name} Lv.${nextLv}/5`,
           type: 'evolve',
           icon: HERO_CONFIGS[hero].icons.ult,
-          desc: hero==='healer'?'群体治疗+10、护盾+10，审判伤害+26%，冷却缩短3秒。':'大招伤害+26%，冷却缩短3秒（满级可觉醒超武）。',
+          desc: hero==='healer'?'群疗与护盾提升，审判伤害+18%，冷却缩短1.5秒，光翼逐级增强。':'大招伤害+18%，冷却缩短1.5秒，形态逐级增强，Lv.5后可觉醒。',
           apply: () => {
             skills.ult.level++;
-            skills.ult.cd = Math.max(9.0, skills.ult.cd - 3.0);
-            skills.ult.damage = Math.round(skills.ult.damage * 1.26);
+            skills.ult.cd = Math.max(12.0, skills.ult.cd - 1.5);
+            skills.ult.damage = Math.round(skills.ult.damage * 1.18);
           }
         });
       }
@@ -4004,8 +4041,7 @@
 
         fireVolley(player.x, player.y, 1.0);
         if (cloneFactor > 0) {
-          fireVolley(player.x - 28, player.y - 20, 0.55);
-          fireVolley(player.x + 28, player.y + 20, 0.55);
+          const n=player.skills.ult.level>=5?4:player.skills.ult.level>=3?2:1;for(let i=0;i<n;i++){const a=Math.PI/4+i*Math.PI*2/n;fireVolley(player.x+Math.cos(a)*38,player.y+Math.sin(a)*38,.45);}
         }
       }
     }
@@ -4654,7 +4690,7 @@
         audio.playSlash();
         const count = s2.count || 1;
         const isSuper = Boolean(s2.isEvolved);
-        const catchGroup={claimed:false};
+        const catchGroup={count:0,refunded:0,healed:0};
         for (let i = 0; i < count; i++) {
           const spread = (i - (count - 1) / 2) * 0.35;
           const ang = player.aimAngle + spread;
@@ -4715,8 +4751,8 @@
         GameState.berserkTimer = isSuperUlt ? 8.0 : 5.5;
         player.invulnerableTimer = 2.0;
         const baseAng = player.aimAngle;
-        const dirs = isSuperUlt ? [-0.38, 0, 0.38] : [0];
-        const stepsCount = isSuperUlt ? 6 : 5;
+        const dirs = isSuperUlt||ult.level>=5?[-.38,0,.38]:ult.level>=3?[-.22,.22]:[0];
+        const stepsCount = isSuperUlt ? 6 : 3+Math.floor(ult.level/2);
         dirs.forEach(dOffset => {
           const ang = baseAng + dOffset;
           for (let step = 1; step <= stepsCount; step++) {
@@ -4748,7 +4784,7 @@
 
       } else if (hero === 'mage') {
         // 群星坠落阵列（超武觉醒：诸神黄昏·星河崩陨，持续9秒、双倍速每次3颗彗星轰炸！）
-        GameState.starfallTimer = isSuperUlt ? 9.0 : 6.0;
+        GameState.starfallTimer = 4+ult.level*.6+(isSuperUlt?2:0);
         GameState.starfallTick = 0;
         player.invulnerableTimer = 1.80;
         createShockwave(player.x, player.y, 240, isSuperUlt ? '#fde047' : '#38bdf8');
@@ -4756,9 +4792,9 @@
 
       } else if (hero === 'ranger') {
         // 暗影幻象齐射（超武觉醒：森罗万象·百影诛神，持续11秒，32向黄金诛神箭雨）
-        GameState.phantomCloneTimer = isSuperUlt ? 11.0 : 8.0;
+        GameState.phantomCloneTimer = 4+ult.level*.9+(isSuperUlt?2:0);
         player.invulnerableTimer = 1.80;
-        const volleyCnt = isSuperUlt ? 32 : 16;
+        const volleyCnt = isSuperUlt ? 32 : 8+ult.level*4;
         for (let b = 0; b < volleyCnt; b++) {
           const ang = (Math.PI * 2 / volleyCnt) * b;
           projectiles.push({
@@ -5495,7 +5531,7 @@
       finalDmg = fixedDamage ? Math.max(1,Math.round(baseDmg)) : Math.max(1, Math.round(finalDmg * (0.92 + Math.random() * 0.16)));
 
       if (WorldCoop.guest()) WorldCoop.reportHit(en, finalDmg, pushAngle, pushForce);
-      else en.hp -= finalDmg;
+      else {Campaign?.damage(killerId,Math.min(Math.max(0,en.hp),finalDmg));en.hp -= finalDmg;}
       GameState.totalDamageDealt += finalDmg;
       if(!isSecondary)NewSynergies.hit(en);
 
@@ -5615,6 +5651,7 @@
 
     function killEnemy(en, killerId = CoopManager.myPeerId, killEpoch = null) {
       if (!en || en.isDead || WorldCoop.guest()) return;
+      Campaign?.kill(en,killerId);
       en.isDead = true;
       if(en.isBoss)BossCombat.cancel(en);
       en.activeFloatText = null;
@@ -6667,8 +6704,8 @@
         GameState.starfallTick -= dt;
         const isSuperStarfall = player.skills.ult && player.skills.ult.isEvolved;
         if (GameState.starfallTick <= 0) {
-          GameState.starfallTick = isSuperStarfall ? 0.32 : 0.42;
-          const meteorCount = isSuperStarfall ? 3 : 1;
+          GameState.starfallTick = Math.max(.32,.55-player.skills.ult.level*.035-(isSuperStarfall?.06:0));
+          const meteorCount = Math.min(3,1+Math.floor((player.skills.ult.level-1)/2));
           for (let m = 0; m < meteorCount; m++) {
             const target = (m === 0 && findNearestEnemy(380)) || {
               x: player.x + (Math.random() - 0.5) * 320,
@@ -6940,11 +6977,11 @@
         // 按百分比恢复战技冷却（严格排除圣盾 item，且随呼啸回旋镖等级 Lv.1~Lv.5/超武从 12% 成长至 40%）
         if (bm.state === 'rebound' || bm.state === 'grounded') {
           if (Math.hypot(player.x - bm.x, player.y - bm.y) <= player.radius + bm.radius + 10) {
-            const catchReward=!bm.catchGroup||!bm.catchGroup.claimed;
+            const catchReward=true;
             if(catchReward){
-            if(bm.catchGroup)bm.catchGroup.claimed=true;
+            const group=bm.catchGroup||{count:0,refunded:0,healed:0},factor=1;group.count=(group.count||0)+1;group.refunded=(group.refunded||0)+1;
             const s2Lv = (player.skills.skill2 && player.skills.skill2.level) || 1;
-            const refundPct = bm.isEvolved ? 0.40 : (0.07 + s2Lv * 0.05); // Lv1:12%, Lv2:17%, Lv3:22%, Lv4:27%, Lv5:32%, 超武:40%
+            const refundPct = (bm.isEvolved ? 0.40 : (0.07 + s2Lv * 0.05))*factor; // Lv1:12%, Lv2:17%, Lv3:22%, Lv4:27%, Lv5:32%, 超武:40%
             player.catchBuffTimer = 3.0;
             ['skill1', 'skill2', 'ult'].forEach(k => {
               const sk = player.skills[k];
@@ -6953,8 +6990,7 @@
                 sk.timer = Math.max(0, sk.timer - sk.cd * effPct);
               }
             });
-            if (bm.isEvolved) healPlayer(12);
-            else if (s2Lv >= 2) healPlayer(8);
+            const baseHeal=bm.isEvolved?12:s2Lv>=2?8:0,heal=baseHeal;group.healed=(group.healed||0)+heal;if(heal>0)healPlayer(heal);
             audio.playGem();
             createShockwave(bm.x, bm.y, 65, bm.isEvolved ? '#fde047' : '#34d399');
             showToast(`[px:boomerang] 走位接住飞轮！战技恢复 ${Math.round(refundPct * 100)}% 冷却 (大招${Math.round(refundPct * 50)}%，不含圣盾)！`);
@@ -6993,7 +7029,7 @@
               if (!en.isDead && Math.hypot(en.x - ge.x, en.y - ge.y) <= ge.radius + en.radius) {
                 if(ge.fireTrail){if(GameState.gameTime<(en.fireTrailNextHit||0))return;en.fireTrailNextHit=GameState.gameTime+.3;}
                 if(ge.fireTrail){damageEnemy(en,ge.damage||18,0,0,true);en.isBurning=true;}
-                else if(GameState.gameTime>=(en.terrainBurnNext||0))terrainBurns.set(en,Math.max(terrainBurns.get(en)||0,ge.damage||18));
+                else if(GameState.gameTime>=(en.terrainBurnNext||0)){const hits=terrainBurns.get(en)||[];hits.push(ge.damage||18);terrainBurns.set(en,hits);};
               }
             });
           }
@@ -7052,7 +7088,7 @@
       }
 
       // 更新敌人 AI、流血/中毒 DoT 与红色攻击预警圈
-      for(const [en,damage]of terrainBurns)if(!en.isDead){en.terrainBurnNext=GameState.gameTime+.3;en.isBurning=true;damageEnemy(en,damage,0,0,true);}
+      for(const [en,hits]of terrainBurns)if(!en.isDead){const damage=hits.sort((a,b)=>b-a).slice(0,4).reduce((n,v,i)=>n+v*[1,.50,.30,.20][i],0);en.terrainBurnNext=GameState.gameTime+.3;en.isBurning=true;damageEnemy(en,damage,0,0,true);}
       if (WorldCoop.authority()) {
 
       const isGlobalFrozen = GameState.globalFreezeTimer > 0;
@@ -7940,7 +7976,9 @@
         const ratio = Math.max(0, sb.life / sb.maxLife), effectAlpha=VisualSettings.effectAlpha(sb);
         ctx.save();
         ctx.globalAlpha = effectAlpha;
-        if(sb.type?.startsWith('healer_')){HealerKit.draw(ctx,sb,ratio);}
+        if(sb.type==='hunt_thrust'){HuntPulse.draw(ctx,sb,ratio);}
+        else if(sb.type==='growth_sigil'){Campaign.drawGrowth(ctx,sb,ratio);}
+        else if(sb.type?.startsWith('healer_')){HealerKit.draw(ctx,sb,ratio);}
         else if(sb.type?.startsWith('forge_')){EngineerKit.drawBeam(ctx,sb,ratio);}
         else if (sb.type === 'sword_pillar') {
           // 断界天陨斩：贯穿天地的黄金巨剑光柱
@@ -8737,6 +8775,7 @@
 
       drawNativeImages(ctx, afterimages); CoopSkillVfx.draw(ctx,'images');
 
+      Campaign?.draw(ctx);
       // 绘制敌人
       for (let i = 0; i < enemies.length; i++) {
         drawEnemy(enemies[i]);
@@ -8899,6 +8938,7 @@
         }
       }
 
+      if(Campaign)for(const [list,icon,color]of [[Campaign.merchants.filter(m=>!m.gone),'[px:shop]','#fde68a'],[Campaign.friends,'[px:ally]','#86efac']])for(const p of list){const dx=(p.x-player.x)*scale,dy=(p.y-player.y)*scale,d=Math.hypot(dx,dy),r=cx-6;PixelIcons.draw(mctx,icon,cx+dx*Math.min(1,r/(d||1)),cy+dy*Math.min(1,r/(d||1)),9,color);}
       // 1. 绘制周围小怪红点
       mctx.fillStyle = 'rgba(239, 68, 68, 0.7)';
       for (let i = 0; i < enemies.length; i += 2) {
@@ -10715,20 +10755,20 @@
             if(s.radius)add('作用半径',s.radius+' px');if(s.range)add('索敌 / 攻击距离',s.range+' px');if(s.count)add('基础数量',s.count);
             if(key==='item'){title='圣盾';add('护盾 / 持续',`${34} / ${s.duration||2.8} 秒`);add('展开冲击', '35 基数 / 半径90 px');notes.push('护盾到期消失；此技能不参与普通战技的冷却返还。');}
             if(hero==='healer'&&key!=='item'){
-              if(key==='attack') {add('每枚圣矢伤害基数',n(s.damage*(1+.10*(lv-1))));add('圣矢数量',s.isEvolved?7:lv>=5?5:lv>=3?3:2);add('每枚穿透参数',s.isEvolved?4:2);add('每次积攒祷光','10 / 上限100');}
-              else {const spec=HealerKit.spec({skill1:'s1',skill2:'s2',ult:'ult'}[key],lv,s.isEvolved);add(key==='skill2'?'每秒群疗':'施放群疗',spec.heal+' 生命 / 每人');add('群疗半径',spec.radius+' px');if(spec.shield)add('施放护盾',spec.shield+' / 每人');if(spec.duration)add('阵地持续',spec.duration+' 秒');if(key==='skill2')add('伤害脉冲',n(s.damage*.65)+' 基数 / 每0.7秒');if(key==='ult'){add('持续群疗','5 生命 / 每秒 / 每人');add('审判脉冲',`${n(s.damage*.48)} 基数 / 每0.7秒 / 最多${s.isEvolved?8:5}目标`);}}
+              if(key==='attack') {add('每次圣光伤害基数',n(s.damage*(1+.12*(lv-1))*1.65));add('圣光目标数',s.isEvolved?7:lv);add('命中方式','直接照射，无飞行弹道');add('每次积攒祷光','10 / 上限100');}
+              else {const spec=HealerKit.spec({skill1:'s1',skill2:'s2',ult:'ult'}[key],lv,s.isEvolved);add(key==='skill2'?'每秒群疗':'施放群疗',spec.heal+' 生命 / 每人');add('群疗半径',spec.radius+' px');if(spec.shield)add('施放护盾',spec.shield+' / 每人');if(spec.duration)add('阵地持续',spec.duration+' 秒');if(key==='skill2')add('伤害脉冲',n(s.damage*.65)+' 基数 / 每0.7秒');if(key==='ult'){add('持续群疗','5 生命 / 每秒 / 每人');add('审判脉冲',`${n(s.damage*.48)} 基数 / 每0.7秒 / 最多${2+s.level+(s.isEvolved?1:0)}目标`);}}
               notes.push('治疗只作用于范围内存活且可参与战斗的玩家。溢疗的一半转盾，最多目标生命上限35%，不会降低已有更高护盾。');
             }else if(hero==='engineer'&&key==='skill2'){
               add('炮台上限',s.isEvolved?6:lv>=5?5:lv>=3?4:2);add('每次部署',s.isEvolved?3:lv>=3?2:1);add('炮台寿命',n(16+.8*lv)+' 秒');add('炮台射程',(s.radius||280)+60+' px');
-            }else if(hero==='engineer'&&key==='ult'){add('机甲炮口','4 门自动瞄准浮游炮');add('浮游炮索敌距离','540 px（从炮座计算）');add('机甲炮击',`${s.isEvolved?8:4} 枚炮弹 / 每0.45秒`);add('每枚直击基数',n(s.damage*.3));add('大招持续',`${s.isEvolved?9:6} 秒`);add('普攻 / 蓄力','普攻间隔×0.65 / 蓄满时间×0.70');
+            }else if(hero==='engineer'&&key==='ult'){add('机甲炮口',EngineerKit.cannonCount(s)+' 门自动瞄准浮游炮');add('支援炮台',EngineerKit.supportCount(s)+' 座');add('浮游炮索敌距离','540 px（从炮座计算）');add('机甲炮击',`${EngineerKit.cannonCount(s)*(s.isEvolved?2:1)} 枚炮弹 / 每0.45秒`);add('每枚直击基数',n(s.damage*.3));add('大招持续',`${4+s.level*.6+(s.isEvolved?2:0)} 秒`);add('普攻 / 蓄力','普攻间隔×0.65 / 蓄满时间×0.70');
             }else if(hero==='mage'&&key==='skill1') {add('位移距离',145+15*lv+' px');add('冻结时间',(s.freezeDuration||2.5)+' 秒');notes.push('起点与终点各触发一次冰霜新星；玩家冰冻对首领只施加寒霜。');}
             else if(hero==='mage'&&key==='attack'){add('奥术弹射','首跳60%基数，后续每跳×0.82');notes.push('星蚀印记需主命中引爆，每目标间隔0.45秒；二次伤害不会连环引爆。');}
-            else if(hero==='mage'&&key==='ult')add('落星间隔 / 数量',s.isEvolved?'0.32秒 / 3颗':'0.42秒 / 1颗');
-            else if(hero==='ranger'&&key==='skill2')notes.push('同一轮飞轮共享一次接取奖励：战技冷却12%–40%，大招减半；Lv.2起回血8点，觉醒12点。');
+            else if(hero==='mage'&&key==='ult')add('落星间隔 / 数量',n(Math.max(.32,.55-s.level*.035-(s.isEvolved?.06:0)))+'秒 / '+Math.min(3,1+Math.floor((s.level-1)/2))+'颗');
+            else if(hero==='ranger'&&key==='skill2')notes.push('每枚飞轮独立返还冷却与治疗，可连续接取、持续刷新；大招返还减半，圣盾不返还。');
             else if(hero==='warrior'&&key==='skill2')add('持续时间',n((s.duration||4.5)+.4*lv)+' 秒');
             if(key!=='item'&&lv<(s.maxLevel||5)){
-              add('下一级伤害基数',Math.round((s.damage||0)*(key==='ult'?1.26:1.22)));
-              add('下一级冷却',n(key==='ult'?Math.max(9,s.cd-3):Math.max(key==='attack'?.14:key==='skill1'?1.8:3.2,s.cd*(key==='attack'?.9:key==='skill1'?.84:.86)))+' 秒');
+              add('下一级伤害基数',Math.round((s.damage||0)*(key==='ult'?1.18:1.22)));
+              add('下一级冷却',n(key==='ult'?Math.max(12,s.cd-1.5):Math.max(key==='attack'?.14:key==='skill1'?1.8:3.2,s.cd*(key==='attack'?.9:key==='skill1'?.84:.86)))+' 秒');
             }
           }
           if(key!=='item'){add('玩家等级增伤',this.pct((player.level-1)*.065));add('当前暴击率 / 暴伤',`${this.pct(player.critChance)} / ${n(player.critMultiplier)} 倍`);notes.push('伤害基数已含已获得的升级与天赋；实际命中另计等级、暴击、增益、目标易伤及±8%波动。治疗不吃这些伤害倍率。');}
@@ -10743,7 +10783,7 @@
             fireTrail:['业火流星',[['火径采样','每40 px或移动.35秒；冲刺、闪现沿路铺火'],['火径基数 / 半径 / 寿命',`${14*lv} / 36 px / 2.2秒`],['同一目标伤害间隔','.3秒（自身重叠火径共用）'],['燃烧尸爆',`${14+8*lv} 基数 / 半径46 px`],['尸爆间隔','.5 秒']]],
             emberEcho:['余烬回响',[['触发','每4次主命中'],['爆破基数 / 半径',`${12+8*lv} / ${56+8*Math.min(6,lv)} px`],['触发间隔','.8 秒']]],
             stellarBastion:['星辉壁垒',[['护盾补充',`${10*lv} / 每6秒有效战斗时间`],['护盾上限',Math.round(player.maxHp*.3)+10*lv]]],
-            huntPulse:['追猎脉冲',[['移动触发距离',Math.max(90,200-20*lv)+' px'],['搜敌距离 / 目标数',`340 px / ${Math.min(4,lv)}`],['每目标伤害基数',22+10*lv],['触发间隔','.9 秒']]]
+            huntPulse:['追猎脉冲',[['触发','沿行走方向锥刺；站立不触发，闪现与冲刺计入'],['移动触发距离',HuntPulse.spec(lv,player.speed).need+' px'],['当前移速参考 / 伤害基数',`${player.speed} px/秒 / ${n(HuntPulse.spec(lv,player.speed).damage)}`],['参考长度 / 末端半宽',`${n(HuntPulse.spec(lv,player.speed).len)} / ${n(HuntPulse.spec(lv,player.speed).width)} px`],['参考最短间隔',n(HuntPulse.spec(lv,player.speed).cd)+' 秒'],['高速成长','实际速度÷180，0.5～3.5倍档；越快伤害越高、范围越大、间隔越短']]]
           };[title]=values[key];for(const row of values[key][1])add(...row);notes.push('流派最多选择两种。详情按当前等级计算；未学习的预览不会产生战斗效果。');
         }else if(kind==='equip'){
           const owned=p[key]||0,lv=owned||1,lb=p.equipLB?.[key]||0;status=owned?`已装备 Lv.${owned}/5${lb?' · 突破+'+lb:''}`:'未装备 · 以下为Lv.1预览';
@@ -10797,25 +10837,25 @@
 
       if (tab === 'active') {
         const superFormulas = {
-          healer:{attack:{reqName:'[px:glove] 狂暴手套',hasReq:pass.critGlove,superName:'七曜圣矢',superDesc:'七枚贯穿圣矢，蓄力转化祷光'},skill1:{reqName:'[px:boots] 疾行之靴',hasReq:pass.swiftBoots,superName:'不灭回春',superDesc:'提高群疗与护盾，溢疗一半转盾'},skill2:{reqName:'[px:heart-lava] 熔岩之心',hasReq:pass.lavaHeart,superName:'常青圣殿',superDesc:'扩大圣域，治疗与灼烧成长'},ult:{reqName:'大招Lv.3',hasReq:skills.ult.level>=3,superName:'炽天使降临',superDesc:'9秒羽翼阵，每轮审判8目标；施放时群疗加盾'}},
-          engineer:{attack:{reqName:'[px:glove] 狂暴手套',hasReq:pass.critGlove,superName:'[px:gear]【超武】磁轨蜂群',superDesc:'6枚贯穿锁定钉，三连击附双追踪火箭'},skill1:{reqName:'[px:boots] 疾行之靴',hasReq:pass.swiftBoots,superName:'[px:bomb]【超武】日冕磁雷阵',superDesc:'4枚聚怪磁雷，132半径爆破'},skill2:{reqName:'[px:heart-lava] 熔岩之心',hasReq:pass.lavaHeart,superName:'[px:gear]【超武】六联重装哨戒',superDesc:'6座三管炮台，每次部署3座，附带追踪导弹'},ult:{reqName:'[px:star] 大招升至满级(Lv.3)',hasReq:skills.ult.level>=3,superName:'[px:sun]【终极超武】日冕工厂',superDesc:'9秒重装机甲、4座支援炮台与巡航轰炸'}},
+          healer:{attack:{reqName:'[px:glove] 狂暴手套',hasReq:pass.critGlove,superName:'七曜圣裁',superDesc:'七道圣光直接照射，蓄力转化祷光'},skill1:{reqName:'[px:boots] 疾行之靴',hasReq:pass.swiftBoots,superName:'不灭回春',superDesc:'提高群疗与护盾，溢疗一半转盾'},skill2:{reqName:'[px:heart-lava] 熔岩之心',hasReq:pass.lavaHeart,superName:'常青圣殿',superDesc:'扩大圣域，治疗与灼烧成长'},ult:{reqName:'大招Lv.5',hasReq:skills.ult.level>=5,superName:'炽天使降临',superDesc:'9秒羽翼阵，每轮审判8目标；施放时群疗加盾'}},
+          engineer:{attack:{reqName:'[px:glove] 狂暴手套',hasReq:pass.critGlove,superName:'[px:gear]【超武】磁轨蜂群',superDesc:'6枚贯穿锁定钉，三连击附双追踪火箭'},skill1:{reqName:'[px:boots] 疾行之靴',hasReq:pass.swiftBoots,superName:'[px:bomb]【超武】日冕磁雷阵',superDesc:'4枚聚怪磁雷，132半径爆破'},skill2:{reqName:'[px:heart-lava] 熔岩之心',hasReq:pass.lavaHeart,superName:'[px:gear]【超武】六联重装哨戒',superDesc:'6座三管炮台，每次部署3座，附带追踪导弹'},ult:{reqName:'[px:star] 大招升至满级(Lv.5)',hasReq:skills.ult.level>=5,superName:'[px:sun]【终极超武】日冕工厂',superDesc:'9秒重装机甲、4座支援炮台与巡航轰炸'}},
           warrior: {
             attack: { reqName: '[px:glove] 狂暴手套', hasReq: pass.critGlove, superName: '[px:crown]【超武】灭世斩神剑', superDesc: '每次挥砍释放半屏金色月牙气刃，必暴击且附带流血处决' },
             skill1: { reqName: '[px:boots] 疾行之靴', hasReq: pass.swiftBoots, superName: '[px:lightning]【超武】虚空血影闪', superDesc: '冲刺CD降至1.8s，沿途留下一排连环血雷阵引爆全场' },
             skill2: { reqName: '[px:heart-lava] 熔岩之心', hasReq: pass.lavaHeart, superName: '[px:fire]【超武】红莲剑狱火凤', superDesc: '回旋重剑化为三圈盘旋火凤，范围翻倍且减速灼烧全场' },
-            ult:    { reqName: '[px:star] 大招升至满级(Lv.3)', hasReq: skills.ult.level >= 3, superName: '[px:sword]【终极超武】万古断界·神魔陨灭', superDesc: '同时劈出三向18道巨型黄金圣剑光柱，战神金身延长至8秒' }
+            ult:    { reqName: '[px:star] 大招升至满级(Lv.5)', hasReq: skills.ult.level >= 5, superName: '[px:sword]【终极超武】万古断界·神魔陨灭', superDesc: '同时劈出三向18道巨型黄金圣剑光柱，战神金身延长至8秒' }
           },
           mage: {
             attack: { reqName: '[px:snow] 极寒光环', hasReq: pass.frostAura, superName: '[px:snow]【超武】极寒绝对零度', superDesc: '每次齐射9道玄冰闪电链，弹射7次并冰封路径魔物' },
             skill1: { reqName: '[px:boots] 疾行之靴', hasReq: pass.swiftBoots, superName: '[px:galaxy]【超武】幻影冰河世纪', superDesc: '冰闪CD降至2.0s，起点与终点爆发双倍暴风雪新星并冻结全场4秒' },
             skill2: { reqName: '[px:heart-lava] 熔岩之心', hasReq: pass.lavaHeart, superName: '[px:planet]【超武】白洞超新星湮灭', superDesc: '黑洞进化为超新星白洞，牵引范围+45%，每秒喷发熔岩星火并二段巨爆' },
-            ult:    { reqName: '[px:star] 大招升至满级(Lv.3)', hasReq: skills.ult.level >= 3, superName: '[px:meteor]【终极超武】诸神黄昏·星河崩陨', superDesc: '持续9秒、双倍速每轮同时轰下3颗毁灭星界彗星并残留星火雷池' }
+            ult:    { reqName: '[px:star] 大招升至满级(Lv.5)', hasReq: skills.ult.level >= 5, superName: '[px:meteor]【终极超武】诸神黄昏·星河崩陨', superDesc: '持续9秒、双倍速每轮同时轰下3颗毁灭星界彗星并残留星火雷池' }
           },
           ranger: {
             attack: { reqName: '[px:target] 穿甲箭袋', hasReq: pass.pierceQuiver, superName: '[px:bow]【超武】万箭诛仙连弩', superDesc: '每次射击发射6支追踪穿透光矢，命中目标触发毒爆新星' },
             skill1: { reqName: '[px:boots] 疾行之靴', hasReq: pass.swiftBoots, superName: '[px:web]【超武】天罗地网雷阵', superDesc: '后跃CD降至2.0s，布下4枚高爆雷磁陷阱并向八方散射麻痹雷针' },
             skill2: { reqName: '[px:glove] 狂暴手套', hasReq: pass.critGlove, superName: '[px:boomerang]【超武】日月乾坤圣轮', superDesc: '巨型金翠圣轮伤害与范围大增，走位接住恢复战技40%总冷却(不含圣盾)并回血12点' },
-            ult:    { reqName: '[px:star] 大招升至满级(Lv.3)', hasReq: skills.ult.level >= 3, superName: '[px:party]【终极超武】森罗万象·百影诛神', superDesc: '召唤4具暗影分身协同齐射11秒，并释放32向黄金诛神箭雨' }
+            ult:    { reqName: '[px:star] 大招升至满级(Lv.5)', hasReq: skills.ult.level >= 5, superName: '[px:party]【终极超武】森罗万象·百影诛神', superDesc: '召唤4具暗影分身协同齐射11秒，并释放32向黄金诛神箭雨' }
           }
         };
 
@@ -10837,7 +10877,7 @@
 
           let formulaHtml = '';
           if (sf) {
-            const reqLv = k === 'ult' ? 3 : 4;
+            const reqLv = k === 'ult' ? 5 : 4;
             const lvReady = sk.level >= reqLv;
             formulaHtml = `
               <div class="tree-formula-bar">
@@ -10923,7 +10963,7 @@
       } else if (tab === 'equip') {
         const eqCount = ['critGlove', 'swiftBoots', 'lavaHeart', 'frostAura', 'pierceQuiver'].filter(k => pass[k]).length;
         const heroEquipMap = {
-          healer:[{key:'critGlove',icon:'[px:glove]',name:'狂暴手套',desc:'提高圣矢暴击',pair:'七曜圣矢觉醒配件'},{key:'swiftBoots',icon:'[px:boots]',name:'疾行之靴',desc:'提高机动与拾取范围',pair:'不灭回春觉醒配件'},{key:'lavaHeart',icon:'[px:heart-lava]',name:'熔岩之心',desc:'提高生命上限并释放热浪',pair:'常青圣殿觉醒配件'}],
+          healer:[{key:'critGlove',icon:'[px:glove]',name:'狂暴手套',desc:'提高圣矢暴击',pair:'七曜圣裁觉醒配件'},{key:'swiftBoots',icon:'[px:boots]',name:'疾行之靴',desc:'提高机动与拾取范围',pair:'不灭回春觉醒配件'},{key:'lavaHeart',icon:'[px:heart-lava]',name:'熔岩之心',desc:'提高生命上限并释放热浪',pair:'常青圣殿觉醒配件'}],
           engineer:[{key:'critGlove',icon:'[px:glove]',name:'狂暴手套',desc:'暴击率与暴伤提高',pair:'普攻超武【磁轨蜂群】配件'},{key:'swiftBoots',icon:'[px:boots]',name:'疾行之靴',desc:'移速与拾取范围提高',pair:'磁雷超武【日冕磁雷阵】配件'},{key:'lavaHeart',icon:'[px:heart-lava]',name:'熔岩之心',desc:'生命上限提高，周期热浪',pair:'炮台超武【六联重装哨戒】配件'}],
           warrior: [
             { key: 'critGlove',  icon: '[px:glove]', name: '狂暴手套', desc: '暴击率+12%，暴击伤害提升至210%', pair: '苍红剑客 普攻超武【灭世斩神剑】核心配件' },
@@ -11206,7 +11246,7 @@
 
     function togglePause() {
       if (!GameState.isStarted || GameState.isOver) return;
-      for(const [id,close] of [['settings-modal',()=>AudioSettings.close()],['skilltree-modal',closeSkillTreeModal],['dev-modal',closeDevModal],['save-modal',closeSaveModal],['shop-modal',closeShopModal],['coop-modal',closeCoopModal]]) {
+      for(const [id,close] of [['campaign-modal',()=>Campaign.closeBook()],['merchant-modal',()=>CampMarket.close()],['settings-modal',()=>AudioSettings.close()],['skilltree-modal',closeSkillTreeModal],['dev-modal',closeDevModal],['save-modal',closeSaveModal],['shop-modal',closeShopModal],['coop-modal',closeCoopModal]]) {
         if(document.getElementById(id).style.display==='flex'){close();return;}
       }
       if(CoopMap.open){CoopMap.toggle(false);return;}
@@ -11389,7 +11429,7 @@
       sk.charge.level = 5; sk.charge.branch = 'A'; sk.charge.branchLv = 3;
       sk.skill1.level = 5; sk.skill1.isEvolved = true; sk.skill1.cd = 1.8; sk.skill1.damage = Math.round(sk.skill1.damage * 2.2);
       sk.skill2.level = 5; sk.skill2.isEvolved = true; sk.skill2.damage = Math.round(sk.skill2.damage * 2.2);
-      sk.ult.level = 3; sk.ult.isEvolved = true; sk.ult.damage = Math.round(sk.ult.damage * 2.4);
+      sk.ult.level = 5; sk.ult.isEvolved = true; sk.ult.damage = Math.round(sk.ult.damage * 2.4);
       if (hero === 'warrior') { pass.critGlove = 5; pass.swiftBoots = 5; pass.lavaHeart = 5; sk.attack.range += 35; }
       if (hero === 'mage') { pass.frostAura = 5; pass.swiftBoots = 5; pass.lavaHeart = 5; sk.attack.count = 9; sk.attack.bounces = 7; }
       if(hero==='healer'){pass.critGlove=5;pass.swiftBoots=5;pass.lavaHeart=5;}
@@ -11489,6 +11529,7 @@
         }
       }
       if(!sp.balanceRulesVersion&&['mage','ranger'].includes(GameState.selectedHero))for(const sk of Object.values(player.skills))if(sk.isEvolved&&sk.damage)sk.damage=Math.round(sk.damage*1.30/1.65);
+      player.skills.ult.maxLevel=5;if(!sp.campaignRulesVersion){const u=player.skills.ult,wasEvolved=u.isEvolved;u.damage=Math.round(u.damage*Math.pow(1.18/1.26,Math.max(0,u.level-1)));if(u.level<5&&wasEvolved){u.damage=Math.round(u.damage/({warrior:1.65,mage:1.30,ranger:1.30,engineer:1.25,healer:1.25})[GameState.selectedHero]);u.isEvolved=false;}u.cd=Math.max(12,HERO_CONFIGS[GameState.selectedHero].initSkills().ult.cd-1.5*(u.level-1)-(u.isEvolved&&['warrior','mage','ranger'].includes(GameState.selectedHero)?2:0));}
       if(GameState.selectedHero==='engineer')EngineerKit.normalizeSkills();
       if (sp.passives) Object.assign(player.passives, sp.passives);
       player.mapRelics = sp.mapRelics || [];
@@ -12622,6 +12663,8 @@
         let nearLabels=0;const point=(p,icon,color,label)=>{if(!Number.isFinite(p.x)||!Number.isFinite(p.y))return;const dx=p.x-player.x,dy=p.y-player.y,d=Math.hypot(dx,dy),rad=this.radial(d,r),x=mid+(d?dx/d*rad:0),y=mid+(d?dy/d*rad:0);c.fillStyle=color;c.font=label?'bold 14px sans-serif':'11px sans-serif';PixelIcons.draw(c,icon,x,y,PixelIcons.fontSize(c),color);if(label){const ly=Math.max(10,y+(label==='你'?-14:d<60?18+(nearLabels++)*13:-13));c.font='bold 10px sans-serif';c.strokeStyle='#020617';c.lineWidth=3;c.strokeText(label,x,ly);c.fillStyle=color;c.fillText(label,x,ly);}};
         // Bounded markers keep large late-game maps cheap on phones.
         for(const [list,icon,color,max]of [[shrines.filter(s=>!s.used),'[px:shrine]','#38bdf8',30],[mapRelicDrops,'[px:chest]','#fde047',30]])for(const p of list.slice(0,max))point(p,icon,color);
+        for(const m of Campaign?.merchants||[])if(!m.gone)point(m,'[px:shop]','#fde68a');
+        for(const f of Campaign?.friends||[])point(f,'[px:ally]','#86efac');
         for(const p of enemies.filter(e=>!e.isDead).slice(0,180))point(p,p.isBoss?'[px:boss]':'[px:enemy-dot]',p.isBoss?'#fb7185':'#ef4444');
         for(const p of CoopManager.allies){const d=Math.round(this.distance(p));point(this.allyPosition(p),p.downed?'[px:rescue]':'[px:ally]',p.downed?'#fb7185':(PLAYER_COLOR_THEMES[p.colorIdx]||PLAYER_COLOR_THEMES[1]).badge,(p.name||'队友')+' '+d+(d>8000?' [px:arrow-up]超出':''));}
         point(player,player.isDowned?'[px:rescue]':'[px:self]','#4ade80','你');c.font='11px sans-serif';c.fillStyle='#94a3b8';c.fillText('北',mid,10);c.fillText('南',mid,size-10);c.fillText('西',10,mid);c.fillText('东',size-10,mid);
@@ -12728,7 +12771,7 @@
         ground:['type','x','y','vx','vy','radius','life','maxLife','angle','isEvolved','overdrive','forgeStage','flash'],
         orbit:['angle','dist','spinSpeed','life','isEvolved'],
         wheel:['x','y','vx','vy','radius','isEvolved','spinAngle','catchX','catchY','state','timer'],
-        beam:['type','x','y','x1','y1','x2','y2','startX','startY','radius','width','color','life','maxLife','isSuper','angle','len'],
+        beam:['type','x','y','x1','y1','x2','y2','startX','startY','radius','width','color','life','maxLife','isSuper','angle','len','stage'],
         slash:['x','y','angle','radius','arc','color','life','maxLife','isFinisher'],
         projectile:['x','y','vx','vy','radius','life','color','applyBleed','applyPoison','isArcaneChain','isFreeze','isRivet','isGrenade','forgeRocket','targetX','targetY','forgeHot','healerBolt','forgeCannon'],
         arc:['x1','y1','x2','y2','color','life'],images:['x','y','facing','hero','life','maxLife'],
@@ -12779,8 +12822,8 @@
           if(old&&pkt.seq<=old.seq)return true;
           const state=old||{visuals:new Map(),seen:new Map(),items:[]};state.seq=pkt.seq;state.castSeq=pkt.castSeq;state.at=performance.now();
           if(Array.isArray(pkt.look)&&(pkt.look.length===7||pkt.look.length===8)&&pkt.look.every(Number.isFinite))state.look=pkt.look.map((v,i)=>Math.max(0,Math.min(i===5?40:30,v)));
-          if(Array.isArray(pkt.rig)&&pkt.rig.length===7&&Number.isSafeInteger(pkt.rig[0])&&pkt.rig[0]>=0&&Number.isInteger(pkt.rig[1])&&pkt.rig[1]>=0&&pkt.rig[1]<=15&&[0,1].includes(pkt.rig[2])&&pkt.rig.slice(3).every(a=>Number.isFinite(a)&&Math.abs(a)<=Math.PI+.01)){
-            const fresh=pkt.rig[0]>(state.rigSeq??0);state.rigSeq=Math.max(state.rigSeq||0,pkt.rig[0]);state.rig={evolved:Boolean(pkt.rig[2]),ports:pkt.rig.slice(3).map((a,i)=>[a,fresh&&(pkt.rig[1]&(1<<i)) ? .18 : (state.rig?.ports?.[i]?.[1]||0)])};
+          if(Array.isArray(pkt.rig)&&(pkt.rig.length===7||pkt.rig.length===8)&&Number.isSafeInteger(pkt.rig[0])&&pkt.rig[0]>=0&&Number.isInteger(pkt.rig[1])&&pkt.rig[1]>=0&&pkt.rig[1]<=15&&[0,1].includes(pkt.rig[2])&&(pkt.rig.length===7||Number.isInteger(pkt.rig[3])&&pkt.rig[3]>=1&&pkt.rig[3]<=4)&&pkt.rig.slice(pkt.rig.length===8?4:3).every(a=>Number.isFinite(a)&&Math.abs(a)<=Math.PI+.01)){
+            const fresh=pkt.rig[0]>(state.rigSeq??0);state.rigSeq=Math.max(state.rigSeq||0,pkt.rig[0]);state.rig={evolved:Boolean(pkt.rig[2]),count:pkt.rig.length===8?pkt.rig[3]:4,ports:pkt.rig.slice(pkt.rig.length===8?4:3).map((a,i)=>[a,fresh&&(pkt.rig[1]&(1<<i)) ? .18 : (state.rig?.ports?.[i]?.[1]||0)])};
           }
           if(Array.isArray(pkt.items)&&pkt.items.length<=16)state.items=pkt.items.filter(a=>Array.isArray(a)&&['orbit','blackhole','trap','wheel'].includes(a[0])&&a.slice(1,4).every(Number.isFinite));
           if(Array.isArray(pkt.alive)&&pkt.alive.length<=320){const alive=new Set(pkt.alive);for(const [id,v]of state.visuals)if((['ground','orbit','wheel','projectile'].includes(v.kind)||['healer_sanctuary','healer_wings'].includes(v.obj.type))&&!alive.has(id))state.visuals.delete(id);}
@@ -14855,7 +14898,7 @@
         if ((pkt.lifeEpoch || 0) !== rec.epoch) return;
         if (!rec.downed) {
           rec.x = pkt.x; rec.y = pkt.y;Arena.clamp(rec,rec.radius); rec.hp = Math.max(0, pkt.hp ?? rec.hp);
-          if (pkt.downed || rec.hp <= 0) { rec.downed = true; rec.hp = 0; rec.progress = 0; }
+          if (pkt.downed || rec.hp <= 0) { if(Campaign)Campaign.stat(id).downs++;rec.downed = true; rec.hp = 0; rec.progress = 0; }
         }
         this.applyLife(rec);
       },
@@ -14963,7 +15006,7 @@
           const en = byId.get(h[0]);
           if (!en || en.isDead || !Number.isFinite(h[1]) || h[1] <= 0 || h[1] > 1e8 ||
               Math.hypot(actor.x - en.x, actor.y - en.y) > 2200) continue;
-          en.hp -= h[1]; en.hitTimer = 0.12;
+          Campaign?.damage(pkt.peerId,Math.min(Math.max(0,en.hp),h[1]));en.hp -= h[1]; en.hitTimer = 0.12;
           en.bleedStacks = Math.max(en.bleedStacks || 0, Math.min(5, Number(h[4]) || 0));
           en.bleedTimer = Math.max(en.bleedTimer || 0, Math.min(6, Number(h[5]) || 0));
           if (h[9] === 1 && h[10] === actor.epoch && h[4] > 0 && h[5] > 0) {
@@ -15109,6 +15152,7 @@
           body.helper = helpers[0]?.id || null;
           this.applyLife(body);
           if (body.progress >= this.corpseTime - 1e-6) {
+            for(const helper of helpers)Campaign.stat(helper.id).rescues++;
             body.downed = false; body.epoch++; body.hp = Math.max(1, Math.round(body.maxHp * 0.4));
             body.progress = 0; body.helpers = 0; body.helper = null; body.protectedUntil = performance.now() + 3000;
             this.applyLife(body);
@@ -15146,7 +15190,7 @@
         if (this.ended) return;
         UpgradeChoice.reset();
         this.ended = victory ? 'victory' : 'defeat';
-        if (CoopManager.isHost) CoopManager.sendPacket(this.packet({ type: 'WORLD_END', result: this.ended, rewards: CoopLoot.rewardSnapshot(), kills: GameState.kills }));
+        if (CoopManager.isHost) CoopManager.sendPacket(this.packet({ type: 'WORLD_END', campaign:Campaign.snapshot(), result: this.ended, rewards: CoopLoot.rewardSnapshot(), kills: GameState.kills }));
         this.finishing = true;
         try { if (victory) triggerVictory(); else gameOver(); } finally { this.finishing = false; }
         if (!victory) document.getElementById('over-summary').innerText = '全队倒地，本次协作战斗结束。可以由房主重新出征。';
@@ -15735,7 +15779,7 @@
           const grant = this.inbox.get(this.received + 1); if (!grant) break;
           const [seq, kind, value] = grant;
           const staleHeal = ['killHeal','support'].includes(kind) && (player.isDowned || value.lifeEpoch !== (player.lifeEpoch || 0) || (kind==='support'&&(!GameState.isStarted||GameState.isOver||UpgradeChoice.active||MenuPause.blocked())));
-          if (!staleHeal && kind !== 'xp' && kind !== 'gold' && (UpgradeChoice.active || player.isDowned || GameState.isPaused || WorldCoop.paused())) break;
+          if (!staleHeal && kind !== 'xp' && kind !== 'gold' && kind !== 'campaignShop' && (UpgradeChoice.active || player.isDowned || GameState.isPaused || WorldCoop.paused())) break;
           this.inbox.delete(seq); this.received = seq;
           if (kind === 'xp') addExp(value);
           else if (kind === 'gold') { SaveManager.addGold(value); audio.playCoin(); }
@@ -15743,6 +15787,7 @@
           else if (kind === 'support' && !staleHeal) HealerKit.applyGrant(value);
           else if (kind === 'item') triggerPickupEffect({ ...value, worldApplied: true });
           else if (kind === 'relic') equipMapRelic({ ...value });
+          else if (kind === 'campaignShop') CampMarket.apply(value);
           else if (kind === 'shrine') triggerShrineEffect({ ...value, worldApplied: true });
         }
         if (CoopManager.isHost) this.acknowledge(CoopManager.myPeerId, this.received);
@@ -15868,7 +15913,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 21, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 22, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
@@ -16427,6 +16472,122 @@
       if (CoopManager.roomCode) WorldCoop.startOrResume();
       else { closeCoopModal(); if (!GameState.isStarted) document.getElementById('btn-start-game').click(); }
     });
+
+    // R22: host-owned battle ledger; browser-owned, idempotent permanent progress.
+    var Campaign={
+      rows:new Map(),feedback:[],feedbackSeen:new Set(),support:new Map(),receipts:new Map(),receiptSeen:new Set(),bosses:[],merchants:[],friends:[],ended:null,sequence:0,round:null,lastPermanent:0,persisted:{},lastUI:0,
+      esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));},
+      permanent(){const d=SaveManager.data,p=d.campaign||(d.campaign={version:1});for(const k of ['counters','seen','bosses','achievements','heroes','wins','rounds'])if(!p[k]||typeof p[k]!=='object'||Array.isArray(p[k]))p[k]={};return p;},
+      stat(id=CoopManager.myPeerId){let r=this.rows.get(id);if(!r){const p=id===CoopManager.myPeerId?{name:CoopManager.myName,hero:GameState.selectedHero}:CoopManager.allies.find(p=>p.id===id);r={id,name:p?.name||'猎手',hero:p?.hero||'warrior',damage:0,healing:0,shielding:0,kills:0,rescues:0,downs:0,bosses:0,purchases:0,hires:0,removals:0,seconds:0};this.rows.set(id,r);}return r;},
+      reset(){this.rows.clear();this.feedback=[];this.feedbackSeen.clear();this.support.clear();this.receipts.clear();this.receiptSeen.clear();this.bosses=[];this.merchants=[];this.friends=[];this.ended=null;this.sequence=0;this.round=null;this.persisted={};this.spawnedMerchants=new Set();this.lastPermanent=0;for(const id of ['btn-over-lobby','btn-restart']){const e=document.getElementById(id);if(e)e.disabled=false;}if(typeof CampMarket!=='undefined')CampMarket.reset();},
+      ensure(){if(!this.round)this.round=WorldCoop.session||('solo:'+Date.now().toString(36)+':'+Math.random().toString(36).slice(2,8));this.stat();},
+      damage(id,value){if(!WorldCoop.authority()||!Number.isFinite(value)||value<=0)return;this.ensure();this.stat(id).damage+=Math.round(value);},
+      kill(en,id){if(!WorldCoop.authority())return;this.ensure();const r=this.stat(id);r.kills++;if(en.isBoss){r.bosses++;const key=en.bossProfile||this.bossCatalog().find(b=>b.key===en.type)?.id;if(key&&!this.bosses.includes(key))this.bosses.push(key);}this.permanent().seen[en.type]=true;},
+      registerSupport(actor,v){if(v.supportId)this.support.set(v.supportId,{source:v.sourceId,target:actor.id,epoch:v.lifeEpoch,heal:Math.min(200,v.amount||0),shield:Math.min(150,v.shield||0),at:performance.now()});},
+      supportApplied(v,heal,shield){if(!v.supportId)return;const pkt={type:'WORLD_R22_RECEIPT',id:v.supportId,heal,shield,lifeEpoch:v.lifeEpoch};if(WorldCoop.active()){if(CoopManager.isHost)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId});else this.receipts.set(pkt.id,{pkt,last:-Infinity});}else{this.stat(v.sourceId).healing+=heal;this.stat(v.sourceId).shielding+=shield;this.showFeedback({id:v.supportId,source:v.sourceId,target:CoopManager.myPeerId,heal,shield,x:player.x,y:player.y});}},
+      acceptReceipt(p){const v=this.support.get(p.id);if(!v||v.target!==p.peerId||v.epoch!==p.lifeEpoch)return false;const ack=()=>CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_ACK',targetPeerId:p.peerId,id:p.id}));if(this.receiptSeen.has(p.id)){ack();return true;}if(!Number.isFinite(p.heal)||!Number.isFinite(p.shield)||p.heal<0||p.shield<0||p.heal>v.heal||p.shield>v.shield+v.heal*.5+.01)return false;this.receiptSeen.add(p.id);const r=this.stat(v.source);r.healing+=p.heal;r.shielding+=p.shield;const target=WorldCoop.participants.get(v.target)||player;const event={id:p.id,source:v.source,target:v.target,heal:p.heal,shield:p.shield,x:target.x,y:target.y};this.showFeedback(event);CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_FEEDBACK',event}));ack();return true;},
+      showFeedback(e){if(this.feedbackSeen.has(e.id)||!Number.isFinite(e.heal)||!Number.isFinite(e.shield)||e.heal+e.shield<=0)return;this.feedbackSeen.add(e.id);while(this.feedbackSeen.size>512)this.feedbackSeen.delete(this.feedbackSeen.values().next().value);this.feedback.push({...e,at:performance.now()});if(this.feedback.length>16)this.feedback.shift();const who=e.target===CoopManager.myPeerId?'你':CoopManager.allies.find(p=>p.id===e.target)?.name||'队友',from=e.source===CoopManager.myPeerId?'你':CoopManager.allies.find(p=>p.id===e.source)?.name||'祷师';const box=document.getElementById('support-feed');if(box){const row=document.createElement('div');row.textContent=from+' → '+who+' '+(e.heal?'治疗 +'+Math.round(e.heal)+' ':'')+(e.shield?'护盾 +'+Math.round(e.shield):'');box.append(row);while(box.children.length>3)box.firstChild.remove();setTimeout(()=>row.remove(),3000);}},
+      snapshot(){return{round:this.round,rows:[...this.rows.values()].slice(0,3),bosses:this.bosses.slice(0,18),merchants:this.merchants.slice(0,6).map(m=>({id:m.id,x:m.x,y:m.y,gone:m.gone,busy:Boolean(m.lease)})),friends:this.friends.slice(0,6).map(({id,owner,boss,x,y,timer})=>({id,owner,boss,x,y,timer})),end:this.ended,feedback:this.feedback.filter(f=>performance.now()-f.at<2000).slice(-8).map(({at,...e})=>e)};},
+      receiveSnapshot(d){if(!d||typeof d.round!=='string'||!Array.isArray(d.rows)||d.rows.length>3)return;const newlySettled=Boolean(d.end?.settled&&!this.ended?.settled);this.round=d.round;for(const row of d.rows)if(typeof row.id==='string'&&['damage','healing','shielding','kills','rescues','downs'].every(k=>Number.isFinite(row[k])&&row[k]>=0))this.rows.set(row.id,{...row,name:String(row.name||'猎手').slice(0,24)});if(Array.isArray(d.bosses))this.bosses=d.bosses.filter(id=>this.bossCatalog().some(b=>b.id===id)).slice(0,18);if(Array.isArray(d.merchants))this.merchants=d.merchants.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)).slice(0,6);if(Array.isArray(d.friends))this.friends=d.friends.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)&&this.bossCatalog().some(b=>b.id===m.boss)).slice(0,6);if(Array.isArray(d.feedback))d.feedback.forEach(e=>this.showFeedback(e));if(d.end){const changed=JSON.stringify(this.ended)!==JSON.stringify(d.end);this.ended=d.end;if(changed)this.renderEnd();}if(newlySettled||performance.now()-this.lastPermanent>2000){this.lastPermanent=performance.now();this.syncPermanent();}},
+      grades(victory){const rows=[...this.rows.values()];const maxima={};for(const k of ['damage','healing','shielding','kills','rescues'])maxima[k]=Math.max(1,...rows.map(r=>r[k]));const rated=rows.map(r=>{const role=r.hero==='healer';const contribution=(role?.22:.48)*r.damage/maxima.damage+(role?.32:.10)*r.healing/maxima.healing+(role?.15:.07)*r.shielding/maxima.shielding+.13*r.kills/maxima.kills+.18*r.rescues/maxima.rescues;const score=Math.min(99,Math.round((victory?55:Math.min(40,GameState.gameTime/45))+contribution*40+Math.min(8,r.seconds/180)-Math.min(18,r.downs*4)));const grade=score>=90?'S':score>=83?'S-':score>=77?'A+':score>=70?'A':score>=63?'A-':score>=55?'B+':score>=47?'B':score>=39?'B-':'C';return{...r,score,grade,contribution};}).sort((a,b)=>b.score-a.score||b.contribution-a.contribution||b.damage-a.damage||a.id.localeCompare(b.id));if(victory&&rated.length)rated[0].grade='S+';return rated;},
+      beginEnd(victory){if(!this.ended){this.ended={victory,settled:false,at:Date.now(),rows:[]};const ending=this.ended;setTimeout(()=>{if(this.ended===ending)this.networkTick();},1850);}if(WorldCoop.authority())this.ended.rows=this.grades(victory);this.renderEnd();},
+      renderEnd(){if(this.ended){for(const id of ['btn-over-lobby','btn-restart'])document.getElementById(id).disabled=!this.ended.settled;document.getElementById('over-healing').textContent=Math.round(this.rows.get(CoopManager.myPeerId)?.healing||0).toLocaleString();}const el=document.getElementById('run-report');if(!el||!this.ended)return;el.innerHTML='<div class="campaign-note">'+(this.ended.settled?'本局评定 · 治疗计有效恢复，护盾计实际新增':'战局统计汇总中…')+' · S+仅通关且全队唯一</div><div class="campaign-scroll"><table><thead><tr><th>猎手 / 评分</th><th>伤害</th><th>治疗</th><th>护盾</th><th>击杀 / 救援</th></tr></thead><tbody>'+this.ended.rows.map(r=>'<tr><td><b class="rank-label">'+r.grade+'</b> '+this.esc(r.name)+(r.id===CoopManager.myPeerId?'（你）':'')+'</td><td>'+Math.round(r.damage).toLocaleString()+'</td><td>'+Math.round(r.healing).toLocaleString()+'</td><td>'+Math.round(r.shielding).toLocaleString()+'</td><td>'+r.kills+' / '+r.rescues+'</td></tr>').join('')+'</tbody></table></div>';},
+      syncPermanent(){if(!this.round)return;const p=this.permanent(),r=this.rows.get(CoopManager.myPeerId);if(!r)return;const round=p.rounds[this.round]||(p.rounds[this.round]={values:{},started:true});for(const k of ['damage','healing','shielding','kills','rescues','downs','bosses','purchases','hires','removals']){const value=Math.floor(r[k]||0),old=round.values[k]||0;if(value>old){p.counters[k]=(p.counters[k]||0)+value-old;round.values[k]=value;}}p.heroes[r.hero]=true;p.counters.maxLevel=Math.max(p.counters.maxLevel||0,player.level);p.counters.survival=Math.max(p.counters.survival||0,GameState.gameTime);p.counters.awakened=Math.max(p.counters.awakened||0,Object.values(player.skills).filter(s=>s.isEvolved).length);p.counters.maxed=Math.max(p.counters.maxed||0,Object.values(player.skills).filter(s=>s.level>=5).length);p.counters.relics=Math.max(p.counters.relics||0,player.mapRelics.length);for(const id of this.bosses)p.bosses[id]=true;for(const e of enemies)if(!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<500)p.seen[e.type]=true;
+        if(this.ended?.settled&&!round.finished){round.finished=true;p.counters.runs=(p.counters.runs||0)+1;if(this.rows.size>1)p.counters.coop=(p.counters.coop||0)+1;if(this.ended.victory){p.counters.wins=(p.counters.wins||0)+1;p.wins[r.hero]=true;}if(this.ended.rows.find(x=>x.id===r.id)?.grade==='S+')p.counters.splus=(p.counters.splus||0)+1;}
+        const keys=Object.keys(p.rounds);while(keys.length>40)delete p.rounds[keys.shift()];this.awardAchievements();SaveManager.save();},
+      achievements(){const list=[],add=(id,name,key,target,reward,desc)=>list.push({id,name,key,target,reward,desc:desc||name});
+        for(const [v,g]of [[1,20],[100,40],[1000,100],[10000,300]])add('kill'+v,'讨伐 '+v+' 只魔物','kills',v,g);
+        for(const [v,g]of [[10000,40],[100000,100],[1000000,250]])add('damage'+v,'累计伤害 '+v.toLocaleString(),'damage',v,g);
+        for(const [v,g]of [[100,40],[1000,100],[10000,300]])add('heal'+v,'有效治疗 '+v.toLocaleString(),'healing',v,g);
+        for(const [v,g]of [[100,40],[1000,100],[5000,200]])add('shield'+v,'新增护盾 '+v.toLocaleString(),'shielding',v,g);
+        for(const [v,g]of [[1,50],[5,100],[20,250]])add('rescue'+v,'救起队友 '+v+' 次','rescues',v,g);
+        for(const [v,g]of [[1,80],[5,150],[18,400]])add('boss'+v,'解锁 '+v+' 位首领','uniqueBosses',v,g);
+        for(const [v,g]of [[1,100],[3,200],[10,500]])add('win'+v,'破晓凯旋 '+v+' 次','wins',v,g);
+        for(const [v,g]of [[5,40],[15,80],[30,150]])add('survive'+v,'坚持 '+v+' 分钟','survival',v*60,g);
+        for(const [v,g]of [[10,30],[30,80],[50,150]])add('level'+v,'达到 Lv.'+v,'maxLevel',v,g);
+        for(const [v,g]of [[1,40],[5,80],[10,150]])add('buy'+v,'商人交易 '+v+' 次','purchases',v,g);
+        add('hire1','昔日之敌，今日之友','hires',1,100);add('hire3','首领雇佣团','hires',3,200);add('remove1','重整行装','removals',1,60);add('coop1','并肩作战','coop',1,60);add('coop10','可靠的队友','coop',10,180);add('heroes5','五种命运','uniqueHeroes',5,150);add('wins5','全职业破晓','heroWins',5,500);add('awaken1','第一次觉醒','awakened',1,60);add('awaken4','四重觉醒','awakened',4,180);add('maxed5','五级大师','maxed',5,200);add('relic2','双秘宝同行','relics',2,80);add('splus1','唯一的破晓之星','splus',1,250);return list;},
+      progress(a){const p=this.permanent();return a.key==='uniqueBosses'?Object.keys(p.bosses).length:a.key==='uniqueHeroes'?Object.keys(p.heroes).length:a.key==='heroWins'?Object.keys(p.wins).length:p.counters[a.key]||0;},
+      awardAchievements(){const p=this.permanent();let gold=0,n=0;for(const a of this.achievements())if(!p.achievements[a.id]&&this.progress(a)>=a.target){p.achievements[a.id]=Date.now();gold+=a.reward;n++;}if(n){SaveManager.data.gold+=gold;showToast('[px:trophy] 达成 '+n+' 项成就 · 金币 +'+gold);}},
+      bossCatalog(){return Object.entries(BIOME_BOSS_ROSTER).flatMap(([biome,rows])=>Object.entries(rows).map(([minute,cfg])=>({...cfg,id:biome+'_'+minute,biome,minute:Number(minute)})));},
+      openBook(tab='heroes'){this.bookPaused=GameState.isPaused;GameState.isPaused=GameState.isStarted&&!GameState.isOver?true:GameState.isPaused;CoopSocial.clearInput();document.getElementById('campaign-modal').style.display='flex';this.renderBook(tab);},
+      closeBook(){document.getElementById('campaign-modal').style.display='none';GameState.isPaused=this.bookPaused||false;CombatKeys.focus();},
+      renderBook(tab){const p=this.permanent(),box=document.getElementById('campaign-content');document.querySelectorAll('[data-book-tab]').forEach(b=>b.classList.toggle('active-toggle',b.dataset.bookTab===tab));if(tab==='achievements'){const all=this.achievements();box.innerHTML='<p class="campaign-note">'+Object.keys(p.achievements).length+' / '+all.length+' · 达成自动发放金币，每项只奖励一次。存档码包含成就与图鉴。</p><div class="campaign-grid">'+all.map(a=>'<article class="campaign-card '+(p.achievements[a.id]?'achieved':'')+'"><strong>'+a.name+'</strong><div>'+Math.floor(Math.min(a.target,this.progress(a))).toLocaleString()+' / '+a.target.toLocaleString()+'</div><progress max="'+a.target+'" value="'+Math.min(a.target,this.progress(a))+'"></progress><div>'+ (p.achievements[a.id]?'已获得':'金币 +'+a.reward)+'</div></article>').join('')+'</div>';return;}
+        const rows=tab==='heroes'?Object.entries(HERO_CONFIGS).map(([id,h])=>({id,name:h.name,icon:'hero-'+id,hero:true,unlocked:true,desc:h.desc||h.subtitle||({warrior:'近战连斩与流血引爆，剑阵护身，突袭穿过敌群。',mage:'远程奥术连锁、冰闪控场、黑洞聚怪与群星坠落。',ranger:'穿透毒箭与后跃陷阱；走位接回飞轮，连续刷新战技。',engineer:'锁定钉积攒热能，磁雷聚怪，部署炮网与成长浮游炮。',healer:'圣光直接审判、蓄力绽放、群体治疗护盾与双倍救援。'})[id],stats:'生命 '+h.maxHp+' · 移速 '+h.speed})):tab==='bosses'?this.bossCatalog().map(b=>({...b,name:b.title,type:b.key,unlocked:Boolean(p.bosses[b.id]),desc:'战胜后可在神秘商人处雇佣。'+(BossCombat.profiles?.[b.id]?.title||''),stats:'基础生命 '+b.hp+' · 伤害 '+b.dmg})):Object.entries(MONSTER_SPECS).map(([type,m])=>({id:type,type,name:this.monsterName(type),unlocked:Boolean(p.seen[type]),desc:'阶级 '+m.tier+(m.isFlying?' · 飞行':' · 地面')+' · 经验 '+m.exp,stats:'基础生命 '+m.hp+' · 伤害 '+m.dmg+' · 移速 '+m.speed}));box.innerHTML='<p class="campaign-note">'+(tab==='bosses'?'击败解锁，18位首领分别收录；未解锁不能雇佣。':tab==='monsters'?'在战场见过的魔物会收录；数值为未计时间成长的基础值。':'选择适合自己的战斗方式。')+'</p><div class="campaign-grid">'+rows.map(r=>'<article class="campaign-card '+(!r.unlocked?'locked':'')+'"><div class="book-portrait" data-portrait="'+(r.hero?'hero:'+r.id:r.type)+'">'+(r.unlocked?'':'?')+'</div><strong>'+this.esc(r.unlocked?r.name:'未解锁')+'</strong><p>'+this.esc(r.unlocked?r.desc:'继续探索血夜')+'</p><small>'+this.esc(r.unlocked?r.stats:'')+'</small></article>').join('')+'</div>';for(const el of box.querySelectorAll('.book-portrait')){if(el.parentElement.classList.contains('locked'))continue;const id=el.dataset.portrait,base=id.startsWith('hero:')?id.slice(5):id==='mage'?'mage_en':id,sp=SpriteCache[base+'_0'];if(sp){const cv=document.createElement('canvas');cv.width=cv.height=80;const c=cv.getContext('2d');c.imageSmoothingEnabled=false;const img=sp.normal||sp;c.drawImage(img,(80-img.width)/2,(80-img.height)/2);el.append(cv);}}},
+      monsterName(key){return({hellknight:'地狱骑士',voidbug:'虚空虫',bone_knight:'白骨骑士',mammoth:'霜原猛犸',imp:'小恶魔',bat:'火蝠',icewolf:'冰狼',snow_owl:'雪鸮',zombie:'腐尸',crow:'冥鸦',hellhound:'地狱猎犬',fire_skull:'焰骨头颅',archer:'骷髅射手',frost_spider:'霜蛛',ghoul:'食尸鬼',skeleton:'骷髅卫士',mage:'邪术师',succubus:'魅魔',gargoyle:'石像鬼',yeti:'雪怪',wraith:'幽魂',icemage:'冰法师',valkyrie:'堕落女武神',reaper:'收割者',golem:'魔像',abomination:'憎恶',revenant:'亡魂',lich:'巫妖'})[key]||key;},
+      tick(dt){if(!GameState.isStarted||GameState.isOver||WorldCoop.simulationPaused())return;this.ensure();if(WorldCoop.authority()){for(const p of WorldCoop.active()?WorldCoop.actors():[{id:CoopManager.myPeerId}]){const r=this.stat(p.id);r.seconds+=dt;if(p.id===CoopManager.myPeerId){r.hero=GameState.selectedHero;r.name=CoopManager.myName||'猎手';}}CampMarket.tick(dt);this.tickFriends(dt);}if(performance.now()-this.lastPermanent>2000){this.lastPermanent=performance.now();this.syncPermanent();}CampMarket.hint();},
+      networkTick(){const now=performance.now();for(const [id,r]of this.receipts)if(now-r.last>400){r.last=now;WorldCoop.toHost(r.pkt);}for(const [id,v]of this.support)if(now-v.at>15000)this.support.delete(id);if(this.ended&&!this.ended.settled&&WorldCoop.authority()&&Date.now()-this.ended.at>1800){this.ended.rows=this.grades(this.ended.victory);this.ended.settled=true;this.syncPermanent();this.renderEnd();if(WorldCoop.active())WorldCoop.broadcastWorld();}CampMarket.networkTick();},
+      hire(owner,boss){if(this.friends.filter(f=>f.owner===owner).length>=2)return false;const p=owner===CoopManager.myPeerId?player:WorldCoop.participants.get(owner);if(!p)return false;this.friends.push({id:'friend:'+(++this.sequence),owner,boss,x:p.x+70,y:p.y+20,timer:0});return true;},
+      tickFriends(dt){for(const f of this.friends){const owner=WorldCoop.active()?WorldCoop.participants.get(f.owner):player;if(!owner||owner.downed||WorldCoop.phased(owner)||owner.paused)continue;const dist=Math.hypot(owner.x-f.x,owner.y-f.y);if(dist>500){f.x=owner.x+55;f.y=owner.y+30;}else if(dist>70){f.x+=(owner.x-f.x)/dist*Math.min(170*dt,dist-70);f.y+=(owner.y-f.y)/dist*Math.min(170*dt,dist-70);}Arena.clamp(f,22);f.timer-=dt;if(f.timer>0)continue;const cfg=this.bossCatalog().find(b=>b.id===f.boss),e=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-f.x,e.y-f.y)<420).sort((a,b)=>Math.hypot(a.x-f.x,a.y-f.y)-Math.hypot(b.x-f.x,b.y-f.y))[0];if(!e)continue;f.timer=1.6;const damage=Math.round((28+GameState.gameTime*.14)*(1+cfg.minute/60));lightningArcs.push({x1:f.x,y1:f.y,x2:e.x,y2:e.y,color:'#86efac',life:.22});for(const t of [...enemies])if(!t.isDead&&Math.hypot(t.x-e.x,t.y-e.y)<(cfg.minute>=20?90:65)){const d=Math.min(t.hp,damage);t.hp-=damage;this.damage(f.owner,d);spawnMergedFloatingText(t,damage,false,false);if(t.hp<=0)killEnemy(t,f.owner);}}},
+      draw(c){const now=performance.now();for(const m of this.merchants)if(!m.gone){c.save();c.translate(m.x,m.y);c.fillStyle='#0a1325';c.fillRect(-24,-40,48,60);c.fillStyle='#7e5999';c.fillRect(-20,-37,40,44);c.fillStyle='#cba65e';c.fillRect(-23,-21,46,5);c.fillRect(-28,15,56,9);c.fillStyle='#fff2ac';c.fillRect(-10,-13,6,4);c.fillRect(5,-13,6,4);c.fillStyle='#46354c';c.fillRect(-17,2,34,17);c.fillStyle='#fbbf24';for(let i=0;i<3;i++)c.fillRect(-18+i*14,11,8,6);c.textAlign='center';c.font='bold 12px sans-serif';c.fillStyle='#fde68a';c.fillText('神秘商人 · 一次访问',0,-49);c.restore();}
+        for(const f of this.friends){const b=this.bossCatalog().find(b=>b.id===f.boss),base=b?.key,sp=SpriteCache[base+'_0']||SpriteCache.skeleton_0;if(!sp)continue;const img=sp.normal;c.save();c.translate(f.x,f.y);c.strokeStyle='#86efac';c.lineWidth=2;c.strokeRect(-26,-29,52,57);c.globalAlpha=.8;c.drawImage(img,-img.width/2,-img.height/2);c.fillStyle='#bbf7d0';c.font='bold 11px sans-serif';c.textAlign='center';c.fillText('友军',0,-34);c.restore();}
+        this.feedback=this.feedback.filter(f=>now-f.at<2200);for(const f of this.feedback){c.save();c.font='bold 14px sans-serif';c.textAlign='center';c.strokeStyle='#052e25';c.lineWidth=3;c.fillStyle='#a7f3d0';const text=(f.heal?'+'+Math.round(f.heal)+' 治疗 ':'')+(f.shield?'+'+Math.round(f.shield)+' 盾':'');const y=f.y-46-(now-f.at)/70;c.strokeText(text,f.x,y);c.fillText(text,f.x,y);c.restore();}},
+      growthFx(kind){const sk=player.skills[{atk:'attack',s1:'skill1',s2:'skill2',ult:'ult',charge:'charge'}[kind]];if(!sk||sk.level<2||kind==='atk')return;skyBeams.push({type:'growth_sigil',x:player.x,y:player.y,radius:28+sk.level*9,stage:sk.level,color:({warrior:'#fda4af',mage:'#7dd3fc',ranger:'#86efac',engineer:'#fbbf24',healer:'#fff0ac'})[GameState.selectedHero],life:.4,maxLife:.4});},
+      drawGrowth(c,s,ratio){const n=s.stage||1;c.save();c.translate(s.x,s.y);c.globalAlpha*=ratio;c.strokeStyle=s.color;c.fillStyle=s.color;c.lineWidth=n>=4?2:1;for(let ring=0;ring<Math.ceil(n/2);ring++){c.save();c.rotate(GameState.gameTime*.5+ring*.4);const r=s.radius+ring*8;c.strokeRect(-r*.7,-r*.7,r*1.4,r*1.4);for(let i=0;i<n+2;i++){c.rotate(Math.PI*2/(n+2));c.fillRect(r,-2,3+ring*2,4);}c.restore();}c.restore();}
+    };
+
+    var CampMarket={
+      open:null,pending:null,request:null,sequence:0,applied:new Set(),transactions:new Map(),requests:new Map(),lastTry:0,
+      reset(){this.open=null;this.pending=null;this.request=null;this.applied.clear();this.transactions.clear();this.requests.clear();const e=document.getElementById('merchant-modal');if(e)e.style.display='none';},
+      nearest(){return Campaign.merchants.filter(m=>!m.gone).sort((a,b)=>Math.hypot(a.x-player.x,a.y-player.y)-Math.hypot(b.x-player.x,b.y-player.y))[0];},
+      tick(){for(const at of [90,360,720,1080,1440])if(GameState.gameTime>=at&&!Campaign.spawnedMerchants.has(at)){Campaign.spawnedMerchants.add(at);const origin=WorldCoop.spawnOrigin(),a=Math.random()*Math.PI*2,p=Arena.safe(origin.x+Math.cos(a)*260,origin.y+Math.sin(a)*260,55);Campaign.merchants.push({id:'merchant:'+at,x:p.x,y:p.y,gone:false,lease:null});showToast('[px:shop] 神秘商人在附近停留 · 靠近后访问');}for(const m of Campaign.merchants)if(m.lease&&(performance.now()>m.lease.until||WorldCoop.active()&&m.lease.owner!==CoopManager.myPeerId&&!CoopManager.allies.some(p=>p.id===m.lease.owner))){m.gone=true;m.lease=null;}},
+      hint(){const b=document.getElementById('merchant-interact'),m=this.nearest();if(!b)return;b.style.display=GameState.isStarted&&!GameState.isOver&&!player.isDowned&&!this.open&&m&&Math.hypot(m.x-player.x,m.y-player.y)<125?'block':'none';},
+      cardOwned(id){const pass={p_crit_glove:'critGlove',p_swift_boots:'swiftBoots',p_lava_heart:'lavaHeart',p_frost_aura:'frostAura',p_pierce_quiver:'pierceQuiver',syn_thunder:'thunderChain',syn_ice:'iceShatter',syn_blood:'bloodPact',syn_fire:'fireTrail'};return id.startsWith('syn_')?Boolean(player.passives[pass[id]||id.slice(4)]):pass[id]?Boolean(player.passives[pass[id]]):true;},
+      catalog(){return generateUpgradePool().filter(c=>!c.id.startsWith('lb_')).slice(0,32).map(c=>({id:c.id,name:c.name,desc:c.desc,type:c.type,owned:this.cardOwned(c.id)}));},
+      removals(){const out=[];for(const key of ['skill1','skill2','ult']){const s=player.skills[key];if(!s.disabled)out.push({id:'remove:skill:'+key,name:'卸下 '+s.name,price:260+40*s.level,desc:'移除这项主动技，之后可在升级或商人处重新学习。'});}for(const key of [...SYNERGY_KEYS,'critGlove','swiftBoots','lavaHeart','frostAura','pierceQuiver'])if(player.passives[key]>0){const kind=SYNERGY_KEYS.includes(key)?'synergy':'equip',info=SkillDetails.describe(kind,key);out.push({id:'remove:'+kind+':'+key,name:'卸下 '+info.title,price:200+40*player.passives[key],desc:'释放一个'+(kind==='synergy'?'流派':'装备')+'格子，不返还原升级。已觉醒形态保留。'});}for(const r of player.mapRelics)out.push({id:'remove:relic:'+r.id,name:'卸下 '+r.name,price:200+40*(r.level||1),desc:'释放一个秘宝格，相关常驻属性一并移除。'});return out;},
+      visit(){if(this.open||this.request||!WorldCoop.canAct()||!GameState.isStarted||GameState.isOver)return;const m=this.nearest();if(!m||Math.hypot(m.x-player.x,m.y-player.y)>125)return;CoopManager.sendPresenceNow();this.request={type:'WORLD_R22_SHOP_OPEN',id:m.id,requestId:CoopManager.myPeerId+':open:'+(++this.sequence),cards:this.catalog(),removals:this.removals(),unlocked:Object.keys(Campaign.permanent().bosses),gold:SaveManager.data.gold,lifeEpoch:player.lifeEpoch||0};this.lastTry=-Infinity;this.send(this.request);},
+      send(p){if(WorldCoop.active()){if(CoopManager.isHost)this.handle({...p,peerId:CoopManager.myPeerId});else WorldCoop.toHost(p);}else this.handle({...p,peerId:CoopManager.myPeerId},true);},
+      reply(id,data,solo=false){const pkt={type:'WORLD_R22_SHOP_REPLY',...data};if(solo||id===CoopManager.myPeerId)this.receive(pkt);else CoopManager.sendPacket(WorldCoop.packet({...pkt,targetPeerId:id}));},
+      actor(id,solo){return solo?{...player,id,epoch:player.lifeEpoch||0,started:true}:WorldCoop.participants.get(id);},
+      handle(p,solo=false){if(!solo&&(!WorldCoop.active()||!CoopManager.isHost))return;const actor=this.actor(p.peerId,solo),m=Campaign.merchants.find(m=>m.id===p.id);if(p.type==='WORLD_R22_SHOP_CLOSE'){if(m?.lease?.owner===p.peerId){m.gone=true;m.lease=null;}return;}const reject=message=>this.reply(p.peerId,{requestId:p.requestId,error:message},solo);if(!actor||!actor.started||actor.downed||actor.epoch!==p.lifeEpoch||WorldCoop.phased(actor)||GameState.isOver||WorldCoop.ended||WorldCoop.paused()||!m||m.gone||Math.hypot(m.x-actor.x,m.y-actor.y)>145)return reject('商人已离去，或当前无法交易');
+        if(p.type==='WORLD_R22_SHOP_OPEN'){if(this.requests.has(p.requestId))return this.reply(p.peerId,this.requests.get(p.requestId),solo);if(m.lease&&m.lease.owner!==p.peerId)return reject('另一位队友正在访问这名商人');if(m.lease)return this.reply(p.peerId,m.lease.reply,solo);if(!Array.isArray(p.cards)||p.cards.length>32||!Number.isFinite(p.gold)||p.gold<0)return reject('交易数据无效');const valid=p.cards.filter(c=>typeof c.id==='string'&&/^(atk_up|s1_up|s2_up|ult_up|charge_|super_|syn_|p_|relic_up_|relearn_)/.test(c.id)&&typeof c.name==='string'&&c.name.length<100&&typeof c.desc==='string'&&c.desc.length<500);const shuffled=a=>a.map(x=>({x,k:Math.random()})).sort((a,b)=>a.k-b.k).map(v=>v.x),fresh=shuffled(valid.filter(c=>!c.owned)),owned=shuffled(valid.filter(c=>c.owned));const chosen=[...fresh.slice(0,4),...owned.slice(0,2)];for(const c of shuffled(valid))if(chosen.length<6&&!chosen.some(x=>x.id===c.id))chosen.push(c);const offers=chosen.map((c,i)=>({...c,price:c.id.startsWith('super_')?180:100+(i%3)*20}));
+          const unlocked=(Array.isArray(p.unlocked)?p.unlocked:[]).filter(id=>Campaign.bossCatalog().some(b=>b.id===id));for(const id of shuffled([...new Set(unlocked)]).slice(0,2)){const b=Campaign.bossCatalog().find(b=>b.id===id);offers.push({id:'hire:'+id,name:'雇佣 '+b.title.split(' · ').at(-1),desc:'本局永久跟随并攻击魔物，每人最多两位友军；你倒地或菜单期间待命。',price:420+b.minute*12});}const removals=(Array.isArray(p.removals)?p.removals:[]).filter(r=>typeof r.id==='string'&&/^remove:(skill|equip|synergy|relic):[a-zA-Z0-9_]+$/.test(r.id)).slice(0,16).map(r=>({...r,price:Math.max(240,Math.min(800,Math.round(r.price)||300))}));const nonce=Math.random().toString(36).slice(2)+':'+(++Campaign.sequence);const reply={requestId:p.requestId,open:true,id:m.id,nonce,offers,removals};m.lease={owner:p.peerId,nonce,until:performance.now()+90000,balance:p.gold,reply,offers:[...offers,...removals]};this.requests.set(p.requestId,reply);return this.reply(p.peerId,reply,solo);
+        }
+        if(p.type==='WORLD_R22_SHOP_BUY'){const lease=m.lease;if(!lease||lease.owner!==p.peerId||lease.nonce!==p.nonce)return reject('这次访问已结束');if(this.transactions.has(p.requestId)){const tx=this.transactions.get(p.requestId);if(tx.done)this.reply(p.peerId,{bought:true,requestId:p.requestId},solo);return;}let offer=lease.offers.find(o=>o.id===p.offer);if(p.removal?.id===p.offer&&/^remove:(skill|equip|synergy|relic):[a-zA-Z0-9_]+$/.test(p.offer))offer={...p.removal,price:Math.max(240,Math.min(800,Math.round(p.removal.price)||300))};if(!offer||lease.balance<offer.price)return reject('金币不足或商品无效');if(offer.id.startsWith('hire:')&&Campaign.friends.filter(f=>f.owner===p.peerId).length>=2)return reject('本局最多雇佣两位首领');lease.balance-=offer.price;const tx={...offer,transaction:p.requestId,owner:p.peerId,merchant:m.id,epoch:actor.epoch,at:performance.now(),done:false,solo};this.transactions.set(p.requestId,tx);if(solo)this.apply(tx);else CoopLoot.grant(actor,'campaignShop',tx);}
+      },
+      receive(p){if(p.error){this.request=null;this.pending=null;showToast('[px:warning] '+p.error);this.render();return;}if(p.open){if(this.open?.nonce===p.nonce){this.request=null;return;}if(!this.request||this.request.requestId!==p.requestId)return;this.request=null;this.open=p;this.paused=GameState.isPaused;GameState.isPaused=true;CoopSocial.clearInput();document.getElementById('merchant-modal').style.display='flex';MenuPause.sync();CoopManager.sendPresenceNow();this.render();}if(p.bought&&this.pending?.requestId===p.requestId){this.pending=null;this.render();}},
+      buy(offer){if(!this.open||this.pending||GameState.isOver)return;const p={type:'WORLD_R22_SHOP_BUY',id:this.open.id,nonce:this.open.nonce,offer,removal:this.removals().find(r=>r.id===offer),requestId:CoopManager.myPeerId+':buy:'+(++this.sequence),lifeEpoch:player.lifeEpoch||0};this.pending=p;this.lastTry=-Infinity;this.send(p);this.render();},
+      apply(tx){let ok=this.applied.has(tx.transaction);if(!ok&&tx.owner===CoopManager.myPeerId&&!GameState.isOver&&SaveManager.data.gold>=tx.price){const offer=tx.id,card=generateUpgradePool().find(c=>c.id===offer),canHire=offer.startsWith('hire:')&&Campaign.permanent().bosses[offer.slice(5)],canRemove=offer.startsWith('remove:')&&this.removals().some(r=>r.id===offer);if(card||canHire||canRemove){SaveManager.data.gold-=tx.price;this.applied.add(tx.transaction);if(card)card.apply();else if(canRemove)this.remove(offer);SaveManager.save();updateLoadoutHUD();updateHpUI();ok=true;showToast('[px:coin] '+tx.name+' · -'+tx.price+' 金币');}}this.pending=null;this.render();const pkt={type:'WORLD_R22_SHOP_RECEIPT',id:tx.transaction,ok};if(tx.solo)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId},true);else if(CoopManager.isHost)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId});else Campaign.receipts.set(pkt.id,{pkt,last:-Infinity});return ok;},
+      acceptReceipt(p,solo=false){const tx=this.transactions.get(p.id);if(!tx||tx.owner!==p.peerId)return;const ack=()=>{if(!solo)CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_ACK',targetPeerId:p.peerId,id:p.id}));};if(tx.done){ack();return;}tx.done=true;if(p.ok===true){const r=Campaign.stat(p.peerId);r.purchases++;if(tx.id.startsWith('hire:')&&Campaign.hire(p.peerId,tx.id.slice(5)))r.hires++;if(tx.id.startsWith('remove:'))r.removals++;}else{const m=Campaign.merchants.find(m=>m.id===tx.merchant);if(m?.lease)m.lease.balance+=tx.price;}this.reply(p.peerId,{bought:true,requestId:p.id},solo);ack();},
+      remove(id){const [,kind,key]=id.split(':'),p=player.passives,lv=p[key]||0,lb=p.equipLB?.[key]||0;if(kind==='skill'){const skill=HERO_CONFIGS[GameState.selectedHero].initSkills()[key];skill.damage=Math.round(skill.damage*(1+(SaveManager.data.talents.might||0)*.06));Object.assign(player.skills[key],skill,{disabled:true,level:0,timer:0,isEvolved:false});if(key==='skill1')player.skills.skill1.isDashing=false;if(key==='skill2'){if(GameState.selectedHero==='healer')HealerKit.localFields=[];if(GameState.selectedHero==='engineer')for(const g of EngineerKit.turrets())g.life=0;}return;}
+        if(kind==='relic'){const r=player.mapRelics.find(r=>r.id===key);if(!r)return;const n=r.level||1;if(key==='dungeon_thorn')player.armor=Math.max(HERO_CONFIGS[GameState.selectedHero].armor,player.armor-(.05+.04*(n-1)));if(key==='dungeon_horn')player.critChance=Math.max(0,player.critChance-(.04+.035*(n-1)));if(key==='tundra_totem')player.speed=Math.round(player.speed/(1.06*Math.pow(1.05,n-1)));if(key==='grave_cloak')player.speed=Math.round(player.speed/(1.05*Math.pow(1.04,n-1)));player.mapRelics=player.mapRelics.filter(r=>r.id!==key);return;}
+        if(key==='critGlove'){player.critChance=Math.max(0,player.critChance-lv*.03-lb*.02);player.critMultiplier=+(player.critMultiplier-lv*.08-lb*.12).toFixed(2);}if(key==='swiftBoots'){player.speed=Math.round(player.speed/Math.pow(1.04,lv+lb));player.magnetRange=Math.max(0,player.magnetRange-lv*6-lb*10);}if(key==='lavaHeart')player.maxHp=Math.max(1,player.maxHp-lv*8-lb*15);if(key==='bloodPact')player.maxHp=Math.max(1,player.maxHp-lv*15);if(key==='pierceQuiver')player.skills.attack.damage=Math.round(player.skills.attack.damage/Math.pow(1.05,lv)/Math.pow(1.08,lb));p[key]=0;if(p.equipLB)p.equipLB[key]=0;player.hp=Math.min(player.hp,player.maxHp);player.shield=Math.min(player.shield,Math.round(player.maxHp*.35));},
+      close(){if(!this.open)return;this.send({type:'WORLD_R22_SHOP_CLOSE',id:this.open.id});this.open=null;document.getElementById('merchant-modal').style.display='none';GameState.isPaused=this.paused||false;CoopSocial.clearInput();CoopManager.sendPresenceNow();CombatKeys.focus();this.hint();},
+      render(){const box=document.getElementById('merchant-content');if(!box||!this.open)return;this.open.removals=this.removals();box.innerHTML='<p class="campaign-note">可用金币 <b>'+SaveManager.data.gold+'</b> · 本次可购买多件；离开后商人离去，全队无法再次访问。</p><h3>本次货物</h3><div class="campaign-grid">'+this.open.offers.map(o=>this.cardHTML(o)).join('')+'</div><h3>卸下与腾出格子</h3><p class="campaign-note">购买时再次校验格子与当前等级；主动技卸下后需重新学习，已觉醒配件卸下不退化技能。</p><div class="campaign-grid">'+this.open.removals.map(o=>this.cardHTML(o)).join('')+'</div>';for(const b of box.querySelectorAll('[data-buy]'))b.onclick=()=>this.buy(b.dataset.buy);},
+      cardHTML(o){const ordinary=!o.id.startsWith('hire:')&&!o.id.startsWith('remove:'),current=ordinary?generateUpgradePool().find(c=>c.id===o.id):o;return'<article class="campaign-card"><strong>'+Campaign.esc(current?.name||o.name)+'</strong><p>'+Campaign.esc(current?.desc||(ordinary?'已满级、格子不足或已不满足条件':o.desc))+'</p><button class="btn-secondary" data-buy="'+Campaign.esc(o.id)+'" '+(this.pending||!current||SaveManager.data.gold<o.price?'disabled':'')+'>'+o.price+' 金币'+(this.pending?.offer===o.id?' · 交易中':'')+'</button></article>';},
+      networkTick(){const now=performance.now();if(this.request&&now-this.lastTry>800){this.lastTry=now;this.send(this.request);}if(this.pending&&now-this.lastTry>800){this.lastTry=now;this.send(this.pending);}if(this.open&&(player.isDowned||GameState.isOver||!Campaign.merchants.some(m=>m.id===this.open.id&&!m.gone)))this.close();}
+    };
+
+    // UI uses the existing pixel atlas and stays usable on narrow phones.
+    const campaignStyle=document.createElement('style');campaignStyle.textContent=`
+      .campaign-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:10px}.campaign-card{border:1px solid #43526b;background:#111d30;padding:14px;border-radius:7px;line-height:1.6;min-width:0}.campaign-card strong{color:#fbe5a1}.campaign-card p{font-size:12px;color:#bdcce2}.campaign-card progress{width:100%;height:8px;accent-color:#7dd3b0}.campaign-card.achieved{border-color:#66b9a0;background:#122d2a}.campaign-card.locked{filter:grayscale(1);opacity:.6}.book-portrait{height:80px;text-align:center;font-size:35px;color:#8aa0be}.book-portrait canvas{width:80px;height:80px;image-rendering:pixelated}.campaign-note{color:#b9c8dd;font-size:12px;line-height:1.7}.campaign-scroll{overflow:auto}.campaign-scroll table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}.campaign-scroll td,.campaign-scroll th{padding:9px 7px;border-bottom:1px solid #40516c;text-align:left}.rank-label{font-size:23px;color:#f8d970;margin-right:5px}#campaign-modal .modal-card,#merchant-modal .modal-card{width:min(900px,94vw);max-height:86dvh;overflow:auto}#support-feed{position:fixed;left:50%;top:28%;transform:translateX(-50%);z-index:90;pointer-events:none;font-size:12px;font-weight:bold;text-align:center;width:min(90vw,450px)}#support-feed div{background:#071e21df;border:1px solid #5aa68f;padding:5px 9px;color:#b0f8d5;margin:3px;border-radius:5px}#merchant-interact{display:none;position:fixed;left:50%;bottom:25%;transform:translateX(-50%);z-index:80;padding:10px 16px;background:#2b2140;color:#ffe2a1;border:2px solid #c79c58;border-radius:6px;font-size:14px}#campaign-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}#run-report{margin:10px 0 18px}`;document.head.append(campaignStyle);
+    document.body.insertAdjacentHTML('beforeend',`<div id="support-feed" aria-live="polite"></div><button id="merchant-interact">[px:shop] 访问神秘商人 · E</button><div id="campaign-modal" class="modal-overlay"><div class="modal-card"><button class="modal-close-x" id="campaign-close" aria-label="关闭图鉴">[px:close]</button><div class="modal-title">[px:book] 血夜图鉴与成就</div><div id="campaign-tabs"><button class="btn-secondary" data-book-tab="heroes">角色</button><button class="btn-secondary" data-book-tab="monsters">魔物</button><button class="btn-secondary" data-book-tab="bosses">首领</button><button class="btn-secondary" data-book-tab="achievements">成就</button></div><div id="campaign-content"></div></div></div><div id="merchant-modal" class="modal-overlay"><div class="modal-card"><button class="modal-close-x" id="merchant-close" aria-label="结束访问">[px:close]</button><div class="modal-title">[px:shop] 雾行商人</div><div class="modal-subtitle">每个商人仅接待一位猎手的一次访问；离开后不会回来。</div><div id="merchant-content"></div><button class="btn-primary" id="merchant-leave">结束访问，让商人离去</button></div></div>`);
+    document.getElementById('btn-start-game').insertAdjacentHTML('afterend','<div style="display:flex;justify-content:center;gap:9px;margin:12px 0;flex-wrap:wrap"><button class="btn-secondary" id="camp-book">[px:book] 角色与魔物图鉴</button><button class="btn-secondary" id="camp-achievements">[px:trophy] 成就与金币</button></div>');
+    document.getElementById('over-damage').parentElement.insertAdjacentHTML('afterend','<div>[px:heart-green] 战局有效治疗: <strong id="over-healing">0</strong></div>');document.getElementById('over-modal').querySelector('.modal-card').insertAdjacentHTML('beforeend','<div id="run-report"></div>');
+    document.getElementById('camp-book').onclick=()=>Campaign.openBook('heroes');document.getElementById('camp-achievements').onclick=()=>Campaign.openBook('achievements');document.getElementById('campaign-close').onclick=()=>Campaign.closeBook();for(const b of document.querySelectorAll('[data-book-tab]'))b.onclick=()=>Campaign.renderBook(b.dataset.bookTab);document.getElementById('merchant-interact').onclick=()=>CampMarket.visit();document.getElementById('merchant-close').onclick=document.getElementById('merchant-leave').onclick=()=>CampMarket.close();
+    window.addEventListener('keydown',e=>{if(CombatKeys.typing(e.target))return;if(e.code==='KeyE'&&!e.repeat){e.preventDefault();CampMarket.visit();}if(e.key==='Escape'&&CampMarket.open){e.preventDefault();CampMarket.close();}else if(e.key==='Escape'&&document.getElementById('campaign-modal').style.display==='flex'){e.preventDefault();Campaign.closeBook();}},true);
+
+    // Extend existing authoritative state and reward logs instead of adding another transport.
+    const r22Encode=WorldCoop.encodeWorld;WorldCoop.encodeWorld=function(){Campaign.ensure();return{...r22Encode.call(this),campaign:Campaign.snapshot()};};
+    const r22Apply=WorldCoop.applyWorld;WorldCoop.applyWorld=function(d){r22Apply.call(this,d);if(this.receivedFrame===d.seq&&d.session===this.session&&d.campaign)Campaign.receiveSnapshot(d.campaign);};
+    const r22Receive=WorldCoop.receive;WorldCoop.receive=function(p){if(p.type?.startsWith('WORLD_R22_')){if(!this.active()||p.session!==this.session||!CoopManager.allies.some(a=>a.id===p.peerId))return true;if(CoopManager.isHost){if(p.type==='WORLD_R22_RECEIPT')Campaign.acceptReceipt(p);if(p.type==='WORLD_R22_SHOP_RECEIPT')CampMarket.acceptReceipt(p);if(['WORLD_R22_SHOP_OPEN','WORLD_R22_SHOP_BUY','WORLD_R22_SHOP_CLOSE'].includes(p.type))CampMarket.handle(p);}else if(p.peerId===this.hostId){if(p.type==='WORLD_R22_ACK')Campaign.receipts.delete(p.id);if(p.type==='WORLD_R22_FEEDBACK'&&p.event)Campaign.showFeedback(p.event);if(p.type==='WORLD_R22_SHOP_REPLY')CampMarket.receive(p);}return true;}if(p.type==='WORLD_END'&&p.peerId===this.hostId&&p.session===this.session&&p.campaign)Campaign.receiveSnapshot(p.campaign);return r22Receive.call(this,p);};
+    const r22Finish=WorldCoop.finish;WorldCoop.finish=function(v){if(this.ended)return;Campaign.beginEnd(v);return r22Finish.call(this,v);};
+    const r22Reset=WorldCoop.reset;WorldCoop.reset=function(){Campaign.reset();return r22Reset.call(this);};
+    const r22Round=resetGameSession;resetGameSession=function(...args){const r=r22Round(...args);Campaign.reset();return r;};
+    const r22Over=gameOver;gameOver=function(){const r=r22Over();if(GameState.isOver){Campaign.beginEnd(false);Campaign.renderEnd();}return r;};
+    const r22Win=triggerVictory;triggerVictory=function(){const r=r22Win();if(GameState.isOver){Campaign.beginEnd(true);Campaign.renderEnd();}return r;};
+    const r22Tick=WorldCoop.tick;WorldCoop.tick=function(dt){r22Tick.call(this,dt);Campaign.networkTick();};
+    const r22Update=update;update=function(dt){r22Update(dt);Campaign.tick(dt);};
+    const r22Grant=CoopLoot.grant;CoopLoot.grant=function(actor,kind,value,id){if(kind==='support')Campaign.registerSupport(actor,value);return r22Grant.call(this,actor,kind,value,id);};
+    const r22Broadcast=CoopManager.broadcastSkill;CoopManager.broadcastSkill=function(kind,p){Campaign.growthFx(kind);return r22Broadcast.call(this,kind,p);};
+    const r22Pool=generateUpgradePool;generateUpgradePool=function(){const disabled={s1_up:'skill1',s2_up:'skill2',ult_up:'ult'},cards=r22Pool().filter(c=>!disabled[c.id]||!player.skills[disabled[c.id]].disabled);for(const key of ['skill1','skill2','ult'])if(player.skills[key].disabled)cards.push({id:'relearn_'+key,name:'重新学习 '+player.skills[key].name,type:'evolve',icon:HERO_CONFIGS[GameState.selectedHero].icons[key==='skill1'?'s1':key==='skill2'?'s2':'ult'],desc:'回到Lv.1，重新获得这项主动技能。',apply:()=>{const next=HERO_CONFIGS[GameState.selectedHero].initSkills()[key];next.damage=Math.round(next.damage*(1+(SaveManager.data.talents.might||0)*.06));Object.assign(player.skills[key],next,{disabled:false});updateLoadoutHUD();}});return cards;};
+    for(const [name,key]of [['executeSkill1','skill1'],['executeSkill2','skill2'],['executeUlt','ult']]){const original=({executeSkill1,executeSkill2,executeUlt})[name],fn=(...a)=>{if(player.skills[key].disabled)return false;return original(...a);};if(name==='executeSkill1')executeSkill1=fn;if(name==='executeSkill2')executeSkill2=fn;if(name==='executeUlt')executeUlt=fn;}
+    const r22SupportGrant=HealerKit.applyGrant;HealerKit.applyGrant=function(v){const hp=player.hp,shield=player.shield,r=r22SupportGrant.call(this,v);if(r)Campaign.supportApplied(v,Math.max(0,player.hp-hp),Math.max(0,player.shield-shield));return r;};
+    const r22Tree=SkillDetails.describe;SkillDetails.describe=function(kind,key){const d=r22Tree.call(this,kind,key);if(kind==='active'&&player.skills[key]?.disabled){d.status='已卸下 · 可重新学习';d.notes.push('当前不能释放；从升级或神秘商人重新学习后恢复Lv.1。');}return d;};
+    const r22SaveBattle=SaveManager.saveBattleSnapshot;SaveManager.saveBattleSnapshot=function(...a){const r=r22SaveBattle.apply(this,a);if(this._memBattleSnap&&!WorldCoop.active()){this._memBattleSnap.campaign={owner:CoopManager.myPeerId,round:Campaign.round,rows:[...Campaign.rows.values()],bosses:Campaign.bosses,merchants:Campaign.merchants.map(m=>({...m,lease:null})),friends:Campaign.friends,spawned:[...(Campaign.spawnedMerchants||[])]};try{localStorage.setItem(this.BATTLE_KEY,JSON.stringify(this._memBattleSnap));}catch{}}return r;};
+    const r22Restore=restoreBattleSnapshot;restoreBattleSnapshot=function(){const snap=SaveManager.hasBattleSnapshot(),r=r22Restore();if(r&&snap?.campaign){const d=snap.campaign;Campaign.reset();Campaign.round=d.round;const oldOwner=d.owner||(d.rows||[]).find(row=>row.hero===GameState.selectedHero)?.id||d.rows?.[0]?.id,newOwner=CoopManager.myPeerId;Campaign.rows=new Map((d.rows||[]).map(row=>{const next={...row,id:row.id===oldOwner?newOwner:row.id};return[next.id,next];}));Campaign.bosses=d.bosses||[];Campaign.merchants=d.merchants||[];Campaign.friends=(d.friends||[]).map(f=>({...f,owner:f.owner===oldOwner?newOwner:f.owner}));HuntPulse.reset();Campaign.spawnedMerchants=new Set(d.spawned||[]);}return r;};
+
+    Campaign.reset();Campaign.permanent();
 
     PixelIcons.start();
     setupHero('warrior');
