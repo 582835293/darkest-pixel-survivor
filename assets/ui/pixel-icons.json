@@ -1,0 +1,1028 @@
+{
+  "license": "MIT",
+  "source": "../../index.html: PixelIcons",
+  "pixelSize": 16,
+  "tile": 20,
+  "padding": 2,
+  "columns": 16,
+  "width": 320,
+  "height": 160,
+  "icons": [
+    {
+      "name": "sword",
+      "label": "长剑",
+      "x": 2,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "swords",
+      "label": "交叉双剑",
+      "x": 22,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "shield",
+      "label": "钢盾",
+      "x": 42,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "lightning",
+      "label": "雷电",
+      "x": 62,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "fire",
+      "label": "烈焰",
+      "x": 82,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "snow",
+      "label": "冰晶",
+      "x": 102,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "coin",
+      "label": "金币",
+      "x": 122,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "star",
+      "label": "星芒",
+      "x": 142,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "sparkles",
+      "label": "辉光",
+      "x": 162,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "crown",
+      "label": "王冠",
+      "x": 182,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "warning",
+      "label": "危险",
+      "x": 202,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "check",
+      "label": "确认",
+      "x": 222,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "close",
+      "label": "关闭",
+      "x": 242,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "error",
+      "label": "错误",
+      "x": 262,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "gear",
+      "label": "设置",
+      "x": 282,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "lock",
+      "label": "锁定",
+      "x": 302,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "boots",
+      "label": "疾行靴",
+      "x": 2,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "glove",
+      "label": "狂暴手套",
+      "x": 22,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "skull",
+      "label": "骷髅",
+      "x": 42,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "boss",
+      "label": "首领",
+      "x": 62,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "shop",
+      "label": "军需商店",
+      "x": 82,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "save",
+      "label": "保存",
+      "x": 102,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "heart",
+      "label": "生命",
+      "x": 122,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "heart-green",
+      "label": "治疗",
+      "x": 142,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "heart-gold",
+      "label": "护盾生命",
+      "x": 162,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "heart-lava",
+      "label": "熔岩之心",
+      "x": 182,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "burst",
+      "label": "爆破",
+      "x": 202,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "network",
+      "label": "联机",
+      "x": 222,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "vortex",
+      "label": "回旋",
+      "x": 242,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "tools",
+      "label": "开发工具",
+      "x": 262,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "bow",
+      "label": "弓弩",
+      "x": 282,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "refresh",
+      "label": "刷新",
+      "x": 302,
+      "y": 22,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "star-bright",
+      "label": "秘宝辉光",
+      "x": 2,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "blood",
+      "label": "流血",
+      "x": 22,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "boomerang",
+      "label": "回旋刃",
+      "x": 42,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "castle",
+      "label": "地牢",
+      "x": 62,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "grave",
+      "label": "墓园",
+      "x": 82,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "home",
+      "label": "房间",
+      "x": 102,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "bomb",
+      "label": "震爆弹",
+      "x": 122,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "antenna",
+      "label": "连接线路",
+      "x": 142,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "orb",
+      "label": "奥术球",
+      "x": 162,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "dice",
+      "label": "匹配",
+      "x": 182,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "rescue",
+      "label": "救援",
+      "x": 202,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "meteor",
+      "label": "星落",
+      "x": 222,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "party",
+      "label": "队友",
+      "x": 242,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "target",
+      "label": "瞄准",
+      "x": 262,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "tree",
+      "label": "技能树",
+      "x": 282,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "play",
+      "label": "继续",
+      "x": 302,
+      "y": 42,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "pause",
+      "label": "暂停",
+      "x": 2,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "fast",
+      "label": "倍速",
+      "x": 22,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "clipboard",
+      "label": "复制",
+      "x": 42,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "clock",
+      "label": "计时",
+      "x": 62,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "alarm",
+      "label": "警报",
+      "x": 82,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "galaxy",
+      "label": "引力黑洞",
+      "x": 102,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "planet",
+      "label": "星核",
+      "x": 122,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "ice",
+      "label": "冰块",
+      "x": 142,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "gem",
+      "label": "水晶",
+      "x": 162,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "number",
+      "label": "伤害数值",
+      "x": 182,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "temple",
+      "label": "营地圣殿",
+      "x": 202,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "chat",
+      "label": "文字交流",
+      "x": 222,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "camp",
+      "label": "营地",
+      "x": 242,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "map",
+      "label": "地图",
+      "x": 262,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "ally",
+      "label": "队友位置",
+      "x": 282,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "self",
+      "label": "自己的位置",
+      "x": 302,
+      "y": 62,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "shrine",
+      "label": "神龛",
+      "x": 2,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "broom",
+      "label": "清理",
+      "x": 22,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "web",
+      "label": "捕网",
+      "x": 42,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "wind",
+      "label": "疾风",
+      "x": 62,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "hourglass",
+      "label": "等待",
+      "x": 82,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "book",
+      "label": "战役记录",
+      "x": 102,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "menu",
+      "label": "菜单",
+      "x": 122,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "music",
+      "label": "音乐",
+      "x": 142,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "upload",
+      "label": "导出",
+      "x": 162,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "download",
+      "label": "导入",
+      "x": 182,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "tornado",
+      "label": "剑刃风暴",
+      "x": 202,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "sun",
+      "label": "过载",
+      "x": 222,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "demon",
+      "label": "处刑",
+      "x": 242,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "rainbow",
+      "label": "棱光",
+      "x": 262,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "magnet",
+      "label": "磁铁",
+      "x": 282,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "food",
+      "label": "恢复道具",
+      "x": 302,
+      "y": 82,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "pepper",
+      "label": "火龙椒",
+      "x": 2,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "trophy",
+      "label": "胜利",
+      "x": 22,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "paw",
+      "label": "兽群",
+      "x": 42,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "ring",
+      "label": "环形阵",
+      "x": 62,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "ruler",
+      "label": "距离刻度",
+      "x": 82,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "scale",
+      "label": "比例尺",
+      "x": 102,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "cross",
+      "label": "复活",
+      "x": 122,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "door",
+      "label": "退出房间",
+      "x": 142,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "confetti",
+      "label": "连通成功",
+      "x": 162,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "diamond",
+      "label": "装饰铆钉",
+      "x": 182,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "compass",
+      "label": "方位",
+      "x": 202,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "pin",
+      "label": "位置",
+      "x": 222,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "trash",
+      "label": "删除存档",
+      "x": 242,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "rivet",
+      "label": "锁定钉",
+      "x": 262,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "diamond-core",
+      "label": "追猎核心",
+      "x": 282,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "chain",
+      "label": "锁链",
+      "x": 302,
+      "y": 102,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "wolf",
+      "label": "狼牙图腾",
+      "x": 2,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "lantern",
+      "label": "引魂灯",
+      "x": 22,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "coffin",
+      "label": "守墓披风",
+      "x": 42,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "speaker",
+      "label": "声音",
+      "x": 62,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "mute",
+      "label": "静音",
+      "x": 82,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "arm",
+      "label": "坚韧",
+      "x": 102,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "search",
+      "label": "查找",
+      "x": 122,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "microphone",
+      "label": "麦克风",
+      "x": 142,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "mic-off",
+      "label": "麦克风静音",
+      "x": 162,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "headphones",
+      "label": "收听",
+      "x": 182,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "enemy-dot",
+      "label": "怪物位置",
+      "x": 202,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "chest",
+      "label": "秘宝",
+      "x": 222,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "plus",
+      "label": "空槽位",
+      "x": 242,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "arrow-right",
+      "label": "向右",
+      "x": 262,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "arrow-left",
+      "label": "向左",
+      "x": 282,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "arrow-up",
+      "label": "向上",
+      "x": 302,
+      "y": 122,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "arrow-both",
+      "label": "距离范围",
+      "x": 2,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "chevron-right",
+      "label": "展开",
+      "x": 22,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "chevron-down",
+      "label": "收起",
+      "x": 42,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "cleave",
+      "label": "裂风三斩",
+      "x": 62,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "blood-dash",
+      "label": "血影突袭",
+      "x": 82,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "sword-vortex",
+      "label": "剑狱回旋",
+      "x": 102,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "holy-sword",
+      "label": "断界天陨",
+      "x": 122,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "ice-blink",
+      "label": "极寒冰闪",
+      "x": 142,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "turret",
+      "label": "哨戒炮台",
+      "x": 162,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "magnetic-mine",
+      "label": "牵引磁雷",
+      "x": 182,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "reactor",
+      "label": "熔星过载",
+      "x": 202,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "hero-warrior",
+      "label": "苍红剑客",
+      "x": 222,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "hero-mage",
+      "label": "星界魔导",
+      "x": 242,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "hero-ranger",
+      "label": "暗夜巡林",
+      "x": 262,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "hero-engineer",
+      "label": "烬铁机匠",
+      "x": 282,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    }
+  ]
+}

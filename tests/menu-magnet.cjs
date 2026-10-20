@@ -26,7 +26,7 @@ const tail=String.raw`
  });
  await clearMenus();
  await check('HUD opens Menu; guest has no team-pause button and cannot trigger it',async()=>{
-  assert.equal((await guest.locator('#btn-pause').textContent()).trim(),'☰菜单');
+  assert.equal((await guest.locator('#btn-pause').textContent()).trim(),'菜单');assert.equal(await guest.locator('#btn-pause [data-pixel-icon=menu]').count(),1);
   await guest.locator('#btn-pause').click();await guest.waitForFunction(()=>MenuPause.open);
   assert(!await guest.locator('#btn-team-pause').isVisible());assert.equal(await guest.evaluate(()=>WorldCoop.toggleTeamPause()),false);
   assert.equal(await host.evaluate(()=>WorldCoop.manualPaused),false);

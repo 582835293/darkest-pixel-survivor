@@ -16,11 +16,17 @@ const tail=String.raw`
  async function returnAll(){for(const p of pages)await p.locator('#btn-over-lobby').click();}
  async function sameParty(){for(const p of pages){assert.equal(await p.evaluate(()=>RoomHub.identity()),identity);assert.equal(await p.evaluate(()=>CoopManager.roomCode),room);assert.equal(await p.evaluate(()=>RoomHub.members.size),3);assert.equal(await p.evaluate(()=>CoopManager.allies.length),2);}}
  const first=await host.evaluate(()=>WorldCoop.session);
+ const oldFrame=await host.evaluate(()=>WorldCoop.encodeWorld());
  await check('defeat return opens the original party for guest and host without changing members or closing game/audio RTC',async()=>{
   await ended(false);for(const p of pages)assert.equal(await p.locator('#btn-over-lobby').textContent(),'返回队伍房间');
   await returnAll();await sameParty();
   for(const p of pages){assert(await p.locator('#coop-modal').isVisible());assert(!await p.locator('#over-modal').isVisible());assert.equal(await p.evaluate(()=>WorldCoop.session),first);assert.equal(await p.evaluate(()=>RoomHub.roomName),'朋友连续出征');assert(await p.evaluate(()=>originalCapture.readyState==='live'&&originalVoicePCs.every(pc=>[...CoopVoice.peers.values()].some(e=>e.pc===pc))&&originalGamePCs.every(pc=>[...CoopManager.autoRtcMap.values()].some(e=>e.pc===pc))));}
   await audioEvidence(a,'peer_m');
+ });
+ await check('camp clears the completed battle and delayed snapshots cannot repopulate or resume it',async()=>{
+  for(const p of pages){assert.equal(await p.evaluate(()=>GameState.isStarted||GameState.isOver||GameState.isPaused),false);assert.equal(await p.evaluate(()=>GameState.gameTime+GameState.kills+enemies.length+projectiles.length+gems.length+groundEffects.length),0);assert.equal(await p.locator('#btn-lobby-resume').count(),0);}
+  await a.evaluate(frame=>{WorldCoop.applyWorld({...frame,seq:1e8,t:performance.now()+1000});CoopManager.onReceivePacket({type:'WORLD_START',peerId:RoomHub.hostId,protocol:32,roomCode:RoomHub.identity(),session:WorldCoop.session,biome:'graveyard',sentAt:1e12,msgId:'camp-old-start'},{kind:'rtc'})},oldFrame);
+  assert.equal(await a.evaluate(()=>GameState.isStarted||GameState.isOver),false);assert.equal(await a.evaluate(()=>enemies.length+GameState.gameTime),0);assert(await a.locator('#coop-modal').isVisible());
  });
  await check('chat remains delivered in the retained party and duplicate old end packets cannot reopen the results',async()=>{
   await a.evaluate(()=>{CoopSocial.toggle(true);document.getElementById('social-input').value='下一把继续';CoopSocial.send()});await host.waitForFunction(()=>CoopSocial.messages.some(m=>m.text==='下一把继续'));
@@ -58,6 +64,12 @@ const tail=String.raw`
  });
  await check('a guest can request the next round from the retained room and all three enter it',async()=>{
   await a.locator('#btn-coop-start-now').click();await Promise.all(pages.map(p=>p.waitForFunction(old=>WorldCoop.active()&&WorldCoop.session!==old&&!GameState.isOver&&GameState.isStarted,second)));await sameParty();await quiet();
+ });
+ await check('a lost end packet is repaired after the host has cleared the battle and returned to camp',async()=>{
+  await b.evaluate(()=>{window.campReceive=CoopManager.onReceivePacket;window.blockCampEnd=true;CoopManager.onReceivePacket=function(pkt,source){if(blockCampEnd&&['WORLD_END','WORLD_CHUNK'].includes(pkt.type))return;return campReceive.call(this,pkt,source)}});
+  await host.evaluate(()=>{GameState.kills=777;WorldCoop.finish(false)});await a.waitForFunction(()=>GameState.isOver);await host.locator('#btn-over-lobby').click();assert.equal(await host.evaluate(()=>GameState.kills+enemies.length),0);assert.equal(await b.evaluate(()=>GameState.isOver),false);
+  await b.evaluate(()=>{window.blockCampEnd=false;CoopManager.onReceivePacket=campReceive});const id=await b.evaluate(()=>CoopManager.myPeerId);await host.evaluate(id=>WorldCoop.broadcastWorld(id),id);await b.waitForFunction(()=>GameState.isOver);assert.equal(await b.evaluate(()=>GameState.kills),777);
+  for(const p of [a,b])await p.locator('#btn-over-lobby').click();await sameParty();const old=await host.evaluate(()=>WorldCoop.session);await host.locator('#btn-coop-start-now').click();await Promise.all(pages.map(p=>p.waitForFunction(old=>WorldCoop.session!==old&&GameState.isStarted,old)));await quiet();
  });
  await check('again-from-results keeps the room, while only explicit leave removes a participant',async()=>{
   const round=await host.evaluate(()=>WorldCoop.session);await ended(false);await host.locator('#btn-restart').click();await Promise.all(pages.map(p=>p.waitForFunction(old=>WorldCoop.session!==old&&!GameState.isOver,round)));await sameParty();

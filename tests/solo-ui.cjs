@@ -10,10 +10,10 @@ fs.mkdirSync('test-results',{recursive:true});
   const ctx=await browser.newContext({viewport:spec.viewport,hasTouch:spec.touch,isMobile:spec.touch});const p=await ctx.newPage();p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:'+server.address().port);
   const press=async(id,opts)=>spec.touch?p.locator(id).tap(opts):p.locator(id).click(opts);
   await check(spec.name+': audio and VFX have one pause-system entry and no outside speaker buttons',async()=>{
-   assert.equal(await p.locator('#game-build').textContent(),'R16');
+   assert.equal(await p.locator('#game-build').textContent(),'R17');
    assert.equal(await p.locator('#btn-lobby-settings-top,#btn-lobby-settings,#btn-hud-settings,#top-hud #btn-bgm-toggle,#coop-effects-details').count(),0);
    assert.equal(await p.locator('#settings-modal #btn-bgm-toggle,#settings-modal #coop-alpha-slider,#settings-modal #self-alpha-slider').count(),3);
-   assert.equal(await p.locator('#btn-pause-settings').textContent(),'⚙️ 系统设置');assert.equal(await p.evaluate(()=>CoopManager.roomCode),null);
+   assert.equal((await p.locator('#btn-pause-settings').textContent()).trim(),'系统设置');assert.equal(await p.locator('#btn-pause-settings [data-pixel-icon=gear]').count(),1);assert.equal(await p.evaluate(()=>CoopManager.roomCode),null);
   });
   await press('#btn-start-game');await p.waitForFunction(()=>GameState.isStarted&&!GameState.isPaused);await p.evaluate(()=>{GameState.godMode=true;GameState.autoAttack=false;spawnEnemyBatch=()=>{};enemies.length=0});
   await check(spec.name+': all tested minimap hit areas open the map and never open pause',async()=>{
@@ -37,8 +37,8 @@ fs.mkdirSync('test-results',{recursive:true});
    const v=await p.evaluate(()=>AudioSettings.values.effects);await p.reload();assert.equal(await p.evaluate(()=>AudioSettings.values.effects),v);
   });
   if(spec.name==='portrait touch')await check('relic direction guidance renders only icon and distance while the full name stays in the compendium',async()=>{
-   const r=await p.evaluate(()=>{document.getElementById('lobby-modal').style.display='none';setupHero('warrior');GameState.isStarted=true;GameState.isPaused=true;GameState.autoAttack=false;player.x=player.y=0;camera.x=-innerWidth/2;camera.y=-innerHeight/2;mapRelicDrops.length=0;mapRelicDrops.push({id:'relic-demon-skull',icon:'⭐',name:'不该出现在方向提示的秘宝名字',x:3000,y:0,rarity:'rare'});const rows=[],original=ctx.fillText;ctx.fillText=function(text,x,y){rows.push({text:String(text),x,y});return original.call(this,text,x,y)};try{draw();}finally{ctx.fillText=original;}return rows;});
-   const label=r.find(v=>v.text==='⭐ 300m');assert(label);assert(!r.some(v=>v.text.includes('不该出现在方向提示的秘宝名字')&&v.x===0&&v.y===4));
+   const r=await p.evaluate(()=>{document.getElementById('lobby-modal').style.display='none';setupHero('warrior');GameState.isStarted=true;GameState.isPaused=true;GameState.autoAttack=false;player.x=player.y=0;camera.x=-innerWidth/2;camera.y=-innerHeight/2;mapRelicDrops.length=0;mapRelicDrops.push({id:'relic-demon-skull',icon:'⭐',name:'不该出现在方向提示的秘宝名字',x:3000,y:0,rarity:'rare'});const rows=[],original=ctx.fillText,od=PixelIcons.draw;PixelIcons.draw=function(c,key,x,y,...args){rows.push({icon:this.key(key),x,y});return od.call(this,c,key,x,y,...args)};ctx.fillText=function(text,x,y){rows.push({text:String(text),x,y});return original.call(this,text,x,y)};try{draw();}finally{ctx.fillText=original;PixelIcons.draw=od;}return rows;});
+   assert(r.some(v=>v.icon==='star'));const label=r.find(v=>v.text?.trim()==='300m');assert(label);assert(!r.some(v=>v.text?.includes('不该出现在方向提示的秘宝名字')&&v.x===0&&v.y===4));
    await p.screenshot({path:'test-results/r10-relic-direction.png'});
   });
   if(spec.name==='portrait touch'){
@@ -56,8 +56,8 @@ fs.mkdirSync('test-results',{recursive:true});
     assert(r.strokes.some(v=>v.color==='#112233'&&v.alpha===0));assert(r.strokes.some(v=>v.color==='#223344'&&v.alpha===1));assert(r.strokes.some(v=>v.color==='#334455'&&v.alpha===.5));assert(r.body.some(a=>a===1));assert(r.warnings.length>0&&r.warnings.every(a=>a===1));assert.deepEqual(r.damage,[73,73,73]);
    });
    await check('expanded map omits ordinary loot markers while preserving real loot and navigation landmarks',async()=>{
-    const r=await p.evaluate(()=>{gems.length=goldDrops.length=fieldPickups.length=0;for(let i=0;i<500;i++){gems.push({x:i+500,y:500,expValue:3});goldDrops.push({x:i+600,y:600,val:4});fieldPickups.push({x:i+700,y:700,color:'#f0abfc',radius:14,floatY:0,icon:'🧲',label:'道具'});}shrines.length=0;shrines.push({x:1000,y:0,used:false});mapRelicDrops.length=0;mapRelicDrops.push({x:0,y:1400,icon:'⭐',name:'秘宝',radius:20,floatY:0});const c=document.getElementById('world-map-canvas').getContext('2d'),rows=[],original=c.fillText;c.fillText=function(text,...args){rows.push({text,color:this.fillStyle});return original.call(this,text,...args)};try{CoopMap.toggle(true);CoopMap.draw(true);}finally{c.fillText=original;}return{rows,legend:document.querySelector('.map-legend').textContent,counts:[gems.length,goldDrops.length,fieldPickups.length]};});
-    assert(!r.rows.some(v=>['◆','♦'].includes(v.text)||(v.text==='●'&&v.color==='#facc15')));assert(r.rows.some(v=>v.text==='▲'));assert(r.rows.some(v=>v.text==='★'));assert(!/经验|金币|道具/.test(r.legend));assert.deepEqual(r.counts,[500,500,500]);await p.locator('#world-map-modal .modal-card').screenshot({path:'test-results/r10-clean-map.png'});
+    const r=await p.evaluate(()=>{gems.length=goldDrops.length=fieldPickups.length=0;for(let i=0;i<500;i++){gems.push({x:i+500,y:500,expValue:3});goldDrops.push({x:i+600,y:600,val:4});fieldPickups.push({x:i+700,y:700,color:'#f0abfc',radius:14,floatY:0,icon:'🧲',label:'道具'});}shrines.length=0;shrines.push({x:1000,y:0,used:false});mapRelicDrops.length=0;mapRelicDrops.push({x:0,y:1400,icon:'⭐',name:'秘宝',radius:20,floatY:0});const c=document.getElementById('world-map-canvas').getContext('2d'),rows=[],original=c.fillText,od=PixelIcons.draw;PixelIcons.draw=function(c,key,x,y,...args){rows.push({icon:this.key(key),x,y});return od.call(this,c,key,x,y,...args)};c.fillText=function(text,...args){rows.push({text,color:this.fillStyle});return original.call(this,text,...args)};try{CoopMap.toggle(true);CoopMap.draw(true);}finally{c.fillText=original;PixelIcons.draw=od;}return{rows,legend:document.querySelector('.map-legend').textContent,counts:[gems.length,goldDrops.length,fieldPickups.length]};});
+    assert(!r.rows.some(v=>['◆','♦'].includes(v.text)||(v.text==='●'&&v.color==='#facc15')));assert(r.rows.some(v=>v.icon==='shrine'));assert(r.rows.some(v=>v.icon==='chest'));assert(!/经验|金币|道具/.test(r.legend));assert.deepEqual(r.counts,[500,500,500]);await p.locator('#world-map-modal .modal-card').screenshot({path:'test-results/r10-clean-map.png'});
    });
   }
   await ctx.close();
