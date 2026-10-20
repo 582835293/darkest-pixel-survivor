@@ -1288,7 +1288,7 @@
             <div class="hero-avatar">[px:hero-engineer]</div><div class="hero-title">烬铁机匠</div>
             <div class="hero-perk">锁定钉攒热 · 炮群集火<br>磁雷聚怪 · 满热炮网齐射<br>成型6炮台 + 4座重装支援</div>
           </div>
-          <div class="hero-card" data-hero="healer"><div class="hero-avatar">[px:hero-healer]</div><div class="hero-title">曙光祷师 · 治疗辅助</div><div class="hero-perk">圣矢攒祷光 · 溢疗转盾<br>圣域协助救援 · 六翼圣光审判</div></div>
+          <div class="hero-card" data-hero="healer"><div class="hero-avatar">[px:hero-healer]</div><div class="hero-title">曙光祷师 · 治疗辅助</div><div class="hero-perk">圣矢攒祷光 · 溢疗转盾<br>救援速度×2 · 六翼圣光审判</div></div>
         </div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #fde047;">2. 选择作战关卡（三关各有独立地图、专属怪物、6位不同招式首领与3种地图秘宝）</div>
@@ -7336,7 +7336,7 @@
       if (GameState.speedShrineTimer > 0) html += `<div class="status-pill" style="border-color:#22c55e; color:#86efac;">[px:wind] 疾风神速 ${GameState.speedShrineTimer.toFixed(1)}s</div>`;
       if (player.reviveLeft > 0) html += `<div class="status-pill" style="border-color:#a855f7; color:#d8b4fe;">[px:cross] 重生: ${player.reviveLeft}</div>`;
       if(GameState.selectedHero==='engineer'){const heat=Math.round(EngineerKit.heat||0),guns=EngineerKit.turrets();html+=`<div class="status-pill" style="border-color:#f59e0b;color:#fef3c7;background:linear-gradient(90deg,rgba(234,88,12,.7) ${heat}%,rgba(15,23,42,.88) ${heat}%)" title="普攻命中锁定并攒热；满热炮网三轮齐射，蓄力消耗热能强化">[px:gear] 热能 ${heat}/100 · 炮台 ${guns.filter(g=>!g.temporary).length}/${EngineerKit.cap()}${guns.some(g=>g.temporary)?' +支援'+guns.filter(g=>g.temporary).length:''}${GameState.forgeOverdriveTimer>0?' · 过载'+GameState.forgeOverdriveTimer.toFixed(1)+'s':''}</div>`;}
-      if(GameState.selectedHero==='healer')html+=`<div class="status-pill" style="border-color:#6ee7b7;color:#d1fae5" title="普攻攒祷光；蓄力消耗至少25点用于群疗，溢疗一半转盾（上限35%生命）。圣域内祷师救援速度×2。">[px:crosier] 祷光 ${Math.round(HealerKit.prayer)}/100 · 溢疗转盾</div>`;
+      if(GameState.selectedHero==='healer')html+=`<div class="status-pill" style="border-color:#6ee7b7;color:#d1fae5" title="普攻攒祷光；蓄力消耗至少25点用于群疗，溢疗一半转盾（上限35%生命）。祷师救援速度×2。">[px:crosier] 祷光 ${Math.round(HealerKit.prayer)}/100 · 溢疗转盾</div>`;
       tray.innerHTML = html;
     }
 
@@ -10579,7 +10579,7 @@
 
       if (tab === 'active') {
         const superFormulas = {
-          healer:{attack:{reqName:'[px:glove] 狂暴手套',hasReq:pass.critGlove,superName:'七曜圣矢',superDesc:'七枚贯穿圣矢，蓄力转化祷光'},skill1:{reqName:'[px:boots] 疾行之靴',hasReq:pass.swiftBoots,superName:'不灭回春',superDesc:'提高群疗与护盾，溢疗一半转盾'},skill2:{reqName:'[px:heart-lava] 熔岩之心',hasReq:pass.lavaHeart,superName:'常青圣殿',superDesc:'扩大圣域，治疗与灼烧成长，祷师救援速度×2'},ult:{reqName:'大招Lv.3',hasReq:skills.ult.level>=3,superName:'炽天使降临',superDesc:'9秒羽翼阵，每轮审判8目标；施放时群疗加盾'}},
+          healer:{attack:{reqName:'[px:glove] 狂暴手套',hasReq:pass.critGlove,superName:'七曜圣矢',superDesc:'七枚贯穿圣矢，蓄力转化祷光'},skill1:{reqName:'[px:boots] 疾行之靴',hasReq:pass.swiftBoots,superName:'不灭回春',superDesc:'提高群疗与护盾，溢疗一半转盾'},skill2:{reqName:'[px:heart-lava] 熔岩之心',hasReq:pass.lavaHeart,superName:'常青圣殿',superDesc:'扩大圣域，治疗与灼烧成长'},ult:{reqName:'大招Lv.3',hasReq:skills.ult.level>=3,superName:'炽天使降临',superDesc:'9秒羽翼阵，每轮审判8目标；施放时群疗加盾'}},
           engineer:{attack:{reqName:'[px:glove] 狂暴手套',hasReq:pass.critGlove,superName:'[px:gear]【超武】磁轨蜂群',superDesc:'6枚贯穿锁定钉，三连击附双追踪火箭'},skill1:{reqName:'[px:boots] 疾行之靴',hasReq:pass.swiftBoots,superName:'[px:bomb]【超武】日冕磁雷阵',superDesc:'4枚聚怪磁雷，132半径爆破'},skill2:{reqName:'[px:heart-lava] 熔岩之心',hasReq:pass.lavaHeart,superName:'[px:gear]【超武】六联重装哨戒',superDesc:'6座三管炮台，每次部署3座，附带追踪导弹'},ult:{reqName:'[px:star] 大招升至满级(Lv.3)',hasReq:skills.ult.level>=3,superName:'[px:sun]【终极超武】日冕工厂',superDesc:'9秒重装机甲、4座支援炮台与巡航轰炸'}},
           warrior: {
             attack: { reqName: '[px:glove] 狂暴手套', hasReq: pass.critGlove, superName: '[px:crown]【超武】灭世斩神剑', superDesc: '每次挥砍释放半屏金色月牙气刃，必暴击且附带流血处决' },
