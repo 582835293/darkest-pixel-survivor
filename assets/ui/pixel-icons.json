@@ -6,7 +6,7 @@
   "padding": 2,
   "columns": 16,
   "width": 320,
-  "height": 160,
+  "height": 180,
   "icons": [
     {
       "name": "sword",
@@ -993,9 +993,41 @@
       "height": 16
     },
     {
+      "name": "crosier",
+      "label": "流辉圣矢",
+      "x": 222,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "mending",
+      "label": "回春祷言",
+      "x": 242,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "sanctuary",
+      "label": "庇护圣域",
+      "x": 262,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "seraph",
+      "label": "六翼曙光",
+      "x": 282,
+      "y": 142,
+      "width": 16,
+      "height": 16
+    },
+    {
       "name": "hero-warrior",
       "label": "苍红剑客",
-      "x": 222,
+      "x": 302,
       "y": 142,
       "width": 16,
       "height": 16
@@ -1003,24 +1035,32 @@
     {
       "name": "hero-mage",
       "label": "星界魔导",
-      "x": 242,
-      "y": 142,
+      "x": 2,
+      "y": 162,
       "width": 16,
       "height": 16
     },
     {
       "name": "hero-ranger",
       "label": "暗夜巡林",
-      "x": 262,
-      "y": 142,
+      "x": 22,
+      "y": 162,
       "width": 16,
       "height": 16
     },
     {
       "name": "hero-engineer",
       "label": "烬铁机匠",
-      "x": 282,
-      "y": 142,
+      "x": 42,
+      "y": 162,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "hero-healer",
+      "label": "曙光祷师",
+      "x": 62,
+      "y": 162,
       "width": 16,
       "height": 16
     }
