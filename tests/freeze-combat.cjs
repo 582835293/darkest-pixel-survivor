@@ -1,0 +1,34 @@
+const fs=require('node:fs');
+const original=fs.readFileSync('tests/gameplay.cjs','utf8'),prefix=original.slice(0,original.indexOf(' await clean();'));
+const tail=String.raw`
+ await clean();const solo=await makePage();
+ for(const p of [solo,host,guest])await p.evaluate(()=>{window.realUpdate=update;update=()=>{};});
+ async function fresh(p=solo){await p.evaluate(()=>{setupHero('mage');GameState.isStarted=true;GameState.isOver=false;GameState.isPaused=false;GameState.godMode=true;GameState.autoAttack=false;GameState.globalFreezeTimer=0;GameState.powerShrineTimer=0;GameState.gameTime=0;MenuPause.reset();UpgradeChoice.reset();player.x=player.y=0;player.isDowned=false;player.pendingLevelUps=0;player.expToNext=1e8;player.critChance=0;player.vx=player.vy=0;player.isCharging=false;player.chargeTimer=0;input.keys={};input.x=input.y=0;input.isHoldingAttack=false;spawnEnemyBatch=()=>{};for(const a of [enemies,projectiles,skyBeams,groundEffects,telegraphs])a.length=0;for(const e of document.querySelectorAll('.modal-overlay'))e.style.display='none';});}
+ await check('enemy stasis cannot stall healer charge recovery or its own damage and healing fields',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{setupHero('healer');player.hp=40;GameState.globalFreezeTimer=5;HealerKit.chargeCd=1.2;const e=createEnemy(80,0,'imp');e.hp=e.maxHp=1000;e.freezeTimer=5;executeSkill2();HealerKit.tick(.5);return{cd:HealerKit.chargeCd,hp:player.hp,enemy:e.hp,freeze:GameState.globalFreezeTimer}});assert(Math.abs(r.cd-.7)<1e-8);assert.equal(r.hp,44);assert(r.enemy<1000);assert.equal(r.freeze,5);
+ });
+ await check('held healer charge repeatedly releases during a still-active five-second freeze',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{setupHero('healer');GameState.globalFreezeTimer=5;GameState.autoAttack=true;input.isHoldingAttack=true;player.isCharging=true;let count=0;const original=HealerKit.charge;HealerKit.charge=function(...a){const v=original.apply(this,a);if(v)count++;return v};try{for(let i=0;i<50;i++)realUpdate(.05);return{count,freeze:GameState.globalFreezeTimer,cd:HealerKit.chargeCd};}finally{HealerKit.charge=original;}});assert.equal(r.count,2);assert(r.freeze>2&&r.cd<1.2);
+ });
+ await check('healer ultimate keeps healing and judging while enemies are frozen',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{setupHero('healer');player.hp=20;player.maxHp=200;GameState.globalFreezeTimer=5;const e=createEnemy(80,0,'imp');e.hp=e.maxHp=1000;e.freezeTimer=5;executeUlt();const burst=player.hp,damage=e.hp;HealerKit.tick(.1);return{burst,hp:player.hp,before:damage,after:e.hp}});assert.equal(r.burst,65);assert.equal(r.hp,70);assert(r.after<r.before);
+ });
+ await check('guest healer can release twice and receive its own grants while the host world remains frozen',async()=>{
+  for(const p of [host,guest])await fresh(p);await host.evaluate(()=>{player.x=1000;player.hp=40;GameState.globalFreezeTimer=5;CoopManager.sendPresenceNow()});await guest.evaluate(()=>{setupHero('healer');player.hp=40;player.shield=0;GameState.globalFreezeTimer=5;CoopManager.sendPresenceNow()});await pause(150);await guest.evaluate(()=>{HealerKit.prayer=100;executeChargedAttack()});await guest.waitForFunction(()=>player.hp===50);await host.evaluate(()=>GameState.gameTime+=1.3);await guest.evaluate(()=>{HealerKit.tick(1.3);HealerKit.prayer=100;executeChargedAttack()});await guest.waitForFunction(()=>player.hp===60);assert.equal(await host.evaluate(()=>player.hp),40);assert((await host.evaluate(()=>GameState.globalFreezeTimer))>0);
+ });
+ await check('all mage charge levels and both specializations damage individually frozen and globally frozen targets',async()=>{
+  const rows=[];for(const mode of ['single','global'])for(const [level,branch]of [[1,null],[2,null],[3,null],[4,null],[5,null],[5,'A'],[5,'B']]){await fresh();rows.push(await solo.evaluate(({mode,level,branch})=>{const e=createEnemy(150,0,'imp');e.hp=e.maxHp=10000;e.speed=0;e.freezeTimer=mode==='single'?5:0;GameState.globalFreezeTimer=mode==='global'?5:0;Object.assign(player.skills.charge,{level,branch,branchLv:branch?3:0});executeChargedAttack();return{mode,level,branch,damage:10000-e.hp,visual:skyBeams.length};},{mode,level,branch}));}console.log('FROZEN_CHARGE',JSON.stringify(rows));for(const r of rows)assert(r.damage>0&&r.visual>0,JSON.stringify(r));
+ });
+ await check('actual hold and release input still charges and damages during full-map freeze',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{GameState.globalFreezeTimer=5;const e=createEnemy(150,0,'imp');e.hp=e.maxHp=10000;e.speed=0;input.isHoldingAttack=true;player.isCharging=true;for(let i=0;i<14;i++)realUpdate(.05);const charged=player.chargeTimer;input.isHoldingAttack=false;releaseChargeAttack();return{charged,damage:10000-e.hp,beams:skyBeams.length}});assert(r.charged>=.68&&r.damage>0&&r.beams>0);
+ });
+ await check('a dense frozen pack with ice-shatter, chain lightning and star marks cannot interrupt a charged cast',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{player.passives.iceShatter=3;player.passives.thunderChain=3;player.level=40;player.skills.charge.level=5;for(let i=0;i<36;i++){const e=createEnemy(130+(i%6)*16,-40+Math.floor(i/6)*16,'imp');e.hp=e.maxHp=100;e.freezeTimer=5;e.starMarks=2;}executeChargedAttack();return{dead:enemies.filter(e=>e.isDead).length,beams:skyBeams.length,shards:projectiles.length}});assert(r.dead>0&&r.beams>0);
+ });
+ await check('real guest charge damages the host frozen monster and duplicate confirmations do not remove that hit',async()=>{
+  for(const p of [host,guest])await fresh(p);await host.evaluate(()=>{player.x=800;CoopManager.sendPresenceNow()});await guest.evaluate(()=>CoopManager.sendPresenceNow());await pause(150);const id=await host.evaluate(()=>{const e=createEnemy(150,0,'imp');e.hp=e.maxHp=1000;e.freezeTimer=5;e.speed=0;WorldCoop.broadcastWorld();return WorldCoop.identify(e)});await guest.waitForFunction(id=>enemies.some(e=>e.netId===id&&e.freezeTimer>0),id);await guest.evaluate(()=>{executeChargedAttack();WorldCoop.flushHits(performance.now()+100)});await host.waitForFunction(id=>enemies.find(e=>e.netId===id)?.hp<1000,id);assert((await host.evaluate(id=>enemies.find(e=>e.netId===id).hp,id))<1000);
+ });
+ assert.deepEqual(errors,[]);
+})().catch(e=>{console.error(e);results.failure=String(e);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close();fs.writeFileSync('test-results/freeze-combat.json',JSON.stringify({results,errors,failure:results.failure,scope:'Healer timers, healing, fields and repeated guest charge under enemy stasis; unchanged mage charge geometry at all levels and branches, individual/global freeze, held input, dense frozen kills and real local guest RTC.'},null,2))});
+`;
+new Function('require',prefix+tail)(require);

@@ -36,7 +36,7 @@ const tail=String.raw`
  await check('healer skills and branch survive a real snapshot restore, while a fresh camp departure resets resources and cooldown gates',async()=>{
   await fresh();await solo.evaluate(()=>{player.skills.charge.branch='B';player.skills.charge.level=5;player.skills.skill2.level=4;SaveManager.saveBattleSnapshot(true);setupHero('warrior');restoreBattleSnapshot()});assert.equal(await solo.evaluate(()=>GameState.selectedHero),'healer');assert.equal(await solo.evaluate(()=>player.skills.charge.branch),'B');assert.equal(await solo.evaluate(()=>player.skills.skill2.level),4);await solo.evaluate(()=>{HealerKit.prayer=100;resetGameSession(true);resetGameSession(false);player.hp=40;executeSkill1()});assert.equal(await solo.evaluate(()=>HealerKit.prayer),0);assert.equal(await solo.evaluate(()=>player.hp),62);
  });
- await check('menus and upgrades cancel owned damage fields, and frozen simulation cannot advance healing',async()=>{
+ await check('menus cancel owned damage fields without granting stray healing during enemy stasis',async()=>{
   await fresh();const r=await solo.evaluate(()=>{executeSkill2();GameState.isPaused=true;HealerKit.tick(.1);const fields=HealerKit.localFields.length;GameState.isPaused=false;GameState.globalFreezeTimer=3;const hp=player.hp;HealerKit.authorityTick(1,true);return{fields,hp,after:player.hp}});assert.equal(r.fields,0);assert.equal(r.hp,r.after);
  });
  const third=await makePage();await third.evaluate(room=>CoopManager.joinRoom(room),room);await third.waitForFunction(()=>WorldCoop.active()&&CoopManager.allies.length===2);await Promise.all([host,guest].map(p=>p.waitForFunction(()=>CoopManager.allies.length===2)));

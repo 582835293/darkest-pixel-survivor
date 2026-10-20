@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R18 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R19 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1082,6 +1082,10 @@
     .loadout-slot .pixel-icon{width:18px;height:18px;min-width:18px;}
     .minimap-legend .pixel-icon{width:12px;height:12px;min-width:12px;vertical-align:-3px;}
     .pixel-button::before{content:'';display:inline-block;width:18px;height:18px;min-width:18px;margin-right:4px;vertical-align:-4px;background-image:var(--pixel-atlas);background-size:var(--pixel-atlas-size);background-position:var(--pixel-button-position);image-rendering:pixelated;pointer-events:none;}
+      .tree-detail-toggle{display:block;width:100%;margin-top:10px;padding:9px 12px;text-align:left;background:#162638;border:1px solid #48617a;color:#bae6fd;font:inherit;font-size:12px;cursor:pointer;touch-action:manipulation;}
+    .tree-detail-toggle:focus-visible{outline:2px solid #fde047;outline-offset:2px;}
+    .tree-detail-panel{margin-top:8px;padding:10px;background:#0b1422;border-left:3px solid #7dd3fc;line-height:1.6;overflow-wrap:anywhere;font-size:12px;}
+    .tree-detail-panel[hidden]{display:none;}.tree-detail-panel strong{color:#fde68a;}.tree-detail-panel dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:4px 10px;margin:8px 0;}.tree-detail-panel dt{color:#94a3b8;}.tree-detail-panel dd{margin:0;color:#e2e8f0;}.tree-detail-panel p{font-size:11px;color:#a5b4c8;margin:6px 0 0;}
   </style>
 </head>
 <body>
@@ -1264,7 +1268,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R18</span></div>
+        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R19</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -1548,12 +1552,12 @@
     </div></div>
     <button id="dev-request-notice" hidden></button>
 
-    <!-- 开发者模式弹窗 (#dev-modal，需输入密码 114514 解锁) -->
+    <!-- 开发者模式弹窗 (#dev-modal) -->
     <div id="dev-modal" class="modal-overlay">
       <div class="modal-card" style="max-width: 480px;">
         <button class="modal-close-x" id="btn-x-dev" title="关闭开发者模式">[px:close]</button>
         <div class="modal-title" style="color:#c084fc;">[px:tools] 开发者模式控制台</div>
-        <div class="modal-subtitle">单人 / 房主密码 114514；客机使用房主专用密码并申请批准</div>
+        <div class="modal-subtitle" id="dev-context-hint">隐藏调试入口 · 需要正确的口令</div>
 
         <!-- 密码验证区 -->
         <div id="dev-auth-box" style="background:#1e293b; padding:16px; border-radius:12px; border:1px solid #475569; margin-bottom:12px;">
@@ -1566,8 +1570,8 @@
         </div>
 
 <div id="dev-host-access" hidden style="background:#172033;padding:12px;border-radius:10px;margin-bottom:12px;text-align:left">
-          <strong>客机开发者权限</strong><div id="dev-host-state" style="font-size:12px;margin:8px 0"></div>
-          <input id="dev-guest-password" type="password" maxlength="32" placeholder="专用密码 4–32 位；留空关闭" autocomplete="new-password" style="width:100%;box-sizing:border-box;padding:10px;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px">
+          <strong>房间开发者权限（仅房主可设置）</strong><div id="dev-host-state" style="font-size:12px;margin:8px 0"></div>
+          <input id="dev-guest-password" type="password" maxlength="32" placeholder="房间密码 4–32 位；留空关闭" autocomplete="new-password" style="width:100%;box-sizing:border-box;padding:10px;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px">
           <button class="btn-secondary" id="btn-dev-guest-set">保存密码 / 撤销已有授权</button><div id="dev-requests"></div>
         </div>
         <!-- 解锁后的功能面板 -->
@@ -2272,7 +2276,7 @@
             speed: player.speed, critChance: player.critChance,
             critMultiplier: player.critMultiplier, armor: player.armor,
             magnetRange: player.magnetRange, reviveLeft: player.reviveLeft,
-            chargeMax: player.chargeMax,
+            chargeMax: player.chargeMax, chargeRulesVersion: 1,
             skills: JSON.parse(JSON.stringify(player.skills)),
             passives: JSON.parse(JSON.stringify(player.passives)),
             mapRelics: JSON.parse(JSON.stringify(player.mapRelics || []))
@@ -2465,21 +2469,30 @@
     };
     // Damage belongs to its caster; team healing is validated and logged by the host.
     var HealerKit={
-      prayer:0,chargeCd:0,sequence:0,localFields:[],pending:new Map(),seen:new Map(),gates:new Map(),zones:new Map(),
-      resetLocal(){this.prayer=0;this.chargeCd=0;this.pending.clear();for(const f of this.localFields)f.visual.life=0;this.localFields=[];},
+      prayer:0,chargeCd:0,reflectCd:0,sequence:0,localFields:[],pending:new Map(),seen:new Map(),gates:new Map(),zones:new Map(),
+      resetLocal(){this.prayer=0;this.chargeCd=0;this.reflectCd=0;this.pending.clear();for(const f of this.localFields)f.visual.life=0;this.localFields=[];},
       reset(){this.resetLocal();this.seen.clear();this.gates.clear();this.zones.clear();},
       visual(type,data,life=.6){const own=skyBeams.filter(v=>v.type?.startsWith('healer_'));if(own.length>=70)own[0].life=0;const v={type:'healer_'+type,life,maxLife:life,...data};skyBeams.push(v);return v;},
       bolt(angle,damage){if(projectiles.filter(p=>p.healerBolt).length>=90)return;projectiles.push({x:player.x,y:player.y,vx:Math.cos(angle)*650,vy:Math.sin(angle)*650,radius:7,damage,life:.8,pierce:player.skills.attack.isEvolved?4:2,color:'#fef3c7',healerBolt:true});},
       attack(angle){const a=player.skills.attack,n=a.isEvolved?7:a.level>=5?5:a.level>=3?3:2;for(let i=0;i<n;i++)this.bolt(angle+(i-(n-1)/2)*.1,a.damage);this.prayer=Math.min(100,this.prayer+10);this.visual('halo',{x:player.x,y:player.y,radius:28,color:'#a7f3d0'},.2);audio.playShoot();},
       charge(angle){
-        if(this.chargeCd>0)return;this.chargeCd=1.2;
+        if(this.chargeCd>0)return false;this.chargeCd=1.2;
         const c=player.skills.charge,spent=this.prayer;this.prayer=0;
         const talent=1+(SaveManager.data.talents.charge||0)*.12,damage=player.skills.attack.damage*(2.4+c.level*.25)*(1+(c.branchLv||0)*.32)*Math.pow(1.24,c.limitBreak||0)*talent*(1+spent/120);
         const radius=(c.branch==='A'?250:155)+c.level*12;
         damageInRadius(player.x,player.y,radius,damage,110);this.visual('halo',{x:player.x,y:player.y,radius,color:'#fde68a'},.7);
         if(c.branch==='B')for(let i=0;i<8+(c.branchLv||1)*2;i++)this.lance(player.x,player.y,angle+i*Math.PI*2/(8+(c.branchLv||1)*2),470,damage*.5,18);
         if(spent>=25)this.submit('charge',c.level,c.branch==='A',spent);
-        audio.playExplosion();
+        audio.playExplosion();return true;
+      },
+      reflect(damage,source){
+        if(GameState.selectedHero!=='healer'||this.reflectCd>0||!WorldCoop.canAct()||player.hp<=0)return false;
+        const e=typeof source==='object'?source:enemies.find(e=>e.netId===source);
+        if(!e||!enemies.includes(e)||e.isDead||e.hp<=0||!Number.isFinite(damage)||damage<=0)return false;
+        this.reflectCd=.5;
+        damageEnemy(e,Math.max(1,Math.round(damage*.5)),Math.atan2(e.y-player.y,e.x-player.x),0,true,CoopManager.myPeerId,player.lifeEpoch||0,true);
+        lightningArcs.push({x1:player.x,y1:player.y,x2:e.x,y2:e.y,color:'#a7f3d0',life:.2});
+        this.visual('halo',{x:player.x,y:player.y,radius:44,color:'#a7f3d0'},.3);return true;
       },
       lance(x,y,angle,length,damage,width=18){
         const x2=x+Math.cos(angle)*length,y2=y+Math.sin(angle)*length;
@@ -2503,7 +2516,8 @@
         return{radius:350+level*30,heal:35+level*10,shield:20+level*10,cd:Math.max(9,26-(level-1)*3),duration:evolved?9:6};
       },
       submit(kind,level,evolved=false,power=0){
-        const p={type:'WORLD_SUPPORT_CAST',castId:CoopManager.myPeerId+':heal:'+(++this.sequence),kind,level,evolved:Boolean(evolved),power,lifeEpoch:player.lifeEpoch||0};
+        const skill=player.skills[{s1:'skill1',s2:'skill2',ult:'ult',charge:'charge'}[kind]],prism=player.mapRelics.find(r=>r.id==='tundra_prism');
+        const p={type:'WORLD_SUPPORT_CAST',castId:CoopManager.myPeerId+':heal:'+(++this.sequence),kind,level,evolved:Boolean(evolved),power,lifeEpoch:player.lifeEpoch||0,limitBreak:skill.limitBreak||0,prismLevel:prism?.level||0};
         if(!WorldCoop.active()){this.accept({...p,peerId:CoopManager.myPeerId},true);return;}
         if(CoopManager.isHost){WorldCoop.observe(CoopManager.myPeerId,WorldCoop.localProfile());this.accept({...p,peerId:CoopManager.myPeerId});}
         else{this.pending.set(p.castId,{packet:p,at:performance.now(),last:performance.now()});WorldCoop.toHost(p);}
@@ -2519,7 +2533,10 @@
         if(hero!=='healer'||!this.available(actor)||pkt.lifeEpoch!==actor.epoch||!['charge','s1','s2','ult'].includes(pkt.kind)||!Number.isInteger(pkt.level)||pkt.level<1||pkt.level>(pkt.kind==='ult'?3:5)||!Number.isFinite(pkt.power)||pkt.power<0||pkt.power>100)return ack(false);
         const spec=this.spec(pkt.kind,pkt.level,Boolean(pkt.evolved),pkt.power),gate=actor.id+':'+pkt.kind;
         if((this.gates.get(gate)??-Infinity)>GameState.gameTime+.05)return ack(false);
-        this.gates.set(gate,GameState.gameTime+Math.max(.9,spec.cd-.2));this.seen.set(pkt.castId,true);if(this.seen.size>256)this.seen.delete(this.seen.keys().next().value);
+        const lb=pkt.limitBreak??0,prism=pkt.prismLevel??0;
+        if(!Number.isInteger(lb)||lb<0||lb>10000||!Number.isInteger(prism)||prism<0||prism>5)return ack(false);
+        const cd=pkt.kind==='charge'?1.2:(pkt.kind==='ult'?Math.max(7.5,spec.cd-lb):Math.max(pkt.kind==='s1'?1.4:2.4,spec.cd*Math.pow(.95,lb)))/(1+(prism ? .065+.035*prism : 0));
+        this.gates.set(gate,GameState.gameTime+Math.max(.9,cd-.2));this.seen.set(pkt.castId,true);if(this.seen.size>256)this.seen.delete(this.seen.keys().next().value);
         if(pkt.kind==='s2'||pkt.kind==='ult')this.zones.set(gate,{...spec,x:actor.x,y:actor.y,owner:actor.id,epoch:actor.epoch,kind:pkt.kind,left:spec.duration,tick:0,solo});
         if(pkt.kind!=='s2')this.groupHeal(actor,spec.radius,spec.heal,spec.shield,solo);
         return ack(true);
@@ -2539,7 +2556,7 @@
         if(player.hp>old)spawnMergedFloatingText(player,Math.round(player.hp-old),false,true);updateHpUI();return true;
       },
       authorityTick(dt,solo=false){
-        if(!GameState.isStarted||GameState.isOver||WorldCoop.simulationPaused()||WorldCoop.ended||GameState.globalFreezeTimer>0)return;
+        if(!GameState.isStarted||GameState.isOver||WorldCoop.simulationPaused()||WorldCoop.ended)return;
         for(const [id,z]of this.zones){
           if(z.solo!==solo)continue;const local=z.owner===CoopManager.myPeerId,caster=solo||local?this.localActor():WorldCoop.participants.get(z.owner);
           const role=local?GameState.selectedHero:CoopManager.allies.find(p=>p.id===z.owner)?.hero;
@@ -2550,8 +2567,8 @@
       },
       rescueBoost(helpers){return helpers.length?helpers.reduce((n,p)=>n+((p.id===CoopManager.myPeerId?GameState.selectedHero:CoopManager.allies.find(a=>a.id===p.id)?.hero||p.hero)==='healer'?2:1),0)/helpers.length:1;},
       tick(dt){
-        if(GameState.selectedHero!=='healer'||GameState.globalFreezeTimer>0)return;this.chargeCd=Math.max(0,this.chargeCd-dt);
-        if(!WorldCoop.canAct()){for(const f of this.localFields)f.visual.life=0;this.localFields=[];return;}
+        if(GameState.selectedHero!=='healer')return;this.chargeCd=Math.max(0,this.chargeCd-dt);this.reflectCd=Math.max(0,this.reflectCd-dt);
+        if(!WorldCoop.canAct()){for(const f of this.localFields)f.visual.life=0;this.localFields=[];for(const [id,z]of this.zones)if(z.owner===CoopManager.myPeerId)this.zones.delete(id);return;}
         for(const f of this.localFields){f.life-=dt;f.tick-=dt;if(f.tick<=0){f.tick=.7;if(f.kind==='s2')damageInRadius(f.x,f.y,f.radius,f.damage*.65,20);else{
           const targets=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-f.x,e.y-f.y)<f.radius).slice(0,f.evolved?8:5);
           for(const [i,e]of targets.entries()){this.visual('lance',{x:e.x,y:e.y,x1:e.x-35,y1:e.y-170,x2:e.x,y2:e.y,width:14,color:'#fde68a'},.4);damageEnemy(e,f.damage*.48,0,20,true);}
@@ -2662,8 +2679,30 @@
       }
     };
     // Combat stays with the caster. Remote peers receive only these renderable descriptors.
+    var FireTrail = {
+      distance:0,elapsed:0,
+      reset(){this.distance=0;this.elapsed=0;},
+      spawn(x,y){
+        if(!Arena.inside(x,y))return;
+        const own=groundEffects.filter(g=>g.fireTrail);if(own.length>=36)groundEffects.splice(groundEffects.indexOf(own[0]),1);
+        groundEffects.push({type:'lava',fireTrail:true,x,y,radius:36,damage:14*player.passives.fireTrail,life:2.2,maxLife:2.2,tickTimer:0});
+      },
+      move(x1,y1,x2,y2,dt=0){
+        if(!player.passives.fireTrail||!WorldCoop.canAct()){this.reset();return;}
+        const d=Math.hypot(x2-x1,y2-y1);if(!Number.isFinite(d)||d>512){this.reset();return;}if(d<.01)return;
+        this.elapsed+=dt;
+        if(!groundEffects.some(g=>g.fireTrail&&g.life>0)){this.spawn(x1,y1);this.distance=0;}
+        // Sample the actual path, including a blink's entire segment and dashes without joystick input.
+        let at=40-this.distance,placed=false;
+        for(;at<=d;at+=40){this.spawn(x1+(x2-x1)*at/d,y1+(y2-y1)*at/d);placed=true;}
+        this.distance=(this.distance+d)%40;
+        if(placed)this.elapsed=0;
+        else if(this.elapsed>=.35){this.spawn(x2,y2);this.elapsed=0;this.distance=0;}
+      }
+    };
+
     var EngineerKit={
-      reset(){this.heat=0;this.heatGate=0;this.lock=null;this.lockTime=0;this.lockVisual=null;this.combo=0;this.strikes=[];this.strikeTimer=0;this.netTimer=0;},
+      reset(){this.heat=0;this.heatGate=0;this.lock=null;this.lockTime=0;this.lockVisual=null;this.combo=0;this.strikes=[];this.strikeTimer=0;this.netTimer=0;this.cannonTimer=0;},
       normalizeSkills(){const defaults=HERO_CONFIGS.engineer.initSkills();for(const [key,sk]of Object.entries(player.skills))if(defaults[key])sk.name=defaults[key].name;Object.assign(player.skills.charge,{branchAName:defaults.charge.branchAName,branchBName:defaults.charge.branchBName});},
       turrets(){return groundEffects.filter(g=>g.type==='turret'&&g.life>0);},
       cap(){const s=player.skills.skill2;return s.isEvolved?6:s.level>=5?5:s.level>=3?4:2;},
@@ -2757,8 +2796,18 @@
         const u=player.skills.ult;GameState.forgeOverdriveTimer=u.isEvolved?9:6;player.invulnerableTimer=Math.max(player.invulnerableTimer,1.2);
         for(const g of this.turrets().filter(g=>g.temporary))g.life=0;
         const n=u.isEvolved?4:2;for(let i=0;i<n;i++){const a=player.aimAngle+Math.PI/4+i*Math.PI*2/n;this.place(player.x+Math.cos(a)*210,player.y+Math.sin(a)*210,true);}
-        this.strikeTimer=.12;this.command(3);this.visual('forge_blast',{x:player.x,y:player.y,radius:200,color:'#fbbf24'},.65);damageInRadius(player.x,player.y,180,u.damage,120);
+        this.strikeTimer=.12;this.cannonTimer=0;this.cannons();this.command(3);this.visual('forge_blast',{x:player.x,y:player.y,radius:200,color:'#fbbf24'},.65);damageInRadius(player.x,player.y,180,u.damage,120);
         showToast(u.isEvolved?'[px:gear] 日冕工厂：四座重装支援 · 炮网齐射 · 巡航轰炸！':'[px:gear] 熔星过载：双支援炮台 · 火力全开！');audio.playExplosion();
+      },
+      cannons(){
+        if(!WorldCoop.canAct()||GameState.forgeOverdriveTimer<=0)return;
+        const u=player.skills.ult,n=u.isEvolved?2:1;
+        for(let port=0;port<4;port++){
+          const a=port*Math.PI/2+GameState.gameTime*.25,x=player.x+Math.cos(a)*115,y=player.y+Math.sin(a)*115;
+          for(let i=0;i<n;i++){const side=n===1?0:(i?7:-7);this.shoot(x-Math.sin(a)*side,y+Math.cos(a)*side,a+(i-(n-1)/2)*.06,u.damage*.30,u.isEvolved,true,{forgeCannon:true,isSecondary:true});}
+          this.visual('forge_muzzle',{x,y,angle:a,radius:38,color:'#fde047'},.18);
+        }
+        this.cannonTimer=.45;audio.playShoot();
       },
       explode(x,y,radius,damage,except=null){
         this.visual('forge_blast',{x,y,radius,color:'#fb923c'},.42);audio.playExplosion();
@@ -2773,6 +2822,7 @@
         for(const strike of this.strikes||[]){strike.left-=dt;if(strike.left<=0&&!strike.done){strike.done=true;this.explode(strike.x,strike.y,strike.radius,strike.damage);}}
         this.strikes=(this.strikes||[]).filter(s=>!s.done);
         if(GameState.forgeOverdriveTimer>0){
+          this.cannonTimer=(this.cannonTimer||0)-dt;if(this.cannonTimer<=0)this.cannons();
           this.strikeTimer=(this.strikeTimer||0)-dt;this.netTimer=(this.netTimer||0)-dt;
           if(this.netTimer<=0){this.netTimer=.85;this.links();}
           if(this.strikeTimer<=0){this.strikeTimer=.8;const u=player.skills.ult,count=u.isEvolved?3:2,candidates=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<620);
@@ -3142,7 +3192,7 @@
           desc: chargeMorphDescs[hero][Math.min(3, nextClv - 2)],
           apply: () => {
             chg.level++;
-            player.chargeMax = Math.max(0.34, player.chargeMax * 0.90);
+            player.chargeMax = Math.max(hero==='healer'?0.50:0.34, player.chargeMax * 0.90);
             updateLoadoutHUD();
             if (chg.level >= chg.maxLevel) {
               showToast(`[px:lightning] 【${chg.name}】已升满 Lv.5！下次升级可直接选择觉醒流派！`);
@@ -3467,7 +3517,7 @@
             desc: '蓄力伤害+24%，蓄力速度加快5%。',
             apply: () => {
               chg.limitBreak = lbChg;
-              player.chargeMax = Math.max(0.28, player.chargeMax * 0.95);
+              player.chargeMax = Math.max(hero==='healer'?0.45:0.28, player.chargeMax * 0.95);
               updateLoadoutHUD();
               showToast(`[px:lightning] 蓄力突破 +${lbChg}！`);
             }
@@ -3774,16 +3824,15 @@
     });
 
     // 8. 三大职业完全独立的主动技能实现
+    function attackCooldownMultiplier(){return (GameState.berserkTimer>0?.5:1)*(player.catchBuffTimer>0?.6:1)*(GameState.selectedHero==='engineer'&&GameState.forgeOverdriveTimer>0?.65:1);}
+    function chargeDuration(){return player.chargeMax*(GameState.selectedHero==='engineer'&&GameState.forgeOverdriveTimer>0?.70:1);}
     function executeAttack() {
       if (!WorldCoop.canAct()) return;
       if (!GameState.isStarted || GameState.isPaused || GameState.isOver) return;
       const atk = player.skills.attack;
       if (atk.timer > 0) return;
 
-      let cdMul = 1.0;
-      if (GameState.berserkTimer > 0) cdMul *= 0.5;
-      if (player.catchBuffTimer > 0) cdMul *= 0.6;
-      atk.timer = atk.cd * cdMul;
+      atk.timer = atk.cd * attackCooldownMultiplier();
 
       let attackAngle = player.aimAngle;
       const nearest = findNearestEnemy(atk.range + 90);
@@ -3912,7 +3961,7 @@
         player.chargeTimer = 0;
         return;
       }
-      if (player.isCharging && player.chargeTimer >= player.chargeMax) {
+      if (player.isCharging && player.chargeTimer >= chargeDuration()) {
         executeChargedAttack();
       }
       player.isCharging = false;
@@ -3924,6 +3973,7 @@
       const atk = player.skills.attack;
       const chg = player.skills.charge || { level: 1, branch: null, branchLv: 0 };
       const hero = GameState.selectedHero;
+      if(hero==='healer'&&HealerKit.chargeCd>0)return false;
       player.swingAnimTimer = 0.3;
       GameState.screenShake = 15;
       audio.playExplosion();
@@ -3944,7 +3994,7 @@
       const totalMul = talentChargeMul * baseLvMul * branchMul * lbChargeMul;
       if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) CoopManager.broadcastSkill('charge', { angle: +attackAngle.toFixed(3), branch: chg.branch, branchLv: chg.branchLv || 0, level: chg.level || 1 });
 
-      if(hero==='healer'){HealerKit.charge(attackAngle);return;}
+      if(hero==='healer')return HealerKit.charge(attackAngle);
       if(hero==='engineer'){EngineerKit.charge(attackAngle);return;}
       if (hero === 'warrior') {
         const chargeRange = (atk.range * 1.85) * (1 + (chg.level - 1) * 0.08);
@@ -3980,8 +4030,10 @@
 
         } else if (chg.branch === 'B') {
           // 流派B：【鬼神一刀流】—— 瞬步突进 + 对范围内最高血量目标连续3次断头重斩（对精英/Boss额外+80%真伤）
+          const trailStartX=player.x,trailStartY=player.y;
           player.x += Math.cos(attackAngle) * 68;
-          player.y += Math.sin(attackAngle) * 68;
+          player.y += Math.sin(attackAngle) * 68;Arena.clamp(player,player.radius);
+          FireTrail.move(trailStartX,trailStartY,player.x,player.y);
           for (let s = 0; s < 5; s++) {
             spawnAfterimage(player.x - Math.cos(attackAngle) * (s * 14), player.y - Math.sin(attackAngle) * (s * 14), '#dc2626');
           }
@@ -4374,7 +4426,8 @@
         const startX = player.x, startY = player.y;
         const blinkDist = 145 + s1.level * 15;
         player.x += dirX * blinkDist;
-        player.y += dirY * blinkDist;
+        player.y += dirY * blinkDist;Arena.clamp(player,player.radius);
+        FireTrail.move(startX,startY,player.x,player.y);
         player.invulnerableTimer = 0.40;
 
         const castFrostNova = (cx, cy) => {
@@ -5366,19 +5419,19 @@
       return closest;
     }
 
-    function damageEnemy(en, baseDmg, pushAngle, pushForce, isSecondary = false, killerId = CoopManager.myPeerId, killEpoch = player.lifeEpoch || 0) {
+    function damageEnemy(en, baseDmg, pushAngle, pushForce, isSecondary = false, killerId = CoopManager.myPeerId, killEpoch = player.lifeEpoch || 0, fixedDamage = false) {
       if (!en || en.isDead || (WorldCoop.active() && (((player.isDowned || UpgradeChoice.active || MenuPause.blocked()) && !WorldCoop.simulatingDot) || WorldCoop.replaying || WorldCoop.paused() || WorldCoop.ended))) return { isCrit: false, finalDmg: 0 };
 
       // 极寒碎冰流派：对被冻结/减速的敌人暴击率提高 20%
       const bonusCrit = (player.passives.iceShatter > 0 && (en.freezeTimer > 0 || en.isChilled)) ? 0.20 : 0;
-      const isCrit = Math.random() < (player.critChance + bonusCrit);
+      const isCrit = !fixedDamage && Math.random() < (player.critChance + bonusCrit);
       const powerMul = GameState.powerShrineTimer > 0 ? 2.0 : 1.0;
       const poisonVuln = (en.poisonStacks && en.poisonStacks > 0) ? (1 + en.poisonStacks * 0.08) : 1.0;
       // 玩家等级成长共鸣：每升1级全伤害提升 +6.5%，确保中后期输出紧跟怪潮血量成长！
       const levelGrowthMul = 1 + (player.level - 1) * 0.065;
 
       let finalDmg = Math.round((isCrit ? baseDmg * player.critMultiplier : baseDmg) * powerMul * poisonVuln * levelGrowthMul);
-      finalDmg = Math.max(1, Math.round(finalDmg * (0.92 + Math.random() * 0.16)));
+      finalDmg = fixedDamage ? Math.max(1,Math.round(baseDmg)) : Math.max(1, Math.round(finalDmg * (0.92 + Math.random() * 0.16)));
 
       if (WorldCoop.guest()) WorldCoop.reportHit(en, finalDmg, pushAngle, pushForce);
       else en.hp -= finalDmg;
@@ -5807,9 +5860,9 @@
         this.impacts.push({...this.pack(w),life:.32,maxLife:.32});if(this.impacts.length>40)this.impacts.shift();
         if(WorldCoop.authority()){
           if(WorldCoop.active())CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_BOSS_IMPACT',warning:this.pack(w)}));
-          for(const p of WorldCoop.actors())if(this.contains(w,p))WorldCoop.hurtActor(p.id,w.damage);
+          for(const p of WorldCoop.actors())if(this.contains(w,p))WorldCoop.hurtActor(p.id,w.damage,w.bossId);
           if(w._action)w._action();
-        }else if(w.damage&&WorldCoop.canTakeDamage()&&this.contains(w,player))damagePlayer(w.damage);
+        }else if(w.damage&&WorldCoop.canTakeDamage()&&this.contains(w,player))damagePlayer(w.damage,w.bossId);
       },
       receive(pkt){
         const w=pkt.warning;if(!w||!w.bossAttack||!Number.isSafeInteger(w.netId)||WorldCoop.resolvedWarnings.has(w.netId)||!this.valid(w))return;
@@ -6634,12 +6687,12 @@
       const isPressingAtk = WorldCoop.canAct() && (input.isHoldingAttack || input.keys['KeyJ'] || input.keys['Space']);
       if (isPressingAtk) {
         const prevCharge = player.chargeTimer;
-        player.chargeTimer = Math.min(player.chargeMax, player.chargeTimer + dt);
+        player.chargeTimer = Math.min(chargeDuration(), player.chargeTimer + dt);
         const atkBtn = document.getElementById('btn-attack');
-        if (player.chargeTimer >= player.chargeMax) {
+        if (player.chargeTimer >= chargeDuration() && (GameState.selectedHero!=='healer'||HealerKit.chargeCd<=0)) {
           atkBtn.classList.remove('charging');
           atkBtn.classList.add('charge-ready');
-          if (prevCharge < player.chargeMax) audio.playGem(); // 蓄力完成提示音
+          if (prevCharge < chargeDuration()) audio.playGem(); // 蓄力完成提示音
           // 若开启了连发辅助且持续按住，蓄满后多保持0.15s自动释放蓄力技
           if (GameState.autoAttack) {
             executeChargedAttack();
@@ -6694,21 +6747,6 @@
         player.aimAngle = Math.atan2(normY, normX);
         player.facing = normX >= 0 ? 1 : -1;
 
-        // 业火流星步流派：移动时每 0.35s 在脚下铺设一团燃烧火径
-        if (player.passives.fireTrail > 0) {
-          player.fireTrailTick -= dt;
-          if (player.fireTrailTick <= 0 && groundEffects.length < 18) {
-            player.fireTrailTick = 0.35;
-            groundEffects.push({
-              type: 'lava',
-              x: player.x, y: player.y,
-              radius: 36,
-              damage: 14 * player.passives.fireTrail,
-              life: 2.2, maxLife: 2.2,
-              tickTimer: 0
-            });
-          }
-        }
       } else if (!player.skills.skill1.isDashing) {
         const friction = GameState.activeBiome === 'tundra' ? 0.9 : 0.78;
         player.vx *= friction;
@@ -6722,6 +6760,7 @@
         }
       }
 
+      const moveStartX=player.x,moveStartY=player.y;
       player.x += player.vx * dt;
       player.y += player.vy * dt;Arena.clamp(player,player.radius);
       NewSynergies.tick(dt);
@@ -6730,6 +6769,7 @@
       if (!player.isDowned && !UpgradeChoice.active && !player.skills.skill1.isDashing) {
         resolveEntityObstacleCollision(player, player.radius);
       }
+      FireTrail.move(moveStartX,moveStartY,player.x,player.y,dt);
       if (moveLen > 0.05) player.animTimer += dt * 10;
       if (player.swingAnimTimer > 0) player.swingAnimTimer = Math.max(0, player.swingAnimTimer - dt);
 
@@ -6884,6 +6924,7 @@
             ge.tickTimer = 0.3;
             enemies.forEach(en => {
               if (!en.isDead && Math.hypot(en.x - ge.x, en.y - ge.y) <= ge.radius + en.radius) {
+                if(ge.fireTrail){if(GameState.gameTime<(en.fireTrailNextHit||0))return;en.fireTrailNextHit=GameState.gameTime+.3;}
                 damageEnemy(en, ge.damage || 18, 0, 0, true);
                 en.isBurning = true;
               }
@@ -6998,7 +7039,7 @@
               if (WorldCoop.session === enemyRound && enemies.includes(en) && !en.isDead && !WorldCoop.simulationPaused() && !GameState.isOver) {
                 const ang = Math.atan2(aimY - en.y, aimX - en.x);
                 projectiles.push({
-                  isEnemy: true,
+                  isEnemy: true, sourceId:WorldCoop.identify(en),
                   x: en.x, y: en.y,
                   vx: Math.cos(ang) * (en.type === 'archer' ? 250 : 210),
                   vy: Math.sin(ang) * (en.type === 'archer' ? 250 : 210),
@@ -7049,7 +7090,7 @@
           en.meleeCd = 0.52;
           const strikeDmg = en.damage;
           if (!WorldCoop.active() || (target.id !== CoopManager.myPeerId && !target.localFeedback))
-            WorldCoop.hurtActor(target.id, strikeDmg);
+            WorldCoop.hurtActor(target.id, strikeDmg, en);
         }
       }
 
@@ -7241,13 +7282,14 @@
       }
     }
 
-    function damagePlayer(dmg) {
+    function damagePlayer(dmg, source = null) {
       if (GameState.isOver || GameState.godMode || player.invulnerableTimer > 0 || player.isDowned || UpgradeChoice.active || WorldCoop.simulationPaused() || MenuPause.remaining() > 0) return;
       const rawDmg = Number(dmg) || 0;
       if (rawDmg <= 0) return;
 
       const effectiveArmor = Math.min(0.60, player.armor || 0);
       let actualDmg = Math.max(2, Math.round(rawDmg * (1 - effectiveArmor)));
+      const reflectedBasis=Math.min(actualDmg,Math.max(0,player.shield)+Math.max(0,player.hp));
 
       if (player.shield > 0) {
         if (player.shield >= actualDmg) {
@@ -7285,6 +7327,7 @@
       GameState.screenShake = 12;
       audio.playPlayerHurt();
       updateHpUI();
+      HealerKit.reflect(reflectedBasis,source);
 
       if (player.hp <= 0 && !GameState.isOver) {
         if (player.reviveLeft > 0) {
@@ -10059,8 +10102,8 @@
 
       // 绘制长按普攻蓄力进度条与聚气光环
       if (player.chargeTimer > 0.12) {
-        const pct = Math.min(1, player.chargeTimer / player.chargeMax);
-        const isReady = pct >= 1;
+        const pct = Math.min(1, player.chargeTimer / chargeDuration());
+        const isReady = pct >= 1 && (GameState.selectedHero!=='healer'||HealerKit.chargeCd<=0);
         ctx.save();
         ctx.strokeStyle = isReady ? '#fde047' : '#38bdf8';
         ctx.lineWidth = isReady ? 2.5 : 1.5;
@@ -10301,7 +10344,7 @@
     function setupHero(heroKey) {
       const cfg = HERO_CONFIGS[heroKey];
       GameState.selectedHero = heroKey;
-      GameState.forgeOverdriveTimer=0;NewSynergies.reset();EngineerKit.reset();HealerKit.resetLocal();
+      GameState.forgeOverdriveTimer=0;NewSynergies.reset();EngineerKit.reset();HealerKit.resetLocal();FireTrail.reset();
 
       const t = SaveManager.data.talents;
       const baseDmgMul = 1 + (t.might * 0.06);
@@ -10316,7 +10359,7 @@
       player.armor = cfg.armor;
       player.magnetRange = 52 + ((t.magnet || 0) * 14);
       player.reviveLeft = t.revive || 0;
-      player.chargeMax = Math.max(0.38, 0.68 * Math.pow(0.94, t.charge || 0));
+      player.chargeMax = Math.max(heroKey==='healer'?0.50:0.38, (heroKey==='healer'?1.1:0.68) * Math.pow(0.94, t.charge || 0));
 
       player.skills = cfg.initSkills();
       for (const k in player.skills) {
@@ -10561,6 +10604,107 @@
     }
 
     // 技能树与流派构筑图鉴渲染逻辑
+    // Read-only descriptions: use live combat fields, never replay upgrade callbacks.
+    const SkillDetails = {
+      n(v){return Number(v||0).toFixed(2).replace(/\.?0+$/,'');},
+      pct(v){return this.n(v*100)+'%';},
+      describe(kind,key){
+        const p=player.passives,hero=GameState.selectedHero,rows=[],notes=[];
+        const add=(label,value)=>rows.push([label,String(value)]),n=v=>this.n(v);
+        let title=key,status='当前生效';
+        if(kind==='active'){
+          const s=player.skills[key],lv=s.level||1;title=s.name;status=`Lv.${lv}${s.isEvolved?' · 已觉醒':''}${s.limitBreak?' · 突破+'+s.limitBreak:''}`;
+          if(key==='charge'){
+            const c=s,a=player.skills.attack,talent=1+(SaveManager.data.talents.charge||0)*.12;
+            const mul=talent*(1+(lv-1)*.25)*(1+(c.branchLv||0)*.32)*Math.pow(1.24,c.limitBreak||0);
+            add('蓄满时间',n(chargeDuration())+' 秒');add('当前分支',c.branch?`${c.branch==='A'?c.branchAName:c.branchBName} Lv.${c.branchLv}`:'未专精（Lv.5 后二选一）');
+            if(hero==='healer'){
+              const spent=HealerKit.prayer,base=a.damage*(2.4+lv*.25)*(1+(c.branchLv||0)*.32)*Math.pow(1.24,c.limitBreak||0)*talent*(1+spent/120),heal=HealerKit.spec('charge',lv,c.branch==='A',spent);
+              add('当前祷光 / 上限',n(spent)+' / 100');add('本次范围伤害基数',n(base));add('伤害半径',(c.branch==='A'?250:155)+lv*12+' px');
+              add('本次群疗',spent>=25?heal.heal+' 生命 / 每人':'0（至少需25点祷光）');add('治疗半径',heal.radius+' px');add('释放间隔 / 剩余',`1.2 秒 / ${n(HealerKit.chargeCd)} 秒`);
+              if(c.branch==='B')add('审判光轮',`${8+(c.branchLv||1)*2} 道 · 长470 px · 每道基数${n(base*.5)}`);
+              notes.push('每次释放消耗全部祷光；普通攻击每次积攒10点。蓄满后还需等待释放间隔结束，自动连发会保留蓄力。');
+            }else if(hero==='warrior'){
+              add('重击伤害基数',Math.round(a.damage*2.6*mul));add('重击距离',n(a.range*1.85*(1+(lv-1)*.08))+' px');
+              notes.push('分支附带剑气或位移打击；这里的基数是重击单段，不代表整次技能总伤害。');
+            }else if(hero==='mage'){
+              if(c.branch){add('专精重击基数',Math.round(a.damage*3.1*mul*(c.branch==='B'?1.45:1)));add(c.branch==='A'?'光束数量':'坍缩半径',c.branch==='A'?3+c.branchLv:(165+22*c.branchLv)+' px');}
+              else {const dmg=Math.round(a.damage*(2.15+.45*lv)*talent);add('光束伤害基数',dmg);add('光束数量 / 长度',`${lv>=5?3:lv>=3?2:1} 道 / ${290+22*lv} px`);add('新星伤害 / 半径',`${Math.round(dmg*.65)} / ${68+12*lv} px`);add('追踪球数量 / 伤害',`${1+lv} 枚 / ${Math.round(dmg*.68)}`);}
+            }else if(hero==='engineer'){
+              add('当前热能',n(EngineerKit.heat)+' / 100');add('重炮伤害基数',Math.round(a.damage*(2.5+.35*lv)*(1+(c.branchLv||0)*.32)*(1+EngineerKit.heat/150)));notes.push('消耗当前热能强化蓄力；专精后指挥炮台齐射或发射追踪火箭。');
+            }else if(hero==='ranger'){
+              const heavy=Math.round(a.damage*3.1*mul),arrow=Math.round(a.damage*(1.85+lv*.38)*talent);
+              if(c.branch==='A'){add('重箭数量 / 每枚基数',`${7+c.branchLv*2} / ${Math.round(heavy*.72)}`);add('火海','3处 / 半径58 px / 持续3.4秒');}
+              else if(c.branch==='B'){add('穿甲束长度','440 px');add('首目标伤害基数',Math.round(heavy*1.5*1.22));notes.push('每贯穿一个目标，倍率再增加22个百分点。');}
+              else{add('重箭数量 / 每枚基数',`${2+lv} / ${arrow}`);add('穿透参数',4+lv*2);if(lv>=2)add('焦点爆破',`${Math.round(arrow*.65)} 基数 / 半径${65+lv*8} px`);if(lv>=3)add('剧毒火海',`${lv>=5?2:1} 处 / 基数${Math.round(a.damage*(.7+lv*.12))} / 持续2.8秒`);}
+            }
+            if(lv<5)add('下一级基础蓄满时间',n(Math.max(hero==='healer'?.5:.34,player.chargeMax*.9))+' 秒');
+          }else{
+            if(s.damage)add('伤害基数（单段）',n(s.damage));if(key==='attack')add('当前实际普攻间隔',n(s.cd*attackCooldownMultiplier())+' 秒');add('冷却 / 剩余',`${n(s.cd)} 秒 / ${n(s.timer)} 秒`);
+            if(s.radius)add('作用半径',s.radius+' px');if(s.range)add('索敌 / 攻击距离',s.range+' px');if(s.count)add('基础数量',s.count);
+            if(key==='item'){title='圣盾';add('护盾 / 持续',`${34} / ${s.duration||2.8} 秒`);add('展开冲击', '35 基数 / 半径90 px');notes.push('护盾到期消失；此技能不参与普通战技的冷却返还。');}
+            if(hero==='healer'&&key!=='item'){
+              if(key==='attack') {add('圣矢数量',s.isEvolved?7:lv>=5?5:lv>=3?3:2);add('每枚穿透参数',s.isEvolved?4:2);add('每次积攒祷光','10 / 上限100');}
+              else {const spec=HealerKit.spec({skill1:'s1',skill2:'s2',ult:'ult'}[key],lv,s.isEvolved);add(key==='skill2'?'每秒群疗':'施放群疗',spec.heal+' 生命 / 每人');add('群疗半径',spec.radius+' px');if(spec.shield)add('施放护盾',spec.shield+' / 每人');if(spec.duration)add('阵地持续',spec.duration+' 秒');if(key==='skill2')add('伤害脉冲',n(s.damage*.65)+' 基数 / 每0.7秒');if(key==='ult'){add('持续群疗','5 生命 / 每秒 / 每人');add('审判脉冲',`${n(s.damage*.48)} 基数 / 每0.7秒 / 最多${s.isEvolved?8:5}目标`);}}
+              notes.push('治疗只作用于范围内存活且可参与战斗的玩家。溢疗的一半转盾，最多目标生命上限35%，不会降低已有更高护盾。');
+            }else if(hero==='engineer'&&key==='skill2'){
+              add('炮台上限',s.isEvolved?6:lv>=5?5:lv>=3?4:2);add('每次部署',s.isEvolved?3:lv>=3?2:1);add('炮台寿命',n(16+.8*lv)+' 秒');add('炮台射程',(s.radius||280)+60+' px');
+            }else if(hero==='engineer'&&key==='ult'){add('机甲炮口','4 个旋转炮口');add('机甲炮击',`${s.isEvolved?8:4} 枚炮弹 / 每0.45秒`);add('每枚直击基数',n(s.damage*.3));add('大招持续',`${s.isEvolved?9:6} 秒`);add('普攻 / 蓄力','普攻间隔×0.65 / 蓄满时间×0.70');
+            }else if(hero==='mage'&&key==='skill1') {add('位移距离',145+15*lv+' px');add('冻结时间',(s.freezeDuration||2.5)+' 秒');notes.push('起点与终点各触发一次冰霜新星。');}
+            else if(hero==='warrior'&&key==='skill2')add('持续时间',n((s.duration||4.5)+.4*lv)+' 秒');
+            if(key!=='item'&&lv<(s.maxLevel||5)){
+              add('下一级伤害基数',Math.round((s.damage||0)*(key==='ult'?1.26:1.22)));
+              add('下一级冷却',n(key==='ult'?Math.max(9,s.cd-3):Math.max(key==='attack'?.14:key==='skill1'?1.8:3.2,s.cd*(key==='attack'?.9:key==='skill1'?.84:.86)))+' 秒');
+            }
+          }
+          if(key!=='item'){add('玩家等级增伤',this.pct((player.level-1)*.065));add('当前暴击率 / 暴伤',`${this.pct(player.critChance)} / ${n(player.critMultiplier)} 倍`);notes.push('伤害基数已含已获得的升级与天赋；实际命中另计等级、暴击、增益、目标易伤及±8%波动。治疗不吃这些伤害倍率。');}
+        }else if(kind==='innate'){
+          title='曙光返照 · 固有反伤';add('反伤比例','实际承受伤害的50%');add('计入伤害','护甲减伤后，护盾吸收 + 生命扣除');add('触发间隔 / 剩余',`0.5 秒 / ${n(HealerKit.reflectCd)} 秒`);add('救援效率','普通玩家的2倍');notes.push('只返还给实际攻击自己的存活怪物。反伤不暴击、不再叠加等级或其他增伤，不触发主攻击流派；无敌、菜单、选卡或倒地期间不会触发。');
+        }else if(kind==='synergy'){
+          const owned=p[key]||0,lv=owned||1;status=owned?`已学习 Lv.${owned}/3`:'未学习 · 以下为Lv.1预览';
+          const values={
+            thunderChain:['雷霆连锁',[['主命中触发率','28%'],['闪电弹射',2+lv+' 次'],['每跳伤害','首击实际伤害的'+this.pct(.45+.15*lv)]]],
+            iceShatter:['极寒碎冰',[['冻结概率',this.pct(.06+.04*lv)],['非Boss冻结','.95 秒'],['对寒霜目标额外暴击率','20个百分点'],['击杀冰刺',`${lv>=3?4:3} 枚 · 每枚${8+6*lv}伤害基数`],['碎冰触发间隔','.65 秒']]],
+            bloodPact:['猩红血棘',[['累计亲自击杀','每10只触发'],['每次恢复',4*lv+' 生命'],['此流派增加生命上限',15*lv],['溢疗转盾上限','60'],['破盾血棘波',45*lv+' 基数 / 半径135 px']]],
+            fireTrail:['业火流星',[['火径采样','每40 px或移动.35秒；冲刺、闪现沿路铺火'],['火径基数 / 半径 / 寿命',`${14*lv} / 36 px / 2.2秒`],['同一目标伤害间隔','.3秒（自身重叠火径共用）'],['燃烧尸爆',`${14+8*lv} 基数 / 半径46 px`],['尸爆间隔','.5 秒']]],
+            emberEcho:['余烬回响',[['触发','每4次主命中'],['爆破基数 / 半径',`${12+8*lv} / ${56+8*Math.min(6,lv)} px`],['触发间隔','.8 秒']]],
+            stellarBastion:['星辉壁垒',[['护盾补充',`${10*lv} / 每6秒有效战斗时间`],['护盾上限',Math.round(player.maxHp*.3)+10*lv]]],
+            huntPulse:['追猎脉冲',[['移动触发距离',Math.max(90,200-20*lv)+' px'],['搜敌距离 / 目标数',`340 px / ${Math.min(4,lv)}`],['每目标伤害基数',22+10*lv],['触发间隔','.9 秒']]]
+          };[title]=values[key];for(const row of values[key][1])add(...row);notes.push('流派最多选择两种。详情按当前等级计算；未学习的预览不会产生战斗效果。');
+        }else if(kind==='equip'){
+          const owned=p[key]||0,lv=owned||1,lb=p.equipLB?.[key]||0;status=owned?`已装备 Lv.${owned}/5${lb?' · 突破+'+lb:''}`:'未装备 · 以下为Lv.1预览';
+          const values={critGlove:['狂暴手套',[['装备增加暴击率',this.pct(lv*.03+lb*.02)],['装备增加暴伤',n(lv*.08+lb*.12)+' 倍'],['当前总暴击率 / 暴伤',`${this.pct(player.critChance)} / ${n(player.critMultiplier)} 倍`]]],swiftBoots:['疾行之靴',[['每级移速成长','×1.04（逐级取整）'],['装备增加拾取半径',lv*6+lb*10+' px'],['当前总移速',player.speed+' px/秒'],['当前总拾取半径',player.magnetRange+' px']]],lavaHeart:['熔岩之心',[['装备增加生命上限',lv*8+lb*15],['热浪伤害基数',10+6*lv+8*lb],['热浪半径 / 间隔',`${80+5*lv} px / 1.2秒`]]],frostAura:['极寒光环',[['光环半径',75+10*lv+' px'],['敌人减速',this.pct(1-Math.max(.45,.84-.06*lv))]]],pierceQuiver:['穿甲箭袋',[['普攻提升倍率',n(Math.pow(1.05,lv)*Math.pow(1.08,lb))+' 倍'],['普通箭矢穿透参数',2+lv+lb+(player.skills.attack.isEvolved?4:0)],['当前普攻基数',player.skills.attack.damage]] ]};
+          [title]=values[key];for(const row of values[key][1])add(...row);notes.push('装备最多三件。当前总属性包含其他来源；装备贡献单独列出，不会在查看时重复添加。');
+        }else if(kind==='relic'){
+          const spec=Object.values(STAGE_SPECIAL_RELICS).flat().find(r=>r.id===key),r=(player.mapRelics||[]).find(r=>r.id===key),lv=r?.level||1,lb=r?.limitBreak||0,scale=(.55+.22*lv)*(1+.25*lb),level=player.level;
+          title=spec.name;status=r?`已装备 Lv.${lv}/5${lb?' · 突破+'+lb:''}`:'未装备 · 以下为Lv.1预览';
+          const values={
+            dungeon_skull:[['飞弹数量',1+Math.floor(lv/2)],['每枚伤害基数',Math.round((16+2.5*level)*scale)],['弹速 / 寿命','420 px/秒 / .55秒']],
+            dungeon_thorn:[['伤害基数',Math.round((24+4*level)*scale)],['半径',95+6*lv+' px'],['护甲贡献',this.pct(.05+(lv-1)*.04)]],
+            dungeon_horn:[['伤害基数',Math.round((32+4.5*level)*scale)],['索敌 / 爆破半径','260 / 75 px'],['自疗',1+Math.floor(lv/2)],['暴击率贡献',this.pct(.04+(lv-1)*.035)]],
+            tundra_crown:[['伤害基数',Math.round((22+3*level)*scale)],['半径 / 冻结',`${105+7*lv} px / ${n(.9+.2*lv)}秒`],['主攻击附带冻结','10%概率 / 非Boss .9秒']],
+            tundra_totem:[['冰锥数量 / 穿透参数',`${1+Math.floor(lv/2)} / ${2+lv}`],['每枚伤害基数',Math.round((26+4*level)*scale)],['移速倍率',n(1.06*Math.pow(1.05,lv-1))+' 倍']],
+            tundra_prism:[['战技额外冷却推进',this.pct(.065+.035*lv)],['周期护盾','每7.5秒补至至少32'],['影响范围','1技能、2技能、大招（不含圣盾）']],
+            grave_lantern:[['魂弹数量',1+Math.floor(lv/2)],['每枚伤害基数',Math.round((18+2.5*level)*scale)],['金币额外收益',this.pct(.06*lv)]],
+            grave_cloak:[['伤害基数',Math.round((20+3*level)*scale)],['半径',95+5*lv+' px'],['自疗',2+lv],['移速倍率',n(1.05*Math.pow(1.04,lv-1))+' 倍']],
+            grave_ring:[['伤害基数',Math.round((32+4.5*level)*scale)],['索敌 / 爆破半径',`240 / ${75+6*lv} px`]]
+          };for(const row of values[key])add(...row);if(key!=='tundra_prism')add('脉冲间隔','2.2 秒');notes.push('最多携带两件地图秘宝。伤害基数已计秘宝等级、突破和当前玩家等级的秘宝公式；实际命中仍受通用增伤与暴击影响。');
+        }
+        return{title,status,rows,notes};
+      },
+      attach(card,kind,key){
+        card.dataset.detailKind=kind;card.dataset.detailKey=key;
+        const button=document.createElement('button'),panel=document.createElement('div');
+        button.className='tree-detail-toggle';button.type='button';button.textContent='点击查看当前详细数值';button.setAttribute('aria-expanded','false');
+        panel.className='tree-detail-panel';panel.id='tree-detail-'+kind+'-'+key;panel.hidden=true;button.setAttribute('aria-controls',panel.id);
+        const toggle=()=>{const open=panel.hidden;button.setAttribute('aria-expanded',String(open));panel.hidden=!open;button.textContent=open?'收起详细数值':'点击查看当前详细数值';if(!open)return;
+          const info=this.describe(kind,key);panel.replaceChildren();const heading=document.createElement('strong');heading.textContent=info.title+' · '+info.status;panel.append(heading);
+          const dl=document.createElement('dl');for(const [label,value]of info.rows){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value;dl.append(dt,dd);}panel.append(dl);
+          for(const note of info.notes){const text=document.createElement('p');text.textContent=note;panel.append(text);}
+        };button.onclick=e=>{e.stopPropagation();toggle();};card.addEventListener('click',e=>{if(!panel.contains(e.target)&&e.target!==button)toggle();});card.append(button,panel);
+      }
+    };
+
     let currentTreeTab = 'active';
     let pausedBeforeTree = false;
 
@@ -10602,11 +10746,11 @@
         };
 
         const skillTagMap = { attack: '[px:swords]【普通攻击】', skill1: '[px:vortex]【1技能】', skill2: '[px:fire]【2技能】', ult: '[px:crown]【终结大招】' };
-        const skillKeys = ['attack', 'skill1', 'skill2', 'ult'];
+        const skillKeys = ['attack', 'skill1', 'skill2', 'ult', 'item'];
         skillKeys.forEach(k => {
           const sk = skills[k];
           if (!sk) return;
-          const maxLv = sk.maxLevel || 5;
+          const maxLv = sk.maxLevel || (k==='item'?1:5);
           let pipsHtml = '';
           for (let lv = 1; lv <= maxLv; lv++) {
             const isReached = sk.level >= lv;
@@ -10640,7 +10784,7 @@
             <div class="tree-nodes-row">${pipsHtml}</div>
             ${formulaHtml}
           `;
-          container.appendChild(card);
+          SkillDetails.attach(card,'active',k);container.appendChild(card);
 
           // 在【普通攻击】正下方紧接着展示【蓄力攻击 + 二选一专精流派】卡片
           if (k === 'attack' && skills.charge) {
@@ -10659,7 +10803,7 @@
             chgCard.innerHTML = `
               <div class="tree-header">
                 <span>[px:lightning]【蓄力攻击】${chg.name} (长按普攻释放)</span>
-                <span style="color:#fde047;">Lv.${chg.level}/${chg.maxLevel} | 蓄力:${player.chargeMax.toFixed(2)}s</span>
+                <span style="color:#fde047;">Lv.${chg.level}/${chg.maxLevel} | 蓄力:${chargeDuration().toFixed(2)}s</span>
               </div>
               <div class="tree-nodes-row">${chgPips}</div>
               <div class="tree-formula-bar" style="margin-top:4px;">
@@ -10667,17 +10811,18 @@
                 <span>流派B：【${chg.branchBName}】 [px:arrow-right] <strong>${branchBStatus}</strong></span>
               </div>
             `;
-            container.appendChild(chgCard);
+            SkillDetails.attach(chgCard,'active','charge');container.appendChild(chgCard);
           }
         });
 
+        if(hero==='healer'){const card=document.createElement('div');card.className='tree-branch-card unlocked';card.innerHTML='<div class="tree-header">[px:shield]【固有能力】曙光返照 · 反伤与加速救援</div>';SkillDetails.attach(card,'innate','reflection');container.appendChild(card);}
       } else if (tab === 'synergy') {
         const activeCount = SYNERGY_KEYS.filter(k => pass[k] > 0).length;
         const synBranches = [
-          { key: 'thunderChain', icon: '[px:lightning]', name: '雷霆连锁流', nodes: ['Lv.1: 3次闪电链弹射+感电', 'Lv.2: 4次闪电链弹射+麻痹', 'Lv.3: 5次全屏雷链+高额雷伤'] },
-          { key: 'iceShatter',   icon: '[px:ice]', name: '极寒碎冰流', nodes: ['Lv.1: 普攻寒霜减速+碎冰6刺', 'Lv.2: 碎冰伤害翻倍+对冰暴击+20%', 'Lv.3: 永冬碎冰风暴连环传染'] },
-          { key: 'bloodPact',    icon: '[px:blood]', name: '猩红血棘流', nodes: ['Lv.1: 击杀回血+溢出转护盾', 'Lv.2: 护盾破裂释放高伤血棘波', 'Lv.3: 生命上限大增+雙倍血棘反伤'] },
-          { key: 'fireTrail',    icon: '[px:fire]', name: '业火流星流', nodes: ['Lv.1: 移动铺设火径+燃烧尸爆', 'Lv.2: 火径伤害翻倍+尸爆范围扩大', 'Lv.3: 炼狱火海+连环多米诺尸爆'] },...NEW_SYNERGIES
+          { key: 'thunderChain', icon: '[px:lightning]', name: '雷霆连锁流', nodes: ['Lv.1: 28%触发，3次弹射', 'Lv.2: 4次弹射', 'Lv.3: 5次弹射'] },
+          { key: 'iceShatter',   icon: '[px:ice]', name: '极寒碎冰流', nodes: ['Lv.1: 寒霜与3枚碎冰', 'Lv.2: 提高冻结概率和伤害', 'Lv.3: 4枚碎冰'] },
+          { key: 'bloodPact',    icon: '[px:blood]', name: '猩红血棘流', nodes: ['Lv.1: 击杀回血+溢出转护盾', 'Lv.2: 护盾破裂释放高伤血棘波', 'Lv.3: 亲自击杀回复12生命'] },
+          { key: 'fireTrail',    icon: '[px:fire]', name: '业火流星流', nodes: ['Lv.1: 移动铺火径与燃烧尸爆', 'Lv.2: 火径基数28', 'Lv.3: 火径基数42'] },...NEW_SYNERGIES
         ];
         synBranches.forEach(b => {
           const curLv = pass[b.key] || 0;
@@ -10698,7 +10843,7 @@
             </div>
             <div class="tree-nodes-row">${pips}</div>
           `;
-          container.appendChild(card);
+          SkillDetails.attach(card,'synergy',b.key);container.appendChild(card);
         });
 
       } else if (tab === 'equip') {
@@ -10741,10 +10886,10 @@
               </span>
             </div>
             <div class="tree-nodes-row">${pips}</div>
-            <div style="font-size:11px; color:#cbd5e1;">满级效果：${item.desc}</div>
+            <div style="font-size:11px; color:#cbd5e1;">当前数值见下方详情（按已获得等级计算）</div>
             <div style="font-size:10px; color:#fde047;">超武关联：${item.pair}</div>
           `;
-          container.appendChild(card);
+          SkillDetails.attach(card,'equip',item.key);container.appendChild(card);
         });
 
       } else if (tab === 'relic') {
@@ -10765,7 +10910,7 @@
               </div>
               <div style="font-size:11px; color:#cbd5e1;">秘宝特效：${rSpec.desc}</div>
             `;
-            container.appendChild(card);
+            SkillDetails.attach(card,'relic',rSpec.id);container.appendChild(card);
           });
         });
       }
@@ -11081,7 +11226,7 @@
     });
 
     // =========================================================================
-    // [px:tools] 开发者模式控制台逻辑 (密码：114514)
+    // [px:tools] 开发者模式控制台逻辑
     // =========================================================================
     let pausedBeforeDev = false;
     function openDevModal() {
@@ -11113,7 +11258,7 @@
         audio.playSuperWeapon();
         showToast('[px:tools] 开发者模式已解锁！尽情体验全部调试神权！');
       } else {
-        document.getElementById('dev-auth-msg').innerText = '[px:error] 密码错误！请输入正确的开发者密码 (114514)';
+        document.getElementById('dev-auth-msg').innerText = '[px:error] 口令不正确';
       }
     }
     document.getElementById('btn-hud-dev').addEventListener('click', (e) => { e.stopPropagation(); openDevModal(); });
@@ -11260,7 +11405,8 @@
       player.armor = sp.armor || 0;
       player.magnetRange = sp.magnetRange || 52;
       player.reviveLeft = sp.reviveLeft || 0;
-      player.chargeMax = sp.chargeMax || 0.68;
+      player.chargeMax = sp.chargeMax || player.chargeMax;
+      if(snap.selectedHero==='healer'&&sp.chargeRulesVersion!==1&&Number.isFinite(sp.chargeMax))player.chargeMax=Math.max(.45,player.chargeMax*1.1/.68);
 
       if (sp.skills) {
         for (const k in sp.skills) {
@@ -12422,19 +12568,20 @@
     var CoopDev = {
       secret:null,salt:null,revision:0,pending:new Map(),approved:new Map(),challenges:new Map(),request:null,grant:null,lastTick:0,
       guest(){return Boolean(CoopManager.roomCode&&!CoopManager.isHost);},
-      allowed(){return this.guest()?Boolean(this.grant&&this.grant.room===RoomHub.identity()&&this.grant.until>performance.now()):GameState.devUnlocked;},
+      allowed(){return this.guest()?Boolean(this.grant&&this.grant.room===RoomHub.identity()&&this.grant.until>performance.now()):Boolean(GameState.devUnlocked&&(!CoopManager.roomCode||this.secret));},
       binding(id,req,nonce){return JSON.stringify([RoomHub.identity(),RoomHub.hostId,id,req,nonce,this.revision]);},
       send(id,p){CoopManager.sendPacket({...p,targetPeerId:id});},
       reset(){this.revision++;this.secret=this.salt=null;this.pending.clear();this.approved.clear();this.challenges.clear();this.request=this.grant=null;GameState.devUnlocked=false;GameState.godMode=false;this.render();},
       async configure(){
-        if(!CoopManager.isHost||!CoopManager.roomCode||!GameState.devUnlocked)return;
-        const field=document.getElementById('dev-guest-password'),pwd=field.value;field.value='';if(pwd&&(pwd.length<4||pwd.length>32)){showToast('客机开发者密码需要 4–32 个字符');return;}
-        const room=RoomHub.identity(),rev=++this.revision;this.secret=null;this.pending.clear();this.challenges.clear();for(const id of this.approved.keys())this.send(id,{type:'DEV_REVOKE'});this.approved.clear();
-        const salt=RoomHub.b64(RoomHub.bytes());const secret=pwd?await RoomHub.passwordKey(pwd,salt):null;
-        if(room!==RoomHub.identity()||rev!==this.revision)return;this.secret=secret;this.salt=salt;showToast(secret?'已设置客机开发者密码；每位客人仍需你批准':'已关闭客机开发者权限');this.render();
+        if(!CoopManager.isHost||!CoopManager.roomCode)return;
+        const field=document.getElementById('dev-guest-password'),pwd=field.value;field.value='';if(pwd&&(pwd.length<4||pwd.length>32)){showToast('房间开发者密码需要 4–32 个字符');return;}
+        const room=RoomHub.identity(),rev=++this.revision;GameState.devUnlocked=false;GameState.godMode=false;this.secret=null;this.pending.clear();this.challenges.clear();for(const id of this.approved.keys())this.send(id,{type:'DEV_REVOKE'});this.approved.clear();
+        const salt=RoomHub.b64(RoomHub.bytes());let secret;try{secret=pwd?await RoomHub.passwordKey(pwd,salt):null;}catch(e){this.message('无法设置密码，请使用正常浏览器的 HTTPS 页面');this.render();return;}
+        if(room!==RoomHub.identity()||rev!==this.revision)return;this.secret=secret;this.salt=salt;GameState.devUnlocked=Boolean(secret);if(!secret)GameState.godMode=false;showToast(secret?'已设置本房间开发者密码；客人仍需房主批准':'已关闭本房间开发者权限');this.render();
       },
       apply(){
-        if(!this.guest())return false;const password=document.getElementById('dev-pwd-input').value;document.getElementById('dev-pwd-input').value='';
+        if(CoopManager.roomCode&&CoopManager.isHost){document.getElementById('dev-pwd-input').value='';this.message('请在下方设置本房间开发者密码');return true;}
+        if(!this.guest())return false;this.clearGrant();const password=document.getElementById('dev-pwd-input').value;document.getElementById('dev-pwd-input').value='';
         if(password.length<4||password.length>32){this.message('请输入房主设置的 4–32 位开发者密码');return true;}
         this.request={id:RoomHub.hex(10),password,at:performance.now(),last:-Infinity,stage:'start'};this.grant=null;this.message('正在验证密码，验证后等待房主批准…');this.tick(performance.now());return true;
       },
@@ -12472,12 +12619,13 @@
       sendGrant(id,g){g.last=performance.now();this.send(id,{type:'DEV_GRANT',req:g.req,token:g.token});},
       clearGrant(){this.grant=this.request=null;GameState.devUnlocked=false;GameState.godMode=false;updateStatusTray();this.render();},
       render(){
-        const box=document.getElementById('dev-host-access');if(!box)return;box.hidden=!(CoopManager.roomCode&&CoopManager.isHost&&GameState.devUnlocked);document.getElementById('dev-host-state').textContent=this.secret?'客机密码已设置；每次申请还需批准':'尚未开放；设置专用密码后客机才能申请';
+        const box=document.getElementById('dev-host-access');if(!box)return;const host=Boolean(CoopManager.roomCode&&CoopManager.isHost);box.hidden=!host;document.getElementById('dev-host-state').textContent=this.secret?'房间密码已设置；客人每次申请仍需你批准':'尚未开放；设置密码后开启本房间的调试权限';
+        document.getElementById('dev-context-hint').textContent=host?'房主设置本房间开发者密码；留空保存可关闭全部调试权限':this.guest()?'请输入房主设置的密码，再申请房主批准':'隐藏调试入口 · 需要正确的口令';
         const list=document.getElementById('dev-requests');list.replaceChildren();
         for(const [id,q]of this.pending){const row=document.createElement('div');row.className='dev-request-row';const text=document.createElement('span');text.textContent=(CoopManager.allies.find(p=>p.id===id)?.name||'队友')+'申请开发者';row.append(text);for(const [label,ok]of [['同意',true],['拒绝',false]]){const b=document.createElement('button');b.className='btn-secondary';b.textContent=label;b.onclick=()=>this.decide(id,ok);row.append(b);}list.append(row);}
         for(const [id]of this.approved){const row=document.createElement('div');row.className='dev-request-row';const t=document.createElement('span');t.textContent=(CoopManager.allies.find(p=>p.id===id)?.name||'队友')+' · 已批准';const b=document.createElement('button');b.className='btn-secondary';b.textContent='撤销';b.onclick=()=>{this.approved.delete(id);this.challenges.delete(id);this.send(id,{type:'DEV_REVOKE'});this.render();};row.append(t,b);list.append(row);}
         document.getElementById('dev-request-notice').hidden=!(CoopManager.isHost&&this.pending.size);document.getElementById('dev-request-notice').textContent='[px:tools] '+this.pending.size+' 位队友申请开发者 · 点击处理';
-        if(document.getElementById('dev-modal').style.display==='flex'){const unlocked=this.allowed();document.getElementById('dev-auth-box').style.display=unlocked?'none':'block';document.getElementById('dev-controls-box').style.display=unlocked?'flex':'none';document.getElementById('btn-dev-unlock').textContent=this.guest()?'验证并申请房主批准':'验证进入';}
+        if(document.getElementById('dev-modal').style.display==='flex'){const unlocked=this.allowed();document.getElementById('dev-auth-box').style.display=(host||unlocked)?'none':'block';document.getElementById('dev-controls-box').style.display=unlocked?'flex':'none';document.getElementById('btn-dev-unlock').textContent=this.guest()?'验证并申请房主批准':'验证进入';}
       },
       tick(now){
         if(now-this.lastTick<500)return;this.lastTick=now;
@@ -12506,7 +12654,7 @@
         wheel:['x','y','vx','vy','radius','isEvolved','spinAngle','catchX','catchY','state','timer'],
         beam:['type','x','y','x1','y1','x2','y2','startX','startY','radius','width','color','life','maxLife','isSuper','angle','len'],
         slash:['x','y','angle','radius','arc','color','life','maxLife','isFinisher'],
-        projectile:['x','y','vx','vy','radius','life','color','applyBleed','applyPoison','isArcaneChain','isFreeze','isRivet','isGrenade','forgeRocket','targetX','targetY','forgeHot','healerBolt'],
+        projectile:['x','y','vx','vy','radius','life','color','applyBleed','applyPoison','isArcaneChain','isFreeze','isRivet','isGrenade','forgeRocket','targetX','targetY','forgeHot','healerBolt','forgeCannon'],
         arc:['x1','y1','x2','y2','color','life'],images:['x','y','facing','hero','life','maxLife'],
         particle:['x','y','vx','vy','radius','maxRadius','isShockwave','size','color','life','maxLife']
       },
@@ -14768,8 +14916,8 @@
         if (gold) goldDrops.push({ x: en.x, y: en.y, val: this.scaleMonsterDrop(gold, 'gold') });
         if (en.isShiny && Math.random() < .25) spawnRandomPickup(en.x, en.y);
       },
-      hurtActor(id, dmg) {
-        if (!this.active() || id === CoopManager.myPeerId) { damagePlayer(dmg); return; }
+      hurtActor(id, dmg, source = null) {
+        if (!this.active() || id === CoopManager.myPeerId) { damagePlayer(dmg,source); return; }
         const p = this.participants.get(id);
         if (!p || p.localFeedback || p.downed || this.phased(p) || performance.now() < Math.max(p.protectedUntil || 0, p.menuUntil || 0)) return;
         CoopManager.sendPacket(this.packet({ type: 'WORLD_HURT', targetPeerId: id, damage: dmg }));
@@ -14788,10 +14936,10 @@
           if (projectile.life <= 0 || !this.authority()) return;
           for (const p of this.actors()) if (p.id !== CoopManager.myPeerId && !p.localFeedback &&
               Math.hypot(p.x - projectile.x, p.y - projectile.y) < p.radius + projectile.radius) {
-            this.hurtActor(p.id, projectile.damage); projectile.life = 0; break;
+            this.hurtActor(p.id, projectile.damage,projectile.sourceId||projectile.bossSource); projectile.life = 0; break;
           }
         } else if (Math.hypot(player.x - projectile.x, player.y - projectile.y) < player.radius + projectile.radius) {
-          damagePlayer(projectile.damage); projectile.life = 0;
+          damagePlayer(projectile.damage,projectile.sourceId||projectile.bossSource); projectile.life = 0;
         }
       },
       localCombat(dt) {
@@ -14808,7 +14956,7 @@
         for (const en of enemies) {
           if (en.isDead || en.freezeTimer > 0 || en.localMeleeCd > 0) continue;
           if (Math.hypot(en.x - player.x, en.y - player.y) <= en.radius + player.radius + 3) {
-            en.localMeleeCd = .52; damagePlayer(en.damage);
+            en.localMeleeCd = .52; damagePlayer(en.damage,en);
           }
         }
       },
@@ -14817,7 +14965,7 @@
         if (Math.hypot(player.x - projectile.x, player.y - projectile.y) < player.radius + projectile.radius) {
           projectile.localSpent = true; projectile.life = 0;
           if (projectile.netId) this.spentProjectiles.add(projectile.netId);
-          damagePlayer(projectile.damage);
+          damagePlayer(projectile.damage,projectile.sourceId||projectile.bossSource);
           if (this.guest()) this.toHost({ type: 'WORLD_BULLET_TOUCH', id: projectile.netId,
             x: player.x, y: player.y, lifeEpoch: player.lifeEpoch || 0 });
         }
@@ -14954,7 +15102,7 @@
         for (const id of this.motionSamples.keys()) if (!liveMotion.has(id)) this.motionSamples.delete(id);
         const bullets = projectiles.filter(p => p.isEnemy && p.life > 0).map(p => {
           if (!p.netId) p.netId = ++this.entitySeq;
-          return [p.netId, q(p.x), q(p.y), q(p.vx), q(p.vy), q(p.life), p.radius, p.color, p.damage];
+          return [p.netId, q(p.x), q(p.y), q(p.vx), q(p.vy), q(p.life), p.radius, p.color, p.damage,p.sourceId||p.bossSource||0];
         });
         return { session: this.session, seq: ++this.frame, t: timestamp, time: GameState.gameTime,
           biome: GameState.activeBiome, scale: GameState.timeScale || 1, kills: GameState.kills,
@@ -15124,7 +15272,7 @@
           if (this.spentProjectiles.has(a[0])) continue;
           let p = existingBullets.get(a[0]);
           if (!p) { p = { isEnemy: true, netId: a[0], x: a[1], y: a[2], snapshots: new CoopSnapshotBuffer({ predictionLimit: 900, delayLimit: 100, cadenceWeight: .5 }) }; projectiles.push(p); }
-          bulletIds.add(a[0]); Object.assign(p, { vx: a[3], vy: a[4], life: a[5], radius: a[6], color: a[7], damage: a[8] });
+          bulletIds.add(a[0]); Object.assign(p, { vx: a[3], vy: a[4], life: a[5], radius: a[6], color: a[7], damage: a[8], sourceId:a[9]||0 });
           p.snapshots.push({ stateSeq: data.seq, sentAt: data.t, x: a[1], y: a[2], vx: a[3] * data.scale, vy: a[4] * data.scale, motionEpoch: 0 }, now, 30);
         }
         for (let i = projectiles.length - 1; i >= 0; i--) if (projectiles[i].isEnemy && !bulletIds.has(projectiles[i].netId)) projectiles.splice(i, 1);
@@ -15638,7 +15786,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 18, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 19, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,

@@ -1,0 +1,101 @@
+const fs=require('node:fs');
+const original=fs.readFileSync('tests/gameplay.cjs','utf8'),prefix=original.slice(0,original.indexOf(' await clean();'));
+const tail=String.raw`
+ await clean();const solo=await makePage({width:390,height:844});
+ for(const p of [host,guest,solo])await p.evaluate(()=>{window.realUpdate=update;update=()=>{};});
+ async function fresh(p=solo,hero='healer'){
+  await p.evaluate(hero=>{setupHero(hero);HealerKit.reset();FireTrail.reset();GameState.isStarted=true;GameState.isOver=false;GameState.isPaused=false;GameState.godMode=false;GameState.globalFreezeTimer=0;GameState.gameTime=0;GameState.powerShrineTimer=0;GameState.autoAttack=false;GameState.timeScale=1;GameState.screenShake=0;MenuPause.reset();UpgradeChoice.reset();player.x=player.y=player.vx=player.vy=0;player.hp=60;player.maxHp=100;player.shield=0;player.lifeEpoch=0;player.invulnerableTimer=0;player.isDowned=false;player.reviveLeft=0;player.expToNext=1e8;player.pendingLevelUps=0;input.keys={};input.x=input.y=0;input.isHoldingAttack=false;player.isCharging=false;player.chargeTimer=0;player.passives={critGlove:0,swiftBoots:0,lavaHeart:0,frostAura:0,pierceQuiver:0,thunderChain:0,iceShatter:0,bloodPact:0,fireTrail:0,emberEcho:0,stellarBastion:0,huntPulse:0,equipLB:{}};player.mapRelics=[];spawnEnemyBatch=()=>{};for(const a of [enemies,projectiles,skyBeams,groundEffects,telegraphs,gems,goldDrops,fieldPickups])a.length=0;for(const e of document.querySelectorAll('.modal-overlay'))e.style.display='none';},hero);
+ }
+ await fresh();
+ await check('all five heroes and every skill, equipment, synergy and relic expose finite read-only live details',async()=>{
+  const r=await solo.evaluate(()=>{const out=[];for(const hero of Object.keys(HERO_CONFIGS)){setupHero(hero);const before=JSON.stringify({player,save:SaveManager.data});for(const tab of ['active','equip','synergy','relic']){renderSkillTreeModal(tab);for(const c of document.querySelectorAll('#skilltree-content [data-detail-key]')){const info=SkillDetails.describe(c.dataset.detailKind,c.dataset.detailKey);if(!info.rows.length||/undefined|NaN|Infinity/.test(JSON.stringify(info)))out.push([hero,tab,info]);}}if(before!==JSON.stringify({player,save:SaveManager.data}))out.push(hero+' mutated');}return out});assert.deepEqual(r,[]);
+ });
+ await check('healer detail computes current prayer damage, healing, shield and cooldown from actual combat fields',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{HealerKit.prayer=100;const detail=SkillDetails.describe('active','charge');const s1=SkillDetails.describe('active','skill1');return{charge:Object.fromEntries(detail.rows),s1:Object.fromEntries(s1.rows)}});assert.equal(r.charge['本次群疗'],'10 生命 / 每人');assert.equal(r.charge['伤害半径'],'167 px');assert.equal(r.charge['蓄满时间'],'1.1 秒');assert.equal(r.s1['施放群疗'],'22 生命 / 每人');assert.equal(r.s1['施放护盾'],'6 / 每人');
+ });
+ await check('detail follows real upgrades and distinguishes inactive previews from owned levels',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{const preview=SkillDetails.describe('equip','critGlove');generateUpgradePool().find(x=>x.id==='p_crit_glove').apply();generateUpgradePool().find(x=>x.id==='s1_up').apply();return{preview,owned:SkillDetails.describe('equip','critGlove'),active:SkillDetails.describe('active','skill1'),cd:player.skills.skill1.cd}});assert(r.preview.status.includes('未装备'));assert(r.owned.status.includes('已装备'));assert.equal(Object.fromEntries(r.owned.rows)['装备增加暴击率'],'3%');assert.equal(Object.fromEntries(r.active.rows)['施放群疗'],'28 生命 / 每人');assert.equal(r.cd,6.72);
+ });
+ await check('cards open on click and keyboard, refresh live data, close inline and fit a narrow phone screen',async()=>{
+  await fresh();await solo.evaluate(()=>{currentTreeTab='active';openSkillTreeModal()});const card=solo.locator('[data-detail-key=charge]');await card.locator('.tree-header').click();assert.equal(await card.locator('button').getAttribute('aria-expanded'),'true');assert(await card.locator('.tree-detail-panel').isVisible());await card.locator('button').press('Enter');assert(!await card.locator('.tree-detail-panel').isVisible());await solo.evaluate(()=>HealerKit.prayer=100);await card.locator('button').press('Space');assert((await card.locator('.tree-detail-panel').textContent()).includes('100 / 100'));const fit=await solo.evaluate(()=>document.getElementById('skilltree-content').scrollWidth<=document.getElementById('skilltree-content').clientWidth+1);assert(fit);
+  await solo.screenshot({path:'test-results/r19-healer-details-mobile.png'});
+ });
+ await check('healer starts at 1.1s while mage charge timing and attack implementation stay unchanged',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{const healer=player.chargeMax;setupHero('mage');const mage=player.chargeMax;executeChargedAttack();return{healer,mage,beams:skyBeams.length,orbs:projectiles.length}});assert.equal(r.healer,1.1);assert.equal(r.mage,.68);assert(r.beams>0&&r.orbs===2);
+ });
+ await check('a healer first-stage cast always creates native holy visuals and damages a nearby enemy',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{const e=createEnemy(60,0,'imp');e.hp=e.maxHp=1000;e.speed=0;executeChargedAttack();return{hp:e.hp,halo:skyBeams.some(s=>s.type==='healer_halo'),cd:HealerKit.chargeCd}});assert(r.hp<1000&&r.halo);assert.equal(r.cd,1.2);
+ });
+ await check('cooldown rejects a charged release before screen shake, sound, prayer spending or skill broadcast',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{HealerKit.chargeCd=.7;HealerKit.prayer=80;let sound=0,broadcast=0;const a=audio.playExplosion,b=CoopManager.broadcastSkill;try{audio.playExplosion=()=>sound++;CoopManager.broadcastSkill=()=>broadcast++;return{result:executeChargedAttack(),shake:GameState.screenShake,sound,broadcast,prayer:HealerKit.prayer,visuals:skyBeams.length};}finally{audio.playExplosion=a;CoopManager.broadcastSkill=b;}});assert.deepEqual(r,{result:false,shake:0,sound:0,broadcast:0,prayer:80,visuals:0});
+ });
+ await check('held auto-charge waits for cooldown without losing the stored full charge or empty-firing',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{GameState.godMode=true;GameState.autoAttack=true;input.isHoldingAttack=true;player.isCharging=true;player.chargeTimer=player.chargeMax;HealerKit.chargeCd=.2;realUpdate(.05);const before={timer:player.chargeTimer,visuals:skyBeams.length};for(let i=0;i<4;i++)realUpdate(.05);return{before,after:player.chargeTimer,halo:skyBeams.some(s=>s.type==='healer_halo'),cd:HealerKit.chargeCd}});assert.equal(r.before.timer,1.1);assert.equal(r.before.visuals,0);assert(r.after<.1&&r.halo&&r.cd>1);
+ });
+ await check('manual release below full charge never casts and a ready manual release casts once',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{player.isCharging=true;player.chargeTimer=1;releaseChargeAttack();const early=skyBeams.length;player.isCharging=true;player.chargeTimer=1.1;releaseChargeAttack();return{early,count:skyBeams.length,charging:player.isCharging,timer:player.chargeTimer}});assert.deepEqual(r,{early:0,count:1,charging:false,timer:0});
+ });
+ await check('old healer snapshots migrate the charge duration once and current snapshots preserve exact upgraded timing',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{player.chargeMax=.68*.9*.9;SaveManager.saveBattleSnapshot(true);const snap=SaveManager.hasBattleSnapshot();delete snap.player.chargeRulesVersion;SaveManager._memBattleSnap=snap;localStorage.setItem(SaveManager.BATTLE_KEY,JSON.stringify(snap));restoreBattleSnapshot();const migrated=player.chargeMax;SaveManager.saveBattleSnapshot(true);restoreBattleSnapshot();return{migrated,restored:player.chargeMax,version:SaveManager.hasBattleSnapshot().player.chargeRulesVersion}});assert(Math.abs(r.migrated-1.1*.9*.9)<1e-8);assert.equal(r.restored,r.migrated);assert.equal(r.version,1);
+ });
+ await check('reflection uses post-armor health damage and hits only the actual attacker with no extra multipliers',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{player.level=50;player.critChance=1;player.critMultiplier=10;player.armor=.2;GameState.powerShrineTimer=10;const a=createEnemy(60,0,'imp'),b=createEnemy(30,0,'imp');for(const e of [a,b]){e.hp=e.maxHp=1000;e.poisonStacks=4;}damagePlayer(20,a);return{hp:player.hp,a:a.hp,b:b.hp,cd:HealerKit.reflectCd}});assert.deepEqual(r,{hp:44,a:992,b:1000,cd:.5});
+ });
+ await check('shield absorption contributes to reflection even if no health is lost',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{player.armor=0;player.shield=30;const e=createEnemy(60,0,'imp');e.hp=e.maxHp=1000;damagePlayer(20,e);return{hp:player.hp,shield:player.shield,enemy:e.hp}});assert.deepEqual(r,{hp:60,shield:10,enemy:990});
+ });
+ await check('dense hits obey the reflection interval; dead or unknown sources never redirect to a nearby enemy',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{player.armor=0;const e=createEnemy(60,0,'imp');e.hp=e.maxHp=1000;damagePlayer(10,e);player.invulnerableTimer=0;damagePlayer(10,e);const gated=e.hp;HealerKit.tick(.5);player.invulnerableTimer=0;damagePlayer(10,999999);const unknown=e.hp;HealerKit.tick(.5);player.invulnerableTimer=0;e.isDead=true;damagePlayer(10,e);return{gated,unknown,dead:e.hp}});assert.deepEqual(r,{gated:995,unknown:995,dead:995});
+ });
+ await check('invulnerability, menus, upgrades, death and non-healers cannot reflect',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{const e=createEnemy(60,0,'imp');e.hp=e.maxHp=1000;const out=[];for(const mode of ['invulnerable','menu','upgrade','down','other']){player.hp=60;player.invulnerableTimer=mode==='invulnerable'?1:0;GameState.isPaused=mode==='menu';UpgradeChoice.active=mode==='upgrade';player.isDowned=mode==='down';GameState.selectedHero=mode==='other'?'warrior':'healer';damagePlayer(10,e);out.push(e.hp);}return out});assert.deepEqual(r,[1000,1000,1000,1000,1000]);
+ });
+ await check('ordinary and boss projectile impacts retain source ownership and reflect once',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{player.armor=0;const e=createEnemy(90,0,'imp');e.hp=e.maxHp=1000;WorldCoop.projectileHit({x:0,y:0,radius:6,damage:20,life:1,sourceId:WorldCoop.identify(e)});const first=e.hp;player.invulnerableTimer=0;HealerKit.tick(.5);WorldCoop.projectileHit({x:0,y:0,radius:6,damage:20,life:1,bossSource:e.netId});return{first,second:e.hp}});assert.deepEqual(r,{first:990,second:980});
+ });
+ await check('stationary warrior dash lays an unbroken fire path without joystick input',async()=>{
+  await fresh(solo,'warrior');const r=await solo.evaluate(()=>{player.passives.fireTrail=1;GameState.godMode=true;executeSkill1();for(let i=0;i<4;i++)realUpdate(.04);const xs=groundEffects.filter(g=>g.fireTrail).map(g=>g.x);return{x:player.x,xs}});assert(r.x>100);assert(r.xs.length>=3);for(let i=1;i<r.xs.length;i++)assert(r.xs[i]-r.xs[i-1]<=40.01);
+ });
+ await check('mage blink and ranger backflip paint the intermediate path, not just their endpoints',async()=>{
+  for(const hero of ['mage','ranger']){await fresh(solo,hero);const r=await solo.evaluate(()=>{player.passives.fireTrail=2;GameState.godMode=true;executeSkill1();for(let i=0;i<5;i++)realUpdate(.04);return{distance:Math.hypot(player.x,player.y),patches:groundEffects.filter(g=>g.fireTrail).map(g=>({x:g.x,y:g.y,damage:g.damage}))}});assert(r.distance>100);assert(r.patches.length>=3);assert(r.patches.some(g=>Math.hypot(g.x,g.y)>30&&Math.hypot(g.x,g.y)<r.distance-15));assert(r.patches.every(g=>g.damage===28));}
+ });
+ await check('overlapping sampled flames apply only one personal burn every .3 seconds',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{GameState.godMode=true;player.passives.fireTrail=1;player.critChance=0;player.level=1;const e=createEnemy(60,0,'imp');e.hp=e.maxHp=1000;e.speed=0;for(let i=0;i<10;i++)FireTrail.spawn(60,0);const rnd=Math.random;Math.random=()=>.5;try{realUpdate(.01);const first=1000-e.hp;realUpdate(.1);const second=1000-e.hp;for(let i=0;i<4;i++)realUpdate(.05);return{first,second,third:1000-e.hp};}finally{Math.random=rnd;}});assert.equal(r.first,14);assert.equal(r.second,14);assert(r.third<=28);
+ });
+ await check('flames have a separate bounded budget, ignore administrative teleports, and cannot spawn while phased',async()=>{
+  await fresh();const r=await solo.evaluate(()=>{player.passives.fireTrail=3;for(let i=0;i<50;i++)groundEffects.push({type:'mine',life:8});for(let i=0;i<30;i++)FireTrail.move(i*160,0,(i+1)*160,0);const max=groundEffects.filter(g=>g.fireTrail).length;const fields=groundEffects.filter(g=>g.type==='mine').length;FireTrail.move(0,0,5000,0);const far=groundEffects.filter(g=>g.fireTrail).length;GameState.isPaused=true;FireTrail.move(0,0,160,0);return{max,fields,far,paused:groundEffects.filter(g=>g.fireTrail).length}});assert.deepEqual(r,{max:36,fields:50,far:36,paused:36});
+ });
+ // Real RTC checks: no direct calls into the receiving peer's combat/HP functions.
+ async function team(){await clean();for(const p of [host,guest])await fresh(p);await host.evaluate(()=>{player.x=1000;player.armor=0;CoopManager.sendPresenceNow()});await guest.evaluate(()=>{player.x=0;player.armor=0;CoopManager.sendPresenceNow()});await pause(160);}
+ async function target(hp=1000){const id=await host.evaluate(hp=>{const e=createEnemy(100,0,'imp');e.hp=e.maxHp=hp;e.speed=0;e.damage=20;WorldCoop.broadcastWorld();return WorldCoop.identify(e)},hp);await guest.waitForFunction(id=>enemies.some(e=>e.netId===id),id);return id;}
+ await check('actual guest charge damages the shared host monster and uses that guest prayer for its own heal',async()=>{
+  await team();const id=await target();await guest.evaluate(()=>{HealerKit.prayer=100;executeChargedAttack();WorldCoop.flushHits(performance.now()+100)});await host.waitForFunction(id=>enemies.find(e=>e.netId===id)?.hp<1000,id);await guest.waitForFunction(()=>player.hp===70);assert.equal(await host.evaluate(()=>player.hp),60);assert.equal(await guest.evaluate(()=>HealerKit.prayer),0);
+ });
+ await check('guest melee reflection reaches the correct host monster, preserving guest health and damage ownership',async()=>{
+  await team();const id=await target();await guest.evaluate(id=>{damagePlayer(20,enemies.find(e=>e.netId===id));WorldCoop.flushHits(performance.now()+100)},id);await host.waitForFunction(id=>enemies.find(e=>e.netId===id)?.hp===990,id);assert.equal(await guest.evaluate(()=>player.hp),40);assert.equal(await host.evaluate(()=>player.hp),60);
+ });
+ await check('lost hit acknowledgement retries without duplicating reflection damage or a kill-heal grant',async()=>{
+  await team();const id=await target(10);const guestId=await guest.evaluate(()=>CoopManager.myPeerId);await host.evaluate(peer=>{WorldCoop.participants.get(peer).personalKills=9;window.r19Send=CoopManager.sendPacket;CoopManager.sendPacket=function(p,...a){if(p.type==='WORLD_HIT_ACK')return false;return r19Send.call(this,p,...a)}},guestId);await guest.evaluate(id=>{player.passives.bloodPact=2;damagePlayer(20,enemies.find(e=>e.netId===id));WorldCoop.flushHits(performance.now()+100)},id);await guest.waitForFunction(()=>player.hp===48);await pause(1000);assert.equal(await guest.evaluate(()=>player.hp),48);assert.equal(await host.evaluate(()=>player.hp),60);assert.equal(await host.evaluate(peer=>WorldCoop.participants.get(peer).personalKills,guestId),10);await host.evaluate(()=>CoopManager.sendPacket=r19Send);
+ });
+ await check('enemy bullet source survives the real world codec and guest collision reflects exactly once',async()=>{
+  await team();const id=await target();await host.evaluate(id=>{projectiles.push({isEnemy:true,sourceId:id,x:0,y:0,vx:0,vy:0,radius:6,damage:20,life:2,color:'#ef4444'});WorldCoop.broadcastWorld()},id);await guest.waitForFunction(id=>projectiles.some(p=>p.isEnemy&&p.sourceId===id),id);await guest.evaluate(()=>{const p=projectiles.find(p=>p.isEnemy);WorldCoop.localProjectileHit(p);player.invulnerableTimer=0;HealerKit.reflectCd=0;WorldCoop.localProjectileHit(p);WorldCoop.flushHits(performance.now()+100)});await host.waitForFunction(id=>enemies.find(e=>e.netId===id)?.hp===990,id);assert.equal(await guest.evaluate(()=>player.hp),40);
+ });
+ await check('host reflection changes shared damage once and never hurts or heals a guest',async()=>{
+  await team();const id=await target();await host.evaluate(id=>damagePlayer(20,enemies.find(e=>e.netId===id)),id);await guest.waitForFunction(id=>enemies.find(e=>e.netId===id)?.hp===990,id);assert.equal(await host.evaluate(()=>player.hp),40);assert.equal(await guest.evaluate(()=>player.hp),60);
+ });
+ await check('boss warning impact credits guest reflection to that boss and resolves duplicate warnings only once',async()=>{
+  await team();const id=await host.evaluate(()=>{spawnBoss(5);const b=enemies.find(e=>e.isBoss);b.x=200;b.y=0;b.damage=20;b.hp=b.maxHp=1000;WorldCoop.broadcastWorld();return WorldCoop.identify(b)});await guest.waitForFunction(id=>enemies.some(e=>e.netId===id&&e.isBoss),id);const warning=await host.evaluate(id=>{const b=enemies.find(e=>e.netId===id);const w=BossCombat.circle(b,0,0,60,.5,1);WorldCoop.broadcastWorld();return w.netId},id);await guest.waitForFunction(id=>telegraphs.some(w=>w.netId===id),warning);await guest.evaluate(id=>{const w=telegraphs.find(w=>w.netId===id);BossCombat.resolve(w);player.invulnerableTimer=0;HealerKit.reflectCd=0;BossCombat.resolve(w);WorldCoop.flushHits(performance.now()+100)},warning);await host.waitForFunction(id=>enemies.find(e=>e.netId===id)?.hp===990,id);assert.equal(await guest.evaluate(()=>player.hp),40);
+ });
+ await check('limit-break and prism cooldowns allow each legitimate fast heal with independent RTC grants',async()=>{
+  await team();await host.evaluate(()=>{player.x=10;player.maxHp=500;CoopManager.sendPresenceNow()});await guest.evaluate(()=>{player.maxHp=500;player.skills.skill1.level=5;player.skills.skill1.limitBreak=100;player.skills.skill1.cd=1.4;player.mapRelics=[{id:'tundra_prism',level:5}];CoopManager.sendPresenceNow()});await pause(120);await guest.evaluate(()=>executeSkill1());await host.waitForFunction(()=>player.hp===106);await guest.waitForFunction(()=>player.hp===106);await host.evaluate(()=>GameState.gameTime+=1.14);await guest.evaluate(()=>{GameState.gameTime+=1.14;player.skills.skill1.timer=0;executeSkill1()});await host.waitForFunction(()=>player.hp===152);await guest.waitForFunction(()=>player.hp===152);await pause(200);assert.equal(await host.evaluate(()=>player.hp),152);
+ });
+ await check('guest fire trail damages an intermediate-path monster once per pulse in the authoritative world',async()=>{
+  await team();const id=await target();await guest.evaluate(()=>{player.passives.fireTrail=1;player.critChance=0;player.level=1;GameState.godMode=true;const rnd=Math.random;Math.random=()=>.5;try{FireTrail.move(0,0,160,0);realUpdate(.01);WorldCoop.flushHits(performance.now()+100);}finally{Math.random=rnd;}});await host.waitForFunction(id=>enemies.find(e=>e.netId===id)?.hp===986,id);assert.equal(await host.evaluate(()=>player.hp),60);
+ });
+ await check('opening guest skill details neither pauses the host nor renews the personal protection deadline',async()=>{
+  await team();const r=await guest.evaluate(()=>{currentTreeTab='active';openSkillTreeModal();MenuPause.sync();const before=MenuPause.deadline;for(let i=0;i<5;i++){document.querySelector('[data-detail-key=charge] button').click();MenuPause.sync();}return{before,after:MenuPause.deadline}});assert.equal(r.before,r.after);assert.equal(await host.evaluate(()=>WorldCoop.paused()),false);assert(await guest.locator('#skilltree-modal').isVisible());
+ });
+ assert.deepEqual(errors,[]);
+})().catch(e=>{console.error(e);results.failure=String(e);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close();fs.writeFileSync('test-results/details-combat.json',JSON.stringify({results,errors,failure:results.failure,scope:'Isolated real two-client RTC damage, healing, reflection, flame path and lost-ACK tests; phone viewport and actual combat functions. No physical phone/carrier latency test.'},null,2))});
+`;
+new Function('require',prefix+tail)(require);
