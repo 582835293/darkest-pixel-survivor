@@ -1,14 +1,15 @@
 {
   "name": "darkest-pixel-survivor",
-  "version": "26.4.20",
+  "version": "26.4.21",
   "private": true,
   "license": "MIT",
   "description": "A single-file pixel survivor game with browser co-op, spectator mode, text chat and WebRTC voice.",
   "scripts": {
     "check": "node scripts/check.mjs",
-    "test": "node tests/rooms.cjs && node tests/lobby.cjs && node tests/social.cjs && node tests/gameplay.cjs && node tests/healing-ui.cjs && node tests/upgrades.cjs && node tests/rescue.cjs && node tests/enhancements.cjs && node tests/solo-ui.cjs && node tests/party-rounds.cjs && node tests/menu-magnet.cjs && node tests/native-vfx.cjs && node tests/engineer.cjs && node tests/forge.cjs && node tests/bosses.cjs && node tests/pixel-icons.cjs && node tests/camp-flow.cjs && node tests/healer.cjs && node tests/arena.cjs && node tests/details-combat.cjs && node tests/dev-access.cjs && node tests/freeze-combat.cjs && node tests/mech-cannons.cjs",
+    "test": "node tests/rooms.cjs && node tests/lobby.cjs && node tests/social.cjs && node tests/gameplay.cjs && node tests/healing-ui.cjs && node tests/upgrades.cjs && node tests/rescue.cjs && node tests/enhancements.cjs && node tests/solo-ui.cjs && node tests/party-rounds.cjs && node tests/menu-magnet.cjs && node tests/native-vfx.cjs && node tests/engineer.cjs && node tests/forge.cjs && node tests/bosses.cjs && node tests/pixel-icons.cjs && node tests/camp-flow.cjs && node tests/healer.cjs && node tests/arena.cjs && node tests/details-combat.cjs && node tests/dev-access.cjs && node tests/freeze-combat.cjs && node tests/mech-cannons.cjs && node tests/keyboard.cjs && node tests/balance.cjs",
     "screenshots": "node scripts/capture-screenshots.cjs",
-    "icons": "node scripts/export-icons.cjs"
+    "icons": "node scripts/export-icons.cjs",
+    "balance": "node scripts/balance-lab.cjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

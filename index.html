@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R20 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R21 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1268,7 +1268,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R20</span></div>
+        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R21</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -2276,7 +2276,7 @@
             speed: player.speed, critChance: player.critChance,
             critMultiplier: player.critMultiplier, armor: player.armor,
             magnetRange: player.magnetRange, reviveLeft: player.reviveLeft,
-            chargeMax: player.chargeMax, chargeRulesVersion: 1,
+            chargeMax: player.chargeMax, chargeRulesVersion: 2, balanceRulesVersion: 1,
             skills: JSON.parse(JSON.stringify(player.skills)),
             passives: JSON.parse(JSON.stringify(player.passives)),
             mapRelics: JSON.parse(JSON.stringify(player.mapRelics || []))
@@ -2474,11 +2474,12 @@
       reset(){this.resetLocal();this.seen.clear();this.gates.clear();this.zones.clear();},
       visual(type,data,life=.6){const own=skyBeams.filter(v=>v.type?.startsWith('healer_'));if(own.length>=70)own[0].life=0;const v={type:'healer_'+type,life,maxLife:life,...data};skyBeams.push(v);return v;},
       bolt(angle,damage){if(projectiles.filter(p=>p.healerBolt).length>=90)return;projectiles.push({x:player.x,y:player.y,vx:Math.cos(angle)*650,vy:Math.sin(angle)*650,radius:7,damage,life:.8,pierce:player.skills.attack.isEvolved?4:2,color:'#fef3c7',healerBolt:true});},
-      attack(angle){const a=player.skills.attack,n=a.isEvolved?7:a.level>=5?5:a.level>=3?3:2;for(let i=0;i<n;i++)this.bolt(angle+(i-(n-1)/2)*.1,a.damage);this.prayer=Math.min(100,this.prayer+10);this.visual('halo',{x:player.x,y:player.y,radius:28,color:'#a7f3d0'},.2);audio.playShoot();},
+      attack(angle){const a=player.skills.attack,n=a.isEvolved?7:a.level>=5?5:a.level>=3?3:2;for(let i=0;i<n;i++)this.bolt(angle+(i-(n-1)/2)*.1,a.damage*(1+.10*(a.level-1)));this.prayer=Math.min(100,this.prayer+10);this.visual('halo',{x:player.x,y:player.y,radius:28,color:'#a7f3d0'},.2);audio.playShoot();},
+      chargeInterval(level,talent=0,lb=0){const base=Math.max(.34,.70*Math.pow(.94,talent)*Math.pow(.9,level-1));return Math.max(.32,Math.max(.30,base*Math.pow(.95,lb))*1.05);},
       charge(angle){
-        if(this.chargeCd>0)return false;this.chargeCd=1.2;
+        if(this.chargeCd>0)return false;this.chargeCd=this.chargeInterval(player.skills.charge.level,SaveManager.data.talents.charge||0,player.skills.charge.limitBreak||0);
         const c=player.skills.charge,spent=this.prayer;this.prayer=0;
-        const talent=1+(SaveManager.data.talents.charge||0)*.12,damage=player.skills.attack.damage*(2.4+c.level*.25)*(1+(c.branchLv||0)*.32)*Math.pow(1.24,c.limitBreak||0)*talent*(1+spent/120);
+        const talent=1+(SaveManager.data.talents.charge||0)*.12,damage=player.skills.attack.damage*(2.4+c.level*.55)*(1+(c.branchLv||0)*.32)*Math.pow(1.24,c.limitBreak||0)*talent*(1+spent/120);
         const radius=(c.branch==='A'?250:155)+c.level*12;
         damageInRadius(player.x,player.y,radius,damage,110);this.visual('halo',{x:player.x,y:player.y,radius,color:'#fde68a'},.7);
         if(c.branch==='B')for(let i=0;i<8+(c.branchLv||1)*2;i++)this.lance(player.x,player.y,angle+i*Math.PI*2/(8+(c.branchLv||1)*2),470,damage*.5,18);
@@ -2510,14 +2511,14 @@
       skill2(){this.field('s2',player.skills.skill2);},
       ult(){this.field('ult',player.skills.ult);damageInRadius(player.x,player.y,380,player.skills.ult.damage,160);this.visual('mending',{x:player.x,y:player.y,radius:380,color:'#fef3c7',isSuper:true},1);},
       spec(kind,level,evolved,power=0){
-        if(kind==='charge')return{radius:evolved?360:220,heal:Math.round((8+level*2)*Math.min(1,power/100)*(evolved?1.5:1)),shield:0,cd:1.2};
+        if(kind==='charge')return{radius:evolved?360:220,heal:Math.round((8+level*2)*Math.min(1,power/100)*(evolved?1.5:1)),shield:0,cd:this.chargeInterval(level)};
         if(kind==='s1')return{radius:220+level*10,heal:16+level*6+(evolved?10:0),shield:4+level*2+(evolved?12:0),cd:Math.max(1.8,8*Math.pow(.84,level-1))};
         if(kind==='s2')return{radius:168+(level-1)*18+(evolved?40:0),heal:3+level+(evolved?2:0),shield:0,cd:Math.max(3.2,10*Math.pow(.86,level-1)),duration:7};
         return{radius:350+level*30,heal:35+level*10,shield:20+level*10,cd:Math.max(9,26-(level-1)*3),duration:evolved?9:6};
       },
       submit(kind,level,evolved=false,power=0){
         const skill=player.skills[{s1:'skill1',s2:'skill2',ult:'ult',charge:'charge'}[kind]],prism=player.mapRelics.find(r=>r.id==='tundra_prism');
-        const p={type:'WORLD_SUPPORT_CAST',castId:CoopManager.myPeerId+':heal:'+(++this.sequence),kind,level,evolved:Boolean(evolved),power,lifeEpoch:player.lifeEpoch||0,limitBreak:skill.limitBreak||0,prismLevel:prism?.level||0};
+        const p={type:'WORLD_SUPPORT_CAST',castId:CoopManager.myPeerId+':heal:'+(++this.sequence),kind,level,evolved:Boolean(evolved),power,lifeEpoch:player.lifeEpoch||0,limitBreak:skill.limitBreak||0,prismLevel:prism?.level||0,chargeTalent:SaveManager.data.talents.charge||0};
         if(!WorldCoop.active()){this.accept({...p,peerId:CoopManager.myPeerId},true);return;}
         if(CoopManager.isHost){WorldCoop.observe(CoopManager.myPeerId,WorldCoop.localProfile());this.accept({...p,peerId:CoopManager.myPeerId});}
         else{this.pending.set(p.castId,{packet:p,at:performance.now(),last:performance.now()});WorldCoop.toHost(p);}
@@ -2533,10 +2534,10 @@
         if(hero!=='healer'||!this.available(actor)||pkt.lifeEpoch!==actor.epoch||!['charge','s1','s2','ult'].includes(pkt.kind)||!Number.isInteger(pkt.level)||pkt.level<1||pkt.level>(pkt.kind==='ult'?3:5)||!Number.isFinite(pkt.power)||pkt.power<0||pkt.power>100)return ack(false);
         const spec=this.spec(pkt.kind,pkt.level,Boolean(pkt.evolved),pkt.power),gate=actor.id+':'+pkt.kind;
         if((this.gates.get(gate)??-Infinity)>GameState.gameTime+.05)return ack(false);
-        const lb=pkt.limitBreak??0,prism=pkt.prismLevel??0;
-        if(!Number.isInteger(lb)||lb<0||lb>10000||!Number.isInteger(prism)||prism<0||prism>5)return ack(false);
-        const cd=pkt.kind==='charge'?1.2:(pkt.kind==='ult'?Math.max(7.5,spec.cd-lb):Math.max(pkt.kind==='s1'?1.4:2.4,spec.cd*Math.pow(.95,lb)))/(1+(prism ? .065+.035*prism : 0));
-        this.gates.set(gate,GameState.gameTime+Math.max(.9,cd-.2));this.seen.set(pkt.castId,true);if(this.seen.size>256)this.seen.delete(this.seen.keys().next().value);
+        const lb=pkt.limitBreak??0,prism=pkt.prismLevel??0,chargeTalent=pkt.chargeTalent??0;
+        if(!Number.isInteger(chargeTalent)||chargeTalent<0||chargeTalent>10000||!Number.isInteger(lb)||lb<0||lb>10000||!Number.isInteger(prism)||prism<0||prism>5)return ack(false);
+        const cd=pkt.kind==='charge'?this.chargeInterval(pkt.level,chargeTalent,lb):(pkt.kind==='ult'?Math.max(7.5,spec.cd-lb):Math.max(pkt.kind==='s1'?1.4:2.4,spec.cd*Math.pow(.95,lb)))/(1+(prism ? .065+.035*prism : 0));
+        this.gates.set(gate,GameState.gameTime+(pkt.kind==='charge'?Math.max(.28,cd-.06):Math.max(.9,cd-.2)));this.seen.set(pkt.castId,true);if(this.seen.size>256)this.seen.delete(this.seen.keys().next().value);
         if(pkt.kind==='s2'||pkt.kind==='ult')this.zones.set(gate,{...spec,x:actor.x,y:actor.y,owner:actor.id,epoch:actor.epoch,kind:pkt.kind,left:spec.duration,tick:0,solo});
         if(pkt.kind!=='s2')this.groupHeal(actor,spec.radius,spec.heal,spec.shield,solo);
         return ack(true);
@@ -3027,7 +3028,7 @@
               skills.attack.isEvolved = true;
               skills.attack.count = 9;
               skills.attack.bounces = 7;
-              skills.attack.damage = Math.round(skills.attack.damage * 1.65);
+              skills.attack.damage = Math.round(skills.attack.damage * 1.30);
               showSuperWeaponFanfare('超武觉醒：极寒绝对零度！');
             }
           });
@@ -3045,7 +3046,7 @@
               skills.skill1.cd = 2.0;
               skills.skill1.radius += 42;
               skills.skill1.freezeDuration = 4.0;
-              skills.skill1.damage = Math.round(skills.skill1.damage * 1.65);
+              skills.skill1.damage = Math.round(skills.skill1.damage * 1.30);
               showSuperWeaponFanfare('超武觉醒：幻影冰河世纪！');
             }
           });
@@ -3061,7 +3062,7 @@
             apply: () => {
               skills.skill2.isEvolved = true;
               skills.skill2.radius += 55;
-              skills.skill2.damage = Math.round(skills.skill2.damage * 1.65);
+              skills.skill2.damage = Math.round(skills.skill2.damage * 1.30);
               showSuperWeaponFanfare('超武觉醒：白洞超新星湮灭！');
             }
           });
@@ -3073,11 +3074,11 @@
             name: '【大招超武】诸神黄昏·星河崩陨',
             type: 'super',
             icon: '[px:meteor]',
-            desc: '持续9秒，落星速度翻倍，每次砸下3颗彗星并留雷池。',
+            desc: '持续9秒，每0.32秒砸下3颗彗星并留雷池；重叠雷池不重复灼烧。',
             apply: () => {
               skills.ult.isEvolved = true;
               skills.ult.cd = Math.max(9.5, skills.ult.cd - 3.5);
-              skills.ult.damage = Math.round(skills.ult.damage * 1.65);
+              skills.ult.damage = Math.round(skills.ult.damage * 1.30);
               showSuperWeaponFanfare('大招超武觉醒：诸神黄昏·星河崩陨！');
             }
           });
@@ -3094,7 +3095,7 @@
             apply: () => {
               skills.attack.isEvolved = true;
               skills.attack.count = 6;
-              skills.attack.damage = Math.round(skills.attack.damage * 1.65);
+              skills.attack.damage = Math.round(skills.attack.damage * 1.30);
               showSuperWeaponFanfare('超武觉醒：万箭诛仙连弩！');
             }
           });
@@ -3110,7 +3111,7 @@
             apply: () => {
               skills.skill1.isEvolved = true;
               skills.skill1.cd = 2.0;
-              skills.skill1.damage = Math.round(skills.skill1.damage * 1.65);
+              skills.skill1.damage = Math.round(skills.skill1.damage * 1.30);
               showSuperWeaponFanfare('超武觉醒：天罗地网雷阵！');
             }
           });
@@ -3122,11 +3123,11 @@
             name: '【2技能超武】日月乾坤圣轮',
             type: 'super',
             icon: '[px:boomerang]',
-            desc: '飞轮化为巨型圣轮，接住恢复40%战技CD并回血12点。',
+            desc: '飞轮化为巨型圣轮，每轮首次接住恢复40%战技CD并回血12点。',
             apply: () => {
               skills.skill2.isEvolved = true;
               skills.skill2.count = Math.max(2, (skills.skill2.count || 1) + 1);
-              skills.skill2.damage = Math.round(skills.skill2.damage * 1.65);
+              skills.skill2.damage = Math.round(skills.skill2.damage * 1.30);
               showSuperWeaponFanfare('超武觉醒：日月乾坤圣轮！');
             }
           });
@@ -3142,7 +3143,7 @@
             apply: () => {
               skills.ult.isEvolved = true;
               skills.ult.cd = Math.max(9.5, skills.ult.cd - 3.5);
-              skills.ult.damage = Math.round(skills.ult.damage * 1.65);
+              skills.ult.damage = Math.round(skills.ult.damage * 1.30);
               showSuperWeaponFanfare('大招超武觉醒：森罗万象·百影诛神！');
             }
           });
@@ -3241,7 +3242,7 @@
           desc: chargeMorphDescs[hero][Math.min(3, nextClv - 2)],
           apply: () => {
             chg.level++;
-            player.chargeMax = Math.max(hero==='healer'?0.50:0.34, player.chargeMax * 0.90);
+            player.chargeMax = Math.max(0.34, player.chargeMax * 0.90);
             updateLoadoutHUD();
             if (chg.level >= chg.maxLevel) {
               showToast(`[px:lightning] 【${chg.name}】已升满 Lv.5！下次升级可直接选择觉醒流派！`);
@@ -3566,7 +3567,7 @@
             desc: '蓄力伤害+24%，蓄力速度加快5%。',
             apply: () => {
               chg.limitBreak = lbChg;
-              player.chargeMax = Math.max(hero==='healer'?0.45:0.28, player.chargeMax * 0.95);
+              player.chargeMax = Math.max(hero==='healer'?0.30:0.28, player.chargeMax * 0.95);
               updateLoadoutHUD();
               showToast(`[px:lightning] 蓄力突破 +${lbChg}！`);
             }
@@ -3844,33 +3845,41 @@
       showToast(GameState.autoAttack ? '[px:lightning] 已开启普攻自动连发，可专注走位与释放战技！' : '已切换为纯手动普攻模式');
     });
 
-    window.addEventListener('keydown', (e) => {
-      if (e.target?.matches?.('input,textarea,select') || e.target?.isContentEditable) return;
-      if(typeof AudioSettings!=='undefined'&&document.getElementById('settings-modal').style.display==='flex'){if(e.code==='Escape')AudioSettings.close();e.preventDefault();return;}
-      if(typeof CoopMap!=='undefined'&&CoopMap.open){if(e.code==='Escape')CoopMap.toggle(false);e.preventDefault();return;}
-      audio.init();
-      const wasDown = input.keys[e.code];
-      input.keys[e.code] = true;
-      if ((e.code === 'KeyJ' || e.code === 'Space') && !wasDown) {
-        input.isHoldingAttack = true;
-        player.isCharging = true;
-        player.chargeTimer = 0;
-        executeAttack();
-      }
-      if (e.code === 'KeyK') executeSkill1();
-      if (e.code === 'KeyL') executeSkill2();
-      if (e.code === 'KeyU') executeUlt();
-      if (e.code === 'KeyI') executeItem();
-      if (e.code === 'KeyP') togglePause();
-    });
-    window.addEventListener('keyup', (e) => {
-      if (e.target?.matches?.('input,textarea,select') || e.target?.isContentEditable) return;
-      input.keys[e.code] = false;
-      if (e.code === 'KeyJ' || e.code === 'Space') {
-        input.isHoldingAttack = false;
-        releaseChargeAttack();
-      }
-    });
+    const CombatKeys={
+      controls:new Set(['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyJ','Space','KeyK','KeyL','KeyU','KeyI','KeyP','Escape']),
+      code(e){
+        if(this.controls.has(e.code))return e.code;
+        const key=String(e.key||''),name=key.length===1&&/[a-z]/i.test(key)?'Key'+key.toUpperCase():key===' '?'Space':key;
+        if(this.controls.has(name))return name;
+        return ({87:'KeyW',65:'KeyA',83:'KeyS',68:'KeyD',38:'ArrowUp',40:'ArrowDown',37:'ArrowLeft',39:'ArrowRight',74:'KeyJ',32:'Space',75:'KeyK',76:'KeyL',85:'KeyU',73:'KeyI',80:'KeyP',27:'Escape'})[e.keyCode||e.which]||'';
+      },
+      typing(el){const field=el?.closest?.('input,textarea,select,[contenteditable="true"],[contenteditable=""]');return Boolean(field&&field.getClientRects().length&&getComputedStyle(field).visibility!=='hidden');},
+      reset(){input.keys={};input.x=input.y=0;input.isHoldingAttack=false;player.isCharging=false;player.chargeTimer=0;document.getElementById('btn-attack')?.classList.remove('charging','charge-ready');},
+      focus(){if(GameState.isStarted&&!GameState.isPaused&&!GameState.isOver&&!this.typing(document.activeElement))canvas.focus({preventScroll:true});}
+    };
+    canvas.tabIndex=0;canvas.setAttribute('aria-label','游戏战场：WASD移动，J普攻，K和L战技，U大招，I圣盾');
+    window.addEventListener('blur',()=>CombatKeys.reset());
+    window.addEventListener('focus',()=>{CombatKeys.reset();CombatKeys.focus();});
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)CombatKeys.reset();});
+    document.addEventListener('focusin',e=>{if(CombatKeys.typing(e.target))CombatKeys.reset();});
+    document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('input,textarea,select,button,a,[contenteditable]'))CombatKeys.focus();});
+    window.addEventListener('keydown',e=>{
+      if(CombatKeys.typing(e.target)||e.ctrlKey||e.metaKey||e.altKey)return;
+      const code=CombatKeys.code(e);if(!code)return;
+      if(document.getElementById('settings-modal').style.display==='flex'){if(code==='Escape')AudioSettings.close();CombatKeys.reset();return;}
+      if(CoopMap.open){if(code==='Escape')CoopMap.toggle(false);CombatKeys.reset();return;}
+      if(!GameState.isStarted||GameState.isOver)return;
+      if(GameState.isPaused&&code!=='KeyP')return;
+      e.preventDefault();const wasDown=input.keys[code];input.keys[code]=true;
+      try{audio.init();}catch{} // Audio permission or device failure must not swallow controls.
+      if((code==='KeyJ'||code==='Space')&&!wasDown){input.isHoldingAttack=true;player.isCharging=true;player.chargeTimer=0;executeAttack();}
+      if(wasDown||e.repeat)return;
+      if(code==='KeyK')executeSkill1();if(code==='KeyL')executeSkill2();if(code==='KeyU')executeUlt();if(code==='KeyI')executeItem();if(code==='KeyP')togglePause();
+    },true);
+    window.addEventListener('keyup',e=>{
+      const code=CombatKeys.code(e);if(!code)return;input.keys[code]=false;
+      if(code==='KeyJ'||code==='Space'){input.isHoldingAttack=false;if(CombatKeys.typing(e.target)){player.isCharging=false;player.chargeTimer=0;}else releaseChargeAttack();}
+    },true);
 
     // 8. 三大职业完全独立的主动技能实现
     function attackCooldownMultiplier(){return (GameState.berserkTimer>0?.5:1)*(player.catchBuffTimer>0?.6:1)*(GameState.selectedHero==='engineer'&&GameState.forgeOverdriveTimer>0?.65:1);}
@@ -4180,7 +4189,7 @@
               const t = Math.max(0, Math.min(1, ((en.x - player.x) * dx + (en.y - player.y) * dy) / lenSq));
               if (Math.hypot(en.x - (player.x + t * dx), en.y - (player.y + t * dy)) <= en.radius + 34) {
                 en.starMarks = 3;
-                en.freezeTimer = Math.max(en.freezeTimer || 0, 1.8);
+                freezeEnemy(en,1.8);
                 damageEnemy(en, heavyDmg, bAng, 130);
               }
             });
@@ -4244,7 +4253,7 @@
               const t = Math.max(0, Math.min(1, ((en.x - player.x) * dx + (en.y - player.y) * dy) / lenSq));
               if (Math.hypot(en.x - (player.x + t * dx), en.y - (player.y + t * dy)) <= en.radius + 22 + clv * 2) {
                 en.starMarks = (en.starMarks || 0) + 2;
-                if (clv >= 2) en.freezeTimer = Math.max(en.freezeTimer || 0, 1.1);
+                if (clv >= 2) freezeEnemy(en,1.1);
                 damageEnemy(en, beamDmg, bAng, 95);
               }
             });
@@ -4494,7 +4503,7 @@
           enemies.forEach(en => {
             if (Math.hypot(en.x - cx, en.y - cy) <= s1.radius + en.radius) {
               damageEnemy(en, s1.damage, Math.atan2(en.y - cy, en.x - cx), 140);
-              en.freezeTimer = s1.freezeDuration || 2.5;
+              freezeEnemy(en,s1.freezeDuration||2.5);
               en.starMarks = (en.starMarks || 0) + 2;
             }
           });
@@ -4645,6 +4654,7 @@
         audio.playSlash();
         const count = s2.count || 1;
         const isSuper = Boolean(s2.isEvolved);
+        const catchGroup={claimed:false};
         for (let i = 0; i < count; i++) {
           const spread = (i - (count - 1) / 2) * 0.35;
           const ang = player.aimAngle + spread;
@@ -4658,7 +4668,7 @@
             x: player.x, y: player.y,
             vx: Math.cos(ang) * 440,
             vy: Math.sin(ang) * 440,
-            catchX, catchY,
+            catchX, catchY, catchGroup,
             state: 'outbound', // outbound(飞出) -> rebound(弹向固定落点) -> grounded(在落点光圈内旋转等待玩家走过去接取)
             timer: 0.45,
             damage: s2.damage,
@@ -5038,7 +5048,7 @@
           createShockwave(player.x, player.y, rad, '#38bdf8');
           enemies.forEach(en => {
             if (!en.isDead && Math.hypot(en.x - player.x, en.y - player.y) <= rad + en.radius) {
-              en.freezeTimer = Math.max(en.freezeTimer || 0, 0.9 + rLv * 0.2);
+              freezeEnemy(en,0.9+rLv*.2);
               damageEnemy(en, Math.round((22 + player.level * 3) * rScale), 0, 90, true);
             }
           });
@@ -5468,6 +5478,8 @@
       return closest;
     }
 
+    function freezeEnemy(en,duration){if(en.isBoss){en.isChilled=true;return false;}en.freezeTimer=Math.max(en.freezeTimer||0,duration);return true;}
+
     function damageEnemy(en, baseDmg, pushAngle, pushForce, isSecondary = false, killerId = CoopManager.myPeerId, killEpoch = player.lifeEpoch || 0, fixedDamage = false) {
       if (!en || en.isDead || (WorldCoop.active() && (((player.isDowned || UpgradeChoice.active || MenuPause.blocked()) && !WorldCoop.simulatingDot) || WorldCoop.replaying || WorldCoop.paused() || WorldCoop.ended))) return { isCrit: false, finalDmg: 0 };
 
@@ -5519,11 +5531,12 @@
 
       // 雷霆连锁流派：主攻击有 28% 概率触发闪电链弹射
       if (!isSecondary && player.passives.thunderChain > 0 && Math.random() < 0.28) {
-        triggerChainLightning(en, Math.round(finalDmg * (0.45 + player.passives.thunderChain * 0.15)), 2 + player.passives.thunderChain);
+        triggerChainLightning(en, Math.round(finalDmg * (0.45 + player.passives.thunderChain * 0.15)), 2 + player.passives.thunderChain,true);
       }
 
       // 法师星蚀印记满 3 层自动星爆
-      if (en.starMarks && en.starMarks >= 3) {
+      if (!isSecondary && en.starMarks >= 3 && GameState.gameTime >= (en.starBurstNext || 0)) {
+        en.starBurstNext = GameState.gameTime + .45;
         en.starMarks = 0;
         createShockwave(en.x, en.y, 55, '#c084fc');
         enemies.forEach(other => {
@@ -5548,7 +5561,7 @@
       return { isCrit, finalDmg };
     }
 
-    function triggerChainLightning(startEnemy, dmg, bouncesLeft) {
+    function triggerChainLightning(startEnemy, dmg, bouncesLeft, resolved = false, falloff = 1) {
       let current = startEnemy;
       const visited = new Set([startEnemy]);
       for (let b = 0; b < bouncesLeft; b++) {
@@ -5568,7 +5581,7 @@
           color: '#38bdf8',
           life: 0.14
         });
-        damageEnemy(nextTarget, dmg, 0, 40, true);
+        damageEnemy(nextTarget, Math.round(dmg*Math.pow(falloff,b)), 0, 40, true, CoopManager.myPeerId,player.lifeEpoch||0,resolved);
         current = nextTarget;
       }
     }
@@ -6648,13 +6661,13 @@
       if (player.catchBuffTimer > 0) player.catchBuffTimer -= dt;
 
       if (WorldCoop.canAct()) {
-      // 法师大招：群星坠落阵列定时落星（超武觉醒后每 0.22s 同时轰下 3 颗巨型星界彗星并留下星火熔岩！）
+      // 法师大招：群星坠落阵列定时落星（超武觉醒后每 0.32s 同时轰下 3 颗巨型星界彗星并留下星火熔岩！）
       if (GameState.starfallTimer > 0) {
         GameState.starfallTimer -= dt;
         GameState.starfallTick -= dt;
         const isSuperStarfall = player.skills.ult && player.skills.ult.isEvolved;
         if (GameState.starfallTick <= 0) {
-          GameState.starfallTick = isSuperStarfall ? 0.22 : 0.42;
+          GameState.starfallTick = isSuperStarfall ? 0.32 : 0.42;
           const meteorCount = isSuperStarfall ? 3 : 1;
           for (let m = 0; m < meteorCount; m++) {
             const target = (m === 0 && findNearestEnemy(380)) || {
@@ -6927,6 +6940,9 @@
         // 按百分比恢复战技冷却（严格排除圣盾 item，且随呼啸回旋镖等级 Lv.1~Lv.5/超武从 12% 成长至 40%）
         if (bm.state === 'rebound' || bm.state === 'grounded') {
           if (Math.hypot(player.x - bm.x, player.y - bm.y) <= player.radius + bm.radius + 10) {
+            const catchReward=!bm.catchGroup||!bm.catchGroup.claimed;
+            if(catchReward){
+            if(bm.catchGroup)bm.catchGroup.claimed=true;
             const s2Lv = (player.skills.skill2 && player.skills.skill2.level) || 1;
             const refundPct = bm.isEvolved ? 0.40 : (0.07 + s2Lv * 0.05); // Lv1:12%, Lv2:17%, Lv3:22%, Lv4:27%, Lv5:32%, 超武:40%
             player.catchBuffTimer = 3.0;
@@ -6942,6 +6958,7 @@
             audio.playGem();
             createShockwave(bm.x, bm.y, 65, bm.isEvolved ? '#fde047' : '#34d399');
             showToast(`[px:boomerang] 走位接住飞轮！战技恢复 ${Math.round(refundPct * 100)}% 冷却 (大招${Math.round(refundPct * 50)}%，不含圣盾)！`);
+            }
             boomerangs.splice(i, 1);
             continue;
           }
@@ -6961,6 +6978,7 @@
       }
 
       // 更新地面领域（严格按 0.28s 周期 Tick 结算，彻底修复之前每帧调用 damageEnemy 导致卡死的 Bug！）
+      const terrainBurns=new Map();
       for (let i = groundEffects.length - 1; i >= 0; i--) {
         const ge = groundEffects[i];
         if (ge.isAlly || !WorldCoop.canAct()) { ge.life -= dt; if (ge.life <= 0) groundEffects.splice(i, 1); continue; }
@@ -6974,8 +6992,8 @@
             enemies.forEach(en => {
               if (!en.isDead && Math.hypot(en.x - ge.x, en.y - ge.y) <= ge.radius + en.radius) {
                 if(ge.fireTrail){if(GameState.gameTime<(en.fireTrailNextHit||0))return;en.fireTrailNextHit=GameState.gameTime+.3;}
-                damageEnemy(en, ge.damage || 18, 0, 0, true);
-                en.isBurning = true;
+                if(ge.fireTrail){damageEnemy(en,ge.damage||18,0,0,true);en.isBurning=true;}
+                else if(GameState.gameTime>=(en.terrainBurnNext||0))terrainBurns.set(en,Math.max(terrainBurns.get(en)||0,ge.damage||18));
               }
             });
           }
@@ -7023,7 +7041,7 @@
             enemies.forEach(en => {
               if (!en.isDead && Math.hypot(en.x - ge.x, en.y - ge.y) <= 95 + en.radius) {
                 damageEnemy(en, ge.damage, 0, 120, true);
-                en.freezeTimer = 1.8; // 电网麻痹禁锢
+                freezeEnemy(en,1.8); // 电网麻痹禁锢
               }
             });
             ge.life = 0;
@@ -7034,7 +7052,9 @@
       }
 
       // 更新敌人 AI、流血/中毒 DoT 与红色攻击预警圈
+      for(const [en,damage]of terrainBurns)if(!en.isDead){en.terrainBurnNext=GameState.gameTime+.3;en.isBurning=true;damageEnemy(en,damage,0,0,true);}
       if (WorldCoop.authority()) {
+
       const isGlobalFrozen = GameState.globalFreezeTimer > 0;
       for (let i = enemies.length - 1; i >= 0; i--) {
         const en = enemies[i];
@@ -7226,12 +7246,12 @@
               if(p.isGrenade&&!p.hasExploded){p.hasExploded=true;EngineerKit.explode(en.x,en.y,p.color==='#fde047'?95:70,Math.round(p.damage*.65),en,Boolean(p.forgeCannon));p.life=0;}
               if (p.applyBleed) { en.bleedStacks = Math.min(5, (en.bleedStacks || 0) + 1); en.bleedTimer = 4.0; WorldCoop.markBleed(en); }
               if (p.applyPoison) { en.poisonStacks = Math.min(4, (en.poisonStacks || 0) + 1); }
-              if (p.isFreeze) { en.freezeTimer = 1.5; }
+              if (p.isFreeze) freezeEnemy(en,1.5);
 
               // 法师奥术连锁弹：命中后自动弹射附近敌人并叠加星蚀印记
               if (p.isArcaneChain) {
-                en.starMarks = (en.starMarks || 0) + 1;
-                triggerChainLightning(en, Math.round(p.damage * 0.75), p.chainBounces || 3);
+                en.starMarks = Math.min(3, (en.starMarks || 0) + 1);
+                triggerChainLightning(en, Math.round(p.damage * 0.60), p.chainBounces || 3, false, .82);
               }
 
               p.pierce = (p.pierce || 1) - 1;
@@ -10410,7 +10430,7 @@
       player.armor = cfg.armor;
       player.magnetRange = 52 + ((t.magnet || 0) * 14);
       player.reviveLeft = t.revive || 0;
-      player.chargeMax = Math.max(heroKey==='healer'?0.50:0.38, (heroKey==='healer'?1.1:0.68) * Math.pow(0.94, t.charge || 0));
+      player.chargeMax = Math.max(heroKey==='healer'?0.34:0.38, (heroKey==='healer'?0.70:0.68) * Math.pow(0.94, t.charge || 0));
 
       player.skills = cfg.initSkills();
       for (const k in player.skills) {
@@ -10670,9 +10690,9 @@
             const mul=talent*(1+(lv-1)*.25)*(1+(c.branchLv||0)*.32)*Math.pow(1.24,c.limitBreak||0);
             add('蓄满时间',n(chargeDuration())+' 秒');add('当前分支',c.branch?`${c.branch==='A'?c.branchAName:c.branchBName} Lv.${c.branchLv}`:'未专精（Lv.5 后二选一）');
             if(hero==='healer'){
-              const spent=HealerKit.prayer,base=a.damage*(2.4+lv*.25)*(1+(c.branchLv||0)*.32)*Math.pow(1.24,c.limitBreak||0)*talent*(1+spent/120),heal=HealerKit.spec('charge',lv,c.branch==='A',spent);
+              const spent=HealerKit.prayer,base=a.damage*(2.4+lv*.55)*(1+(c.branchLv||0)*.32)*Math.pow(1.24,c.limitBreak||0)*talent*(1+spent/120),heal=HealerKit.spec('charge',lv,c.branch==='A',spent);
               add('当前祷光 / 上限',n(spent)+' / 100');add('本次范围伤害基数',n(base));add('伤害半径',(c.branch==='A'?250:155)+lv*12+' px');
-              add('本次群疗',spent>=25?heal.heal+' 生命 / 每人':'0（至少需25点祷光）');add('治疗半径',heal.radius+' px');add('释放间隔 / 剩余',`1.2 秒 / ${n(HealerKit.chargeCd)} 秒`);
+              add('本次群疗',spent>=25?heal.heal+' 生命 / 每人':'0（至少需25点祷光）');add('治疗半径',heal.radius+' px');add('释放间隔 / 剩余',` ${n(HealerKit.chargeInterval(lv,SaveManager.data.talents.charge||0,c.limitBreak||0))} 秒 / ${n(HealerKit.chargeCd)} 秒`);
               if(c.branch==='B')add('审判光轮',`${8+(c.branchLv||1)*2} 道 · 长470 px · 每道基数${n(base*.5)}`);
               notes.push('每次释放消耗全部祷光；普通攻击每次积攒10点。蓄满后还需等待释放间隔结束，自动连发会保留蓄力。');
             }else if(hero==='warrior'){
@@ -10689,19 +10709,22 @@
               else if(c.branch==='B'){add('穿甲束长度','440 px');add('首目标伤害基数',Math.round(heavy*1.5*1.22));notes.push('每贯穿一个目标，倍率再增加22个百分点。');}
               else{add('重箭数量 / 每枚基数',`${2+lv} / ${arrow}`);add('穿透参数',4+lv*2);if(lv>=2)add('焦点爆破',`${Math.round(arrow*.65)} 基数 / 半径${65+lv*8} px`);if(lv>=3)add('剧毒火海',`${lv>=5?2:1} 处 / 基数${Math.round(a.damage*(.7+lv*.12))} / 持续2.8秒`);}
             }
-            if(lv<5)add('下一级基础蓄满时间',n(Math.max(hero==='healer'?.5:.34,player.chargeMax*.9))+' 秒');
+            if(lv<5)add('下一级基础蓄满时间',n(Math.max(.34,player.chargeMax*.9))+' 秒');
           }else{
             if(s.damage)add('伤害基数（单段）',n(s.damage));if(key==='attack')add('当前实际普攻间隔',n(s.cd*attackCooldownMultiplier())+' 秒');add('冷却 / 剩余',`${n(s.cd)} 秒 / ${n(s.timer)} 秒`);
             if(s.radius)add('作用半径',s.radius+' px');if(s.range)add('索敌 / 攻击距离',s.range+' px');if(s.count)add('基础数量',s.count);
             if(key==='item'){title='圣盾';add('护盾 / 持续',`${34} / ${s.duration||2.8} 秒`);add('展开冲击', '35 基数 / 半径90 px');notes.push('护盾到期消失；此技能不参与普通战技的冷却返还。');}
             if(hero==='healer'&&key!=='item'){
-              if(key==='attack') {add('圣矢数量',s.isEvolved?7:lv>=5?5:lv>=3?3:2);add('每枚穿透参数',s.isEvolved?4:2);add('每次积攒祷光','10 / 上限100');}
+              if(key==='attack') {add('每枚圣矢伤害基数',n(s.damage*(1+.10*(lv-1))));add('圣矢数量',s.isEvolved?7:lv>=5?5:lv>=3?3:2);add('每枚穿透参数',s.isEvolved?4:2);add('每次积攒祷光','10 / 上限100');}
               else {const spec=HealerKit.spec({skill1:'s1',skill2:'s2',ult:'ult'}[key],lv,s.isEvolved);add(key==='skill2'?'每秒群疗':'施放群疗',spec.heal+' 生命 / 每人');add('群疗半径',spec.radius+' px');if(spec.shield)add('施放护盾',spec.shield+' / 每人');if(spec.duration)add('阵地持续',spec.duration+' 秒');if(key==='skill2')add('伤害脉冲',n(s.damage*.65)+' 基数 / 每0.7秒');if(key==='ult'){add('持续群疗','5 生命 / 每秒 / 每人');add('审判脉冲',`${n(s.damage*.48)} 基数 / 每0.7秒 / 最多${s.isEvolved?8:5}目标`);}}
               notes.push('治疗只作用于范围内存活且可参与战斗的玩家。溢疗的一半转盾，最多目标生命上限35%，不会降低已有更高护盾。');
             }else if(hero==='engineer'&&key==='skill2'){
               add('炮台上限',s.isEvolved?6:lv>=5?5:lv>=3?4:2);add('每次部署',s.isEvolved?3:lv>=3?2:1);add('炮台寿命',n(16+.8*lv)+' 秒');add('炮台射程',(s.radius||280)+60+' px');
             }else if(hero==='engineer'&&key==='ult'){add('机甲炮口','4 门自动瞄准浮游炮');add('浮游炮索敌距离','540 px（从炮座计算）');add('机甲炮击',`${s.isEvolved?8:4} 枚炮弹 / 每0.45秒`);add('每枚直击基数',n(s.damage*.3));add('大招持续',`${s.isEvolved?9:6} 秒`);add('普攻 / 蓄力','普攻间隔×0.65 / 蓄满时间×0.70');
-            }else if(hero==='mage'&&key==='skill1') {add('位移距离',145+15*lv+' px');add('冻结时间',(s.freezeDuration||2.5)+' 秒');notes.push('起点与终点各触发一次冰霜新星。');}
+            }else if(hero==='mage'&&key==='skill1') {add('位移距离',145+15*lv+' px');add('冻结时间',(s.freezeDuration||2.5)+' 秒');notes.push('起点与终点各触发一次冰霜新星；玩家冰冻对首领只施加寒霜。');}
+            else if(hero==='mage'&&key==='attack'){add('奥术弹射','首跳60%基数，后续每跳×0.82');notes.push('星蚀印记需主命中引爆，每目标间隔0.45秒；二次伤害不会连环引爆。');}
+            else if(hero==='mage'&&key==='ult')add('落星间隔 / 数量',s.isEvolved?'0.32秒 / 3颗':'0.42秒 / 1颗');
+            else if(hero==='ranger'&&key==='skill2')notes.push('同一轮飞轮共享一次接取奖励：战技冷却12%–40%，大招减半；Lv.2起回血8点，觉醒12点。');
             else if(hero==='warrior'&&key==='skill2')add('持续时间',n((s.duration||4.5)+.4*lv)+' 秒');
             if(key!=='item'&&lv<(s.maxLevel||5)){
               add('下一级伤害基数',Math.round((s.damage||0)*(key==='ult'?1.26:1.22)));
@@ -11140,6 +11163,7 @@
         GameState.isPaused = false;
         audio.startBGM(GameState.activeBiome);
         document.getElementById('lobby-modal').style.display = 'none';
+        document.activeElement?.blur();CombatKeys.reset();CombatKeys.focus();
         showToast(`[px:swords] ${HERO_CONFIGS[GameState.selectedHero].name} 再次出征！`);
       }
     }
@@ -11457,13 +11481,14 @@
       player.magnetRange = sp.magnetRange || 52;
       player.reviveLeft = sp.reviveLeft || 0;
       player.chargeMax = sp.chargeMax || player.chargeMax;
-      if(snap.selectedHero==='healer'&&sp.chargeRulesVersion!==1&&Number.isFinite(sp.chargeMax))player.chargeMax=Math.max(.45,player.chargeMax*1.1/.68);
+      if(snap.selectedHero==='healer'&&sp.chargeRulesVersion!==2&&Number.isFinite(sp.chargeMax))player.chargeMax=Math.max(.30,player.chargeMax*.70/(sp.chargeRulesVersion===1?1.1:.68));
 
       if (sp.skills) {
         for (const k in sp.skills) {
           if (player.skills[k]) Object.assign(player.skills[k], sp.skills[k]);
         }
       }
+      if(!sp.balanceRulesVersion&&['mage','ranger'].includes(GameState.selectedHero))for(const sk of Object.values(player.skills))if(sk.isEvolved&&sk.damage)sk.damage=Math.round(sk.damage*1.30/1.65);
       if(GameState.selectedHero==='engineer')EngineerKit.normalizeSkills();
       if (sp.passives) Object.assign(player.passives, sp.passives);
       player.mapRelics = sp.mapRelics || [];
@@ -15843,7 +15868,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 20, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 21, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
