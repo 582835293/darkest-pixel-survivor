@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R15 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R16 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1177,6 +1177,7 @@
     <!-- 顶部首领 Boss 血条 -->
     <div id="boss-hud">
       <div class="boss-name" id="boss-name-text">👑 深渊狱主 · 狂暴阶段</div>
+      <div id="boss-move-text" style="font-size:10px;line-height:13px;color:#fde68a;text-align:center"></div>
       <div class="boss-hp-bar">
         <div id="boss-hp-fill" class="boss-hp-fill"></div>
       </div>
@@ -1243,7 +1244,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R15</span></div>
+        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R16</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -1269,7 +1270,7 @@
           </div>
         </div>
 
-        <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #fde047;">2. 选择作战关卡（三关拥有完全不同的地图背景、专属怪物、6大首领与3种地图秘宝）</div>
+        <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #fde047;">2. 选择作战关卡（三关各有独立地图、专属怪物、6位不同招式首领与3种地图秘宝）</div>
         <div class="biome-grid">
           <div class="biome-card selected" data-biome="dungeon">🏰 第一关：恶魔熔火地牢<br><span style="font-size:9px;color:#94a3b8;">恶魔系怪+巴尔 | 秘宝:炎魔颅/荆棘甲</span></div>
           <div class="biome-card" data-biome="tundra">❄️ 第二关：极寒永冬冻原<br><span style="font-size:9px;color:#94a3b8;">雪原系怪+冰古神 | 秘宝:永冬冠/霜狼柱</span></div>
@@ -5111,6 +5112,7 @@
     function killEnemy(en, killerId = CoopManager.myPeerId, killEpoch = null) {
       if (!en || en.isDead || WorldCoop.guest()) return;
       en.isDead = true;
+      if(en.isBoss)BossCombat.cancel(en);
       en.activeFloatText = null;
       GameState.kills++;
       document.getElementById('kill-count').innerText = GameState.kills;
@@ -5222,6 +5224,7 @@
       document.getElementById('boss-hp-fill').style.width = `${pct}%`;
       const title = boss.bossTitle || '深渊狱主 · 巴尔';
       const hpStr = `${Math.max(0, Math.ceil(boss.hp))} / ${boss.maxHp}`;
+      document.getElementById('boss-move-text').textContent=(boss.bossMove||'接近中')+(boss.isPhase2?' · 二阶段':'');
       document.getElementById('boss-name-text').innerText = boss.isPhase2
         ? `👑 ${title} [狂暴 ${hpStr}]`
         : `👑 ${title} [${hpStr}]`;
@@ -5309,6 +5312,142 @@
         30: { key: 'boss_lich',    title: '30m墓园最终Boss · 幽冥死神纳迦什真身', hp: 14000, speed: 102, radius: 32, dmg: 54, color: '#10b981', skill: 'baal', isFinal: true }
       }
     };
+
+    // A boss owns its casts and delayed actions. Nothing uses wall-clock callbacks.
+    var BossCombat={
+      profiles:{
+        dungeon_5:{name:'锁链冲锋 / 扇斧处刑',moves:['wardenRush','axe'],cd:3.6},
+        dungeon_10:{name:'碎地三连 / 熔核外环',moves:['magmaHammers','magmaRing'],cd:4.1},
+        dungeon_15:{name:'魅影剪刀 / 旋舞花刃',moves:['scissors','petals'],cd:3.6},
+        dungeon_20:{name:'熔岩十字 / 焦土追猎',moves:['lavaCross','fireTrail'],cd:4},
+        dungeon_25:{name:'魔眼扫视 / 虚空螺旋',moves:['eyeSweep','voidSpiral'],cd:4.2},
+        dungeon_30:{name:'灭世棋盘 / 末日三重奏',moves:['doomGrid','doomTrinity'],cd:4.6},
+        tundra_5:{name:'冰河践踏 / 巨兽扑击',moves:['iceStomps','beastLeap'],cd:3.8},
+        tundra_10:{name:'八方冰牢 / 凛冬冰扇',moves:['icePrison','iceFan'],cd:3.8},
+        tundra_15:{name:'极寒龙息 / 冰翼横扫',moves:['frostBreath','wingSweep'],cd:4.1},
+        tundra_20:{name:'冰封棋径 / 王权交错',moves:['royalLanes','royalCross'],cd:4.2},
+        tundra_25:{name:'雪崩推进 / 陨冰震地',moves:['avalanche','iceBoulders'],cd:4.4},
+        tundra_30:{name:'绝零缺口 / 往返寒潮',moves:['zeroGate','tideReturn'],cd:4.6},
+        graveyard_5:{name:'钩镰拖斩 / 腐毒陷地',moves:['hookCleave','poisonPits'],cd:3.8},
+        graveyard_10:{name:'骸骨禁阵 / 死灵骨墙',moves:['boneCourt','boneWalls'],cd:4.2},
+        graveyard_15:{name:'冥河分流 / 渡魂舟影',moves:['river','ferryPass'],cd:4},
+        graveyard_20:{name:'鲜血花环 / 血影连猎',moves:['bloodBloom','bloodHunt'],cd:4.1},
+        graveyard_25:{name:'骨翼风道 / 亡骸龙息',moves:['boneWind','boneBreath'],cd:4.4},
+        graveyard_30:{name:'灵魂收割 / 生死轮转',moves:['soulHarvest','deathWheel'],cd:4.8}
+      },
+      impacts:[],
+      profile(en){return this.profiles[en.bossProfile]||this.profiles.dungeon_5;},
+      state(en){return en.bossCast||(en.bossCast={cd:1.6,step:0,busy:0,jobs:[],dash:null,phaseSeen:false});},
+      source(id){return enemies.find(e=>e.isBoss&&!e.isDead&&e.netId===id);},
+      pack(w){const r={};for(const k of ['netId','bossAttack','bossId','type','x','y','x1','y1','x2','y2','radius','innerRadius','angle','arc','safeAngle','safeArc','width','color','damage','life','maxLife'])if(w[k]!==undefined)r[k]=w[k];return r;},
+      warn(en,type,data,delay=1,mul=.8,action=null){
+        WorldCoop.identify(en);const w=WorldCoop.warn({bossAttack:true,bossId:en.netId,type,color:en.color,damage:Math.round(en.damage*mul),life:delay,maxLife:delay,...data});w._action=action;return w;
+      },
+      circle(en,x,y,r,delay=1,mul=.8,action=null){return this.warn(en,'circle',{x,y,radius:r},delay,mul,action);},
+      line(en,x1,y1,x2,y2,width=42,delay=1,mul=.8,action=null){return this.warn(en,'corridor',{x1,y1,x2,y2,width},delay,mul,action);},
+      sector(en,x,y,angle,arc,radius,delay=1,mul=.8){return this.warn(en,'sector',{x,y,angle,arc,radius},delay,mul);},
+      ring(en,x,y,innerRadius,radius,delay=1,mul=.8,safeAngle=0,safeArc=0){return this.warn(en,'ring',{x,y,innerRadius,radius,safeAngle,safeArc},delay,mul);},
+      later(en,delay,fn){const jobs=this.state(en).jobs;if(jobs.length<20)jobs.push({left:delay,fn});},
+      bullet(en,x,y,angle,speed=175,damage=.65,radius=7){if(projectiles.filter(p=>p.isEnemy&&p.life>0).length>=120)return;projectiles.push({isEnemy:true,x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,radius,damage:Math.round(en.damage*damage),life:3.2,color:en.color,bossSource:en.netId});},
+      fan(en,a,count,spread,speed=185){for(let i=0;i<count;i++)this.bullet(en,en.x,en.y,a+(i-(count-1)/2)*spread/Math.max(1,count-1),speed);},
+      gapRing(en,a,count=18,gap=.7){for(let i=0;i<count;i++){const b=a+i*Math.PI*2/count;if(Math.abs(Math.atan2(Math.sin(b-a),Math.cos(b-a)))>gap)this.bullet(en,en.x,en.y,b,155);}},
+      summon(en,x,y,type,count=3){for(let i=0;i<count&&enemies.filter(e=>!e.isDead).length<320;i++){const a=i*Math.PI*2/count,e=createEnemy(x+Math.cos(a)*48,y+Math.sin(a)*48,type);e.bossSummoner=en.netId;}},
+      dash(en,tx,ty){const s=this.state(en),d=Math.hypot(tx-en.x,ty-en.y),limit=Math.min(380,d);s.dash={x:en.x,y:en.y,tx:en.x+(tx-en.x)*limit/Math.max(1,d),ty:en.y+(ty-en.y)*limit/Math.max(1,d),left:.42,total:.42};en.motionEpoch=(en.motionEpoch||0)+1;},
+      cast(en,t,move){
+        const p2=en.isPhase2,a=Math.atan2(t.y-en.y,t.x-en.x),x=t.x,y=t.y,bx=en.x,by=en.y;
+        const label=this.profile(en).name.split(' / ')[this.state(en).step%2];en.bossMove=label;this.state(en).busy=1.15;
+        switch(move){
+          case 'wardenRush':this.line(en,bx,by,bx+Math.cos(a)*360,by+Math.sin(a)*360,p2?64:48,1.1,.95,()=>this.dash(en,bx+Math.cos(a)*360,by+Math.sin(a)*360));if(p2)this.later(en,1.6,()=>this.sector(en,en.x,en.y,a+Math.PI,Math.PI,145,.8));break;
+          case 'axe':this.sector(en,bx,by,a,p2?Math.PI*1.25:Math.PI*.95,170,1);break;
+          case 'magmaHammers':for(let i=0;i<(p2?4:3);i++)this.circle(en,x+(i-1)*90,y+Math.sin(i*2)*50,70,1+i*.25,.8);break;
+          case 'magmaRing':this.ring(en,bx,by,90,p2?320:270,1.2);break;
+          case 'scissors':for(const ang of [a-.55,a+.55])this.line(en,x-Math.cos(ang)*300,y-Math.sin(ang)*300,x+Math.cos(ang)*300,y+Math.sin(ang)*300,38,1);if(p2)this.circle(en,x,y,55,1.65,.6);break;
+          case 'petals':this.circle(en,bx,by,80,.9,.3,()=>{this.gapRing(en,a+Math.PI,20,.65);if(p2)this.later(en,.45,()=>this.gapRing(en,a+Math.PI+.3,20,.65));});break;
+          case 'lavaCross':for(const ang of [0,Math.PI/2])this.line(en,x-Math.cos(ang)*300,y-Math.sin(ang)*300,x+Math.cos(ang)*300,y+Math.sin(ang)*300,56,1.1);if(p2)this.ring(en,x,y,140,235,1.7,.65);break;
+          case 'fireTrail':for(let i=0;i<(p2?5:4);i++){const px=x+Math.cos(a)*(i-1)*80,py=y+Math.sin(a)*(i-1)*80;this.circle(en,px,py,62,1+i*.22,.65);this.circle(en,px,py,62,2.1+i*.22,.45);}break;
+          case 'eyeSweep':for(let i=0;i<(p2?7:5);i++){const ang=a-.6+i*.24;this.line(en,bx,by,bx+Math.cos(ang)*520,by+Math.sin(ang)*520,30,1+i*.2,.65);}break;
+          case 'voidSpiral':for(let i=0;i<(p2?5:3);i++)this.later(en,i*.3,()=>this.circle(en,en.x,en.y,45,.8,.2,()=>this.gapRing(en,a+i*.35,16,.65)));break;
+          case 'doomGrid':for(let row=-1;row<=1;row++)for(let col=-1;col<=1;col++)if((row+col+4)%2===(p2?1:0))this.circle(en,x+col*130,y+row*130,72,1.3,.9);this.later(en,1.6,()=>{for(let i=0;i<3;i++)this.line(en,x-220,y-160+i*160,x+220,y-160+i*160,30,1,.65);});break;
+          case 'doomTrinity':this.circle(en,bx,by,110,1,.85);this.ring(en,bx,by,130,300,1.7,.8);for(let i=0;i<(p2?5:3);i++){const ang=a+(i-(p2?2:1))*.5;this.line(en,bx,by,bx+Math.cos(ang)*480,by+Math.sin(ang)*480,40,2.25,.85);}break;
+          case 'iceStomps':for(let i=0;i<(p2?4:3);i++)this.ring(en,bx,by,35+i*85,100+i*85,1+i*.45,.7);break;
+          case 'beastLeap':this.circle(en,x,y,95,1.2,.9,()=>this.dash(en,x,y));if(p2)this.later(en,1.6,()=>this.ring(en,en.x,en.y,100,180,.9,.7));break;
+          case 'icePrison':for(let i=0;i<(p2?10:8);i++){const ang=i*Math.PI*2/(p2?10:8);this.line(en,x+Math.cos(ang)*70,y+Math.sin(ang)*70,x+Math.cos(ang)*300,y+Math.sin(ang)*300,22,1.2,.7);}break;
+          case 'iceFan':this.sector(en,bx,by,a,1.4,125,.9,.35);this.later(en,.9,()=>{this.fan(en,a,p2?9:7,1.6,170);if(p2)this.later(en,.5,()=>this.fan(en,a+.12,8,1.6,170));});break;
+          case 'frostBreath':this.sector(en,bx,by,a,p2?1.35:1.05,420,1.35,.9);this.later(en,1.6,()=>this.sector(en,en.x,en.y,a+.45,.55,340,.85,.6));break;
+          case 'wingSweep':for(const sign of [-1,1])this.sector(en,bx,by,a+sign*Math.PI/2,1.55,300,1.15,.8);if(p2)this.circle(en,bx,by,75,1.7,.5);break;
+          case 'royalLanes':for(const side of [-1,1])this.line(en,x+side*110,y-330,x+side*110,y+330,70,1.2,.8);this.later(en,1.65,()=>{for(const side of [-1,1])this.line(en,x-330,y+side*110,x+330,y+side*110,p2?90:70,1,.8);});break;
+          case 'royalCross':for(let wave=0;wave<(p2?3:2);wave++)for(const sign of [-1,1]){const ang=wave*Math.PI/4+sign*Math.PI/4;this.line(en,x-Math.cos(ang)*330,y-Math.sin(ang)*330,x+Math.cos(ang)*330,y+Math.sin(ang)*330,34,1.1+wave*.7,.7);}break;
+          case 'avalanche':for(let i=-2;i<=2;i++)if(i!==(p2?1:0)){const px=x+i*90;this.line(en,px,y-340,px,y+340,55,1.1+(i+2)*.16,.8);}break;
+          case 'iceBoulders':for(let i=0;i<(p2?7:5);i++){const ang=i*Math.PI*2/(p2?7:5);this.circle(en,x+Math.cos(ang)*140,y+Math.sin(ang)*140,70,1+(i%2)*.35,.75);}this.later(en,1.4,()=>this.circle(en,x,y,90,.9,.9));break;
+          case 'zeroGate':this.ring(en,bx,by,85,400,1.4,.9,a,p2?.65:1);this.later(en,1.8,()=>this.ring(en,en.x,en.y,55,350,1.1,.8,a+Math.PI/2,p2?.75:1.15));break;
+          case 'tideReturn':for(let i=0;i<3;i++){this.ring(en,bx,by,40+i*90,105+i*90,1.1+i*.45,.65);this.ring(en,bx,by,40+i*90,105+i*90,3.2-i*.45,.65);}if(p2)this.later(en,2.9,()=>this.fan(en,a,5,1.4,160));break;
+          case 'hookCleave':this.line(en,bx,by,x,y,24,1.1,.6);this.sector(en,bx,by,a,Math.PI*1.2,190,1.65,.95);break;
+          case 'poisonPits':for(let i=0;i<(p2?4:3);i++){const ang=i*Math.PI*2/(p2?4:3),px=x+Math.cos(ang)*95,py=y+Math.sin(ang)*95;for(let pulse=0;pulse<3;pulse++)this.circle(en,px,py,58,1.1+pulse*.8,.45);}break;
+          case 'boneCourt':this.circle(en,x,y,105,1.1,.4,()=>this.summon(en,x,y,'skeleton',p2?4:3));this.ring(en,x,y,140,230,1.6,.75);break;
+          case 'boneWalls':for(const side of [-1,1]){const px=x+side*165;this.line(en,px,y-240,px,y+240,35,1,.45,()=>{for(let i=-3;i<=3;i++)this.bullet(en,px,y+i*62,side>0?Math.PI:0,145,.6,8);});}break;
+          case 'river':for(const side of [-1,1])this.line(en,x-370,y+side*125,x+370,y+side*125,p2?115:90,1.1,.8);this.later(en,1.4,()=>this.line(en,x-280,y,x+280,y,48,1.05,.8));break;
+          case 'ferryPass':for(const side of [-1,1])this.line(en,bx-Math.sin(a)*side*75,by+Math.cos(a)*side*75,bx+Math.cos(a)*420-Math.sin(a)*side*75,by+Math.sin(a)*420+Math.cos(a)*side*75,38,1.1,.75);this.later(en,1.1,()=>this.dash(en,bx+Math.cos(a)*340,by+Math.sin(a)*340));break;
+          case 'bloodBloom':for(let i=0;i<(p2?8:6);i++){const ang=i*Math.PI*2/(p2?8:6);this.circle(en,x+Math.cos(ang)*145,y+Math.sin(ang)*145,56,1.1,.7);}this.later(en,1.2,()=>this.circle(en,x,y,90,.9,.9));break;
+          case 'bloodHunt':for(let i=0;i<(p2?3:2);i++)this.later(en,i*1.35,()=>{const victim=WorldCoop.target(en);if(victim){const vx=victim.x,vy=victim.y;this.circle(en,vx,vy,78,1,.75,()=>this.dash(en,vx,vy));}});break;
+          case 'boneWind':for(let wave=0;wave<(p2?3:2);wave++)this.later(en,wave*.8,()=>{for(let i=-3;i<=3;i++)if(i!==wave-1)this.line(en,x-300,y+i*72,x+300,y+i*72,28,1.15,.55,()=>this.bullet(en,x-300,y+i*72,0,200,.65));});break;
+          case 'boneBreath':this.sector(en,bx,by,a,1.9,300,1.3,.85);this.circle(en,bx-Math.cos(a)*150,by-Math.sin(a)*150,65,1.65,.35,()=>this.summon(en,bx,by,'reaper',p2?3:2));break;
+          case 'soulHarvest':this.ring(en,x,y,155,340,1.4,.9);for(let i=0;i<(p2?4:3);i++)this.circle(en,x+Math.cos(a+i*2.1)*90,y+Math.sin(a+i*2.1)*90,42,2,.65);break;
+          case 'deathWheel':for(let wave=0;wave<(p2?3:2);wave++){const cast=()=>{for(let i=0;i<4;i++)this.sector(en,bx,by,i*Math.PI/2+wave*Math.PI/4,Math.PI*.27,370,wave?1:1.3,.8);};if(wave)this.later(en,1.5+(wave-1)*1.2,cast);else cast();}break;
+        }
+        updateBossHud(en);
+      },
+      tick(en,t,dt){
+        const s=this.state(en);if(!s.phaseSeen&&en.isPhase2){s.phaseSeen=true;s.cd=Math.min(s.cd,1);}
+        for(const j of [...s.jobs]){j.left-=dt;if(j.left<=0){s.jobs.splice(s.jobs.indexOf(j),1);j.fn();}}
+        if(s.dash){const d=s.dash;d.left=Math.max(0,d.left-dt);const p=1-d.left/d.total;en.x=d.x+(d.tx-d.x)*p;en.y=d.y+(d.ty-d.y)*p;en.vx=en.vy=0;if(d.left<=0){s.dash=null;en.motionEpoch=(en.motionEpoch||0)+1;}return true;}
+        s.cd-=dt;s.busy=Math.max(0,s.busy-dt);
+        if(s.cd<=0){const profile=this.profile(en),move=profile.moves[s.step%2];this.cast(en,t,move);s.step++;s.cd=profile.cd*(en.isPhase2?.8:1);}
+        if(s.busy>0){en.vx=en.vy=0;return true;}return false;
+      },
+      contains(w,p){
+        const r=p.radius||12;
+        if(w.type==='corridor'){const dx=w.x2-w.x1,dy=w.y2-w.y1,t=Math.max(0,Math.min(1,((p.x-w.x1)*dx+(p.y-w.y1)*dy)/(dx*dx+dy*dy||1)));return Math.hypot(p.x-w.x1-t*dx,p.y-w.y1-t*dy)<=w.width/2+r;}
+        const d=Math.hypot(p.x-w.x,p.y-w.y),a=Math.atan2(p.y-w.y,p.x-w.x),diff=b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b))),margin=Math.asin(Math.min(1,r/Math.max(r,d)));
+        if(w.type==='ring')return d>=Math.max(0,w.innerRadius-r)&&d<=w.radius+r&&(!w.safeArc||diff(w.safeAngle)>Math.max(0,w.safeArc/2-margin));
+        if(w.type==='sector')return d<=w.radius+r&&diff(w.angle)<=w.arc/2+margin;
+        return d<=w.radius+r;
+      },
+      resolve(w){
+        if(w._resolved||w.cancelled||!this.source(w.bossId))return;w._resolved=true;
+        if(w.netId){if(WorldCoop.resolvedWarnings.has(w.netId))return;WorldCoop.resolvedWarnings.add(w.netId);if(WorldCoop.resolvedWarnings.size>2048)WorldCoop.resolvedWarnings.delete(WorldCoop.resolvedWarnings.values().next().value);}
+        this.impacts.push({...this.pack(w),life:.32,maxLife:.32});if(this.impacts.length>40)this.impacts.shift();
+        if(WorldCoop.authority()){
+          if(WorldCoop.active())CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_BOSS_IMPACT',warning:this.pack(w)}));
+          for(const p of WorldCoop.actors())if(this.contains(w,p))WorldCoop.hurtActor(p.id,w.damage);
+          if(w._action)w._action();
+        }else if(w.damage&&WorldCoop.canTakeDamage()&&this.contains(w,player))damagePlayer(w.damage);
+      },
+      receive(pkt){
+        const w=pkt.warning;if(!w||!w.bossAttack||!Number.isSafeInteger(w.netId)||WorldCoop.resolvedWarnings.has(w.netId)||!this.valid(w))return;
+        const host=CoopManager.allies.find(p=>p.id===WorldCoop.hostId),offset=host?.snapshots?.offset;
+        if(Number.isFinite(offset)&&performance.now()-pkt.sentAt-offset>2000)return;
+        if(telegraphs.some(t=>t.netId===w.netId))return;
+        telegraphs.push({...w,life:.3,maxLife:.3});
+      },
+      valid(w){
+        if(!['circle','corridor','sector','ring'].includes(w.type)||!Number.isSafeInteger(w.bossId)||!Number.isFinite(w.damage)||w.damage<0||w.damage>1e6)return false;
+        const fields=w.type==='corridor'?['x1','y1','x2','y2','width']:w.type==='sector'?['x','y','radius','angle','arc']:w.type==='ring'?['x','y','radius','innerRadius','safeAngle','safeArc']:['x','y','radius'];
+        return fields.every(k=>Number.isFinite(w[k])&&Math.abs(w[k])<1e7)&&(w.radius===undefined||w.radius>0&&w.radius<=600)&&(w.width===undefined||w.width>0&&w.width<=200)&&(w.innerRadius===undefined||w.innerRadius>=0&&w.innerRadius<w.radius)&&(w.arc===undefined||w.arc>0&&w.arc<=Math.PI*2)&&(w.safeArc===undefined||w.safeArc>=0&&w.safeArc<=Math.PI*2);
+      },
+      cancel(en){for(const w of telegraphs)if(w.bossAttack&&w.bossId===en.netId){w.cancelled=true;w.life=0;}if(en.bossCast){en.bossCast.jobs=[];en.bossCast.dash=null;}},
+      updateVisuals(dt){for(const e of this.impacts)e.life-=dt;this.impacts=this.impacts.filter(e=>e.life>0);},
+      draw(c,w,impact=false){
+        c.save();const progress=1-Math.max(0,w.life/w.maxLife);c.lineWidth=impact?4:2;c.strokeStyle=impact?(w.color||'#fca5a5'):'#f87171';c.fillStyle=impact?'rgba(239,68,68,.24)':'rgba(239,68,68,.16)';if(impact)c.globalAlpha=Math.max(0,w.life/w.maxLife);
+        c.beginPath();
+        if(w.type==='corridor'){const a=Math.atan2(w.y2-w.y1,w.x2-w.x1),len=Math.hypot(w.x2-w.x1,w.y2-w.y1);c.translate(w.x1,w.y1);c.rotate(a);c.rect(0,-w.width/2,len,w.width);c.fill();c.stroke();c.setLineDash([12,8]);c.lineDashOffset=-progress*30;c.beginPath();c.moveTo(0,0);c.lineTo(len,0);c.stroke();}
+        else if(w.type==='ring'){
+          const start=w.safeArc?w.safeAngle+w.safeArc/2:0,end=w.safeArc?w.safeAngle+Math.PI*2-w.safeArc/2:Math.PI*2;c.arc(w.x,w.y,w.radius,start,end);c.arc(w.x,w.y,w.innerRadius,end,start,true);c.closePath();c.fill();c.stroke();c.beginPath();c.arc(w.x,w.y,w.innerRadius+(w.radius-w.innerRadius)*progress,start,end);c.stroke();
+        }else if(w.type==='sector'){c.moveTo(w.x,w.y);c.arc(w.x,w.y,w.radius,w.angle-w.arc/2,w.angle+w.arc/2);c.closePath();c.fill();c.stroke();c.beginPath();c.arc(w.x,w.y,w.radius*progress,w.angle-w.arc/2,w.angle+w.arc/2);c.stroke();}
+        else{c.arc(w.x,w.y,w.radius,0,Math.PI*2);c.fill();c.stroke();c.beginPath();c.arc(w.x,w.y,w.radius*progress,0,Math.PI*2);c.stroke();}
+        c.restore();
+      }
+    };
+
 
     // 全24种魔物差异化属性表（基础属性 + 随游戏时间连续增长倍率 getTimeScaling()，经验产出与血量同步攀升！）
     const MONSTER_SPECS = {
@@ -5811,6 +5950,7 @@
         type: cfg.key,
         bossTitle: cfg.title,
         bossSkill: cfg.skill,
+        bossProfile: GameState.activeBiome+'_'+(stageRoster[minuteMark]?minuteMark:30),
         isBoss: true,
         isFinalBoss: Boolean(cfg.isFinal),
         isPhase2: false,
@@ -6481,56 +6621,8 @@
           effectiveSpeed *= 0.35;
         }
 
-        // 6大首领专属技能模组：每位5分钟Boss拥有独特招式演出！
-        if (en.isBoss) {
-          en.chargeTimer = (en.chargeTimer || 0) + dt;
-          en.shootTimer = (en.shootTimer || 0) + dt;
-
-          // 通用红圈预警大招 (根据不同首领触发不同效果)
-          if (en.chargeTimer >= 4.0) {
-            en.chargeTimer = 0;
-            const targetX = target.x, targetY = target.y;
-            const warnRad = en.bossSkill === 'dragon' ? 105 : 88;
-            const warning = WorldCoop.warn({ type: 'circle', x: targetX, y: targetY, radius: warnRad, life: 0.85, maxLife: 0.85, damage: Math.round(en.damage * 1.15) });
-            const enemyRound = WorldCoop.session;
-            setTimeout(() => {
-              if (WorldCoop.session === enemyRound && enemies.includes(en) && !en.isDead && !WorldCoop.simulationPaused() && !GameState.isOver) {
-                createShockwave(targetX, targetY, warnRad, en.color || '#ef4444');
-                if (en.bossSkill === 'butcher') {
-                  // 05m 缝合屠夫：冲锋重劈跳跃至目标点
-                  en.x = targetX; en.y = targetY;
-                } else if (en.bossSkill === 'lich') {
-                  // 10m 死灵君王：在预警圈召唤2只骸骨亲卫
-                  createEnemy(targetX - 28, targetY, 'skeleton');
-                  createEnemy(targetX + 28, targetY, 'skeleton');
-                } else if (en.bossSkill === 'queen') {
-                  // 20m 鲜血女皇：血影瞬移突袭
-                  en.x = targetX + 35; en.y = targetY;
-                }
-                WorldCoop.areaHit(targetX, targetY, warnRad, Math.round(en.damage * 1.15), warning.netId);
-              }
-            }, 850);
-          }
-
-          // 首领专属弹幕技能 (一阶段也会释放各自特色弹幕，二阶段频率加快)
-          const volleyCd = en.isPhase2 ? 1.8 : 2.8;
-          if (en.shootTimer >= volleyCd) {
-            en.shootTimer = 0;
-            const bCount = en.bossSkill === 'baal' ? 12 : (en.bossSkill === 'queen' ? 10 : 6);
-            for (let b = 0; b < bCount; b++) {
-              const bAngle = (Math.PI * 2 / bCount) * b + GameState.gameTime;
-              projectiles.push({
-                isEnemy: true,
-                x: en.x, y: en.y,
-                vx: Math.cos(bAngle) * 195,
-                vy: Math.sin(bAngle) * 195,
-                damage: Math.round(en.damage * 0.68),
-                radius: 7, life: 2.8,
-                color: en.color || '#ef4444'
-              });
-            }
-          }
-        }
+        // Each of the eighteen bosses owns a different two-move attack sequence.
+        if(en.isBoss&&BossCombat.tick(en,target,dt))continue;
 
         en.vx += (dx / dist) * effectiveSpeed * 4 * dt;
         en.vy += (dy / dist) * effectiveSpeed * 4 * dt;
@@ -6669,6 +6761,8 @@
         if (p.life <= 0) projectiles.splice(i, 1);
       }
 
+      BossCombat.updateVisuals(dt);
+
       // 定期检测地面同品质经验水晶，自动 3 合 1 聚拢升阶 (蓝水晶 ➔ 绿水晶 ➔ 红水晶 ➔ 金耀圣晶)
       GameState.gemMergeTimer = (GameState.gemMergeTimer || 0) + dt;
       if (GameState.gemMergeTimer >= 0.35) {
@@ -6693,6 +6787,8 @@
       }
 
       for (let i = telegraphs.length - 1; i >= 0; i--) {
+        const warning=telegraphs[i];
+        if(warning.bossAttack){const source=BossCombat.source(warning.bossId);if(!source){warning.cancelled=true;warning.life=0;}else if(GameState.globalFreezeTimer>0||source.freezeTimer>0)continue;}
         telegraphs[i].life -= dt;
         if (telegraphs[i].life <= 0) { WorldCoop.resolveWarning(telegraphs[i]); telegraphs.splice(i, 1); }
       }
@@ -7686,6 +7782,7 @@
       for (let i = 0; i < telegraphs.length; i++) {
         const tg = telegraphs[i];
         const progress = 1 - (tg.life / tg.maxLife);
+        if(tg.bossAttack){BossCombat.draw(ctx,tg);continue;}
         if (tg.type === 'line') {
           ctx.strokeStyle = 'rgba(239, 68, 68, 0.75)';
           ctx.lineWidth = 2;
@@ -7708,6 +7805,8 @@
           ctx.stroke();
         }
       }
+
+      for(const impact of BossCombat.impacts)BossCombat.draw(ctx,impact,true);
 
       // 绘制观战目标周围的地形，不改变尸体与碰撞判定位置。
       const viewObstacles = CoopSpectate.obstacles();
@@ -10349,7 +10448,7 @@
       orbitingBlades.length = 0;
       boomerangs.length = 0;
       lightningArcs.length = 0;
-      telegraphs.length = 0;
+      telegraphs.length = 0;BossCombat.impacts=[];
       bloodDecals.length = 0;
       debrisPool.length = 0;
       afterimages.length = 0;
@@ -14325,6 +14424,7 @@
         telegraphs.push(warning); return warning;
       },
       resolveWarning(warning) {
+        if(warning.bossAttack){BossCombat.resolve(warning);return;}
         if (!this.guest() || !warning.netId || this.resolvedWarnings.has(warning.netId)) return;
         this.resolvedWarnings.add(warning.netId);
         if (this.resolvedWarnings.size > 2048) this.resolvedWarnings.delete(this.resolvedWarnings.values().next().value);
@@ -14424,7 +14524,7 @@
           const id = this.identify(en);
           const definition = JSON.stringify([en.type, en.maxHp, en.radius, en.damage, en.speed, en.color, en.tier || 1,
             (en.isBoss ? 1 : 0) | (en.isElite ? 2 : 0) | (en.isShiny ? 4 : 0) | (en.isFlying ? 8 : 0) | (en.isFinalBoss ? 16 : 0),
-            en.bossTitle || '', en.bossSkill || '', en.affixes || [], en.expReward || 2]);
+            en.bossTitle || '', en.bossSkill || '', en.affixes || [], en.expReward || 2,en.bossProfile||'']);
           let index = types.get(definition);
           if (index === undefined) { index = defs.length; types.set(definition, index); defs.push(JSON.parse(definition)); }
           const stationary = stopped || en.freezeTimer > 0;
@@ -14437,7 +14537,7 @@
           }
           this.motionSamples.set(id, { x: en.x, y: en.y, t: timestamp }); liveMotion.add(id);
           rows.push([id, index, q(en.x), q(en.y), q(stationary ? 0 : vx), q(stationary ? 0 : vy), Math.max(0, Math.ceil(en.hp)),
-            q(en.freezeTimer), q(en.hitTimer), en.isPhase2 ? 1 : 0, en.bleedStacks || 0, en.poisonStacks || 0, en.motionEpoch || 0]);
+            q(en.freezeTimer), q(en.hitTimer), en.isPhase2 ? 1 : 0, en.bleedStacks || 0, en.poisonStacks || 0, en.motionEpoch || 0,en.bossMove||'']);
         }
         for (const id of this.motionSamples.keys()) if (!liveMotion.has(id)) this.motionSamples.delete(id);
         const bullets = projectiles.filter(p => p.isEnemy && p.life > 0).map(p => {
@@ -14449,7 +14549,7 @@
           paused: this.paused(), pauseRevision: this.pauseRevision, end: this.ended, loot: CoopLoot.snapshot(), rewards: CoopLoot.rewardSnapshot(),
           freeze: GameState.globalFreezeTimer, curse: GameState.curseLevel, curseExp: GameState.curseExpStacks,
           players: [...this.participants.values()].map(p => this.packLife(p)), defs, rows, bullets,
-          warnings: telegraphs.map(t => ({ netId: t.netId, damage: t.damage, type: t.type, x: t.x, y: t.y, x1: t.x1, y1: t.y1, x2: t.x2, y2: t.y2, radius: t.radius, life: t.life, maxLife: t.maxLife })) };
+          warnings: telegraphs.filter(t=>t.life>0&&!t.cancelled).map(t=>BossCombat.pack(t)) };
       },
       worldInterval(peer, route) {
         if(this.ended)return 1000;
@@ -14592,7 +14692,7 @@
           const previousHp = en.hp;
           Object.assign(en, { type: def[0], maxHp: def[1], radius: def[2], damage: def[3], speed: def[4], color: def[5], tier: def[6],
             isBoss: Boolean(def[7] & 1), isElite: Boolean(def[7] & 2), isShiny: Boolean(def[7] & 4), isFlying: Boolean(def[7] & 8), isFinalBoss: Boolean(def[7] & 16),
-            bossTitle: def[8], bossSkill: def[9], affixes: def[10], expReward: def[11], vx: a[4], vy: a[5], hp: a[6], freezeTimer: a[7],
+            bossTitle: def[8], bossSkill: def[9], affixes: def[10], expReward: def[11],bossProfile:def[12]||'',bossMove:a[13]||'', vx: a[4], vy: a[5], hp: a[6], freezeTimer: a[7],
             isPhase2: Boolean(a[9]), bleedStacks: a[10], poisonStacks: a[11], isDead: false });
           en.snapshots.push({ stateSeq: data.seq, sentAt: data.t, x: a[2], y: a[3], vx: a[4] * data.scale, vy: a[5] * data.scale, motionEpoch: a[12] || 0 }, now, 50);
           if (en.snapshots.warp) { en.x = a[2]; en.y = a[3]; }
@@ -14600,7 +14700,7 @@
           if (en.isBoss) updateBossHud(en);
         }
         for (let i = enemies.length - 1; i >= 0; i--) if (!alive.has(enemies[i].netId)) {
-          const en = enemies[i]; spawnDeathSpectacle(en); enemies.splice(i, 1);
+          const en = enemies[i];if(en.isBoss)BossCombat.cancel(en); spawnDeathSpectacle(en); enemies.splice(i, 1);
         }
         if (!enemies.some(e => e.isBoss)) document.getElementById('boss-hud').style.display = 'none';
         const existingBullets = new Map(projectiles.filter(p => p.isEnemy).map(p => [p.netId, p]));
@@ -14617,6 +14717,7 @@
         for (let i = projectiles.length - 1; i >= 0; i--) if (projectiles[i].isEnemy && !bulletIds.has(projectiles[i].netId)) projectiles.splice(i, 1);
         const oldWarnings = new Map(telegraphs.map(t => [t.netId, t]));
         for (const row of data.warnings || []) {
+          if(row.bossAttack&&!BossCombat.valid(row))continue;
           if (row.netId && this.resolvedWarnings.has(row.netId)) continue;
           const existing = row.netId && oldWarnings.get(row.netId);
           if (existing) { existing.life = Math.min(existing.life, row.life); existing.damage = row.damage; }
@@ -14674,6 +14775,7 @@
           if (pkt.type === 'WORLD_LOOT_GONE') CoopLoot.markTaken(pkt.id, pkt.frame);
           if (pkt.type === 'WORLD_LOOT_REJECT') CoopLoot.pendingPickups.delete(pkt.id);
           if (pkt.type === 'WORLD_AREA') this.receiveArea(pkt);
+          if (pkt.type === 'WORLD_BOSS_IMPACT') BossCombat.receive(pkt);
           // Contact and projectile damage are resolved against this client's visible scene.
           // Old unanchored WORLD_HURT packets must not deal delayed phantom damage.
           if (pkt.type === 'WORLD_HIT_ACK') this.hitBatches.delete(pkt.seq);
@@ -15116,7 +15218,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 15, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 16, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
