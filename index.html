@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R22 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R23 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1169,15 +1169,16 @@
           <span>开发者</span>
         </div>
       </div>
-      <!-- 局内实时蓄力流派、被动流派槽(上限2)、装备奇物槽(上限3) 与 战役阶段生态指示 -->
+      <!-- 局内实时蓄力流派、被动流派槽(上限3)、装备奇物槽(上限3) 与 战役阶段生态指示 -->
       <div id="hud-loadout-bar" title="点击打开技能树与装备详情">
         <div class="loadout-group" id="loadout-charge-group" style="border-color: rgba(250, 204, 21, 0.45);">
           <span id="hud-charge-label" style="color:#fde047;">[px:lightning]蓄力:初始Lv.1</span>
         </div>
         <div class="loadout-group" id="loadout-synergy-group">
-          <span>流派(0/2):</span>
+          <span>流派(0/3):</span>
           <div class="loadout-slot" id="syn-slot-0">[px:lock]</div>
           <div class="loadout-slot" id="syn-slot-1">[px:lock]</div>
+          <div class="loadout-slot" id="syn-slot-2">[px:lock]</div>
         </div>
         <div class="loadout-group" id="loadout-equip-group">
           <span>装备(0/3):</span>
@@ -1268,7 +1269,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R22</span></div>
+        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R23</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -1498,10 +1499,10 @@
       <div class="modal-card" style="max-width: 600px;">
         <button class="modal-close-x" id="btn-x-skilltree" title="关闭图鉴">[px:close]</button>
         <div class="modal-title">[px:tree] 技能进化树与流派图鉴</div>
-        <div class="modal-subtitle">查看当前已升/未升节点、超武合成公式，以及流派(上限2)与装备(上限3)槽位状态</div>
+        <div class="modal-subtitle">查看当前已升/未升节点、超武合成公式，以及流派(上限3)与装备(上限3)槽位状态</div>
         <div class="tree-tabs" style="flex-wrap: wrap;">
           <button class="tree-tab-btn active" id="tab-btn-active" data-tab="active">[px:swords] 职业战技与超武</button>
-          <button class="tree-tab-btn" id="tab-btn-synergy" data-tab="synergy">[px:orb] 七大构筑流派 (限2)</button>
+          <button class="tree-tab-btn" id="tab-btn-synergy" data-tab="synergy">[px:orb] 七大构筑流派 (限3)</button>
           <button class="tree-tab-btn" id="tab-btn-equip" data-tab="equip">[px:shield] 奇物装备栏 (限3)</button>
           <button class="tree-tab-btn" id="tab-btn-relic" data-tab="relic">[px:map] 地图特殊秘宝 (限2)</button>
         </div>
@@ -2276,7 +2277,7 @@
             speed: player.speed, critChance: player.critChance,
             critMultiplier: player.critMultiplier, armor: player.armor,
             magnetRange: player.magnetRange, reviveLeft: player.reviveLeft,
-            chargeMax: player.chargeMax, chargeRulesVersion: 2, balanceRulesVersion: 1, campaignRulesVersion: 1,
+            chargeMax: player.chargeMax, chargeRulesVersion: 2, balanceRulesVersion: 1, campaignRulesVersion: 1, relicRulesVersion: 1,
             skills: JSON.parse(JSON.stringify(player.skills)),
             passives: JSON.parse(JSON.stringify(player.passives)),
             mapRelics: JSON.parse(JSON.stringify(player.mapRelics || []))
@@ -2666,25 +2667,31 @@
     const NEW_SYNERGIES = [
       {key:'emberEcho',icon:'[px:burst]',name:'余烬回响',nodes:['每4次主命中引发64半径爆破（0.8秒间隔）','爆破伤害提高，半径扩大至72','爆破伤害提高，半径扩大至80']},
       {key:'stellarBastion',icon:'[px:sparkles]',name:'星辉壁垒',nodes:['每6秒获得10护盾（有上限）','每6秒获得20护盾，提高上限','每6秒获得30护盾，提高上限']},
-      {key:'huntPulse',icon:'[px:diamond-core]',name:'追猎脉冲',nodes:['沿行走方向释放电流锥刺；移速越快越强，闪现也生效','锥刺伤害、长度与宽度提升，触发距离缩短','大幅强化高速锥刺，可击中前方区域内全部敌人']}
+      {key:'huntPulse',icon:'[px:diamond-core]',name:'追猎脉冲',nodes:['沿行走方向释放1道锥刺；闪现和突进结束后3轮快速连发','每次释放2道锥刺；保留移速增幅与落点3连发','每次释放3道锥刺；高速位移结束后3轮扇形连发']}
     ];
     const SYNERGY_KEYS=['thunderChain','iceShatter','bloodPact','fireTrail',...NEW_SYNERGIES.map(s=>s.key)];
-    // Travel-driven, caster-owned electric thrust. Only skill paths may count as instant travel.
+    // Movement owns its pulses; remote peers receive native render descriptors only.
     var HuntPulse={
-      reset(){this.x=player.x;this.y=player.y;this.distance=0;this.cooldown=0;this.speed=0;this.angle=0;},
-      spec(lv,speed){const ratio=Math.max(.5,Math.min(3.5,speed/180));return{need:Math.max(70,180-20*lv),cd:.8/Math.pow(ratio,.8),damage:(20+10*lv)*(.65+.35*ratio),len:100+25*lv+40*ratio,width:22+6*lv+12*ratio,ratio};},
+      reset(){this.x=player.x;this.y=player.y;this.distance=0;this.cooldown=0;this.speed=0;this.angle=0;this.pending=[];this.dash=null;},
+      cancel(){this.pending=[];this.dash=null;this.distance=0;this.speed=0;this.x=player.x;this.y=player.y;},
+      guard(){if(!GameState.isStarted||GameState.isOver||CoopMap?.open||!WorldCoop.canAct()||!player.passives.huntPulse)this.cancel();},
+      spec(lv,speed){const ratio=Math.max(.5,Math.min(3.5,speed/180));return{count:Math.max(1,Math.min(3,Math.floor(lv))),need:Math.max(70,180-20*lv),cd:.8/Math.pow(ratio,.8),damage:(20+10*lv)*(.65+.35*ratio),len:100+25*lv+40*ratio,width:22+6*lv+12*ratio,ratio};},
+      startDash(){this.dash={x:player.x,y:player.y,travel:0,speed:0};this.x=player.x;this.y=player.y;},
       tick(dt){const dx=player.x-(this.x??player.x),dy=player.y-(this.y??player.y),d=Math.hypot(dx,dy);this.x=player.x;this.y=player.y;this.cooldown=Math.max(0,(this.cooldown||0)-dt);this.speed=0;
-        if(!player.passives.huntPulse||!WorldCoop.canAct()){this.distance=0;return;}
-        // Ordinary locomotion must fit one simulation step; restore/teleport coordinates do not count.
-        if(!Number.isFinite(d)||d>Math.max(45,player.speed*dt*5)){this.distance=0;return;}if(d<.01||dt<=0)return;
-        const speed=d/dt;this.speed=speed;this.angle=Math.atan2(dy,dx);const s=this.spec(player.passives.huntPulse,speed);this.distance=Math.min(s.need*2,(this.distance||0)+d);
-        if(this.distance>=s.need&&this.cooldown<=0){this.distance%=s.need;this.emit(player.x,player.y,this.angle,s);}
+        if(!player.passives.huntPulse||GameState.isOver||CoopMap?.open||!WorldCoop.canAct()){this.cancel();return;}
+        for(const p of this.pending||[])p.left-=dt;const due=(this.pending||[]).filter(p=>p.left<=1e-6);this.pending=(this.pending||[]).filter(p=>p.left>1e-6);for(const p of due)this.volley(p.x,p.y,p.angle,p.spec);
+        if(!Number.isFinite(d)||d>Math.max(45,player.speed*dt*5)){this.distance=0;this.dash=null;return;}if(dt<=0)return;
+        const speed=d/dt;this.speed=speed;
+        if(this.dash){this.dash.travel+=d;this.dash.speed=Math.max(this.dash.speed,speed);if(player.skills.skill1.isDashing)return;const dash=this.dash;this.dash=null;if(dash.travel>=20){this.burst(player.x,player.y,Math.atan2(player.y-dash.y,player.x-dash.x),dash.speed);return;}}
+        if(d<.01)return;this.angle=Math.atan2(dy,dx);const s=this.spec(player.passives.huntPulse,speed);this.distance=Math.min(s.need*2,(this.distance||0)+d);
+        if(this.distance>=s.need&&this.cooldown<=0){this.distance%=s.need;this.volley(player.x,player.y,this.angle,s);}
       },
       blink(x1,y1,x2,y2){this.x=x2;this.y=y2;const d=Math.hypot(x2-x1,y2-y1);if(!player.passives.huntPulse||!WorldCoop.canAct()||!Number.isFinite(d)||d<10||d>512)return;
-        this.speed=d/.14;this.angle=Math.atan2(y2-y1,x2-x1);const s=this.spec(player.passives.huntPulse,this.speed);this.distance=(this.distance||0)+d;
-        if(this.distance>=s.need||d>=40){this.distance%=s.need;s.len=Math.min(560,Math.max(s.len,d+65));this.emit(x1,y1,this.angle,s);}
+        this.burst(x2,y2,Math.atan2(y2-y1,x2-x1),d/.14);
       },
-      emit(x,y,angle,s){this.cooldown=s.cd;const lv=player.passives.huntPulse,c=Math.cos(angle),n=Math.sin(angle);skyBeams.push({type:'hunt_thrust',x,y,angle,len:s.len,width:s.width,stage:lv,life:.28,maxLife:.28,color:'#67e8f9'});
+      burst(x,y,angle,speed){const s=this.spec(player.passives.huntPulse,speed);this.angle=angle;this.speed=speed;this.distance=0;this.pending=[];this.volley(x,y,angle,s);for(const left of [.09,.18])this.pending.push({x,y,angle,spec:{...s},left});},
+      volley(x,y,angle,s){for(let i=0;i<s.count;i++)this.emit(x,y,angle+(i-(s.count-1)/2)*.26,s);},
+      emit(x,y,angle,s){this.cooldown=s.cd;const lv=player.passives.huntPulse,c=Math.cos(angle),n=Math.sin(angle);skyBeams.push({type:'hunt_thrust',x,y,angle,len:s.len,width:s.width,stage:lv,life:.20,maxLife:.20,color:'#67e8f9'});
         for(const e of [...enemies]){if(e.isDead)continue;const dx=e.x-x,dy=e.y-y,along=dx*c+dy*n,side=Math.abs(-dx*n+dy*c),radius=e.radius||12;
           if(along>=-radius&&along<=s.len+radius&&side<=8+s.width*Math.max(0,along)/s.len+radius)damageEnemy(e,s.damage,0,25,true);}
       },
@@ -3415,8 +3422,8 @@
         });
       }
 
-      // --- 4. 四大元素流派 (单局上限 2 种) ---
-      const MAX_SYNERGY_SLOTS = 2;
+      // --- 4. 四大元素流派 (单局上限 3 种) ---
+      const MAX_SYNERGY_SLOTS = 3;
       const activeSynergies = SYNERGY_KEYS.filter(k => pass[k] > 0);
       const canLearnNewSynergy = activeSynergies.length < MAX_SYNERGY_SLOTS;
 
@@ -3546,30 +3553,7 @@
         });
       }
 
-      // --- 6. 地图秘宝升阶 ---
-      (player.mapRelics || []).forEach(relic => {
-        const curRlv = relic.level || 1;
-        const maxRlv = relic.maxLevel || 5;
-        if (curRlv < maxRlv) {
-          const nextRlv = curRlv + 1;
-          pool.push({
-            id: `relic_up_${relic.id}`,
-            name: `秘宝 · ${relic.name} Lv.${nextRlv}/${maxRlv}`,
-            type: 'evolve',
-            icon: relic.icon,
-            desc: `【${relic.name}】属性与触发伤害提升 +25%。`,
-            apply: () => {
-              relic.level = nextRlv;
-              if (relic.id === 'dungeon_thorn') player.armor = Math.min(0.65, player.armor + 0.04);
-              if (relic.id === 'dungeon_horn')  player.critChance += 0.035;
-              if (relic.id === 'tundra_totem')  player.speed = Math.round(player.speed * 1.05);
-              if (relic.id === 'grave_cloak')   player.speed = Math.round(player.speed * 1.04);
-              updateLoadoutHUD();
-              showToast(`[px:star-bright] 秘宝升阶：【${relic.name}】Lv.${nextRlv}/${maxRlv}！`);
-            }
-          });
-        }
-      });
+      // 地图秘宝拾取即获得原Lv.5效果，不占用升级卡。
 
       // --- 7. 全满级后开启【界限突破】 ---
       if (pool.length === 0) {
@@ -3703,23 +3687,7 @@
           }
         });
 
-        (player.mapRelics || []).forEach(relic => {
-          if ((relic.level || 1) >= (relic.maxLevel || 5)) {
-            const nextRlb = (relic.limitBreak || 0) + 1;
-            pool.push({
-              id: `lb_relic_${relic.id}`,
-              name: `【秘宝突破】${relic.name} +${nextRlb}`,
-              type: 'super',
-              icon: relic.icon,
-              desc: `【${relic.name}】伤害与范围+25%。`,
-              apply: () => {
-                relic.limitBreak = nextRlb;
-                updateLoadoutHUD();
-                showToast(`[px:star-bright] 秘宝突破：${relic.name} +${nextRlb}！`);
-              }
-            });
-          }
-        });
+
       }
 
       if (pool.length < 3) {
@@ -4479,7 +4447,7 @@
       if (hero === 'warrior') {
         // 苍红剑客：向目标方向高速突进，引爆沿途流血敌人并返还CD！
         audio.playSlash();
-        s1.isDashing = true;
+        HuntPulse.startDash();s1.isDashing = true;
         s1.dashTimer = s1.dashDuration;
         player.vx = dirX * 780;
         player.vy = dirY * 780;
@@ -4584,7 +4552,7 @@
             tickTimer: 0
           });
         }
-        s1.isDashing = true;
+        HuntPulse.startDash();s1.isDashing = true;
         s1.dashTimer = 0.2;
         // 若玩家没有推动摇杆，则默认向面朝反方向后空翻拉开距离
         const rollX = Math.hypot(input.x, input.y) > 0.1 ? dirX : -Math.cos(player.aimAngle);
@@ -4849,7 +4817,7 @@
           icon: '[px:fire]',
           color: '#f97316',
           stageName: '恶魔熔火地牢',
-          desc: '【恶魔地牢专属】每 2.2 秒自动向周围发射 4 颗追踪地狱火球，命中引发烈焰爆破！'
+          desc: '完整秘宝：每2.2秒发射3枚贯穿火弹，伤害随玩家等级成长。'
         },
         {
           id: 'dungeon_thorn',
@@ -4857,7 +4825,7 @@
           icon: '[px:chain]',
           color: '#ef4444',
           stageName: '恶魔熔火地牢',
-          desc: '【恶魔地牢专属】受到的所有伤害降低 20%，且每 2.8 秒向周身爆发一圈高伤黑曜石火环！'
+          desc: '完整秘宝：护甲增加21个百分点（总护甲最高65%）；每2.2秒爆发半径125的荆棘波。'
         },
         {
           id: 'dungeon_horn',
@@ -4865,7 +4833,7 @@
           icon: '[px:blood]',
           color: '#dc2626',
           stageName: '恶魔熔火地牢',
-          desc: '【恶魔地牢专属】暴击率提升 +18%，且每 2.5 秒召唤一道恶魔赤雷劈击附近最强魔物并回复3点生命！'
+          desc: '完整秘宝：暴击率增加18个百分点；每2.2秒审判附近目标并恢复3点生命。'
         }
       ],
       tundra: [
@@ -4875,7 +4843,7 @@
           icon: '[px:crown]',
           color: '#38bdf8',
           stageName: '极寒永冬冻原',
-          desc: '【极寒冻原专属】每 2.6 秒在周身爆发极寒冰霜新星，直接冻结周围敌人 1.8 秒并造成碎冰伤害！'
+          desc: '完整秘宝：每2.2秒释放半径140的寒冰波，普通敌人冻结1.9秒，首领仅受寒霜。'
         },
         {
           id: 'tundra_totem',
@@ -4883,7 +4851,7 @@
           icon: '[px:wolf]',
           color: '#7dd3fc',
           stageName: '极寒永冬冻原',
-          desc: '【极寒冻原专属】常驻移动速度 +26%，每 2.2 秒向前方扇形释放 3 道极寒霜狼冲击波撕咬敌群！'
+          desc: '完整秘宝：移速约提高29%；每2.2秒发射3道高穿透冰锥。'
         },
         {
           id: 'tundra_prism',
@@ -4891,7 +4859,7 @@
           icon: '[px:gem]',
           color: '#60a5fa',
           stageName: '极寒永冬冻原',
-          desc: '【极寒冻原专属】每 7.5 秒生成 32 点极光护盾，且战技与绝招冷却恢复加快 10%~24%（随等级提升，不含圣盾）！'
+          desc: '完整秘宝：战技与大招冷却额外推进24%；每7.5秒把护盾补至至少32点，不加速圣盾。'
         }
       ],
       graveyard: [
@@ -4901,7 +4869,7 @@
           icon: '[px:lantern]',
           color: '#34d399',
           stageName: '幽冥血月墓园',
-          desc: '【幽冥墓园专属】每 2.0 秒自动释放 4 团幽冥鬼火追踪轰炸附近魔物，且金币与经验获取 +25%！'
+          desc: '完整秘宝：每2.2秒发射3团魂火，金币额外收益30%。'
         },
         {
           id: 'grave_cloak',
@@ -4909,7 +4877,7 @@
           icon: '[px:coffin]',
           color: '#f43f5e',
           stageName: '幽冥血月墓园',
-          desc: '【幽冥墓园专属】移动速度 +20%，每 2.8 秒化出猩红血蝠群汲取周围魔物生命并恢复自身 6 点生命！'
+          desc: '完整秘宝：移速约提高23%；每2.2秒释放半径120的血蝠波并恢复7点生命。'
         },
         {
           id: 'grave_ring',
@@ -4917,7 +4885,7 @@
           icon: '[px:skull]',
           color: '#c084fc',
           stageName: '幽冥血月墓园',
-          desc: '【幽冥墓园专属】每 2.6 秒召唤自爆骸骨亡灵冲向附近怪群，引发大范围白骨锁链殉爆！'
+          desc: '完整秘宝：每2.2秒在附近目标处引发半径105的白骨爆破。'
         }
       ]
     };
@@ -4999,6 +4967,20 @@
       if (hintEl) hintEl.innerText = `本局刷新 ${spawnCount} 件秘宝[px:star]`;
     }
 
+    // Preserve the exact old Lv.5 progression, including integer rounding on movement bonuses.
+    var RelicPower={
+      complete(r,fresh=false){const from=fresh?0:Math.max(1,Math.min(5,Math.floor(r.level||1))),armor=player.armor;
+        for(let lv=from+1;lv<=5;lv++){
+          if(r.id==='dungeon_thorn')player.armor=Math.min(.65,player.armor+(lv===1?.05:.04));
+          if(r.id==='dungeon_horn')player.critChance+=lv===1?.04:.035;
+          if(r.id==='tundra_totem')player.speed=Math.round(player.speed*(lv===1?1.06:1.05));
+          if(r.id==='grave_cloak')player.speed=Math.round(player.speed*(lv===1?1.05:1.04));
+        }
+        if(r.id==='dungeon_thorn'&&(fresh||Number.isFinite(r.armorGranted)))r.armorGranted=(fresh?0:r.armorGranted)+player.armor-armor;
+        r.level=5;r.maxLevel=5;r.limitBreak=r.limitBreak||0;
+      }
+    };
+
     function equipMapRelic(relic) {
       if (player.mapRelics.some(r => r.id === relic.id)) {
         healPlayer(40);
@@ -5015,11 +4997,7 @@
       relic.maxLevel = 5;
       relic.limitBreak = 0;
       player.mapRelics.push(relic);
-      // 初始 Lv.1 常驻属性加成（后续可通过升级选卡升至 Lv.5 并开启界限突破！）
-      if (relic.id === 'dungeon_thorn') player.armor = Math.min(0.65, player.armor + 0.05);
-      if (relic.id === 'dungeon_horn')  player.critChance += 0.04;
-      if (relic.id === 'tundra_totem')  player.speed = Math.round(player.speed * 1.06);
-      if (relic.id === 'grave_cloak')   player.speed = Math.round(player.speed * 1.05);
+      RelicPower.complete(relic,true);
 
       audio.playSuperWeapon();
       GameState.screenShake = 16;
@@ -6608,8 +6586,8 @@
       const selected = UpgradeDraft.draw(pool, excludeIds);
       const synergyCount=SYNERGY_KEYS.filter(k=>player.passives[k]>0).length;
       const equipCount=['critGlove','swiftBoots','lavaHeart','frostAura','pierceQuiver'].filter(k=>player.passives[k]>0).length;
-      const locks=[];if(synergyCount>=2)locks.push('流派已满，未学的新流派不会出现');if(equipCount>=3)locks.push('配件已满，只能升级已有配件');
-      document.getElementById('upgrade-draft-hint').textContent=(pool.length<=3?'已显示全部可选项':'刷新优先换成未出现的选项')+' · 流派 '+synergyCount+'/2 · 配件 '+equipCount+'/3'+(locks.length?'。'+locks.join('；'):'');
+      const locks=[];if(synergyCount>=3)locks.push('流派已满，未学的新流派不会出现');if(equipCount>=3)locks.push('配件已满，只能升级已有配件');
+      document.getElementById('upgrade-draft-hint').textContent=(pool.length<=3?'已显示全部可选项':'刷新优先换成未出现的选项')+' · 流派 '+synergyCount+'/3 · 配件 '+equipCount+'/3'+(locks.length?'。'+locks.join('；'):'');
       if (!selected.length) selected.push({id:'fallback',type:'passive',icon:'[px:arm]',name:'坚韧成长',desc:'最大生命 +5',apply:()=>{player.maxHp+=5;updateHpUI();}});
       const generation = ++UpgradeChoice.generation; let chosen = false;
       lastShownUpgradeIds = selected.map(c => c.id);
@@ -6862,12 +6840,12 @@
       const moveStartX=player.x,moveStartY=player.y;
       player.x += player.vx * dt;
       player.y += player.vy * dt;Arena.clamp(player,player.radius);
-      NewSynergies.tick(dt);
       updateActiveObstacles();
       // 玩家非冲刺状态下受到围栏、冰块、树木等实体地形阻挡，需走位绕行！
       if (!player.isDowned && !UpgradeChoice.active && !player.skills.skill1.isDashing) {
         resolveEntityObstacleCollision(player, player.radius);
       }
+      NewSynergies.tick(dt);
       FireTrail.move(moveStartX,moveStartY,player.x,player.y,dt);
       if (moveLen > 0.05) player.animTimer += dt * 10;
       if (player.swingAnimTimer > 0) player.swingAnimTimer = Math.max(0, player.swingAnimTimer - dt);
@@ -10634,7 +10612,7 @@
       showToast(`[px:refresh] 已重置所有圣殿天赋，全额退回 ${refund} 枚金币！`);
     });
 
-    // 刷新左上角【流派被动槽(上限2)】与【奇物装备槽(上限3)】显示
+    // 刷新左上角【流派被动槽(上限3)】与【奇物装备槽(上限3)】显示
     function updateLoadoutHUD() {
       const pass = player.passives;
       const chg = player.skills && player.skills.charge;
@@ -10655,9 +10633,9 @@
       ];
       const activeSyns = synMeta.filter(m => pass[m.key] > 0);
       const synGroupLabel = document.querySelector('#loadout-synergy-group > span');
-      if (synGroupLabel) synGroupLabel.innerText = `流派(${activeSyns.length}/2):`;
+      if (synGroupLabel) synGroupLabel.innerText = `流派(${activeSyns.length}/3):`;
 
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 3; i++) {
         const slotEl = document.getElementById(`syn-slot-${i}`);
         if (!slotEl) continue;
         if (activeSyns[i]) {
@@ -10705,8 +10683,8 @@
           const rLv = relics[i].level || 1;
           const rLb = relics[i].limitBreak || 0;
           rSlot.className = 'loadout-slot filled-relic';
-          rSlot.innerHTML = `${relics[i].icon}<span class="slot-lvl">L${rLv}${rLb ? '+' + rLb : ''}</span>`;
-          rSlot.title = `${relics[i].name} (Lv.${rLv}/5): ${relics[i].desc}`;
+          rSlot.innerHTML = `${relics[i].icon}<span class="slot-lvl">满${rLb ? '+' + rLb : ''}</span>`;
+          rSlot.title = `${relics[i].name} (完整秘宝): ${relics[i].desc}`;
         } else {
           rSlot.className = 'loadout-slot';
           rSlot.innerHTML = '[px:plus]';
@@ -10783,15 +10761,15 @@
             fireTrail:['业火流星',[['火径采样','每40 px或移动.35秒；冲刺、闪现沿路铺火'],['火径基数 / 半径 / 寿命',`${14*lv} / 36 px / 2.2秒`],['同一目标伤害间隔','.3秒（自身重叠火径共用）'],['燃烧尸爆',`${14+8*lv} 基数 / 半径46 px`],['尸爆间隔','.5 秒']]],
             emberEcho:['余烬回响',[['触发','每4次主命中'],['爆破基数 / 半径',`${12+8*lv} / ${56+8*Math.min(6,lv)} px`],['触发间隔','.8 秒']]],
             stellarBastion:['星辉壁垒',[['护盾补充',`${10*lv} / 每6秒有效战斗时间`],['护盾上限',Math.round(player.maxHp*.3)+10*lv]]],
-            huntPulse:['追猎脉冲',[['触发','沿行走方向锥刺；站立不触发，闪现与冲刺计入'],['移动触发距离',HuntPulse.spec(lv,player.speed).need+' px'],['当前移速参考 / 伤害基数',`${player.speed} px/秒 / ${n(HuntPulse.spec(lv,player.speed).damage)}`],['参考长度 / 末端半宽',`${n(HuntPulse.spec(lv,player.speed).len)} / ${n(HuntPulse.spec(lv,player.speed).width)} px`],['参考最短间隔',n(HuntPulse.spec(lv,player.speed).cd)+' 秒'],['高速成长','实际速度÷180，0.5～3.5倍档；越快伤害越高、范围越大、间隔越短']]]
-          };[title]=values[key];for(const row of values[key][1])add(...row);notes.push('流派最多选择两种。详情按当前等级计算；未学习的预览不会产生战斗效果。');
+            huntPulse:['追猎脉冲',[['触发','沿行走方向锥刺；站立不触发'],['每次锥刺数量',HuntPulse.spec(lv,player.speed).count+' 道'],['位移结束连发','闪现/瞬步/快速突进结束，在落点连发3轮，间隔0.09秒'],['移动触发距离',HuntPulse.spec(lv,player.speed).need+' px'],['当前移速参考 / 伤害基数',`${player.speed} px/秒 / ${n(HuntPulse.spec(lv,player.speed).damage)}`],['参考长度 / 末端半宽',`${n(HuntPulse.spec(lv,player.speed).len)} / ${n(HuntPulse.spec(lv,player.speed).width)} px`],['参考最短间隔',n(HuntPulse.spec(lv,player.speed).cd)+' 秒'],['高速成长','实际速度÷180，0.5～3.5倍档；越快伤害越高、范围越大、间隔越短']]]
+          };[title]=values[key];for(const row of values[key][1])add(...row);notes.push('流派最多选择三种。详情按当前等级计算；未学习的预览不会产生战斗效果。');
         }else if(kind==='equip'){
           const owned=p[key]||0,lv=owned||1,lb=p.equipLB?.[key]||0;status=owned?`已装备 Lv.${owned}/5${lb?' · 突破+'+lb:''}`:'未装备 · 以下为Lv.1预览';
           const values={critGlove:['狂暴手套',[['装备增加暴击率',this.pct(lv*.03+lb*.02)],['装备增加暴伤',n(lv*.08+lb*.12)+' 倍'],['当前总暴击率 / 暴伤',`${this.pct(player.critChance)} / ${n(player.critMultiplier)} 倍`]]],swiftBoots:['疾行之靴',[['每级移速成长','×1.04（逐级取整）'],['装备增加拾取半径',lv*6+lb*10+' px'],['当前总移速',player.speed+' px/秒'],['当前总拾取半径',player.magnetRange+' px']]],lavaHeart:['熔岩之心',[['装备增加生命上限',lv*8+lb*15],['热浪伤害基数',10+6*lv+8*lb],['热浪半径 / 间隔',`${80+5*lv} px / 1.2秒`]]],frostAura:['极寒光环',[['光环半径',75+10*lv+' px'],['敌人减速',this.pct(1-Math.max(.45,.84-.06*lv))]]],pierceQuiver:['穿甲箭袋',[['普攻提升倍率',n(Math.pow(1.05,lv)*Math.pow(1.08,lb))+' 倍'],['普通箭矢穿透参数',2+lv+lb+(player.skills.attack.isEvolved?4:0)],['当前普攻基数',player.skills.attack.damage]] ]};
           [title]=values[key];for(const row of values[key][1])add(...row);notes.push('装备最多三件。当前总属性包含其他来源；装备贡献单独列出，不会在查看时重复添加。');
         }else if(kind==='relic'){
-          const spec=Object.values(STAGE_SPECIAL_RELICS).flat().find(r=>r.id===key),r=(player.mapRelics||[]).find(r=>r.id===key),lv=r?.level||1,lb=r?.limitBreak||0,scale=(.55+.22*lv)*(1+.25*lb),level=player.level;
-          title=spec.name;status=r?`已装备 Lv.${lv}/5${lb?' · 突破+'+lb:''}`:'未装备 · 以下为Lv.1预览';
+          const spec=Object.values(STAGE_SPECIAL_RELICS).flat().find(r=>r.id===key),r=(player.mapRelics||[]).find(r=>r.id===key),lv=r?.level||5,lb=r?.limitBreak||0,scale=(.55+.22*lv)*(1+.25*lb),level=player.level;
+          title=spec.name;status=r?`已装备 · 完整秘宝${lb?' · 旧存档突破+'+lb:''}`:'未装备 · 拾取即完整效果';
           const values={
             dungeon_skull:[['飞弹数量',1+Math.floor(lv/2)],['每枚伤害基数',Math.round((16+2.5*level)*scale)],['弹速 / 寿命','420 px/秒 / .55秒']],
             dungeon_thorn:[['伤害基数',Math.round((24+4*level)*scale)],['半径',95+6*lv+' px'],['护甲贡献',this.pct(.05+(lv-1)*.04)]],
@@ -10802,7 +10780,7 @@
             grave_lantern:[['魂弹数量',1+Math.floor(lv/2)],['每枚伤害基数',Math.round((18+2.5*level)*scale)],['金币额外收益',this.pct(.06*lv)]],
             grave_cloak:[['伤害基数',Math.round((20+3*level)*scale)],['半径',95+5*lv+' px'],['自疗',2+lv],['移速倍率',n(1.05*Math.pow(1.04,lv-1))+' 倍']],
             grave_ring:[['伤害基数',Math.round((32+4.5*level)*scale)],['索敌 / 爆破半径',`240 / ${75+6*lv} px`]]
-          };for(const row of values[key])add(...row);if(key!=='tundra_prism')add('脉冲间隔','2.2 秒');notes.push('最多携带两件地图秘宝。伤害基数已计秘宝等级、突破和当前玩家等级的秘宝公式；实际命中仍受通用增伤与暴击影响。');
+          };for(const row of values[key])add(...row);if(key!=='tundra_prism')add('脉冲间隔','2.2 秒');notes.push('最多携带两件地图秘宝。拾取即原Lv.5数值，不需要升级。伤害随当前玩家等级成长；实际命中仍受通用增伤与暴击影响。');
         }
         return{title,status,rows,notes};
       },
@@ -10940,7 +10918,7 @@
         ];
         synBranches.forEach(b => {
           const curLv = pass[b.key] || 0;
-          const isLockedByCap = curLv === 0 && activeCount >= 2;
+          const isLockedByCap = curLv === 0 && activeCount >= 3;
           const pips = b.nodes.map((desc, idx) => {
             const reached = curLv >= idx + 1;
             return `<span class="tree-node-pip ${reached ? 'active' : ''}">${desc} ${reached ? '[px:check]' : ''}</span>`;
@@ -10952,7 +10930,7 @@
             <div class="tree-header">
               <span>${b.icon} ${b.name}</span>
               <span style="color:${curLv > 0 ? '#4ade80' : (isLockedByCap ? '#ef4444' : '#94a3b8')};">
-                ${curLv > 0 ? `已激活 Lv.${curLv}/3` : (isLockedByCap ? '[px:lock] 流派槽已满(2/2)锁定' : '未学习 (可升级获取)')}
+                ${curLv > 0 ? `已激活 Lv.${curLv}/3` : (isLockedByCap ? '[px:lock] 流派槽已满(3/3)锁定' : '未学习 (可升级获取)')}
               </span>
             </div>
             <div class="tree-nodes-row">${pips}</div>
@@ -11019,7 +10997,7 @@
               <div class="tree-header">
                 <span>${rSpec.icon} ${rSpec.name} <span style="font-size:10px;color:#94a3b8;">[${rSpec.stageName}]</span></span>
                 <span style="color:${isEquipped ? '#fde047' : (isOnMap ? '#4ade80' : '#94a3b8')};">
-                  ${isEquipped ? `[px:check] 已装备 Lv.${curRelics.find(r => r.id === rSpec.id).level || 1}/5${curRelics.find(r => r.id === rSpec.id).limitBreak ? ' [突破+' + curRelics.find(r => r.id === rSpec.id).limitBreak + ']' : ''}` : (isOnMap ? `[px:star] 距你 ${((Math.hypot(mapRelicDrops.find(d => d.id === rSpec.id).x - player.x, mapRelicDrops.find(d => d.id === rSpec.id).y - player.y) / 10000)).toFixed(2)} 公里 (看小地图方向拾取)` : '未刷新')}
+                  ${isEquipped ? `[px:check] 已装备 · 完整秘宝${curRelics.find(r => r.id === rSpec.id).limitBreak ? ' [突破+' + curRelics.find(r => r.id === rSpec.id).limitBreak + ']' : ''}` : (isOnMap ? `[px:star] 距你 ${((Math.hypot(mapRelicDrops.find(d => d.id === rSpec.id).x - player.x, mapRelicDrops.find(d => d.id === rSpec.id).y - player.y) / 10000)).toFixed(2)} 公里 (看小地图方向拾取)` : '未刷新')}
                 </span>
               </div>
               <div style="font-size:11px; color:#cbd5e1;">秘宝特效：${rSpec.desc}</div>
@@ -11533,6 +11511,7 @@
       if(GameState.selectedHero==='engineer')EngineerKit.normalizeSkills();
       if (sp.passives) Object.assign(player.passives, sp.passives);
       player.mapRelics = sp.mapRelics || [];
+      for(const relic of player.mapRelics)RelicPower.complete(relic);
       Object.assign(player,Arena.safe(player.x,player.y,player.radius+8));
 
       lastPlayerChunkKey = '';
@@ -15913,7 +15892,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 22, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 23, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
@@ -16512,8 +16491,20 @@
       bossCatalog(){return Object.entries(BIOME_BOSS_ROSTER).flatMap(([biome,rows])=>Object.entries(rows).map(([minute,cfg])=>({...cfg,id:biome+'_'+minute,biome,minute:Number(minute)})));},
       openBook(tab='heroes'){this.bookPaused=GameState.isPaused;GameState.isPaused=GameState.isStarted&&!GameState.isOver?true:GameState.isPaused;CoopSocial.clearInput();document.getElementById('campaign-modal').style.display='flex';this.renderBook(tab);},
       closeBook(){document.getElementById('campaign-modal').style.display='none';GameState.isPaused=this.bookPaused||false;CombatKeys.focus();},
-      renderBook(tab){const p=this.permanent(),box=document.getElementById('campaign-content');document.querySelectorAll('[data-book-tab]').forEach(b=>b.classList.toggle('active-toggle',b.dataset.bookTab===tab));if(tab==='achievements'){const all=this.achievements();box.innerHTML='<p class="campaign-note">'+Object.keys(p.achievements).length+' / '+all.length+' · 达成自动发放金币，每项只奖励一次。存档码包含成就与图鉴。</p><div class="campaign-grid">'+all.map(a=>'<article class="campaign-card '+(p.achievements[a.id]?'achieved':'')+'"><strong>'+a.name+'</strong><div>'+Math.floor(Math.min(a.target,this.progress(a))).toLocaleString()+' / '+a.target.toLocaleString()+'</div><progress max="'+a.target+'" value="'+Math.min(a.target,this.progress(a))+'"></progress><div>'+ (p.achievements[a.id]?'已获得':'金币 +'+a.reward)+'</div></article>').join('')+'</div>';return;}
-        const rows=tab==='heroes'?Object.entries(HERO_CONFIGS).map(([id,h])=>({id,name:h.name,icon:'hero-'+id,hero:true,unlocked:true,desc:h.desc||h.subtitle||({warrior:'近战连斩与流血引爆，剑阵护身，突袭穿过敌群。',mage:'远程奥术连锁、冰闪控场、黑洞聚怪与群星坠落。',ranger:'穿透毒箭与后跃陷阱；走位接回飞轮，连续刷新战技。',engineer:'锁定钉积攒热能，磁雷聚怪，部署炮网与成长浮游炮。',healer:'圣光直接审判、蓄力绽放、群体治疗护盾与双倍救援。'})[id],stats:'生命 '+h.maxHp+' · 移速 '+h.speed})):tab==='bosses'?this.bossCatalog().map(b=>({...b,name:b.title,type:b.key,unlocked:Boolean(p.bosses[b.id]),desc:'战胜后可在神秘商人处雇佣。'+(BossCombat.profiles?.[b.id]?.title||''),stats:'基础生命 '+b.hp+' · 伤害 '+b.dmg})):Object.entries(MONSTER_SPECS).map(([type,m])=>({id:type,type,name:this.monsterName(type),unlocked:Boolean(p.seen[type]),desc:'阶级 '+m.tier+(m.isFlying?' · 飞行':' · 地面')+' · 经验 '+m.exp,stats:'基础生命 '+m.hp+' · 伤害 '+m.dmg+' · 移速 '+m.speed}));box.innerHTML='<p class="campaign-note">'+(tab==='bosses'?'击败解锁，18位首领分别收录；未解锁不能雇佣。':tab==='monsters'?'在战场见过的魔物会收录；数值为未计时间成长的基础值。':'选择适合自己的战斗方式。')+'</p><div class="campaign-grid">'+rows.map(r=>'<article class="campaign-card '+(!r.unlocked?'locked':'')+'"><div class="book-portrait" data-portrait="'+(r.hero?'hero:'+r.id:r.type)+'">'+(r.unlocked?'':'?')+'</div><strong>'+this.esc(r.unlocked?r.name:'未解锁')+'</strong><p>'+this.esc(r.unlocked?r.desc:'继续探索血夜')+'</p><small>'+this.esc(r.unlocked?r.stats:'')+'</small></article>').join('')+'</div>';for(const el of box.querySelectorAll('.book-portrait')){if(el.parentElement.classList.contains('locked'))continue;const id=el.dataset.portrait,base=id.startsWith('hero:')?id.slice(5):id==='mage'?'mage_en':id,sp=SpriteCache[base+'_0'];if(sp){const cv=document.createElement('canvas');cv.width=cv.height=80;const c=cv.getContext('2d');c.imageSmoothingEnabled=false;const img=sp.normal||sp;c.drawImage(img,(80-img.width)/2,(80-img.height)/2);el.append(cv);}}},
+      achievementInfo(a){const t=a.target.toLocaleString(),methods={
+        kills:'累计亲自击杀'+t+'只魔物。',damage:'累计对魔物造成'+t+'点实际伤害。',healing:'累计恢复'+t+'点有效生命；满血溢出不计。',shielding:'通过祷师支援累计新增'+t+'点护盾。',rescues:'累计成功救起倒地队友'+t+'次。',uniqueBosses:'战胜'+t+'种不同首领；重复击败同一位不增加。',wins:'累计通关'+t+'局战役。',survival:'在一局中坚持'+(a.target/60)+'分钟。',maxLevel:'在一局中达到Lv.'+t+'。',purchases:'在神秘商人处完成'+t+'次交易。',hires:'累计雇佣'+t+'位已解锁首领友军。',removals:'在商人处付费卸下一项技能、流派、装备或秘宝。',coop:'完成'+t+'局多人战役，胜负均可。',uniqueHeroes:'分别使用全部五位角色进入战场。',heroWins:'分别用五位角色各通关一次。',awakened:'在一局中同时拥有'+t+'项觉醒技能。',maxed:'在一局中使五项技能达到五级。',relics:'在一局中同时携带两件地图秘宝。',splus:'通关并获得本局唯一的S+评定。'};
+        const icons={kills:'sword',damage:'burst',healing:'heart-green',shielding:'shield',rescues:'rescue',uniqueBosses:'boss',wins:'trophy',survival:'clock',maxLevel:'star',purchases:'shop',hires:'ally',removals:'gear',coop:'ally',uniqueHeroes:'book',heroWins:'trophy',awakened:'star',maxed:'star',relics:'chest',splus:'trophy'};
+        return{method:methods[a.key]||a.name,icon:icons[a.key]||'trophy',progress:a.key==='survival'?(Math.min(a.target,this.progress(a))/60).toFixed(1)+' / '+a.target/60+' 分钟':Math.floor(Math.min(a.target,this.progress(a))).toLocaleString()+' / '+t};},
+      bookRows(tab){const p=this.permanent();if(tab==='heroes')return Object.entries(HERO_CONFIGS).map(([id,h])=>({id,name:h.name,portrait:'hero:'+id,unlocked:true,desc:({warrior:'近战连斩与流血引爆，剑阵护身，突袭穿过敌群。',mage:'远程奥术连锁、冰闪控场、黑洞聚怪与群星坠落。',ranger:'穿透毒箭与后跃陷阱；接回飞轮连续刷新战技。',engineer:'锁定钉积攒热能，磁雷聚怪，部署炮网与成长浮游炮。',healer:'圣光直接审判，群体治疗护盾，救援速度加倍。'})[id],stats:[['基础生命',h.maxHp],['移动速度',h.speed+' px/秒'],['基础护甲',Math.round(h.armor*100)+'%'],['基础暴击',Math.round(h.critChance*100)+'%']],skills:Object.values(h.initSkills()).filter(s=>Number.isFinite(s.cd)).map(s=>s.name+'：'+(Number.isFinite(s.damage)?'伤害基数 '+s.damage+'，':'')+'冷却 '+s.cd+' 秒')}));
+        if(tab==='bosses')return this.bossCatalog().map(b=>({id:b.id,name:b.title.split(' · ').at(-1),portrait:b.key,unlocked:Boolean(p.bosses[b.id]),desc:'战胜后解锁图鉴与商人雇佣资格。'+b.title,stats:[['基础生命',b.hp],['接触伤害',b.dmg],['移动速度',b.speed+' px/秒'],['出现时间',b.minute+' 分钟']]}));
+        return Object.entries(MONSTER_SPECS).map(([type,m])=>({id:type,name:this.monsterName(type),portrait:type==='mage'?'mage_en':type,unlocked:Boolean(p.seen[type]),desc:'第'+m.tier+'阶'+(m.isFlying?'飞行':'地面')+'魔物。',stats:[['基础生命',m.hp],['接触伤害',m.dmg],['移动速度',m.speed+' px/秒'],['基础经验',m.exp]]}));
+      },
+      portrait(el,id){const base=id.startsWith('hero:')?id.slice(5):id,sp=SpriteCache[base+'_0'];if(!sp){el.innerHTML='[px:enemy-dot]';return;}const cv=document.createElement('canvas');cv.width=cv.height=32;const c=cv.getContext('2d'),img=sp.normal||sp;c.imageSmoothingEnabled=false;const scale=Math.min(32/img.width,32/img.height);c.drawImage(img,Math.round((32-img.width*scale)/2),Math.round((32-img.height*scale)/2),Math.round(img.width*scale),Math.round(img.height*scale));el.append(cv);},
+      selectBook(id){const row=this.bookEntries?.find(r=>r.id===id);if(!row?.unlocked)return;this.bookSelection=id;for(const b of document.querySelectorAll('[data-codex-id]')){const active=b.dataset.codexId===id;b.classList.toggle('selected',active);b.setAttribute('aria-expanded',String(active));}const panel=document.getElementById('book-detail');panel.hidden=false;panel.innerHTML='<div class="codex-detail-title">'+this.esc(row.name)+'</div><p>'+this.esc(row.desc)+'</p><div class="codex-stats">'+row.stats.map(([k,v])=>'<span>'+this.esc(k)+' <b>'+this.esc(v)+'</b></span>').join('')+'</div>'+(row.skills?'<div class="codex-skill-list">'+row.skills.map(v=>'<div>'+this.esc(v)+'</div>').join('')+'</div>':'')+'<small>基础数值，不含时间成长、天赋与局内增益。</small>';panel.scrollIntoView({block:'nearest'});},
+      renderBook(tab){const p=this.permanent(),box=document.getElementById('campaign-content');this.bookSelection=null;document.querySelectorAll('[data-book-tab]').forEach(b=>b.classList.toggle('active-toggle',b.dataset.bookTab===tab));
+        if(tab==='achievements'){const all=this.achievements();box.innerHTML='<p class="campaign-note">'+Object.keys(p.achievements).length+' / '+all.length+' · 达成自动发金币，每项只奖励一次。</p><div class="achievement-list">'+all.map(a=>{const info=this.achievementInfo(a),done=Boolean(p.achievements[a.id]);return'<article class="campaign-card achievement-row '+(done?'achieved':'')+'"><span class="achievement-icon">[px:'+info.icon+']</span><div class="achievement-body"><strong>'+a.name+'</strong><div class="achievement-method">'+info.method+'</div><div class="achievement-meta"><span>'+info.progress+'</span><span>[px:coin] '+a.reward+(done?' · 已领取':'')+'</span></div><progress max="'+a.target+'" value="'+Math.min(a.target,this.progress(a))+'" aria-label="'+a.name+'进度"></progress></div></article>';}).join('')+'</div>';return;}
+        this.bookEntries=this.bookRows(tab);box.innerHTML='<p class="campaign-note">点击小图标查看描述和详细数值。'+(tab==='bosses'?'战胜首领后解锁。':tab==='monsters'?'遇见魔物后解锁。':'')+'</p><section id="book-detail" class="codex-detail" hidden aria-live="polite"></section><div class="codex-grid">'+this.bookEntries.map(r=>'<button type="button" class="campaign-card codex-entry '+(!r.unlocked?'locked':'')+'" data-codex-id="'+this.esc(r.id)+'" aria-expanded="false" aria-controls="book-detail" '+(!r.unlocked?'disabled':'')+'><span class="codex-icon" '+(r.unlocked?'data-portrait="'+this.esc(r.portrait)+'"':'')+'>'+(!r.unlocked?'[px:lock]':'')+'</span><span><strong>'+this.esc(r.unlocked?r.name:'未解锁')+'</strong><small>'+(r.unlocked?'点击详情':'继续探索')+'</small></span></button>').join('')+'</div>';for(const e of box.querySelectorAll('[data-portrait]'))this.portrait(e,e.dataset.portrait);for(const b of box.querySelectorAll('[data-codex-id]'))b.onclick=()=>this.selectBook(b.dataset.codexId);
+      },
       monsterName(key){return({hellknight:'地狱骑士',voidbug:'虚空虫',bone_knight:'白骨骑士',mammoth:'霜原猛犸',imp:'小恶魔',bat:'火蝠',icewolf:'冰狼',snow_owl:'雪鸮',zombie:'腐尸',crow:'冥鸦',hellhound:'地狱猎犬',fire_skull:'焰骨头颅',archer:'骷髅射手',frost_spider:'霜蛛',ghoul:'食尸鬼',skeleton:'骷髅卫士',mage:'邪术师',succubus:'魅魔',gargoyle:'石像鬼',yeti:'雪怪',wraith:'幽魂',icemage:'冰法师',valkyrie:'堕落女武神',reaper:'收割者',golem:'魔像',abomination:'憎恶',revenant:'亡魂',lich:'巫妖'})[key]||key;},
       tick(dt){if(!GameState.isStarted||GameState.isOver||WorldCoop.simulationPaused())return;this.ensure();if(WorldCoop.authority()){for(const p of WorldCoop.active()?WorldCoop.actors():[{id:CoopManager.myPeerId}]){const r=this.stat(p.id);r.seconds+=dt;if(p.id===CoopManager.myPeerId){r.hero=GameState.selectedHero;r.name=CoopManager.myName||'猎手';}}CampMarket.tick(dt);this.tickFriends(dt);}if(performance.now()-this.lastPermanent>2000){this.lastPermanent=performance.now();this.syncPermanent();}CampMarket.hint();},
       networkTick(){const now=performance.now();for(const [id,r]of this.receipts)if(now-r.last>400){r.last=now;WorldCoop.toHost(r.pkt);}for(const [id,v]of this.support)if(now-v.at>15000)this.support.delete(id);if(this.ended&&!this.ended.settled&&WorldCoop.authority()&&Date.now()-this.ended.at>1800){this.ended.rows=this.grades(this.ended.victory);this.ended.settled=true;this.syncPermanent();this.renderEnd();if(WorldCoop.active())WorldCoop.broadcastWorld();}CampMarket.networkTick();},
@@ -16550,7 +16541,7 @@
       apply(tx){let ok=this.applied.has(tx.transaction);if(!ok&&tx.owner===CoopManager.myPeerId&&!GameState.isOver&&SaveManager.data.gold>=tx.price){const offer=tx.id,card=generateUpgradePool().find(c=>c.id===offer),canHire=offer.startsWith('hire:')&&Campaign.permanent().bosses[offer.slice(5)],canRemove=offer.startsWith('remove:')&&this.removals().some(r=>r.id===offer);if(card||canHire||canRemove){SaveManager.data.gold-=tx.price;this.applied.add(tx.transaction);if(card)card.apply();else if(canRemove)this.remove(offer);SaveManager.save();updateLoadoutHUD();updateHpUI();ok=true;showToast('[px:coin] '+tx.name+' · -'+tx.price+' 金币');}}this.pending=null;this.render();const pkt={type:'WORLD_R22_SHOP_RECEIPT',id:tx.transaction,ok};if(tx.solo)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId},true);else if(CoopManager.isHost)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId});else Campaign.receipts.set(pkt.id,{pkt,last:-Infinity});return ok;},
       acceptReceipt(p,solo=false){const tx=this.transactions.get(p.id);if(!tx||tx.owner!==p.peerId)return;const ack=()=>{if(!solo)CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_ACK',targetPeerId:p.peerId,id:p.id}));};if(tx.done){ack();return;}tx.done=true;if(p.ok===true){const r=Campaign.stat(p.peerId);r.purchases++;if(tx.id.startsWith('hire:')&&Campaign.hire(p.peerId,tx.id.slice(5)))r.hires++;if(tx.id.startsWith('remove:'))r.removals++;}else{const m=Campaign.merchants.find(m=>m.id===tx.merchant);if(m?.lease)m.lease.balance+=tx.price;}this.reply(p.peerId,{bought:true,requestId:p.id},solo);ack();},
       remove(id){const [,kind,key]=id.split(':'),p=player.passives,lv=p[key]||0,lb=p.equipLB?.[key]||0;if(kind==='skill'){const skill=HERO_CONFIGS[GameState.selectedHero].initSkills()[key];skill.damage=Math.round(skill.damage*(1+(SaveManager.data.talents.might||0)*.06));Object.assign(player.skills[key],skill,{disabled:true,level:0,timer:0,isEvolved:false});if(key==='skill1')player.skills.skill1.isDashing=false;if(key==='skill2'){if(GameState.selectedHero==='healer')HealerKit.localFields=[];if(GameState.selectedHero==='engineer')for(const g of EngineerKit.turrets())g.life=0;}return;}
-        if(kind==='relic'){const r=player.mapRelics.find(r=>r.id===key);if(!r)return;const n=r.level||1;if(key==='dungeon_thorn')player.armor=Math.max(HERO_CONFIGS[GameState.selectedHero].armor,player.armor-(.05+.04*(n-1)));if(key==='dungeon_horn')player.critChance=Math.max(0,player.critChance-(.04+.035*(n-1)));if(key==='tundra_totem')player.speed=Math.round(player.speed/(1.06*Math.pow(1.05,n-1)));if(key==='grave_cloak')player.speed=Math.round(player.speed/(1.05*Math.pow(1.04,n-1)));player.mapRelics=player.mapRelics.filter(r=>r.id!==key);return;}
+        if(kind==='relic'){const r=player.mapRelics.find(r=>r.id===key);if(!r)return;const n=r.level||1;if(key==='dungeon_thorn')player.armor=Math.max(HERO_CONFIGS[GameState.selectedHero].armor,player.armor-(r.armorGranted??(.05+.04*(n-1))));if(key==='dungeon_horn')player.critChance=Math.max(0,player.critChance-(.04+.035*(n-1)));if(key==='tundra_totem')player.speed=Math.round(player.speed/(1.06*Math.pow(1.05,n-1)));if(key==='grave_cloak')player.speed=Math.round(player.speed/(1.05*Math.pow(1.04,n-1)));player.mapRelics=player.mapRelics.filter(r=>r.id!==key);return;}
         if(key==='critGlove'){player.critChance=Math.max(0,player.critChance-lv*.03-lb*.02);player.critMultiplier=+(player.critMultiplier-lv*.08-lb*.12).toFixed(2);}if(key==='swiftBoots'){player.speed=Math.round(player.speed/Math.pow(1.04,lv+lb));player.magnetRange=Math.max(0,player.magnetRange-lv*6-lb*10);}if(key==='lavaHeart')player.maxHp=Math.max(1,player.maxHp-lv*8-lb*15);if(key==='bloodPact')player.maxHp=Math.max(1,player.maxHp-lv*15);if(key==='pierceQuiver')player.skills.attack.damage=Math.round(player.skills.attack.damage/Math.pow(1.05,lv)/Math.pow(1.08,lb));p[key]=0;if(p.equipLB)p.equipLB[key]=0;player.hp=Math.min(player.hp,player.maxHp);player.shield=Math.min(player.shield,Math.round(player.maxHp*.35));},
       close(){if(!this.open)return;this.send({type:'WORLD_R22_SHOP_CLOSE',id:this.open.id});this.open=null;document.getElementById('merchant-modal').style.display='none';GameState.isPaused=this.paused||false;CoopSocial.clearInput();CoopManager.sendPresenceNow();CombatKeys.focus();this.hint();},
       render(){const box=document.getElementById('merchant-content');if(!box||!this.open)return;this.open.removals=this.removals();box.innerHTML='<p class="campaign-note">可用金币 <b>'+SaveManager.data.gold+'</b> · 本次可购买多件；离开后商人离去，全队无法再次访问。</p><h3>本次货物</h3><div class="campaign-grid">'+this.open.offers.map(o=>this.cardHTML(o)).join('')+'</div><h3>卸下与腾出格子</h3><p class="campaign-note">购买时再次校验格子与当前等级；主动技卸下后需重新学习，已觉醒配件卸下不退化技能。</p><div class="campaign-grid">'+this.open.removals.map(o=>this.cardHTML(o)).join('')+'</div>';for(const b of box.querySelectorAll('[data-buy]'))b.onclick=()=>this.buy(b.dataset.buy);},
@@ -16560,7 +16551,8 @@
 
     // UI uses the existing pixel atlas and stays usable on narrow phones.
     const campaignStyle=document.createElement('style');campaignStyle.textContent=`
-      .campaign-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:10px}.campaign-card{border:1px solid #43526b;background:#111d30;padding:14px;border-radius:7px;line-height:1.6;min-width:0}.campaign-card strong{color:#fbe5a1}.campaign-card p{font-size:12px;color:#bdcce2}.campaign-card progress{width:100%;height:8px;accent-color:#7dd3b0}.campaign-card.achieved{border-color:#66b9a0;background:#122d2a}.campaign-card.locked{filter:grayscale(1);opacity:.6}.book-portrait{height:80px;text-align:center;font-size:35px;color:#8aa0be}.book-portrait canvas{width:80px;height:80px;image-rendering:pixelated}.campaign-note{color:#b9c8dd;font-size:12px;line-height:1.7}.campaign-scroll{overflow:auto}.campaign-scroll table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}.campaign-scroll td,.campaign-scroll th{padding:9px 7px;border-bottom:1px solid #40516c;text-align:left}.rank-label{font-size:23px;color:#f8d970;margin-right:5px}#campaign-modal .modal-card,#merchant-modal .modal-card{width:min(900px,94vw);max-height:86dvh;overflow:auto}#support-feed{position:fixed;left:50%;top:28%;transform:translateX(-50%);z-index:90;pointer-events:none;font-size:12px;font-weight:bold;text-align:center;width:min(90vw,450px)}#support-feed div{background:#071e21df;border:1px solid #5aa68f;padding:5px 9px;color:#b0f8d5;margin:3px;border-radius:5px}#merchant-interact{display:none;position:fixed;left:50%;bottom:25%;transform:translateX(-50%);z-index:80;padding:10px 16px;background:#2b2140;color:#ffe2a1;border:2px solid #c79c58;border-radius:6px;font-size:14px}#campaign-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}#run-report{margin:10px 0 18px}`;document.head.append(campaignStyle);
+      .campaign-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:10px}.campaign-card{border:1px solid #43526b;background:#111d30;padding:14px;border-radius:7px;line-height:1.6;min-width:0}.campaign-card strong{color:#fbe5a1}.campaign-card p{font-size:12px;color:#bdcce2}.campaign-card progress{width:100%;height:8px;accent-color:#7dd3b0}.campaign-card.achieved{border-color:#66b9a0;background:#122d2a}.campaign-card.locked{filter:grayscale(1);opacity:.6}.book-portrait{height:80px;text-align:center;font-size:35px;color:#8aa0be}.book-portrait canvas{width:80px;height:80px;image-rendering:pixelated}.campaign-note{color:#b9c8dd;font-size:12px;line-height:1.7}.campaign-scroll{overflow:auto}.campaign-scroll table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}.campaign-scroll td,.campaign-scroll th{padding:9px 7px;border-bottom:1px solid #40516c;text-align:left}.rank-label{font-size:23px;color:#f8d970;margin-right:5px}#campaign-modal .modal-card,#merchant-modal .modal-card{width:min(900px,94vw);max-height:86dvh;overflow:auto}#support-feed{position:fixed;left:50%;top:28%;transform:translateX(-50%);z-index:90;pointer-events:none;font-size:12px;font-weight:bold;text-align:center;width:min(90vw,450px)}#support-feed div{background:#071e21df;border:1px solid #5aa68f;padding:5px 9px;color:#b0f8d5;margin:3px;border-radius:5px}#merchant-interact{display:none;position:fixed;left:50%;bottom:25%;transform:translateX(-50%);z-index:80;padding:10px 16px;background:#2b2140;color:#ffe2a1;border:2px solid #c79c58;border-radius:6px;font-size:14px}#campaign-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}#run-report{margin:10px 0 18px}      #campaign-modal .modal-card{width:min(740px,94vw)}.codex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:6px}.campaign-card.codex-entry{display:flex;align-items:center;gap:9px;text-align:left;padding:8px;min-height:57px;cursor:pointer;font:inherit}.codex-entry strong{font-size:12px;line-height:1.35;display:block}.codex-entry small{font-size:10px;color:#95abc4;display:block;margin-top:3px}.codex-entry.selected{border-color:#f1cf7b;background:#2c2e34}.codex-icon{width:32px;height:32px;flex:0 0 32px;display:grid;place-items:center}.codex-icon canvas{width:32px;height:32px;image-rendering:pixelated}.codex-icon .px-icon{width:24px;height:24px}.codex-detail{padding:12px;border:1px solid #a48b55;background:#192337;margin-bottom:9px;font-size:12px;line-height:1.65}.codex-detail[hidden]{display:none}.codex-detail-title{color:#ffe3a0;font-weight:bold;font-size:15px}.codex-detail p{margin:5px 0}.codex-stats{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}.codex-stats b{color:#e5edf9}.codex-skill-list{margin:7px 0;color:#c4d5e7}.codex-detail small{color:#95abc4;font-size:10px}.achievement-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:6px}.campaign-card.achievement-row{padding:8px;display:flex;gap:8px;align-items:flex-start;line-height:1.35}.achievement-icon{flex:0 0 24px;width:24px;height:24px;display:grid;place-items:center;margin-top:2px}.achievement-icon .px-icon{width:24px;height:24px}.achievement-body{min-width:0;flex:1}.achievement-body strong{display:block;font-size:12px;line-height:1.4}.achievement-method{font-size:10px;line-height:1.5;color:#b8c8dc;margin:3px 0}.achievement-meta{display:flex;justify-content:space-between;gap:7px;font-size:10px;color:#d7c69c}.achievement-meta .px-icon{width:12px;height:12px}.achievement-body progress{display:block;width:100%;height:3px;margin:5px 0 0;accent-color:#7dd3b0}@media(max-width:420px){.codex-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.campaign-card.codex-entry{gap:6px;padding:7px}.codex-entry strong{font-size:11px}.codex-stats{column-gap:6px}}
+`;document.head.append(campaignStyle);
     document.body.insertAdjacentHTML('beforeend',`<div id="support-feed" aria-live="polite"></div><button id="merchant-interact">[px:shop] 访问神秘商人 · E</button><div id="campaign-modal" class="modal-overlay"><div class="modal-card"><button class="modal-close-x" id="campaign-close" aria-label="关闭图鉴">[px:close]</button><div class="modal-title">[px:book] 血夜图鉴与成就</div><div id="campaign-tabs"><button class="btn-secondary" data-book-tab="heroes">角色</button><button class="btn-secondary" data-book-tab="monsters">魔物</button><button class="btn-secondary" data-book-tab="bosses">首领</button><button class="btn-secondary" data-book-tab="achievements">成就</button></div><div id="campaign-content"></div></div></div><div id="merchant-modal" class="modal-overlay"><div class="modal-card"><button class="modal-close-x" id="merchant-close" aria-label="结束访问">[px:close]</button><div class="modal-title">[px:shop] 雾行商人</div><div class="modal-subtitle">每个商人仅接待一位猎手的一次访问；离开后不会回来。</div><div id="merchant-content"></div><button class="btn-primary" id="merchant-leave">结束访问，让商人离去</button></div></div>`);
     document.getElementById('btn-start-game').insertAdjacentHTML('afterend','<div style="display:flex;justify-content:center;gap:9px;margin:12px 0;flex-wrap:wrap"><button class="btn-secondary" id="camp-book">[px:book] 角色与魔物图鉴</button><button class="btn-secondary" id="camp-achievements">[px:trophy] 成就与金币</button></div>');
     document.getElementById('over-damage').parentElement.insertAdjacentHTML('afterend','<div>[px:heart-green] 战局有效治疗: <strong id="over-healing">0</strong></div>');document.getElementById('over-modal').querySelector('.modal-card').insertAdjacentHTML('beforeend','<div id="run-report"></div>');
@@ -16604,6 +16596,7 @@
     }
     const keyResumePause=togglePause;togglePause=function(...a){const result=keyResumePause(...a);CombatKeys.resume();return result;};
 
+    const r23WorldTick=WorldCoop.tick;WorldCoop.tick=function(dt){HuntPulse.guard();return r23WorldTick.call(this,dt);};
     PixelIcons.start();
     setupHero('warrior');
     syncHeroAndBiomeSelectionUI();

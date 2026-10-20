@@ -51,7 +51,7 @@ const tail=String.raw`
  });
  await check('slot caps explain ineligible skills instead of spending rerolls on impossible candidates',async()=>{
   const r=await solo.evaluate(()=>{
-   UpgradeChoice.end();player.passives.thunderChain=1;player.passives.iceShatter=1;player.passives.bloodPact=player.passives.fireTrail=0;player.pendingLevelUps=1;triggerLevelUp();
+   UpgradeChoice.end();player.passives.thunderChain=1;player.passives.iceShatter=player.passives.huntPulse=1;player.passives.bloodPact=player.passives.fireTrail=0;player.pendingLevelUps=1;triggerLevelUp();
    return {ids:generateUpgradePool().map(c=>c.id),hint:document.getElementById('upgrade-draft-hint').textContent};
   });assert(!r.ids.includes('syn_blood')&&!r.ids.includes('syn_fire'));assert(r.hint.includes('流派已满'));assert(r.hint.includes('配件已满'));
   await solo.locator('#level-modal .modal-card').screenshot({path:'test-results/fair-upgrade-draft.png'});

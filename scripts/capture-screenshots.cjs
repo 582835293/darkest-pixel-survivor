@@ -10,7 +10,7 @@ for(const hero of ['warrior','mage','engineer','healer']){
   function choose(id){const c=generateUpgradePool().find(c=>c.id===id);if(!c)return false;c.apply();return true;}
   let upgrades=0;for(const id of ['atk_up','charge_base_up','s1_up','s2_up','ult_up'])for(let i=0;i<8&&choose(id);i++)upgrades++;
   const gear=hero==='mage'?['p_frost_aura','p_swift_boots','p_lava_heart']:['p_crit_glove','p_swift_boots','p_lava_heart'];for(const id of gear)for(let i=0;i<5&&choose(id);i++)upgrades++;
-  const flows=hero==='engineer'?['syn_emberEcho','syn_stellarBastion']:hero==='mage'?['syn_ice','syn_huntPulse']:['syn_thunder','syn_blood'];for(const id of flows)for(let i=0;i<3&&choose(id);i++)upgrades++;
+  const flows=hero==='engineer'?['syn_emberEcho','syn_stellarBastion','syn_huntPulse']:hero==='mage'?['syn_ice','syn_huntPulse','syn_thunder']:['syn_thunder','syn_blood','syn_fire'];for(const id of flows)for(let i=0;i<3&&choose(id);i++)upgrades++;
   for(let i=0;i<12;i++){const c=generateUpgradePool().find(c=>c.id.startsWith('super_'));if(!c)break;c.apply();upgrades++;}if(choose('charge_branch_a'))upgrades++;for(let i=0;i<2&&choose('charge_branch_up');i++)upgrades++;
   player.level=1+upgrades;player.expToNext=38;for(let i=1;i<player.level;i++)player.expToNext=Math.round(player.expToNext*1.22+24);updateLoadoutHUD();updateExpUI();updateHpUI();updateActiveObstacles();
   const types=getCurrentWaveInfo().types;
