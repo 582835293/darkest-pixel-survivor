@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R14 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R15 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1243,7 +1243,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R14</span></div>
+        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R15</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -1265,7 +1265,7 @@
           </div>
           <div class="hero-card" data-hero="engineer">
             <div class="hero-avatar">⚙️</div><div class="hero-title">烬铁机匠</div>
-            <div class="hero-perk">铆钉连射 · 磁雷控场<br>部署炮台构筑交叉火力<br>熔星过载召来支援炮台</div>
+            <div class="hero-perk">锁定钉攒热 · 炮群集火<br>磁雷聚怪 · 满热炮网齐射<br>成型6炮台 + 4座重装支援</div>
           </div>
         </div>
 
@@ -2243,10 +2243,10 @@
 
     HERO_CONFIGS.engineer = {
       name:'烬铁机匠',color:'#f59e0b',speed:146,maxHp:110,critChance:.08,armor:.06,
-      icons:{atk:'🔩',s1:'💣',s2:'⚙️',ult:'☀️',item:'🛡️'},labels:{atk:'铆钉连射',s1:'震荡磁雷',s2:'哨戒炮台',ult:'熔星过载'},
+      icons:{atk:'🔩',s1:'💣',s2:'⚙️',ult:'☀️',item:'🛡️'},labels:{atk:'锁定钉连射',s1:'震荡磁雷',s2:'哨戒炮台',ult:'熔星过载'},
       initSkills:()=>({
-        attack:{name:'铆钉连射',level:1,maxLevel:5,damage:11,cd:.48,timer:0,range:290,count:2,isEvolved:false},
-        charge:{name:'蓄力·震爆重炮',level:1,maxLevel:5,branch:null,branchLv:0,maxBranchLv:3,branchAName:'贯穿磁轨炮',branchBName:'爆破弹幕'},
+        attack:{name:'锁定钉连射',level:1,maxLevel:5,damage:11,cd:.48,timer:0,range:290,count:2,isEvolved:false},
+        charge:{name:'蓄力·磁暴重炮',level:1,maxLevel:5,branch:null,branchLv:0,maxBranchLv:3,branchAName:'炮网贯穿齐射',branchBName:'追踪火箭弹幕'},
         skill1:{name:'震荡磁雷',level:1,maxLevel:5,damage:46,cd:5.5,timer:0,isDashing:false,dashTimer:0,isEvolved:false},
         skill2:{name:'哨戒炮台',level:1,maxLevel:5,damage:16,cd:6.5,timer:0,radius:280,isEvolved:false},
         ult:{name:'熔星过载',level:1,maxLevel:3,damage:105,cd:24,timer:0,isEvolved:false},
@@ -2341,58 +2341,185 @@
         if(huntLv){this.distance=(this.distance||0)+moved;const need=Math.max(90,200-huntLv*20);if(this.distance>=need&&this.pulseCd<=0){const targets=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<=340).sort((a,b)=>Math.hypot(a.x-player.x,a.y-player.y)-Math.hypot(b.x-player.x,b.y-player.y)).slice(0,Math.min(4,huntLv));if(targets.length){this.distance%=need;this.pulseCd=.9;for(const e of targets){lightningArcs.push({x1:player.x,y1:player.y,x2:e.x,y2:e.y,color:'#67e8f9',life:.22});damageEnemy(e,22+10*huntLv,0,15,true);}}}}
       }
     };
+    // Combat stays with the caster. Remote peers receive only these renderable descriptors.
     var EngineerKit={
-      shoot(x,y,angle,damage,evolved=false,grenade=false){projectiles.push({x,y,vx:Math.cos(angle)*(grenade?390:690),vy:Math.sin(angle)*(grenade?390:690),radius:grenade?11:7,damage,life:grenade?.75:.7,pierce:grenade?1:evolved?3:1,color:evolved?'#fde047':'#fb923c',isRivet:true,isGrenade:grenade});},
-      attack(angle){const a=player.skills.attack,n=a.isEvolved?4:2+Math.floor((a.level-1)/2);for(let i=0;i<n;i++)this.shoot(player.x,player.y,angle+(i-(n-1)/2)*.085,a.damage,a.isEvolved);audio.playShoot();},
+      reset(){this.heat=0;this.heatGate=0;this.lock=null;this.lockTime=0;this.lockVisual=null;this.combo=0;this.strikes=[];this.strikeTimer=0;this.netTimer=0;},
+      normalizeSkills(){const defaults=HERO_CONFIGS.engineer.initSkills();for(const [key,sk]of Object.entries(player.skills))if(defaults[key])sk.name=defaults[key].name;Object.assign(player.skills.charge,{branchAName:defaults.charge.branchAName,branchBName:defaults.charge.branchBName});},
+      turrets(){return groundEffects.filter(g=>g.type==='turret'&&g.life>0);},
+      cap(){const s=player.skills.skill2;return s.isEvolved?6:s.level>=5?5:s.level>=3?4:2;},
+      target(x,y,range){
+        if(this.lockTime>0&&this.lock&&!this.lock.isDead&&Math.hypot(this.lock.x-x,this.lock.y-y)<range)return this.lock;
+        let result=null,best=range*range;
+        for(const e of enemies)if(!e.isDead){const d=(e.x-x)**2+(e.y-y)**2;if(d<best){best=d;result=e;}}
+        return result;
+      },
+      visual(type,data,life=.45){const v={type,life,maxLife:life,...data};skyBeams.push(v);return v;},
+      mark(en){
+        if(!en||en.isDead)return;this.lock=en;this.lockTime=3;
+        if(!this.lockVisual||this.lockVisual.life<=0)this.lockVisual=this.visual('forge_lock',{x:en.x,y:en.y,radius:en.radius+23,color:'#fb923c'},.4);
+      },
+      gain(amount){
+        this.heat=Math.min(100,(this.heat||0)+amount);
+        if(this.heat>=100&&this.turrets().length){this.heat=0;this.command(3);this.visual('forge_blast',{x:player.x,y:player.y,radius:68,color:'#67e8f9'},.4);}
+      },
+      onHit(en,p){
+        if(GameState.selectedHero!=='engineer'||!WorldCoop.canAct()||!p.forgeHand)return;
+        this.mark(en);if((this.heatGate||0)<=0){this.heatGate=.08;this.gain(12);}
+        if(p.forgeHot)this.explode(en.x,en.y,38,Math.max(1,Math.round(p.damage*.22)),en);
+      },
+      command(waves=2){
+        if(!WorldCoop.canAct())return;
+        const guns=this.turrets();for(const g of guns){g.burstLeft=Math.max(g.burstLeft||0,waves);g.tickTimer=0;}
+        this.links(guns);
+      },
+      links(guns=this.turrets()){
+        for(const v of skyBeams)if(v.type==='forge_link')v.life=0;
+        for(let i=0;i<guns.length;i++){const a=guns[i],b=guns[(i+1)%guns.length];if(a===b)continue;this.visual('forge_link',{x1:a.x,y1:a.y,x2:b.x,y2:b.y,width:2,color:'#67e8f9'},.55);}
+      },
+      shoot(x,y,angle,damage,evolved=false,grenade=false,extra={}){
+        if(projectiles.filter(p=>p.isRivet&&!p.isEnemy).length>=150)return null;
+        const speed=grenade?410:790,p={x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,radius:grenade?11:7,damage,life:grenade?1.15:.72,pierce:grenade?1:evolved?3:1,color:evolved?'#fde047':'#fb923c',isRivet:true,isGrenade:grenade,...extra};projectiles.push(p);return p;
+      },
+      rocket(x,y,angle,damage,target,evolved=false,hand=false){
+        if(projectiles.filter(p=>p.forgeRocket).length>=20)return;
+        return this.shoot(x,y,angle,damage,evolved,true,{forgeRocket:true,forgeTarget:target,forgeHand:hand,targetX:target?.x??x+Math.cos(angle)*430,targetY:target?.y??y+Math.sin(angle)*430});
+      },
+      steer(p,dt,remote=false){
+        if(!p.forgeRocket)return;
+        if(!remote&&p.forgeTarget&&!p.forgeTarget.isDead){p.targetX=p.forgeTarget.x;p.targetY=p.forgeTarget.y;}
+        const current=Math.atan2(p.vy,p.vx),desired=Math.atan2(p.targetY-p.y,p.targetX-p.x),delta=Math.atan2(Math.sin(desired-current),Math.cos(desired-current));
+        const angle=current+Math.max(-dt*5,Math.min(dt*5,delta));p.vx=Math.cos(angle)*410;p.vy=Math.sin(angle)*410;
+      },
+      attack(angle){
+        const a=player.skills.attack,n=a.isEvolved?6:a.level>=5?5:a.level>=3?4:2;this.combo=((this.combo||0)+1)%3;
+        for(let i=0;i<n;i++){const side=(i%2?1:-1)*22,x=player.x-Math.sin(angle)*side,y=player.y+Math.cos(angle)*side;this.shoot(x,y,angle+(i-(n-1)/2)*.065,a.damage,a.isEvolved,false,{forgeHand:true,forgeHot:a.isEvolved&&this.combo===0});}
+        this.visual('forge_muzzle',{x:player.x,y:player.y,angle,radius:a.isEvolved?42:28,color:'#fb923c'},.16);
+        if(this.combo===0&&a.level>=3){const target=this.target(player.x,player.y,460),count=a.isEvolved?2:1;for(let i=0;i<count;i++)this.rocket(player.x,player.y,angle+(i?1:-1)*.85,a.damage*.8,target,a.isEvolved,true);}
+        audio.playShoot();
+      },
+      rail(x,y,tx,ty,damage,width=32){
+        const angle=Math.atan2(ty-y,tx-x),length=Math.hypot(tx-x,ty-y),ux=Math.cos(angle),uy=Math.sin(angle);
+        this.visual('forge_rail',{x1:x,y1:y,x2:tx,y2:ty,width,color:'#fbbf24'},.5);
+        for(const e of [...enemies])if(!e.isDead){const dx=e.x-x,dy=e.y-y,t=dx*ux+dy*uy;if(t>=0&&t<=length&&Math.abs(dx*uy-dy*ux)<=width*.5+e.radius)damageEnemy(e,damage,angle,100,true);}
+      },
       charge(angle){
-        const c=player.skills.charge,damage=Math.round(player.skills.attack.damage*(2.5+c.level*.35)*(1+(c.branchLv||0)*.32));
+        const c=player.skills.charge,target=this.target(player.x,player.y,600),spent=this.heat||0;this.heat=0;
+        const damage=Math.round(player.skills.attack.damage*(2.5+c.level*.35)*(1+(c.branchLv||0)*.32)*(1+spent/150));
         if(c.branch==='A'){
-          const length=500+(c.branchLv||1)*55,ux=Math.cos(angle),uy=Math.sin(angle);skyBeams.push({type:'laser_beam',x1:player.x,y1:player.y,x2:player.x+ux*length,y2:player.y+uy*length,width:20+(c.branchLv||1)*5,color:'#fde047',life:.32,maxLife:.32});
-          for(const e of enemies)if(!e.isDead){const dx=e.x-player.x,dy=e.y-player.y,t=dx*ux+dy*uy;if(t>=0&&t<=length&&Math.abs(dx*uy-dy*ux)<=18+e.radius)damageEnemy(e,damage*1.3,angle,100);}
-        }else{const n=c.branch==='B'?4+(c.branchLv||1):1+Math.floor((c.level-1)/2);for(let i=0;i<n;i++)this.shoot(player.x,player.y,angle+(i-(n-1)/2)*.2,damage,c.branch==='B',true);}
-        audio.playExplosion();
+          const length=560+(c.branchLv||1)*65,tx=player.x+Math.cos(angle)*length,ty=player.y+Math.sin(angle)*length;
+          this.rail(player.x,player.y,tx,ty,damage*1.3,48);
+          for(const g of this.turrets()){const a=Math.atan2((target?.y??ty)-g.y,(target?.x??tx)-g.x);this.rail(g.x,g.y,g.x+Math.cos(a)*length,g.y+Math.sin(a)*length,damage*.42,24);g.flash=.18;}
+        }else{
+          const n=c.branch==='B'?4+(c.branchLv||1)*2:1+Math.floor((c.level-1)/2);
+          for(let i=0;i<n;i++)this.rocket(player.x-Math.sin(angle)*(i-(n-1)/2)*12,player.y+Math.cos(angle)*(i-(n-1)/2)*12,angle+(i-(n-1)/2)*.32,damage,c.branch==='B'?this.target(player.x,player.y,650):target,c.branch==='B',true);
+          this.command(c.branch==='B'?3:1);
+        }
+        this.visual('forge_muzzle',{x:player.x,y:player.y,angle,radius:66,color:'#fde047'},.3);audio.playExplosion();
       },
       mine(){
-        const s=player.skills.skill1,n=s.isEvolved?3:s.level>=3?2:1;
-        for(let i=0;i<n;i++){const a=player.aimAngle+(i-(n-1)/2)*.7;groundEffects.push({type:'mine',x:player.x+Math.cos(a)*55,y:player.y+Math.sin(a)*55,radius:18,damage:s.damage,blastRadius:s.isEvolved?100:76,life:8,maxLife:8,tickTimer:.25,isEvolved:s.isEvolved});}
-        const mines=groundEffects.filter(g=>g.type==='mine');for(const old of mines.slice(0,Math.max(0,mines.length-8)))old.life=0;
+        const s=player.skills.skill1,n=s.isEvolved?4:s.level>=3?3:2;
+        for(let i=0;i<n;i++){const a=player.aimAngle+(i-(n-1)/2)*.85;groundEffects.push({type:'mine',x:player.x+Math.cos(a)*90,y:player.y+Math.sin(a)*90,radius:18,damage:s.damage,blastRadius:s.isEvolved?132:100,life:8,maxLife:8,tickTimer:.25,isEvolved:s.isEvolved,forgeStage:0,pullLeft:.65});}
+        const mines=groundEffects.filter(g=>g.type==='mine'&&g.life>0);for(const old of mines.slice(0,Math.max(0,mines.length-12)))old.life=0;
         player.shield=Math.max(player.shield,10+s.level*2);player.shieldMax=Math.max(player.shieldMax,player.shield);updateHpUI();audio.playShoot();
       },
       place(x,y,temporary=false){
-        const s=player.skills.skill2,life=temporary?(player.skills.ult.isEvolved?9:6):11+s.level*.6;
-        groundEffects.push({type:'turret',x,y,radius:19,damage:s.damage,range:s.radius||280,life,maxLife:life,tickTimer:.12,angle:player.aimAngle,isEvolved:s.isEvolved,temporary,overdrive:GameState.forgeOverdriveTimer>0});
-        if(!temporary){const turrets=groundEffects.filter(g=>g.type==='turret'&&!g.temporary&&g.life>0),cap=s.isEvolved?3:2;for(const g of turrets.slice(0,Math.max(0,turrets.length-cap)))g.life=0;}
-        createShockwave(x,y,40,'#fbbf24');
+        const s=player.skills.skill2,life=temporary?(player.skills.ult.isEvolved?9:6):16+s.level*.8;
+        groundEffects.push({type:'turret',x,y,radius:22,damage:s.damage,range:(s.radius||280)+60,life,maxLife:life,tickTimer:.12,angle:player.aimAngle,isEvolved:s.isEvolved,forgeStage:s.level,temporary,overdrive:GameState.forgeOverdriveTimer>0,flash:0,shots:0,burstLeft:0});
+        if(!temporary){const turrets=this.turrets().filter(g=>!g.temporary);for(const g of turrets.slice(0,Math.max(0,turrets.length-this.cap())))g.life=0;}
+        this.visual('forge_blast',{x,y,radius:46,color:'#67e8f9'},.35);
       },
-      turret(){this.place(player.x+Math.cos(player.aimAngle)*65,player.y+Math.sin(player.aimAngle)*65);audio.playShoot();},
+      turret(){
+        const s=player.skills.skill2,n=s.isEvolved?3:s.level>=3?2:1;const existing=this.turrets().filter(g=>!g.temporary).length;
+        for(let i=0;i<n;i++){const a=player.aimAngle+(existing+i)*Math.PI*2/this.cap();this.place(player.x+Math.cos(a)*125,player.y+Math.sin(a)*125);}
+        this.links();audio.playShoot();
+      },
       ult(){
         const u=player.skills.ult;GameState.forgeOverdriveTimer=u.isEvolved?9:6;player.invulnerableTimer=Math.max(player.invulnerableTimer,1.2);
-        for(const g of groundEffects.filter(g=>g.type==='turret'&&g.temporary))g.life=0;
-        const n=u.isEvolved?2:1;for(let i=0;i<n;i++){const a=player.aimAngle+Math.PI/2+(i?Math.PI:0);this.place(player.x+Math.cos(a)*72,player.y+Math.sin(a)*72,true);}
-        createShockwave(player.x,player.y,180,'#fde047');damageInRadius(player.x,player.y,180,u.damage,120);showToast(u.isEvolved?'⚙️【日冕工厂】双支援炮台就位，过载9秒！':'⚙️ 熔星过载：支援炮台就位，火控加速6秒！');
+        for(const g of this.turrets().filter(g=>g.temporary))g.life=0;
+        const n=u.isEvolved?4:2;for(let i=0;i<n;i++){const a=player.aimAngle+Math.PI/4+i*Math.PI*2/n;this.place(player.x+Math.cos(a)*210,player.y+Math.sin(a)*210,true);}
+        this.strikeTimer=.12;this.command(3);this.visual('forge_blast',{x:player.x,y:player.y,radius:200,color:'#fbbf24'},.65);damageInRadius(player.x,player.y,180,u.damage,120);
+        showToast(u.isEvolved?'⚙️ 日冕工厂：四座重装支援 · 炮网齐射 · 巡航轰炸！':'⚙️ 熔星过载：双支援炮台 · 火力全开！');audio.playExplosion();
       },
-      explode(x,y,radius,damage,except=null){createShockwave(x,y,radius,'#fb923c');audio.playExplosion();for(const e of [...enemies])if(e!==except&&!e.isDead&&Math.hypot(e.x-x,e.y-y)<=radius+e.radius)damageEnemy(e,damage,Math.atan2(e.y-y,e.x-x),90,true);},
+      explode(x,y,radius,damage,except=null){
+        this.visual('forge_blast',{x,y,radius,color:'#fb923c'},.42);audio.playExplosion();
+        for(const e of [...enemies])if(e!==except&&!e.isDead&&Math.hypot(e.x-x,e.y-y)<=radius+e.radius)damageEnemy(e,damage,Math.atan2(e.y-y,e.x-x),90,true);
+      },
+      tick(dt){
+        if(GameState.selectedHero!=='engineer')return;
+        if(!WorldCoop.canAct()){this.strikes=[];if(this.lockVisual)this.lockVisual.life=0;if(player.isDowned){this.heat=0;this.lockTime=0;}for(const g of this.turrets())g.burstLeft=0;return;}
+        this.heatGate=Math.max(0,(this.heatGate||0)-dt);this.lockTime=Math.max(0,(this.lockTime||0)-dt);
+        if(this.lockTime>0&&this.lock&&!this.lock.isDead){const v=this.lockVisual;if(v&&skyBeams.includes(v)){v.x=this.lock.x;v.y=this.lock.y;v.life=.4;}else this.mark(this.lock);}
+        else if(this.lockVisual)this.lockVisual.life=0;
+        for(const strike of this.strikes||[]){strike.left-=dt;if(strike.left<=0&&!strike.done){strike.done=true;this.explode(strike.x,strike.y,strike.radius,strike.damage);}}
+        this.strikes=(this.strikes||[]).filter(s=>!s.done);
+        if(GameState.forgeOverdriveTimer>0){
+          this.strikeTimer=(this.strikeTimer||0)-dt;this.netTimer=(this.netTimer||0)-dt;
+          if(this.netTimer<=0){this.netTimer=.85;this.links();}
+          if(this.strikeTimer<=0){this.strikeTimer=.8;const u=player.skills.ult,count=u.isEvolved?3:2,candidates=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<620);
+            for(let i=0;i<Math.min(count,candidates.length);i++){const e=candidates[(i*7+Math.floor(GameState.gameTime*3))%candidates.length],radius=u.isEvolved?94:74;this.strikes.push({x:e.x,y:e.y,radius,damage:u.damage*.4,left:.42});this.visual('forge_strike',{x:e.x,y:e.y,radius,color:'#f97316'},.42);}
+          }
+        }
+      },
       tickGround(g,dt){
-        if(g.type==='mine'){if(g.tickTimer>0)return;const near=enemies.some(e=>!e.isDead&&Math.hypot(e.x-g.x,e.y-g.y)<42+e.radius);if(near){this.explode(g.x,g.y,g.blastRadius||76,g.damage);g.life=0;}return;}
-        g.overdrive=GameState.forgeOverdriveTimer>0;const target=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-g.x,e.y-g.y)<(g.range||280)).sort((a,b)=>Math.hypot(a.x-g.x,a.y-g.y)-Math.hypot(b.x-g.x,b.y-g.y))[0];if(!target)return;
-        g.angle=Math.atan2(target.y-g.y,target.x-g.x);if(g.tickTimer>0)return;
-        g.tickTimer=(g.isEvolved?.58:.74)*(g.overdrive?.55:1);const count=g.isEvolved?2:1;
-        for(let i=0;i<count;i++)this.shoot(g.x+Math.cos(g.angle)*21,g.y+Math.sin(g.angle)*21,g.angle+(i-(count-1)/2)*.09,g.damage,g.isEvolved);
+        if(g.life<=0)return;
+        if(g.type==='mine'){
+          if(!g.forgeStage){if(g.tickTimer>0)return;if(!enemies.some(e=>!e.isDead&&Math.hypot(e.x-g.x,e.y-g.y)<110+e.radius))return;g.forgeStage=1;g.tickTimer=0;}
+          g.pullLeft=(g.pullLeft??.65)-dt;
+          if(g.tickTimer<=0){g.tickTimer=.18;for(const e of [...enemies])if(!e.isDead&&Math.hypot(e.x-g.x,e.y-g.y)<(g.isEvolved?180:140)&&!e.isBoss)damageEnemy(e,1,Math.atan2(g.y-e.y,g.x-e.x),200,true);}
+          if(g.pullLeft<=0){this.explode(g.x,g.y,g.blastRadius||100,g.damage);g.life=0;this.gain(15);}return;
+        }
+        g.flash=Math.max(0,(g.flash||0)-dt);g.overdrive=GameState.forgeOverdriveTimer>0;
+        const target=this.target(g.x,g.y,g.range||340);if(!target)return;g.angle=Math.atan2(target.y-g.y,target.x-g.x);if(g.tickTimer>0)return;
+        const burst=(g.burstLeft||0)>0;g.tickTimer=burst?.14:(g.isEvolved?.48:g.forgeStage>=5?.55:.74)*(g.overdrive?.55:1);if(burst)g.burstLeft--;
+        const count=g.isEvolved?3:g.forgeStage>=3?2:1;g.flash=.15;g.shots=(g.shots||0)+1;
+        for(let i=0;i<count;i++)this.shoot(g.x+Math.cos(g.angle)*32,g.y+Math.sin(g.angle)*32,g.angle+(i-(count-1)/2)*.075,g.damage,g.isEvolved,false,{isSecondary:true});
+        if((g.isEvolved||g.overdrive)&&g.shots%3===0)this.rocket(g.x,g.y,g.angle+.8,g.damage*.85,target,g.isEvolved);
       },
       draw(c,g,alpha){
-        c.save();c.globalAlpha=alpha;c.translate(g.x,g.y);const hot=g.isEvolved||g.overdrive;
+        c.save();c.globalAlpha=alpha;c.translate(g.x,g.y);const hot=g.isEvolved||g.overdrive,t=GameState.gameTime;
         if(g.type==='turret'){
-          c.fillStyle='rgba(0,0,0,.5)';c.fillRect(-24,14,48,6);c.strokeStyle=hot?'#fde047':'#b45309';c.lineWidth=3;
-          if(g.overdrive){c.save();c.rotate(GameState.gameTime*2);c.setLineDash([6,5]);c.beginPath();c.arc(0,0,30,0,Math.PI*2);c.stroke();c.restore();}
-          c.fillStyle='#334155';c.fillRect(-19,4,38,13);c.fillStyle='#94a3b8';c.fillRect(-16,14,8,8);c.fillRect(8,14,8,8);
-          c.fillStyle=hot?'#f59e0b':'#b45309';c.fillRect(-15,-9,30,24);c.fillStyle='#fef08a';c.fillRect(-10,-5,20,5);
-          c.save();c.rotate(g.angle||0);c.fillStyle='#1e293b';c.fillRect(-8,-7,35,14);c.fillStyle=hot?'#fff7ae':'#fb923c';c.fillRect(10,-4,24,8);if(g.isEvolved){c.fillRect(8,-11,21,5);c.fillRect(8,6,21,5);}c.restore();
+          c.fillStyle='rgba(0,0,0,.5)';c.fillRect(-29,16,58,8);
+          c.save();c.rotate(t*(hot?1.6:.5));c.strokeStyle=hot?'#fbbf24':'#64748b';c.lineWidth=3;for(let i=0;i<8;i++){c.rotate(Math.PI/4);c.strokeRect(24,-4,8,8);}c.restore();
+          c.fillStyle='#0f172a';c.fillRect(-25,-13,50,33);c.fillStyle='#475569';c.fillRect(-28,3,56,15);c.fillStyle='#94a3b8';for(const x of [-26,17])c.fillRect(x,15,10,9);
+          c.fillStyle=hot?'#f59e0b':'#b45309';c.fillRect(-20,-12,40,23);c.fillStyle='#fde68a';c.fillRect(-14,-8,28,5);c.fillStyle='#0f172a';c.fillRect(-8,-2,16,11);c.fillStyle=hot?'#fef9c3':'#67e8f9';c.fillRect(-5,0,10,6);
+          c.save();c.rotate(g.angle||0);const recoil=(g.flash||0)*25,n=g.isEvolved?3:g.forgeStage>=3?2:1;
+          for(let i=0;i<n;i++){const y=(i-(n-1)/2)*10;c.fillStyle='#0f172a';c.fillRect(-12-recoil,y-5,46,10);c.fillStyle='#94a3b8';c.fillRect(3-recoil,y-3,25,6);c.fillStyle=hot?'#fbbf24':'#fb923c';c.fillRect(26-recoil,y-5,9,10);if(g.flash>0){c.fillStyle='#f97316';c.beginPath();c.moveTo(35,y-8);c.lineTo(60,y);c.lineTo(35,y+8);c.fill();c.fillStyle='#fff7ae';c.fillRect(34,y-2,17,4);}}
+          if(hot){c.fillStyle='#334155';c.fillRect(-20,-24,23,10);c.fillRect(-20,14,23,10);c.fillStyle='#fbbf24';c.fillRect(-15,-22,5,6);c.fillRect(-6,16,5,6);}c.restore();
         }else{
-          c.strokeStyle=hot?'#fde047':'#fb923c';c.lineWidth=2;c.setLineDash([4,4]);c.beginPath();c.arc(0,0,27,0,Math.PI*2);c.stroke();c.setLineDash([]);
-          c.fillStyle='#334155';c.fillRect(-14,-7,28,18);c.fillStyle='#94a3b8';c.fillRect(-9,-12,18,6);c.fillStyle=Math.sin(GameState.gameTime*12)>0?'#fff7ae':'#f97316';c.fillRect(-4,-5,8,8);c.strokeStyle='#fbbf24';c.beginPath();c.moveTo(-22,0);c.lineTo(-14,0);c.moveTo(14,0);c.lineTo(22,0);c.stroke();
+          const radius=g.forgeStage?(g.isEvolved?180:140):29;c.save();c.rotate(t*2);c.strokeStyle=g.forgeStage?'#67e8f9':'#fb923c';c.lineWidth=2;c.setLineDash([10,7]);c.beginPath();c.arc(0,0,radius,0,Math.PI*2);c.stroke();c.setLineDash([]);
+          if(g.forgeStage)for(let i=0;i<8;i++){const a=i*Math.PI/4;c.save();c.rotate(a);c.beginPath();c.moveTo(radius*.8,-9);c.lineTo(radius*.6,0);c.lineTo(radius*.8,9);c.stroke();c.restore();}c.restore();
+          c.fillStyle='#1e293b';c.fillRect(-18,-10,36,22);c.strokeStyle='#f59e0b';c.strokeRect(-14,-7,28,16);c.fillStyle=g.forgeStage?'#fff7ae':'#f97316';c.fillRect(-7,-5,14,10);for(let i=0;i<4;i++){c.save();c.rotate(i*Math.PI/2);c.fillStyle='#94a3b8';c.fillRect(14,-3,13,6);c.restore();}
         }c.restore();
+      },
+      drawBeam(c,s,ratio){
+        c.globalAlpha*=Math.min(1,ratio*3);const t=GameState.gameTime;
+        if(s.type==='forge_link'||s.type==='forge_rail'){
+          const dx=s.x2-s.x1,dy=s.y2-s.y1,len=Math.hypot(dx,dy);c.translate(s.x1,s.y1);c.rotate(Math.atan2(dy,dx));
+          if(s.type==='forge_link'){c.strokeStyle='#22d3ee';c.lineWidth=1.5;c.setLineDash([12,10]);c.lineDashOffset=-t*70;c.strokeRect(0,-2,len,4);c.setLineDash([]);for(let i=0;i<3;i++){c.fillStyle='#cffafe';c.fillRect(((t*.8+i/3)%1)*len,-3,8,6);}}
+          else{const w=s.width*Math.max(.15,ratio);c.fillStyle='rgba(249,115,22,.24)';c.fillRect(0,-w,len,w*2);c.fillStyle='#f59e0b';c.fillRect(0,-w*.36,len,w*.72);c.fillStyle='#fff7ae';c.fillRect(0,-w*.12,len,w*.24);c.strokeStyle='#fbbf24';c.lineWidth=2;for(let x=25;x<len;x+=70){c.beginPath();c.ellipse(x,0,12,w*.9,0,0,Math.PI*2);c.stroke();}c.strokeStyle='#ffedd5';c.beginPath();for(let x=0;x<len;x+=8){const y=Math.sin(x*.045+t*20)*w*.6;if(x)c.lineTo(x,y);else c.moveTo(x,y);}c.stroke();}
+          return;
+        }
+        c.translate(s.x,s.y);const r=s.radius||50;
+        if(s.type==='forge_lock'||s.type==='forge_strike'){
+          const strike=s.type==='forge_strike',rr=strike?r*(.45+.55*ratio):r;c.strokeStyle=strike?'#f97316':'#67e8f9';c.lineWidth=2;c.save();c.rotate(t*(strike?-2:1));for(let i=0;i<4;i++){c.rotate(Math.PI/2);c.beginPath();c.moveTo(rr,-12);c.lineTo(rr,12);c.lineTo(rr-10,12);c.stroke();}c.restore();c.beginPath();c.arc(0,0,rr*.65,0,Math.PI*2);c.moveTo(-rr*.3,0);c.lineTo(rr*.3,0);c.moveTo(0,-rr*.3);c.lineTo(0,rr*.3);c.stroke();
+          if(strike){const y=-240*ratio;c.strokeStyle='rgba(251,146,60,.5)';c.lineWidth=6;c.beginPath();c.moveTo(-80*ratio,y-45);c.lineTo(0,0);c.stroke();c.fillStyle='#fbbf24';c.save();c.translate(-80*ratio,y);c.rotate(-.32);c.fillRect(-7,-23,14,28);c.fillStyle='#fff7ae';c.fillRect(-3,5,6,24);c.restore();}return;
+        }
+        if(s.type==='forge_muzzle'){c.rotate(s.angle||0);c.fillStyle='#f97316';c.beginPath();c.moveTo(14,-r*.35);c.lineTo(r*1.5,0);c.lineTo(14,r*.35);c.fill();c.fillStyle='#fff7ae';c.fillRect(13,-3,r,6);return;}
+        const size=r*(1.1-ratio*.7),gradient=c.createRadialGradient(0,0,0,0,0,size);gradient.addColorStop(0,'rgba(255,247,174,.6)');gradient.addColorStop(.45,'rgba(249,115,22,.28)');gradient.addColorStop(1,'rgba(249,115,22,0)');c.fillStyle=gradient;c.fillRect(-size,-size,size*2,size*2);
+        c.rotate((1-ratio)*1.3);c.strokeStyle=s.color||'#fb923c';c.lineWidth=3;c.beginPath();for(let i=0;i<48;i++){const a=i*Math.PI/24,rr=size*(i%4<2?1:.86);if(i)c.lineTo(Math.cos(a)*rr,Math.sin(a)*rr);else c.moveTo(Math.cos(a)*rr,Math.sin(a)*rr);}c.closePath();c.stroke();c.strokeStyle='#fff7ae';c.lineWidth=1.5;c.beginPath();c.arc(0,0,size*.65,0,Math.PI*2);c.stroke();
+        for(let i=0;i<12;i++){c.save();c.rotate(i*Math.PI/6);c.fillStyle=i%2?'#fef3c7':'#f97316';c.fillRect(size*.7,-3,size*.35,6);c.restore();}
+      },
+      drawRig(c,p,state){
+        if(state.selectedHero!=='engineer')return;const active=state.forgeOverdriveTimer>0,t=state.gameTime||0;
+        c.save();c.translate(p.x,p.y);c.strokeStyle=active?'#fbbf24':'#fb923c';c.lineWidth=2;
+        if(active){
+          c.save();c.rotate(t*.4);c.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3;if(i)c.lineTo(Math.cos(a)*102,Math.sin(a)*102);else c.moveTo(102,0);}c.closePath();c.stroke();for(let i=0;i<12;i++){c.rotate(Math.PI/6);c.fillStyle='#f59e0b';c.fillRect(95,-4,13,8);}c.restore();
+          for(let i=0;i<4;i++){const a=i*Math.PI/2+t*.25,x=Math.cos(a)*69,y=Math.sin(a)*69;c.strokeStyle='#64748b';c.lineWidth=7;c.beginPath();c.moveTo(0,0);c.lineTo(x,y);c.stroke();c.save();c.translate(x,y);c.rotate(a);c.fillStyle='#0f172a';c.fillRect(-24,-18,48,36);c.fillStyle='#b45309';c.fillRect(-18,-14,32,28);c.fillStyle='#fbbf24';c.fillRect(-10,-10,12,20);c.fillStyle='#94a3b8';c.fillRect(8,-11,33,7);c.fillRect(8,4,33,7);c.fillStyle='#fff7ae';c.fillRect(40,-10,8+Math.sin(t*24+i)*6,5);c.fillRect(40,5,8+Math.sin(t*24+i)*6,5);c.restore();}
+        }else{for(const side of [-1,1]){c.fillStyle='#334155';c.fillRect(side*29-8,-8,16,22);c.fillStyle='#fb923c';c.fillRect(side*29-5,-5,10,5);c.fillStyle='#94a3b8';c.fillRect(side*29-3,-20,6,15);}}
+        c.restore();
       }
     };
+
 
 
     function generateUpgradePool() {
@@ -2604,7 +2731,7 @@
       }
 
       if(hero==='engineer'){
-        const forms=[['attack','critGlove','super_rivet','磁轨蜂群','铆钉变为4枚金色贯穿弹，可穿透3个目标。'],['skill1','swiftBoots','super_mine','日冕磁雷阵','同时部署3枚磁雷，爆破半径扩大至100。'],['skill2','lavaHeart','super_turret','双联重装哨戒','炮台上限升至3座，双联装穿透弹。'],['ult',null,'super_forge','日冕工厂','过载延长到9秒，同时召来2座支援炮台。']];
+        const forms=[['attack','critGlove','super_rivet','磁轨蜂群','6枚金色锁定钉，三连击追踪火箭；每次贯穿3个目标。'],['skill1','swiftBoots','super_mine','日冕磁雷阵','布设4枚聚怪磁雷，牵引后132半径爆破。'],['skill2','lavaHeart','super_turret','六联重装哨戒','常规炮台上限6座，每次部署3座；三管连射附带导弹。'],['ult',null,'super_forge','日冕工厂','过载9秒，4座支援炮台、巡航轰炸与重装机甲展开。']];
         for(const [key,equip,id,name,desc]of forms){const sk=skills[key];if(!sk.isEvolved&&sk.level>=(key==='ult'?3:4)&&(!equip||pass[equip]>0))pool.push({id,name:'【超武】'+name,desc,type:'super',icon:'⚙️',isTrueSuper:true,apply:()=>{sk.isEvolved=true;sk.damage=Math.round(sk.damage*1.25);showSuperWeaponFanfare('机匠觉醒：'+name+'！');}});}
       }
 
@@ -2612,7 +2739,7 @@
       if (skills.attack.level < skills.attack.maxLevel) {
         const nextLv = skills.attack.level + 1;
         const morphDescs = {
-          engineer:['铆钉伤害+22%，射速提高。','铆钉伤害+22%，弹数提高至3枚。','铆钉伤害+22%，射速提高（手套可合成超武）。','铆钉伤害+22%，弹数提高至4枚。'],
+          engineer:['锁定钉伤害+22%，射速提高；命中标记并积攒热能。','弹数提高至4枚，每第三次攻击附带追踪火箭。','锁定钉伤害+22%，射速提高（手套可合成超武）。','弹数提高至5枚；满热令炮网进行三轮齐射。'],
           warrior: [
             '伤害+22%，每击发射穿透剑气，流血伤害翻倍。',
             '伤害+22%，挥砍范围扩大，第3击震退周围敌人。',
@@ -2659,7 +2786,7 @@
       if (chg && chg.level < chg.maxLevel) {
         const nextClv = chg.level + 1;
         const chargeMorphDescs = {
-          engineer:['重炮伤害成长，蓄力更快。','增加1枚震爆弹，命中产生范围爆破。','蓄力更快，重炮伤害成长。','增加第3枚震爆弹；下次可选择磁轨或弹幕觉醒。'],
+          engineer:['消耗热能增伤，发射追踪重炮并指挥炮台集火。','增加1枚追踪重炮，命中产生范围爆破。','蓄力更快，热能增伤与重炮伤害成长。','发射3枚追踪重炮；下次选择炮网齐射或火箭弹幕。'],
           warrior: [
             '范围扩大，扇形发射 3 道裂空剑气并叠流血。',
             '挥砍额外触发前方【十字裂隙斩】二段爆炸。',
@@ -2699,7 +2826,7 @@
       // 蓄力升满 Lv.5 后，下一级直接置顶解锁两种蓄力流派二选一（无需普攻满级）
       if (chg && chg.level >= chg.maxLevel && !chg.branch) {
         const branchSpecs = {
-          engineer:{A:{name:'【蓄力觉醒A】贯穿磁轨炮',icon:'⚡',desc:'【二选一】发射金色贯穿光束，直击路径上所有敌人。'},B:{name:'【蓄力觉醒B】爆破弹幕',icon:'💥',desc:'【二选一】扇形发射5—7枚金色震爆弹，逐枚范围爆破。'}},
+          engineer:{A:{name:'【蓄力觉醒A】炮网贯穿齐射',icon:'⚡',desc:'【二选一】自己与全部炮台同步发射金色磁轨束，消耗热能增伤。'},B:{name:'【蓄力觉醒B】追踪火箭弹幕',icon:'💥',desc:'【二选一】6—10枚追踪火箭绕弧轰炸，同时命令炮群三轮集火。'}},
           warrior: {
             A: { name: '【蓄力觉醒A】八荒万剑流', icon: '🗡️', desc: '【二选一】爆发360°剑阵，向八方齐射8~12道黄金剑气。' },
             B: { name: '【蓄力觉醒B】鬼神一刀流', icon: '👹', desc: '【二选一】蓄力移速+35%，瞬步突进斩首，对首领伤害大增。' }
@@ -2761,7 +2888,7 @@
       if (skills.skill1.level < skills.skill1.maxLevel) {
         const nextLv = skills.skill1.level + 1;
         const s1Descs = {
-          engineer:'磁雷伤害+22%，冷却缩短；Lv.3布雷数增至2枚。',
+          engineer:'磁雷伤害+22%，冷却缩短；牵引后爆破，Lv.3布雷增至3枚。',
           warrior: '伤害+22%，冷却缩短，冲刺引爆流血范围扩大并回CD。',
           mage: '伤害+22%，冷却缩短，起点与终点冰冻延长至3.5秒。',
           ranger: '伤害+22%，冷却缩短，布设陷阱数+1并散射雷针。'
@@ -2783,7 +2910,7 @@
       if (skills.skill2.level < skills.skill2.maxLevel) {
         const nextLv = skills.skill2.level + 1;
         const s2Descs = {
-          engineer:'炮台伤害+22%，射程扩大，部署冷却缩短。',
+          engineer:'炮台伤害+22%，冷却缩短；Lv.3上限4座/双管，Lv.5上限5座。',
           warrior: `伤害+22%，转速加快${nextLv === 3 ? '，新增第2圈外环剑阵' : (nextLv === 5 ? '，新增第3圈外环剑阵' : '，路过敌人减速42%')}。`,
           mage: '伤害+22%，冷却缩短，黑洞牵引范围扩大30%。',
           ranger: '伤害+22%，飞轮数+1，接住飞轮回血并刷战技CD。'
@@ -5880,6 +6007,7 @@
       if (GameState.hurtFlashTimer > 0) GameState.hurtFlashTimer = Math.max(0, GameState.hurtFlashTimer - dt);
       if (GameState.berserkTimer > 0) GameState.berserkTimer -= dt;
       if(GameState.forgeOverdriveTimer>0)GameState.forgeOverdriveTimer=Math.max(0,GameState.forgeOverdriveTimer-dt);
+      EngineerKit.tick(dt);
       if (GameState.powerShrineTimer > 0) GameState.powerShrineTimer -= dt;
       if (GameState.speedShrineTimer > 0) GameState.speedShrineTimer -= dt;
       if (GameState.phantomCloneTimer > 0) GameState.phantomCloneTimer -= dt;
@@ -6505,6 +6633,7 @@
         p.trail.push({ x: p.x, y: p.y });
         if (p.trail.length > 5) p.trail.shift();
         p.life -= dt;
+        if(p.forgeRocket)EngineerKit.steer(p,dt);
         if (!(WorldCoop.guest() && p.isEnemy && p.snapshots)) {
           p.x += p.vx * dt; p.y += p.vy * dt;
         }
@@ -6519,7 +6648,8 @@
             if (!en.isDead && !p.hitEnemies.has(en) && Math.hypot(p.x - en.x, p.y - en.y) < p.radius + en.radius) {
               p.hitEnemies.add(en);
               damageEnemy(en, p.damage, Math.atan2(p.vy, p.vx), 110, Boolean(p.isSecondary));
-              if(p.isGrenade&&!p.hasExploded){p.hasExploded=true;EngineerKit.explode(en.x,en.y,p.color==='#fde047'?78:56,Math.round(p.damage*.65),en);p.life=0;}
+              if(p.forgeHand)EngineerKit.onHit(en,p);
+              if(p.isGrenade&&!p.hasExploded){p.hasExploded=true;EngineerKit.explode(en.x,en.y,p.color==='#fde047'?95:70,Math.round(p.damage*.65),en);p.life=0;}
               if (p.applyBleed) { en.bleedStacks = Math.min(5, (en.bleedStacks || 0) + 1); en.bleedTimer = 4.0; WorldCoop.markBleed(en); }
               if (p.applyPoison) { en.poisonStacks = Math.min(4, (en.poisonStacks || 0) + 1); }
               if (p.isFreeze) { en.freezeTimer = 1.5; }
@@ -6535,7 +6665,7 @@
             }
           }
         }
-        if(p.life<=0&&p.isGrenade&&!p.hasExploded&&WorldCoop.canAct()){p.hasExploded=true;EngineerKit.explode(p.x,p.y,p.color==='#fde047'?78:56,Math.round(p.damage*.65));}
+        if(p.life<=0&&p.isGrenade&&!p.hasExploded&&WorldCoop.canAct()){p.hasExploded=true;EngineerKit.explode(p.x,p.y,p.color==='#fde047'?95:70,Math.round(p.damage*.65));}
         if (p.life <= 0) projectiles.splice(i, 1);
       }
 
@@ -6717,6 +6847,7 @@
       if (GameState.powerShrineTimer > 0) html += `<div class="status-pill" style="border-color:#ea580c; color:#fdba74;">⚡ 狂暴神力 ${GameState.powerShrineTimer.toFixed(1)}s</div>`;
       if (GameState.speedShrineTimer > 0) html += `<div class="status-pill" style="border-color:#22c55e; color:#86efac;">💨 疾风神速 ${GameState.speedShrineTimer.toFixed(1)}s</div>`;
       if (player.reviveLeft > 0) html += `<div class="status-pill" style="border-color:#a855f7; color:#d8b4fe;">✝️ 重生: ${player.reviveLeft}</div>`;
+      if(GameState.selectedHero==='engineer'){const heat=Math.round(EngineerKit.heat||0),guns=EngineerKit.turrets();html+=`<div class="status-pill" style="border-color:#f59e0b;color:#fef3c7;background:linear-gradient(90deg,rgba(234,88,12,.7) ${heat}%,rgba(15,23,42,.88) ${heat}%)" title="普攻命中锁定并攒热；满热炮网三轮齐射，蓄力消耗热能强化">⚙️ 热能 ${heat}/100 · 炮台 ${guns.filter(g=>!g.temporary).length}/${EngineerKit.cap()}${guns.some(g=>g.temporary)?' +支援'+guns.filter(g=>g.temporary).length:''}${GameState.forgeOverdriveTimer>0?' · 过载'+GameState.forgeOverdriveTimer.toFixed(1)+'s':''}</div>`;}
       tray.innerHTML = html;
     }
 
@@ -7056,8 +7187,9 @@
         ctx.rotate(ang);
 
         if(p.isRivet){
+          if(p.forgeRocket){ctx.fillStyle='rgba(249,115,22,.45)';ctx.beginPath();ctx.moveTo(-10,-6);ctx.lineTo(-48,0);ctx.lineTo(-10,6);ctx.fill();ctx.fillStyle='#fff7ae';ctx.fillRect(-30,-2,20,4);}
           ctx.fillStyle='#1e293b';ctx.fillRect(-14,-5,28,10);ctx.fillStyle=p.color;
-          if(p.isGrenade){ctx.fillRect(-10,-7,20,14);ctx.fillStyle='#fff7ae';ctx.fillRect(-4,-5,7,10);}else{ctx.fillRect(-13,-3,24,6);ctx.fillStyle='#fff7ae';ctx.fillRect(7,-5,7,10);ctx.fillStyle='#94a3b8';ctx.fillRect(-14,-5,4,10);}
+          if(p.isGrenade){ctx.fillRect(-10,-7,20,14);ctx.fillStyle='#94a3b8';ctx.fillRect(-12,-11,8,4);ctx.fillRect(-12,7,8,4);ctx.fillStyle='#fff7ae';ctx.fillRect(-4,-5,7,10);}else{ctx.fillRect(-13,-3,24,6);ctx.fillStyle='#fff7ae';ctx.fillRect(7,-5,7,10);ctx.fillStyle='#94a3b8';ctx.fillRect(-14,-5,4,10);}
         }else if (p.applyBleed) {
           // 剑客：多层新月弯刀剑气波
           ctx.strokeStyle = p.color;
@@ -7203,7 +7335,8 @@
         const ratio = Math.max(0, sb.life / sb.maxLife), effectAlpha=VisualSettings.effectAlpha(sb);
         ctx.save();
         ctx.globalAlpha = effectAlpha;
-        if (sb.type === 'sword_pillar') {
+        if(sb.type?.startsWith('forge_')){EngineerKit.drawBeam(ctx,sb,ratio);}
+        else if (sb.type === 'sword_pillar') {
           // 断界天陨斩：贯穿天地的黄金巨剑光柱
           const w = sb.width * ratio;
           ctx.fillStyle = 'rgba(250, 204, 21, 0.38)';
@@ -7425,6 +7558,7 @@
 
     function drawNativeAuras(ctx,player,state,opacity) {
       const spriteSet=SpriteCache[(state.selectedHero||'warrior')+'_0']||SpriteCache.warrior_0;
+      ctx.save();ctx.globalAlpha*=opacity;EngineerKit.drawRig(ctx,player,state);ctx.restore();
       // 游侠幻影分身绘制
       if (state.phantomCloneTimer > 0) {
         ctx.save();
@@ -9667,7 +9801,7 @@
     function setupHero(heroKey) {
       const cfg = HERO_CONFIGS[heroKey];
       GameState.selectedHero = heroKey;
-      GameState.forgeOverdriveTimer=0;NewSynergies.reset();
+      GameState.forgeOverdriveTimer=0;NewSynergies.reset();EngineerKit.reset();
 
       const t = SaveManager.data.talents;
       const baseDmgMul = 1 + (t.might * 0.06);
@@ -9951,7 +10085,7 @@
 
       if (tab === 'active') {
         const superFormulas = {
-          engineer:{attack:{reqName:'🥊 狂暴手套',hasReq:pass.critGlove,superName:'⚙️【超武】磁轨蜂群',superDesc:'4枚金色铆钉，穿透3个目标'},skill1:{reqName:'👟 疾行之靴',hasReq:pass.swiftBoots,superName:'💣【超武】日冕磁雷阵',superDesc:'同时部署3枚100半径高爆磁雷'},skill2:{reqName:'💖 熔岩之心',hasReq:pass.lavaHeart,superName:'⚙️【超武】双联重装哨戒',superDesc:'最多部署3座炮台，双联装贯穿弹'},ult:{reqName:'⭐ 大招升至满级(Lv.3)',hasReq:skills.ult.level>=3,superName:'☀️【终极超武】日冕工厂',superDesc:'过载持续9秒，额外部署2座支援炮台'}},
+          engineer:{attack:{reqName:'🥊 狂暴手套',hasReq:pass.critGlove,superName:'⚙️【超武】磁轨蜂群',superDesc:'6枚贯穿锁定钉，三连击附双追踪火箭'},skill1:{reqName:'👟 疾行之靴',hasReq:pass.swiftBoots,superName:'💣【超武】日冕磁雷阵',superDesc:'4枚聚怪磁雷，132半径爆破'},skill2:{reqName:'💖 熔岩之心',hasReq:pass.lavaHeart,superName:'⚙️【超武】六联重装哨戒',superDesc:'6座三管炮台，每次部署3座，附带追踪导弹'},ult:{reqName:'⭐ 大招升至满级(Lv.3)',hasReq:skills.ult.level>=3,superName:'☀️【终极超武】日冕工厂',superDesc:'9秒重装机甲、4座支援炮台与巡航轰炸'}},
           warrior: {
             attack: { reqName: '🥊 狂暴手套', hasReq: pass.critGlove, superName: '👑【超武】灭世斩神剑', superDesc: '每次挥砍释放半屏金色月牙气刃，必暴击且附带流血处决' },
             skill1: { reqName: '👟 疾行之靴', hasReq: pass.swiftBoots, superName: '⚡【超武】虚空血影闪', superDesc: '冲刺CD降至1.8s，沿途留下一排连环血雷阵引爆全场' },
@@ -10075,7 +10209,7 @@
       } else if (tab === 'equip') {
         const eqCount = ['critGlove', 'swiftBoots', 'lavaHeart', 'frostAura', 'pierceQuiver'].filter(k => pass[k]).length;
         const heroEquipMap = {
-          engineer:[{key:'critGlove',icon:'🥊',name:'狂暴手套',desc:'暴击率与暴伤提高',pair:'普攻超武【磁轨蜂群】配件'},{key:'swiftBoots',icon:'👟',name:'疾行之靴',desc:'移速与拾取范围提高',pair:'磁雷超武【日冕磁雷阵】配件'},{key:'lavaHeart',icon:'💖',name:'熔岩之心',desc:'生命上限提高，周期热浪',pair:'炮台超武【双联重装哨戒】配件'}],
+          engineer:[{key:'critGlove',icon:'🥊',name:'狂暴手套',desc:'暴击率与暴伤提高',pair:'普攻超武【磁轨蜂群】配件'},{key:'swiftBoots',icon:'👟',name:'疾行之靴',desc:'移速与拾取范围提高',pair:'磁雷超武【日冕磁雷阵】配件'},{key:'lavaHeart',icon:'💖',name:'熔岩之心',desc:'生命上限提高，周期热浪',pair:'炮台超武【六联重装哨戒】配件'}],
           warrior: [
             { key: 'critGlove',  icon: '🥊', name: '狂暴手套', desc: '暴击率+12%，暴击伤害提升至210%', pair: '苍红剑客 普攻超武【灭世斩神剑】核心配件' },
             { key: 'swiftBoots', icon: '👟', name: '疾行之靴', desc: '移速+18%，拾取磁吸范围+24px', pair: '苍红剑客 1技能超武【虚空血影闪】核心配件' },
@@ -10625,6 +10759,7 @@
           if (player.skills[k]) Object.assign(player.skills[k], sp.skills[k]);
         }
       }
+      if(GameState.selectedHero==='engineer')EngineerKit.normalizeSkills();
       if (sp.passives) Object.assign(player.passives, sp.passives);
       player.mapRelics = sp.mapRelics || [];
 
@@ -11857,12 +11992,12 @@
       visualSeq:0, ids:new WeakMap(), records:new Map(), budgets:new Map(),
       kinds:['ground','orbit','wheel','beam','slash','projectile','arc','images','particle'],
       fields:{
-        ground:['type','x','y','vx','vy','radius','life','maxLife','angle','isEvolved','overdrive'],
+        ground:['type','x','y','vx','vy','radius','life','maxLife','angle','isEvolved','overdrive','forgeStage','flash'],
         orbit:['angle','dist','spinSpeed','life','isEvolved'],
         wheel:['x','y','vx','vy','radius','isEvolved','spinAngle','catchX','catchY','state','timer'],
         beam:['type','x','y','x1','y1','x2','y2','startX','startY','radius','width','color','life','maxLife','isSuper','angle','len'],
         slash:['x','y','angle','radius','arc','color','life','maxLife','isFinisher'],
-        projectile:['x','y','vx','vy','radius','life','color','applyBleed','applyPoison','isArcaneChain','isFreeze','isRivet','isGrenade'],
+        projectile:['x','y','vx','vy','radius','life','color','applyBleed','applyPoison','isArcaneChain','isFreeze','isRivet','isGrenade','forgeRocket','targetX','targetY','forgeHot'],
         arc:['x1','y1','x2','y2','color','life'],images:['x','y','facing','hero','life','maxLife'],
         particle:['x','y','vx','vy','radius','maxRadius','isShockwave','size','color','life','maxLife']
       },
@@ -11891,7 +12026,7 @@
         }
         if(kind==='orbit'){if(!(o.dist>=0&&o.dist<=350&&Number.isFinite(o.angle)&&Number.isFinite(o.spinSpeed)))return null;}
         else if(['arc'].includes(kind)){if(![o.x1,o.y1,o.x2,o.y2].every(Number.isFinite))return null;}
-        else if(kind==='beam'&&['laser_beam','blink_rift','execution_cut'].includes(o.type)){if(![o.x1,o.y1,o.x2,o.y2].every(Number.isFinite))return null;}
+        else if(kind==='beam'&&['laser_beam','blink_rift','execution_cut','forge_rail','forge_link'].includes(o.type)){if(![o.x1,o.y1,o.x2,o.y2].every(Number.isFinite))return null;}
         else if(![o.x,o.y].every(Number.isFinite))return null;
         if(o.radius!==undefined&&!(o.radius>0&&o.radius<=1200))return null;
         if(o.life!==undefined&&!(o.life>0&&o.life<=30))return null;
@@ -11915,7 +12050,13 @@
           if(Array.isArray(pkt.alive)&&pkt.alive.length<=320){const alive=new Set(pkt.alive);for(const [id,v]of state.visuals)if(['ground','orbit','wheel','projectile'].includes(v.kind)&&!alive.has(id))state.visuals.delete(id);}
           const ack=[];
           for(const row of pkt.visuals){const v=this.unpack(row);if(!v)continue;ack.push(v.id);if(!state.seen.has(v.id)&&state.visuals.size<320){state.seen.set(v.id,performance.now());state.visuals.set(v.id,v);}}
-          for(const a of Array.isArray(pkt.updates)?pkt.updates.slice(0,16):[]){const v=state.visuals.get(a[0]);if(v?.kind==='ground'&&v.obj.type==='turret'&&a.slice(1,6).every(Number.isFinite)){v.obj.angle=a[3];v.obj.overdrive=Boolean(a[4]);v.obj.life=Math.max(.01,a[5]);}if(v?.kind==='wheel'&&a.slice(1,6).every(Number.isFinite)){v.obj._errorX=a[1]-v.obj.x;v.obj._errorY=a[2]-v.obj.y;v.obj.spinAngle=a[3];v.obj.state=['outbound','rebound','grounded'][a[4]]||'grounded';v.obj.timer=Math.max(0,a[5]);}}
+          for(const a of Array.isArray(pkt.updates)?pkt.updates.slice(0,16):[]){
+            const v=state.visuals.get(a[0]);if(!v||a.length<6||!a.slice(1,6).every(Number.isFinite))continue;const o=v.obj;
+            if(v.kind==='ground'&&['turret','mine'].includes(o.type)){o.angle=a[3];o.overdrive=Boolean(a[4]);o.life=Math.max(.01,a[5]);if(Number.isFinite(a[6]))o.forgeStage=a[6];if(Number.isFinite(a[7]))o.flash=a[7];}
+            else if(v.kind==='wheel'){o._errorX=a[1]-o.x;o._errorY=a[2]-o.y;o.spinAngle=a[3];o.state=['outbound','rebound','grounded'][a[4]]||'grounded';o.timer=Math.max(0,a[5]);}
+            else if(v.kind==='projectile'&&o.forgeRocket&&a.length===8&&a.slice(6).every(Number.isFinite)){o._errorX=a[1]-o.x;o._errorY=a[2]-o.y;o.vx=a[3];o.vy=a[4];o.life=Math.max(.01,a[5]);o.targetX=a[6];o.targetY=a[7];}
+            else if(v.kind==='beam'&&o.type==='forge_lock'){o.x=a[1];o.y=a[2];o.life=Math.max(.01,a[5]);}
+          }
           this.states.set(peer.id,state);
           if(ack.length)CoopManager.sendPacket({type:'SKILL_VISUAL_ACK',targetPeerId:peer.id,session:WorldCoop.session,ids:ack});return true;
         }
@@ -11946,7 +12087,13 @@
         for(const b of boomerangs.slice(0,4))items.push(['wheel',Math.round(b.x),Math.round(b.y),b.radius,b.isEvolved?1:0]);
         const look=[player.passives.frostAura||0,GameState.berserkTimer||0,GameState.starfallTimer||0,GameState.phantomCloneTimer||0,player.shield||0,player.radius,MenuPause.blocked()||UpgradeChoice.active?1:0,GameState.forgeOverdriveTimer||0];
         const alive=[...this.records].filter(([,v])=>['ground','orbit','wheel','projectile'].includes(v.kind)).map(([id])=>id);
-        const updates=[...this.records].filter(([,v])=>v.kind==='wheel'||(v.kind==='ground'&&v.obj.type==='turret')).slice(0,16).map(([id,{obj:b,kind}])=>kind==='wheel'?[id,Math.round(b.x*10)/10,Math.round(b.y*10)/10,Math.round(b.spinAngle*100)/100,['outbound','rebound','grounded'].indexOf(b.state),Math.round(b.timer*100)/100]:[id,b.x,b.y,Math.round((b.angle||0)*100)/100,b.overdrive?1:0,Math.round(b.life*100)/100]);
+        const motionRecords=[...this.records].filter(([,v])=>v.kind==='wheel'||(v.kind==='ground'&&['turret','mine'].includes(v.obj.type))||(v.kind==='beam'&&v.obj.type==='forge_lock'));
+        const rockets=[...this.records].filter(([,v])=>v.kind==='projectile'&&v.obj.forgeRocket).slice(-4);
+        const updates=motionRecords.slice(0,12).concat(rockets).map(([id,{obj:b,kind}])=>{
+          if(kind==='wheel')return[id,Math.round(b.x*10)/10,Math.round(b.y*10)/10,Math.round(b.spinAngle*100)/100,['outbound','rebound','grounded'].indexOf(b.state),Math.round(b.timer*100)/100];
+          if(kind==='projectile')return[id,Math.round(b.x),Math.round(b.y),Math.round(b.vx),Math.round(b.vy),Math.round(b.life*100)/100,Math.round(b.targetX),Math.round(b.targetY)];
+          return[id,Math.round(b.x),Math.round(b.y),Math.round((b.angle||0)*100)/100,b.overdrive?1:0,Math.round(b.life*100)/100,b.forgeStage||0,Math.round((b.flash||0)*100)/100];
+        });
         for(const peer of CoopManager.allies){
           const route=CoopManager.routeFor(peer.id,false),rate=route.kind==='mqtt'?4000:12000,burst=route.kind==='mqtt'?2800:6000;
           const b=this.budgets.get(peer.id)||{at:now,credit:burst,meta:-Infinity,motion:-Infinity};b.credit=Math.min(burst,b.credit+Math.max(0,now-b.at)*rate/1000);b.at=now;this.budgets.set(peer.id,b);
@@ -11955,7 +12102,8 @@
           const motion=updates.length&&now-b.motion>=150;
           if(meta)Object.assign(packet,{items:items.slice(0,16),look,alive});if(motion)packet.updates=updates;
           const chosen=[];let bytes=JSON.stringify(packet).length+240;
-          for(const [id,v]of this.records){
+          const visualPriority=v=>v.kind==='ground'||v.kind==='orbit'||v.kind==='wheel'?0:v.kind==='beam'?1:v.obj.forgeRocket?2:v.kind==='particle'?4:3;
+          for(const [id,v]of [...this.records].sort((a,b)=>visualPriority(a[1])-visualPriority(b[1]))){
             if(v.acked.has(peer.id)||now-(v.sent.get(peer.id)??-Infinity)<450)continue;
             const row=this.pack(v.kind,id,v.obj),size=JSON.stringify(row).length+1;
             if(bytes+size>Math.min(3900,b.credit)||chosen.length>=40)continue;
@@ -11989,7 +12137,8 @@
               else if(o.state==='rebound'){const dx=o.catchX-o.x,dy=o.catchY-o.y,len=Math.hypot(dx,dy);if(len<=14||o.timer<=0){o.x=o.catchX;o.y=o.catchY;o.state='grounded';o.timer=o.isEvolved?4:2.8;}else{o.x+=dx/len*430*d;o.y+=dy/len*430*d;}}
               const blend=1-Math.exp(-16*d),cx=(o._errorX||0)*blend,cy=(o._errorY||0)*blend;o.x+=cx;o.y+=cy;o._errorX=(o._errorX||0)-cx;o._errorY=(o._errorY||0)-cy;
             }
-            if(v.kind==='projectile'){o.trail??=[];o.trail.push({x:o.x,y:o.y});if(o.trail.length>5)o.trail.shift();o.x+=o.vx*d;o.y+=o.vy*d;}
+            if(v.kind==='ground'&&o.flash>0)o.flash=Math.max(0,o.flash-d);
+            if(v.kind==='projectile'){if(o.forgeRocket)EngineerKit.steer(o,d,true);const blend=1-Math.exp(-14*d);o.x+=(o._errorX||0)*blend;o.y+=(o._errorY||0)*blend;o._errorX=(o._errorX||0)*(1-blend);o._errorY=(o._errorY||0)*(1-blend);o.trail??=[];o.trail.push({x:o.x,y:o.y});if(o.trail.length>5)o.trail.shift();o.x+=o.vx*d;o.y+=o.vy*d;}
             if(v.kind==='ground'&&!frozen){o.x+=(o.vx||0)*d;o.y+=(o.vy||0)*d;}
             if(v.kind==='particle'){if(o.isShockwave)o.radius+=((o.maxRadius-o.radius)/(o.life+.05))*d*3;else{o.x+=(o.vx||0)*d;o.y+=(o.vy||0)*d;}}
             if(v.kind==='beam'&&o.type==='soul_wisp'){o.y-=38*d;o.x+=Math.sin(GameState.gameTime*10)*18*d;}
@@ -14967,7 +15116,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 14, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 15, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
