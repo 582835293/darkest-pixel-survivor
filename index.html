@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R12 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R13 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1243,7 +1243,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R12</span></div>
+        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R13</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -6639,34 +6639,7 @@
     }
 
     // 15. 零 shadowBlur 高帧率像素渲染引擎
-    function draw() {
-      ctx.save();
-      ctx.fillStyle = '#0a0a0f';
-      ctx.fillRect(0, 0, camera.viewportWidth, camera.viewportHeight);
-
-      let shakeX = 0, shakeY = 0;
-      if (GameState.screenShake > 0) {
-        shakeX = (Math.random() - 0.5) * GameState.screenShake;
-        shakeY = (Math.random() - 0.5) * GameState.screenShake;
-      }
-      ctx.translate(-camera.x + shakeX, -camera.y + shakeY);
-
-      drawTileMap();
-
-      // 绘制地面持久战斗血迹、骨渣、冰渍与焦痕 (bloodDecals)
-      for (let i = 0; i < bloodDecals.length; i++) {
-        const bd = bloodDecals[i];
-        ctx.globalAlpha = Math.min(0.75, (bd.life / bd.maxLife) * 0.85);
-        ctx.fillStyle = bd.color;
-        ctx.fillRect(bd.x - bd.size / 2, bd.y - bd.size / 3, bd.size, bd.size * 0.65);
-        ctx.fillRect(bd.x + bd.dx, bd.y + bd.dy, bd.size * 0.45, bd.size * 0.45);
-        if (bd.isScorch) {
-          ctx.fillStyle = '#f97316';
-          ctx.fillRect(bd.x - 2, bd.y - 2, 4, 4);
-        }
-      }
-      ctx.globalAlpha = 1;
-
+    function drawNativeGround(ctx, groundEffects) {
       // 绘制华丽地面领域 (八芒熔岩裂谷法阵、六旋臂星云引力黑洞、高能八角雷磁电网)
       for (let i = 0; i < groundEffects.length; i++) {
         const ge = groundEffects[i];
@@ -6822,6 +6795,635 @@
           ctx.restore();
         }
       }
+
+    }
+
+    function drawNativeImages(ctx, afterimages) {
+      // 绘制位移残影 (afterimages)
+      for (let i = 0; i < afterimages.length; i++) {
+        const ai = afterimages[i];
+        ctx.save();
+        ctx.globalAlpha = (ai.life / ai.maxLife) * 0.55 * VisualSettings.effectAlpha(ai);
+        ctx.translate(ai.x, ai.y);
+        ctx.scale(ai.facing, 1);
+        if (ai.img) ctx.drawImage(ai.img, -ai.img.width / 2, -ai.img.height / 2 - 2);
+        ctx.restore();
+      }
+
+    }
+
+    function drawNativeOrbitWheels(ctx, orbitingBlades, boomerangs, player, opacity) {
+      ctx.save();ctx.globalAlpha *= opacity;
+      // 绘制剑客多圈剑狱引力环与旋转重剑
+      if (orbitingBlades.length > 0) {
+        const ringDists = [...new Set(orbitingBlades.map(b => b.dist))];
+        ctx.save();
+        ctx.setLineDash([8, 6]);
+        ringDists.forEach(rDist => {
+          ctx.strokeStyle = 'rgba(244, 63, 94, 0.28)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(player.x, player.y, rDist, 0, Math.PI * 2);
+          ctx.stroke();
+        });
+        ctx.setLineDash([]);
+        ctx.restore();
+      }
+      for (let i = 0; i < orbitingBlades.length; i++) {
+        const blade = orbitingBlades[i];
+        const bx = player.x + Math.cos(blade.angle) * blade.dist;
+        const by = player.y + Math.sin(blade.angle) * blade.dist;
+        // 旋转刀风拖尾弧
+        ctx.strokeStyle = blade.isEvolved ? 'rgba(249, 115, 22, 0.55)' : 'rgba(244, 63, 94, 0.45)';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, blade.dist, blade.angle - 0.75, blade.angle);
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(bx, by);
+        ctx.rotate(blade.angle + Math.PI / 2);
+        ctx.fillStyle = blade.isEvolved ? '#f97316' : '#f43f5e';
+        ctx.fillRect(-18, -5, 36, 10);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(-16, -2, 32, 4);
+        ctx.fillStyle = '#fde047';
+        ctx.fillRect(-5, -10, 10, 20);
+        ctx.restore();
+      }
+
+      // 绘制游侠折返飞轮与地面固定【走位接取光圈】(需玩家主动走入光圈接取飞轮！)
+      for (let i = 0; i < boomerangs.length; i++) {
+        const bm = boomerangs[i];
+        if (bm.catchX !== undefined && bm.catchY !== undefined) {
+          ctx.save();
+          // 飞轮与固定落点之间的虚线轨迹引导
+          if (bm.state !== 'grounded') {
+            ctx.strokeStyle = 'rgba(52, 211, 153, 0.45)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([5, 4]);
+            ctx.beginPath();
+            ctx.moveTo(bm.x, bm.y);
+            ctx.lineTo(bm.catchX, bm.catchY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+          // 地面落点接取光圈
+          const ringPulse = 1 + Math.sin(performance.now() * 0.012) * 0.1;
+          ctx.translate(bm.catchX, bm.catchY);
+          ctx.fillStyle = bm.isEvolved ? 'rgba(250, 204, 21, 0.18)' : 'rgba(16, 185, 129, 0.18)';
+          ctx.beginPath();
+          ctx.arc(0, 0, 26 * ringPulse, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = bm.isEvolved ? '#fde047' : '#34d399';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.fillStyle = bm.isEvolved ? '#fde047' : '#6ee7b7';
+          ctx.font = 'bold 9px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('🪃接取点', 0, -30);
+          ctx.restore();
+        }
+
+        ctx.save();
+        ctx.translate(bm.x, bm.y);
+        ctx.strokeStyle = bm.isEvolved ? 'rgba(250, 204, 21, 0.7)' : 'rgba(52, 211, 153, 0.55)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(0, 0, bm.radius + 3, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.rotate(bm.spinAngle);
+        const armLen = bm.isEvolved ? 24 : 18;
+        ctx.fillStyle = bm.isEvolved ? '#f59e0b' : '#10b981';
+        ctx.fillRect(-armLen, -4, armLen * 2, 8);
+        ctx.fillRect(-4, -armLen, 8, armLen * 2);
+        ctx.fillStyle = '#ecfdf5';
+        ctx.fillRect(-(armLen - 4), -2, (armLen - 4) * 2, 4);
+        ctx.fillRect(-2, -(armLen - 4), 4, (armLen - 4) * 2);
+        ctx.fillStyle = '#fde047';
+        ctx.fillRect(-4, -4, 8, 8);
+        ctx.restore();
+      }
+
+      ctx.restore();
+    }
+
+    function drawNativeProjectiles(ctx, projectiles) {
+      // 绘制定制化形态弹道与流光拖尾 (剑气弯月波 / 星芒魔弹 / 羽尾利箭 / 邪火骷髅弹)
+      for (let i = 0; i < projectiles.length; i++) {
+        const p = projectiles[i];
+        const ang = Math.atan2(p.vy, p.vx);
+        const pAllyMul = VisualSettings.effectAlpha(p);
+
+        // 绘制渐变流光尾迹
+        if (p.trail && p.trail.length > 1) {
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = Math.max(2, p.radius * 0.55);
+          ctx.globalAlpha = 0.38 * pAllyMul;
+          ctx.beginPath();
+          ctx.moveTo(p.trail[0].x, p.trail[0].y);
+          for (let t = 1; t < p.trail.length; t++) {
+            ctx.lineTo(p.trail[t].x, p.trail[t].y);
+          }
+          ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = pAllyMul;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(ang);
+
+        if (p.applyBleed) {
+          // 剑客：多层新月弯刀剑气波
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = 6;
+          ctx.beginPath();
+          ctx.arc(-6, 0, p.radius * 1.15, -Math.PI * 0.42, Math.PI * 0.42);
+          ctx.stroke();
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.arc(-4, 0, p.radius * 1.15, -Math.PI * 0.35, Math.PI * 0.35);
+          ctx.stroke();
+        } else if (p.isArcaneChain) {
+          // 法师：八芒星晶奥术法球 + 径向辉光晕 + 环绕双星屑
+          const r = p.radius * 1.25;
+          ctx.fillStyle = p.isFreeze ? 'rgba(56, 189, 248, 0.32)' : 'rgba(168, 85, 247, 0.32)';
+          ctx.beginPath();
+          ctx.arc(0, 0, r * 1.35, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.rotate(GameState.gameTime * 16);
+          ctx.fillStyle = p.color;
+          for (let k = 0; k < 2; k++) {
+            ctx.rotate(Math.PI / 4);
+            ctx.fillRect(-r, -2.5, r * 2, 5);
+            ctx.fillRect(-2.5, -r, 5, r * 2);
+          }
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(0, 0, r * 0.45, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (p.applyPoison) {
+          // 游侠：带铁簇箭头与翠绿尾羽的利箭
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-14, -2, 24, 4);
+          ctx.fillStyle = '#f8fafc';
+          ctx.beginPath();
+          ctx.moveTo(14, 0); ctx.lineTo(6, -5); ctx.lineTo(6, 5);
+          ctx.closePath(); ctx.fill();
+          ctx.fillStyle = '#fde047';
+          ctx.fillRect(-16, -4, 6, 8);
+        } else {
+          // 敌方邪火球或冰锥
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(-2, -2, 4, 4);
+        }
+        ctx.restore();
+      }
+
+    }
+
+    function drawNativeArcs(ctx, lightningArcs) {
+      // 绘制5段分叉锯齿闪电链电弧 (外层电光蓝 + 内芯炽白)
+      for (let i = 0; i < lightningArcs.length; i++) {
+        const arc = lightningArcs[i];
+        ctx.save();ctx.globalAlpha=VisualSettings.effectAlpha(arc);
+        const segs = 5;
+        const pts = [{ x: arc.x1, y: arc.y1 }];
+        for (let s = 1; s < segs; s++) {
+          const t = s / segs;
+          pts.push({
+            x: arc.x1 + (arc.x2 - arc.x1) * t + (Math.random() - 0.5) * 22,
+            y: arc.y1 + (arc.y2 - arc.y1) * t + (Math.random() - 0.5) * 22
+          });
+        }
+        pts.push({ x: arc.x2, y: arc.y2 });
+
+        ctx.strokeStyle = arc.color;
+        ctx.lineWidth = 4.5;
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, pts[0].y);
+        for (let s = 1; s < pts.length; s++) ctx.lineTo(pts[s].x, pts[s].y);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.8;
+        ctx.stroke();ctx.restore();
+      }
+
+    }
+
+    function drawNativeSlashes(ctx, slashVisuals) {
+      // 绘制三层复合动态刀光弧线 (外层烈焰光晕 + 中层主刃 + 内层炽白剑锋)
+      for (let i = 0; i < slashVisuals.length; i++) {
+        const s = slashVisuals[i];
+        const progress = 1 - (s.life / s.maxLife);
+        const alpha = Math.max(0, 1 - progress) * VisualSettings.effectAlpha(s);
+        const arcSpan = s.arc || Math.PI;
+        const curRad = s.radius * (0.8 + progress * 0.28);
+
+        ctx.save();
+        ctx.translate(s.x, s.y);
+        ctx.rotate(s.angle);
+        ctx.globalAlpha = alpha;
+
+        // 第一层：宽幅彩色剑气外晕
+        ctx.strokeStyle = s.color;
+        ctx.lineWidth = (s.isFinisher ? 20 : 12) * alpha;
+        ctx.beginPath();
+        ctx.arc(0, 0, curRad, -arcSpan / 2, arcSpan / 2);
+        ctx.stroke();
+
+        // 第二层：高亮剑刃中层
+        ctx.strokeStyle = s.isFinisher ? '#fde047' : '#93c5fd';
+        ctx.lineWidth = (s.isFinisher ? 10 : 6) * alpha;
+        ctx.beginPath();
+        ctx.arc(0, 0, curRad + 2, -arcSpan * 0.44, arcSpan * 0.44);
+        ctx.stroke();
+
+        // 第三层：炽白剑芯亮线
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, curRad + 4, -arcSpan * 0.36, arcSpan * 0.36);
+        ctx.stroke();
+
+        // 第四层：剑气龙骨放射棱线与刀锋飞溅星火残粒
+        const ribs = s.isFinisher ? 7 : 5;
+        for (let rIdx = 0; rIdx < ribs; rIdx++) {
+          const rAng = -arcSpan * 0.42 + (arcSpan * 0.84) * (rIdx / (ribs - 1));
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 1.5 * alpha;
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(rAng) * (curRad - 10), Math.sin(rAng) * (curRad - 10));
+          ctx.lineTo(Math.cos(rAng) * (curRad + 8), Math.sin(rAng) * (curRad + 8));
+          ctx.stroke();
+          ctx.fillStyle = '#fde047';
+          ctx.fillRect(Math.cos(rAng) * (curRad + 10) - 2, Math.sin(rAng) * (curRad + 10) - 2, 4, 4);
+        }
+
+        ctx.restore();
+      }
+
+    }
+
+    function drawNativeBeams(ctx, skyBeams) {
+      // 绘制天降光柱、坠落陨石、居合十字裂隙、一刀两断斩杀线与升腾魂火 (skyBeams)
+      for (let i = 0; i < skyBeams.length; i++) {
+        const sb = skyBeams[i];
+        const ratio = Math.max(0, sb.life / sb.maxLife), effectAlpha=VisualSettings.effectAlpha(sb);
+        ctx.save();
+        ctx.globalAlpha = effectAlpha;
+        if (sb.type === 'sword_pillar') {
+          // 断界天陨斩：贯穿天地的黄金巨剑光柱
+          const w = sb.width * ratio;
+          ctx.fillStyle = 'rgba(250, 204, 21, 0.38)';
+          ctx.fillRect(sb.x - w, sb.y - 420, w * 2, 430);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(sb.x - w * 0.35, sb.y - 420, w * 0.7, 430);
+          // 地面十字星芒裂痕
+          ctx.strokeStyle = '#fde047';
+          ctx.lineWidth = 3.5;
+          ctx.beginPath();
+          ctx.moveTo(sb.x - 48, sb.y); ctx.lineTo(sb.x + 48, sb.y);
+          ctx.moveTo(sb.x, sb.y - 24); ctx.lineTo(sb.x, sb.y + 24);
+          ctx.stroke();
+        } else if (sb.type === 'frost_nova_matrix') {
+          // 法师【极寒冰闪】专属特效：双层旋转六芒星冰晶法阵 + 6根突起冰川棱柱！
+          ctx.translate(sb.x, sb.y);
+          ctx.globalAlpha = ratio * effectAlpha;
+          const curR = sb.radius * (0.45 + (1 - ratio) * 0.62);
+          const fGrad = ctx.createRadialGradient(0, 0, curR * 0.1, 0, 0, curR);
+          fGrad.addColorStop(0, 'rgba(224, 242, 254, 0.65)');
+          fGrad.addColorStop(0.6, 'rgba(56, 189, 248, 0.35)');
+          fGrad.addColorStop(1, 'rgba(2, 132, 199, 0.0)');
+          ctx.fillStyle = fGrad;
+          ctx.beginPath();
+          ctx.arc(0, 0, curR, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.rotate((1 - ratio) * 2.4);
+          ctx.strokeStyle = '#bae6fd';
+          ctx.lineWidth = 2.5 * ratio;
+          // 绘制六芒星双正三角法阵
+          for (let t = 0; t < 2; t++) {
+            ctx.beginPath();
+            for (let p = 0; p < 3; p++) {
+              const a = t * (Math.PI / 3) + (p * Math.PI * 2) / 3;
+              const px = Math.cos(a) * curR * 0.88;
+              const py = Math.sin(a) * curR * 0.88;
+              if (p === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.stroke();
+          }
+          // 绘制 6 道向外刺出的晶莹冰川棱柱 + 分形雪花侧枝 + 12星轨符文刻度
+          for (let k = 0; k < 6; k++) {
+            const a = (Math.PI * 2 / 6) * k;
+            ctx.save();
+            ctx.rotate(a);
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath();
+            ctx.moveTo(curR * 0.22, -7);
+            ctx.lineTo(curR * 1.12, 0);
+            ctx.lineTo(curR * 0.22, 7);
+            ctx.closePath();
+            ctx.fill();
+            // 分形雪花晶枝 V 型侧翼
+            ctx.strokeStyle = '#e0f2fe';
+            ctx.lineWidth = 2 * ratio;
+            ctx.beginPath();
+            ctx.moveTo(curR * 0.58, 0); ctx.lineTo(curR * 0.76, -13);
+            ctx.moveTo(curR * 0.58, 0); ctx.lineTo(curR * 0.76, 13);
+            ctx.moveTo(curR * 0.78, 0); ctx.lineTo(curR * 0.92, -9);
+            ctx.moveTo(curR * 0.78, 0); ctx.lineTo(curR * 0.92, 9);
+            ctx.stroke();
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(curR * 0.42, -2, curR * 0.45, 4);
+            ctx.restore();
+          }
+        } else if (sb.type === 'blink_rift') {
+          // 法师【极寒冰闪】折跃通道：双螺旋次元裂隙 + 悬浮冰晶星尘
+          ctx.globalAlpha = ratio * effectAlpha;
+          const dx = sb.x2 - sb.x1, dy = sb.y2 - sb.y1;
+          const dist = Math.hypot(dx, dy) || 1;
+          const ang = Math.atan2(dy, dx);
+          ctx.translate(sb.x1, sb.y1);
+          ctx.rotate(ang);
+          // 中心次元裂缝亮芯
+          ctx.strokeStyle = '#e0f2fe';
+          ctx.lineWidth = 4 * ratio;
+          ctx.beginPath();
+          ctx.moveTo(0, 0); ctx.lineTo(dist, 0);
+          ctx.stroke();
+          // 双螺旋奥术冰雷波纹
+          for (let s = -1; s <= 1; s += 2) {
+            ctx.strokeStyle = s === 1 ? '#38bdf8' : '#c084fc';
+            ctx.lineWidth = 2.2 * ratio;
+            ctx.beginPath();
+            for (let step = 0; step <= 16; step++) {
+              const t = step / 16;
+              const px = dist * t;
+              const py = Math.sin(t * Math.PI * 4 + GameState.gameTime * 20) * 14 * s * ratio;
+              if (step === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+          }
+        } else if (sb.type === 'meteor') {
+          // 群星坠落：地面预瞄星芒法阵 + 三层等离子慧尾陨星
+          const p = 1 - ratio;
+          const curX = sb.startX + (sb.x - sb.startX) * p;
+          const curY = sb.startY + (sb.y - sb.startY) * p;
+          // 地面落点锁定星芒阵
+          ctx.save();
+          ctx.translate(sb.x, sb.y);
+          ctx.strokeStyle = sb.color || '#38bdf8';
+          ctx.lineWidth = 1.8;
+          ctx.beginPath();
+          ctx.arc(0, 0, sb.radius * 0.55 * p, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+          // 彗星三层等离子拖尾
+          ctx.strokeStyle = 'rgba(192, 132, 252, 0.55)';
+          ctx.lineWidth = 18 * ratio;
+          ctx.beginPath();
+          ctx.moveTo(sb.startX, sb.startY);
+          ctx.lineTo(curX, curY);
+          ctx.stroke();
+          ctx.strokeStyle = sb.color || '#38bdf8';
+          ctx.lineWidth = 10 * ratio;
+          ctx.stroke();
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(curX, curY, 15, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (sb.type === 'cross_slash') {
+          // 居合次元十字斩：X型空间斩裂线
+          ctx.translate(sb.x, sb.y);
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 9 * ratio;
+          ctx.beginPath();
+          ctx.moveTo(-sb.radius, -sb.radius * 0.6); ctx.lineTo(sb.radius, sb.radius * 0.6);
+          ctx.moveTo(-sb.radius, sb.radius * 0.6);  ctx.lineTo(sb.radius, -sb.radius * 0.6);
+          ctx.stroke();
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 3 * ratio;
+          ctx.stroke();
+        } else if (sb.type === 'laser_beam') {
+          // 星界超新星贯穿炮：双层粗大激光束
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+          ctx.lineWidth = sb.width * ratio;
+          ctx.beginPath();
+          ctx.moveTo(sb.x1, sb.y1); ctx.lineTo(sb.x2, sb.y2);
+          ctx.stroke();
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = sb.width * 0.35 * ratio;
+          ctx.stroke();
+        } else if (sb.type === 'death_slash') {
+          // 怪物被斩杀时的凌厉一闪亮线
+          ctx.translate(sb.x, sb.y);
+          ctx.rotate(sb.angle);
+          ctx.strokeStyle = sb.color || '#ffffff';
+          ctx.lineWidth = 3.5 * ratio;
+          ctx.beginPath();
+          ctx.moveTo(-sb.len, 0); ctx.lineTo(sb.len, 0);
+          ctx.stroke();
+        } else if (sb.type === 'soul_wisp') {
+          // 怪物死亡升起的幽冥魂火
+          ctx.globalAlpha = ratio * 0.85 * effectAlpha;
+          ctx.fillStyle = sb.color;
+          ctx.fillRect(sb.x - 3, sb.y - 3, 6, 6);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(sb.x - 1, sb.y - 6, 2, 4);
+        }
+        ctx.restore();
+      }
+
+    }
+
+    function drawNativeParticles(ctx, particles) {
+      // 粒子与复合符文星芒震波渲染（告别单调圆圈，升级为径向能量光晕 + 内嵌旋转几何星芒 + 8向放射锋芒！）
+      for (let i = 0; i < particles.length; i++) {
+        const pt = particles[i];
+        if (pt.isShockwave) {
+          const alpha = Math.max(0, pt.life / pt.maxLife) * VisualSettings.effectAlpha(pt);
+          ctx.save();
+          ctx.translate(pt.x, pt.y);
+          ctx.globalAlpha = alpha;
+
+          // 1. 外环主冲击波与内层副波纹
+          ctx.strokeStyle = pt.color;
+          ctx.lineWidth = 3.5 * alpha;
+          ctx.beginPath();
+          ctx.arc(0, 0, pt.radius, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 1.5 * alpha;
+          ctx.beginPath();
+          ctx.arc(0, 0, pt.radius * 0.76, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // 2. 内嵌旋转八芒星射线、16刻度罗盘环与8枚菱形能量矛尖
+          ctx.rotate((1 - alpha) * 1.6 + i);
+          ctx.strokeStyle = pt.color;
+          ctx.lineWidth = 1.8 * alpha;
+          const spikes = 8;
+          for (let k = 0; k < spikes; k++) {
+            const a = (Math.PI * 2 / spikes) * k;
+            const rIn = pt.radius * 0.52;
+            const rOut = pt.radius * 1.08;
+            ctx.beginPath();
+            ctx.moveTo(Math.cos(a) * rIn, Math.sin(a) * rIn);
+            ctx.lineTo(Math.cos(a) * rOut, Math.sin(a) * rOut);
+            ctx.stroke();
+            // 波峰菱形能量矛尖
+            const tipX = Math.cos(a) * rOut;
+            const tipY = Math.sin(a) * rOut;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(tipX - 2.5, tipY - 2.5, 5, 5);
+          }
+          ctx.restore();
+        } else {
+          ctx.save();ctx.globalAlpha=VisualSettings.effectAlpha(pt);
+          ctx.fillStyle = pt.color;
+          ctx.fillRect(pt.x - pt.size / 2, pt.y - pt.size / 2, pt.size, pt.size);
+          ctx.restore();
+        }
+      }
+
+    }
+
+    function drawNativeAuras(ctx,player,state,opacity) {
+      const spriteSet=SpriteCache[(state.selectedHero||'warrior')+'_0']||SpriteCache.warrior_0;
+      // 游侠幻影分身绘制
+      if (state.phantomCloneTimer > 0) {
+        ctx.save();
+        ctx.globalAlpha = 0.55 * opacity;
+        ctx.drawImage(spriteSet.ice, player.x - 42, player.y - 26);
+        ctx.drawImage(spriteSet.ice, player.x + 14, player.y + 4);
+        ctx.restore();
+      }
+
+      // 极寒冰霜光环绘制：随身旋转的六芒星冰晶雪花领域 + 环绕冰晶棱柱
+      if (player.passives.frostAura) {
+        const auraR = 75 + (player.passives.frostAura || 1) * 10;
+        ctx.save();
+        ctx.globalAlpha *= opacity;
+        ctx.translate(player.x, player.y);
+        const fGrad = ctx.createRadialGradient(0, 0, auraR * 0.2, 0, 0, auraR);
+        fGrad.addColorStop(0, 'rgba(56, 189, 248, 0.04)');
+        fGrad.addColorStop(1, 'rgba(56, 189, 248, 0.22)');
+        ctx.fillStyle = fGrad;
+        ctx.beginPath();
+        ctx.arc(0, 0, auraR, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.rotate(state.gameTime * 1.1);
+        ctx.strokeStyle = 'rgba(125, 211, 252, 0.52)';
+        ctx.lineWidth = 1.5;
+        for (let t = 0; t < 2; t++) {
+          ctx.beginPath();
+          for (let p = 0; p < 3; p++) {
+            const a = t * (Math.PI / 3) + (p * Math.PI * 2) / 3;
+            const px = Math.cos(a) * auraR;
+            const py = Math.sin(a) * auraR;
+            if (p === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.stroke();
+        }
+        for (let k = 0; k < 6; k++) {
+          const a = (Math.PI * 2 / 6) * k;
+          ctx.fillStyle = '#bae6fd';
+          ctx.fillRect(Math.cos(a) * auraR - 3, Math.sin(a) * auraR - 3, 6, 6);
+        }
+        ctx.restore();
+      }
+
+      // 法师大招【群星坠落阵列】开启期间：脚下展开巨型双环逆旋黄金星象仪法阵！
+      if (state.starfallTimer > 0) {
+        ctx.save();
+        ctx.globalAlpha *= opacity;
+        ctx.translate(player.x, player.y);
+        ctx.rotate(state.gameTime * 2.2);
+        const astR = 64;
+        ctx.strokeStyle = 'rgba(250, 204, 21, 0.78)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, astR, 0, Math.PI * 2);
+        ctx.stroke();
+        for (let t = 0; t < 2; t++) {
+          ctx.beginPath();
+          for (let p = 0; p < 3; p++) {
+            const a = t * (Math.PI / 3) + (p * Math.PI * 2) / 3;
+            const px = Math.cos(a) * astR;
+            const py = Math.sin(a) * astR;
+            if (p === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      ctx.save();ctx.translate(player.x,player.y);
+      ctx.save();ctx.globalAlpha *= opacity;
+      if (state.berserkTimer > 0 || state.starfallTimer > 0) {
+        ctx.strokeStyle = '#facc15';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, player.radius + 9, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      if (player.shield > 0) {
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, player.radius + 6, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+      ctx.restore();
+    }
+
+    function draw() {
+      ctx.save();
+      ctx.fillStyle = '#0a0a0f';
+      ctx.fillRect(0, 0, camera.viewportWidth, camera.viewportHeight);
+
+      let shakeX = 0, shakeY = 0;
+      if (GameState.screenShake > 0) {
+        shakeX = (Math.random() - 0.5) * GameState.screenShake;
+        shakeY = (Math.random() - 0.5) * GameState.screenShake;
+      }
+      ctx.translate(-camera.x + shakeX, -camera.y + shakeY);
+
+      drawTileMap();
+
+      // 绘制地面持久战斗血迹、骨渣、冰渍与焦痕 (bloodDecals)
+      for (let i = 0; i < bloodDecals.length; i++) {
+        const bd = bloodDecals[i];
+        ctx.globalAlpha = Math.min(0.75, (bd.life / bd.maxLife) * 0.85);
+        ctx.fillStyle = bd.color;
+        ctx.fillRect(bd.x - bd.size / 2, bd.y - bd.size / 3, bd.size, bd.size * 0.65);
+        ctx.fillRect(bd.x + bd.dx, bd.y + bd.dy, bd.size * 0.45, bd.size * 0.45);
+        if (bd.isScorch) {
+          ctx.fillStyle = '#f97316';
+          ctx.fillRect(bd.x - 2, bd.y - 2, 4, 4);
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      drawNativeGround(ctx, groundEffects); CoopSkillVfx.draw(ctx,'ground');
 
       // 绘制敌人红色预警线与预警圈
       for (let i = 0; i < telegraphs.length; i++) {
@@ -7267,16 +7869,7 @@
         }
       }
 
-      // 绘制位移残影 (afterimages)
-      for (let i = 0; i < afterimages.length; i++) {
-        const ai = afterimages[i];
-        ctx.save();
-        ctx.globalAlpha = (ai.life / ai.maxLife) * 0.55 * VisualSettings.selfAlpha;
-        ctx.translate(ai.x, ai.y);
-        ctx.scale(ai.facing, 1);
-        if (ai.img) ctx.drawImage(ai.img, -ai.img.width / 2, -ai.img.height / 2 - 2);
-        ctx.restore();
-      }
+      drawNativeImages(ctx, afterimages); CoopSkillVfx.draw(ctx,'images');
 
       // 绘制敌人
       for (let i = 0; i < enemies.length; i++) {
@@ -7315,477 +7908,18 @@
 
       // 绘制主角及分身
       drawPlayer();
-      CoopSkillVfx.draw(ctx);
 
-      ctx.save();ctx.globalAlpha *= VisualSettings.selfAlpha;
-      // 绘制剑客多圈剑狱引力环与旋转重剑
-      if (orbitingBlades.length > 0) {
-        const ringDists = [...new Set(orbitingBlades.map(b => b.dist))];
-        ctx.save();
-        ctx.setLineDash([8, 6]);
-        ringDists.forEach(rDist => {
-          ctx.strokeStyle = 'rgba(244, 63, 94, 0.28)';
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(player.x, player.y, rDist, 0, Math.PI * 2);
-          ctx.stroke();
-        });
-        ctx.setLineDash([]);
-        ctx.restore();
-      }
-      for (let i = 0; i < orbitingBlades.length; i++) {
-        const blade = orbitingBlades[i];
-        const bx = player.x + Math.cos(blade.angle) * blade.dist;
-        const by = player.y + Math.sin(blade.angle) * blade.dist;
-        // 旋转刀风拖尾弧
-        ctx.strokeStyle = blade.isEvolved ? 'rgba(249, 115, 22, 0.55)' : 'rgba(244, 63, 94, 0.45)';
-        ctx.lineWidth = 6;
-        ctx.beginPath();
-        ctx.arc(player.x, player.y, blade.dist, blade.angle - 0.75, blade.angle);
-        ctx.stroke();
+      drawNativeOrbitWheels(ctx,orbitingBlades,boomerangs,player,VisualSettings.selfAlpha); CoopSkillVfx.draw(ctx,'orbit'); CoopSkillVfx.draw(ctx,'wheel');
 
-        ctx.save();
-        ctx.translate(bx, by);
-        ctx.rotate(blade.angle + Math.PI / 2);
-        ctx.fillStyle = blade.isEvolved ? '#f97316' : '#f43f5e';
-        ctx.fillRect(-18, -5, 36, 10);
-        ctx.fillStyle = '#f8fafc';
-        ctx.fillRect(-16, -2, 32, 4);
-        ctx.fillStyle = '#fde047';
-        ctx.fillRect(-5, -10, 10, 20);
-        ctx.restore();
-      }
+      drawNativeProjectiles(ctx,projectiles); CoopSkillVfx.draw(ctx,'projectile');
 
-      // 绘制游侠折返飞轮与地面固定【走位接取光圈】(需玩家主动走入光圈接取飞轮！)
-      for (let i = 0; i < boomerangs.length; i++) {
-        const bm = boomerangs[i];
-        if (bm.catchX !== undefined && bm.catchY !== undefined) {
-          ctx.save();
-          // 飞轮与固定落点之间的虚线轨迹引导
-          if (bm.state !== 'grounded') {
-            ctx.strokeStyle = 'rgba(52, 211, 153, 0.45)';
-            ctx.lineWidth = 1.5;
-            ctx.setLineDash([5, 4]);
-            ctx.beginPath();
-            ctx.moveTo(bm.x, bm.y);
-            ctx.lineTo(bm.catchX, bm.catchY);
-            ctx.stroke();
-            ctx.setLineDash([]);
-          }
-          // 地面落点接取光圈
-          const ringPulse = 1 + Math.sin(performance.now() * 0.012) * 0.1;
-          ctx.translate(bm.catchX, bm.catchY);
-          ctx.fillStyle = bm.isEvolved ? 'rgba(250, 204, 21, 0.18)' : 'rgba(16, 185, 129, 0.18)';
-          ctx.beginPath();
-          ctx.arc(0, 0, 26 * ringPulse, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.strokeStyle = bm.isEvolved ? '#fde047' : '#34d399';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-          ctx.fillStyle = bm.isEvolved ? '#fde047' : '#6ee7b7';
-          ctx.font = 'bold 9px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText('🪃接取点', 0, -30);
-          ctx.restore();
-        }
+      drawNativeArcs(ctx,lightningArcs); CoopSkillVfx.draw(ctx,'arc');
 
-        ctx.save();
-        ctx.translate(bm.x, bm.y);
-        ctx.strokeStyle = bm.isEvolved ? 'rgba(250, 204, 21, 0.7)' : 'rgba(52, 211, 153, 0.55)';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(0, 0, bm.radius + 3, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.rotate(bm.spinAngle);
-        const armLen = bm.isEvolved ? 24 : 18;
-        ctx.fillStyle = bm.isEvolved ? '#f59e0b' : '#10b981';
-        ctx.fillRect(-armLen, -4, armLen * 2, 8);
-        ctx.fillRect(-4, -armLen, 8, armLen * 2);
-        ctx.fillStyle = '#ecfdf5';
-        ctx.fillRect(-(armLen - 4), -2, (armLen - 4) * 2, 4);
-        ctx.fillRect(-2, -(armLen - 4), 4, (armLen - 4) * 2);
-        ctx.fillStyle = '#fde047';
-        ctx.fillRect(-4, -4, 8, 8);
-        ctx.restore();
-      }
+      drawNativeSlashes(ctx,slashVisuals); CoopSkillVfx.draw(ctx,'slash');
 
-      ctx.restore();
-      // 绘制定制化形态弹道与流光拖尾 (剑气弯月波 / 星芒魔弹 / 羽尾利箭 / 邪火骷髅弹)
-      for (let i = 0; i < projectiles.length; i++) {
-        const p = projectiles[i];
-        const ang = Math.atan2(p.vy, p.vx);
-        const pAllyMul = VisualSettings.effectAlpha(p);
+      drawNativeBeams(ctx,skyBeams); CoopSkillVfx.draw(ctx,'beam');
 
-        // 绘制渐变流光尾迹
-        if (p.trail && p.trail.length > 1) {
-          ctx.strokeStyle = p.color;
-          ctx.lineWidth = Math.max(2, p.radius * 0.55);
-          ctx.globalAlpha = 0.38 * pAllyMul;
-          ctx.beginPath();
-          ctx.moveTo(p.trail[0].x, p.trail[0].y);
-          for (let t = 1; t < p.trail.length; t++) {
-            ctx.lineTo(p.trail[t].x, p.trail[t].y);
-          }
-          ctx.lineTo(p.x, p.y);
-          ctx.stroke();
-          ctx.globalAlpha = 1;
-        }
-
-        ctx.save();
-        ctx.globalAlpha = pAllyMul;
-        ctx.translate(p.x, p.y);
-        ctx.rotate(ang);
-
-        if (p.applyBleed) {
-          // 剑客：多层新月弯刀剑气波
-          ctx.strokeStyle = p.color;
-          ctx.lineWidth = 6;
-          ctx.beginPath();
-          ctx.arc(-6, 0, p.radius * 1.15, -Math.PI * 0.42, Math.PI * 0.42);
-          ctx.stroke();
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 2.5;
-          ctx.beginPath();
-          ctx.arc(-4, 0, p.radius * 1.15, -Math.PI * 0.35, Math.PI * 0.35);
-          ctx.stroke();
-        } else if (p.isArcaneChain) {
-          // 法师：八芒星晶奥术法球 + 径向辉光晕 + 环绕双星屑
-          const r = p.radius * 1.25;
-          ctx.fillStyle = p.isFreeze ? 'rgba(56, 189, 248, 0.32)' : 'rgba(168, 85, 247, 0.32)';
-          ctx.beginPath();
-          ctx.arc(0, 0, r * 1.35, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.rotate(GameState.gameTime * 16);
-          ctx.fillStyle = p.color;
-          for (let k = 0; k < 2; k++) {
-            ctx.rotate(Math.PI / 4);
-            ctx.fillRect(-r, -2.5, r * 2, 5);
-            ctx.fillRect(-2.5, -r, 5, r * 2);
-          }
-          ctx.fillStyle = '#ffffff';
-          ctx.beginPath();
-          ctx.arc(0, 0, r * 0.45, 0, Math.PI * 2);
-          ctx.fill();
-        } else if (p.applyPoison) {
-          // 游侠：带铁簇箭头与翠绿尾羽的利箭
-          ctx.fillStyle = p.color;
-          ctx.fillRect(-14, -2, 24, 4);
-          ctx.fillStyle = '#f8fafc';
-          ctx.beginPath();
-          ctx.moveTo(14, 0); ctx.lineTo(6, -5); ctx.lineTo(6, 5);
-          ctx.closePath(); ctx.fill();
-          ctx.fillStyle = '#fde047';
-          ctx.fillRect(-16, -4, 6, 8);
-        } else {
-          // 敌方邪火球或冰锥
-          ctx.fillStyle = p.color;
-          ctx.beginPath();
-          ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(-2, -2, 4, 4);
-        }
-        ctx.restore();
-      }
-
-      // 绘制5段分叉锯齿闪电链电弧 (外层电光蓝 + 内芯炽白)
-      for (let i = 0; i < lightningArcs.length; i++) {
-        const arc = lightningArcs[i];
-        ctx.save();ctx.globalAlpha=VisualSettings.effectAlpha(arc);
-        const segs = 5;
-        const pts = [{ x: arc.x1, y: arc.y1 }];
-        for (let s = 1; s < segs; s++) {
-          const t = s / segs;
-          pts.push({
-            x: arc.x1 + (arc.x2 - arc.x1) * t + (Math.random() - 0.5) * 22,
-            y: arc.y1 + (arc.y2 - arc.y1) * t + (Math.random() - 0.5) * 22
-          });
-        }
-        pts.push({ x: arc.x2, y: arc.y2 });
-
-        ctx.strokeStyle = arc.color;
-        ctx.lineWidth = 4.5;
-        ctx.beginPath();
-        ctx.moveTo(pts[0].x, pts[0].y);
-        for (let s = 1; s < pts.length; s++) ctx.lineTo(pts[s].x, pts[s].y);
-        ctx.stroke();
-
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 1.8;
-        ctx.stroke();ctx.restore();
-      }
-
-      // 绘制三层复合动态刀光弧线 (外层烈焰光晕 + 中层主刃 + 内层炽白剑锋)
-      for (let i = 0; i < slashVisuals.length; i++) {
-        const s = slashVisuals[i];
-        const progress = 1 - (s.life / s.maxLife);
-        const alpha = Math.max(0, 1 - progress) * VisualSettings.effectAlpha(s);
-        const arcSpan = s.arc || player.skills.attack.arc;
-        const curRad = s.radius * (0.8 + progress * 0.28);
-
-        ctx.save();
-        ctx.translate(s.x, s.y);
-        ctx.rotate(s.angle);
-        ctx.globalAlpha = alpha;
-
-        // 第一层：宽幅彩色剑气外晕
-        ctx.strokeStyle = s.color;
-        ctx.lineWidth = (s.isFinisher ? 20 : 12) * alpha;
-        ctx.beginPath();
-        ctx.arc(0, 0, curRad, -arcSpan / 2, arcSpan / 2);
-        ctx.stroke();
-
-        // 第二层：高亮剑刃中层
-        ctx.strokeStyle = s.isFinisher ? '#fde047' : '#93c5fd';
-        ctx.lineWidth = (s.isFinisher ? 10 : 6) * alpha;
-        ctx.beginPath();
-        ctx.arc(0, 0, curRad + 2, -arcSpan * 0.44, arcSpan * 0.44);
-        ctx.stroke();
-
-        // 第三层：炽白剑芯亮线
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.arc(0, 0, curRad + 4, -arcSpan * 0.36, arcSpan * 0.36);
-        ctx.stroke();
-
-        // 第四层：剑气龙骨放射棱线与刀锋飞溅星火残粒
-        const ribs = s.isFinisher ? 7 : 5;
-        for (let rIdx = 0; rIdx < ribs; rIdx++) {
-          const rAng = -arcSpan * 0.42 + (arcSpan * 0.84) * (rIdx / (ribs - 1));
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 1.5 * alpha;
-          ctx.beginPath();
-          ctx.moveTo(Math.cos(rAng) * (curRad - 10), Math.sin(rAng) * (curRad - 10));
-          ctx.lineTo(Math.cos(rAng) * (curRad + 8), Math.sin(rAng) * (curRad + 8));
-          ctx.stroke();
-          ctx.fillStyle = '#fde047';
-          ctx.fillRect(Math.cos(rAng) * (curRad + 10) - 2, Math.sin(rAng) * (curRad + 10) - 2, 4, 4);
-        }
-
-        ctx.restore();
-      }
-
-      // 绘制天降光柱、坠落陨石、居合十字裂隙、一刀两断斩杀线与升腾魂火 (skyBeams)
-      for (let i = 0; i < skyBeams.length; i++) {
-        const sb = skyBeams[i];
-        const ratio = Math.max(0, sb.life / sb.maxLife), effectAlpha=VisualSettings.effectAlpha(sb);
-        ctx.save();
-        ctx.globalAlpha = effectAlpha;
-        if (sb.type === 'sword_pillar') {
-          // 断界天陨斩：贯穿天地的黄金巨剑光柱
-          const w = sb.width * ratio;
-          ctx.fillStyle = 'rgba(250, 204, 21, 0.38)';
-          ctx.fillRect(sb.x - w, sb.y - 420, w * 2, 430);
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(sb.x - w * 0.35, sb.y - 420, w * 0.7, 430);
-          // 地面十字星芒裂痕
-          ctx.strokeStyle = '#fde047';
-          ctx.lineWidth = 3.5;
-          ctx.beginPath();
-          ctx.moveTo(sb.x - 48, sb.y); ctx.lineTo(sb.x + 48, sb.y);
-          ctx.moveTo(sb.x, sb.y - 24); ctx.lineTo(sb.x, sb.y + 24);
-          ctx.stroke();
-        } else if (sb.type === 'frost_nova_matrix') {
-          // 法师【极寒冰闪】专属特效：双层旋转六芒星冰晶法阵 + 6根突起冰川棱柱！
-          ctx.translate(sb.x, sb.y);
-          ctx.globalAlpha = ratio * effectAlpha;
-          const curR = sb.radius * (0.45 + (1 - ratio) * 0.62);
-          const fGrad = ctx.createRadialGradient(0, 0, curR * 0.1, 0, 0, curR);
-          fGrad.addColorStop(0, 'rgba(224, 242, 254, 0.65)');
-          fGrad.addColorStop(0.6, 'rgba(56, 189, 248, 0.35)');
-          fGrad.addColorStop(1, 'rgba(2, 132, 199, 0.0)');
-          ctx.fillStyle = fGrad;
-          ctx.beginPath();
-          ctx.arc(0, 0, curR, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.rotate((1 - ratio) * 2.4);
-          ctx.strokeStyle = '#bae6fd';
-          ctx.lineWidth = 2.5 * ratio;
-          // 绘制六芒星双正三角法阵
-          for (let t = 0; t < 2; t++) {
-            ctx.beginPath();
-            for (let p = 0; p < 3; p++) {
-              const a = t * (Math.PI / 3) + (p * Math.PI * 2) / 3;
-              const px = Math.cos(a) * curR * 0.88;
-              const py = Math.sin(a) * curR * 0.88;
-              if (p === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-            }
-            ctx.closePath();
-            ctx.stroke();
-          }
-          // 绘制 6 道向外刺出的晶莹冰川棱柱 + 分形雪花侧枝 + 12星轨符文刻度
-          for (let k = 0; k < 6; k++) {
-            const a = (Math.PI * 2 / 6) * k;
-            ctx.save();
-            ctx.rotate(a);
-            ctx.fillStyle = '#38bdf8';
-            ctx.beginPath();
-            ctx.moveTo(curR * 0.22, -7);
-            ctx.lineTo(curR * 1.12, 0);
-            ctx.lineTo(curR * 0.22, 7);
-            ctx.closePath();
-            ctx.fill();
-            // 分形雪花晶枝 V 型侧翼
-            ctx.strokeStyle = '#e0f2fe';
-            ctx.lineWidth = 2 * ratio;
-            ctx.beginPath();
-            ctx.moveTo(curR * 0.58, 0); ctx.lineTo(curR * 0.76, -13);
-            ctx.moveTo(curR * 0.58, 0); ctx.lineTo(curR * 0.76, 13);
-            ctx.moveTo(curR * 0.78, 0); ctx.lineTo(curR * 0.92, -9);
-            ctx.moveTo(curR * 0.78, 0); ctx.lineTo(curR * 0.92, 9);
-            ctx.stroke();
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(curR * 0.42, -2, curR * 0.45, 4);
-            ctx.restore();
-          }
-        } else if (sb.type === 'blink_rift') {
-          // 法师【极寒冰闪】折跃通道：双螺旋次元裂隙 + 悬浮冰晶星尘
-          ctx.globalAlpha = ratio * effectAlpha;
-          const dx = sb.x2 - sb.x1, dy = sb.y2 - sb.y1;
-          const dist = Math.hypot(dx, dy) || 1;
-          const ang = Math.atan2(dy, dx);
-          ctx.translate(sb.x1, sb.y1);
-          ctx.rotate(ang);
-          // 中心次元裂缝亮芯
-          ctx.strokeStyle = '#e0f2fe';
-          ctx.lineWidth = 4 * ratio;
-          ctx.beginPath();
-          ctx.moveTo(0, 0); ctx.lineTo(dist, 0);
-          ctx.stroke();
-          // 双螺旋奥术冰雷波纹
-          for (let s = -1; s <= 1; s += 2) {
-            ctx.strokeStyle = s === 1 ? '#38bdf8' : '#c084fc';
-            ctx.lineWidth = 2.2 * ratio;
-            ctx.beginPath();
-            for (let step = 0; step <= 16; step++) {
-              const t = step / 16;
-              const px = dist * t;
-              const py = Math.sin(t * Math.PI * 4 + GameState.gameTime * 20) * 14 * s * ratio;
-              if (step === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-            }
-            ctx.stroke();
-          }
-        } else if (sb.type === 'meteor') {
-          // 群星坠落：地面预瞄星芒法阵 + 三层等离子慧尾陨星
-          const p = 1 - ratio;
-          const curX = sb.startX + (sb.x - sb.startX) * p;
-          const curY = sb.startY + (sb.y - sb.startY) * p;
-          // 地面落点锁定星芒阵
-          ctx.save();
-          ctx.translate(sb.x, sb.y);
-          ctx.strokeStyle = sb.color || '#38bdf8';
-          ctx.lineWidth = 1.8;
-          ctx.beginPath();
-          ctx.arc(0, 0, sb.radius * 0.55 * p, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.restore();
-          // 彗星三层等离子拖尾
-          ctx.strokeStyle = 'rgba(192, 132, 252, 0.55)';
-          ctx.lineWidth = 18 * ratio;
-          ctx.beginPath();
-          ctx.moveTo(sb.startX, sb.startY);
-          ctx.lineTo(curX, curY);
-          ctx.stroke();
-          ctx.strokeStyle = sb.color || '#38bdf8';
-          ctx.lineWidth = 10 * ratio;
-          ctx.stroke();
-          ctx.fillStyle = '#ffffff';
-          ctx.beginPath();
-          ctx.arc(curX, curY, 15, 0, Math.PI * 2);
-          ctx.fill();
-        } else if (sb.type === 'cross_slash') {
-          // 居合次元十字斩：X型空间斩裂线
-          ctx.translate(sb.x, sb.y);
-          ctx.strokeStyle = '#ef4444';
-          ctx.lineWidth = 9 * ratio;
-          ctx.beginPath();
-          ctx.moveTo(-sb.radius, -sb.radius * 0.6); ctx.lineTo(sb.radius, sb.radius * 0.6);
-          ctx.moveTo(-sb.radius, sb.radius * 0.6);  ctx.lineTo(sb.radius, -sb.radius * 0.6);
-          ctx.stroke();
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 3 * ratio;
-          ctx.stroke();
-        } else if (sb.type === 'laser_beam') {
-          // 星界超新星贯穿炮：双层粗大激光束
-          ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
-          ctx.lineWidth = sb.width * ratio;
-          ctx.beginPath();
-          ctx.moveTo(sb.x1, sb.y1); ctx.lineTo(sb.x2, sb.y2);
-          ctx.stroke();
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = sb.width * 0.35 * ratio;
-          ctx.stroke();
-        } else if (sb.type === 'death_slash') {
-          // 怪物被斩杀时的凌厉一闪亮线
-          ctx.translate(sb.x, sb.y);
-          ctx.rotate(sb.angle);
-          ctx.strokeStyle = sb.color || '#ffffff';
-          ctx.lineWidth = 3.5 * ratio;
-          ctx.beginPath();
-          ctx.moveTo(-sb.len, 0); ctx.lineTo(sb.len, 0);
-          ctx.stroke();
-        } else if (sb.type === 'soul_wisp') {
-          // 怪物死亡升起的幽冥魂火
-          ctx.globalAlpha = ratio * 0.85 * effectAlpha;
-          ctx.fillStyle = sb.color;
-          ctx.fillRect(sb.x - 3, sb.y - 3, 6, 6);
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(sb.x - 1, sb.y - 6, 2, 4);
-        }
-        ctx.restore();
-      }
-
-      // 粒子与复合符文星芒震波渲染（告别单调圆圈，升级为径向能量光晕 + 内嵌旋转几何星芒 + 8向放射锋芒！）
-      for (let i = 0; i < particles.length; i++) {
-        const pt = particles[i];
-        if (pt.isShockwave) {
-          const alpha = Math.max(0, pt.life / pt.maxLife) * VisualSettings.effectAlpha(pt);
-          ctx.save();
-          ctx.translate(pt.x, pt.y);
-          ctx.globalAlpha = alpha;
-
-          // 1. 外环主冲击波与内层副波纹
-          ctx.strokeStyle = pt.color;
-          ctx.lineWidth = 3.5 * alpha;
-          ctx.beginPath();
-          ctx.arc(0, 0, pt.radius, 0, Math.PI * 2);
-          ctx.stroke();
-
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 1.5 * alpha;
-          ctx.beginPath();
-          ctx.arc(0, 0, pt.radius * 0.76, 0, Math.PI * 2);
-          ctx.stroke();
-
-          // 2. 内嵌旋转八芒星射线、16刻度罗盘环与8枚菱形能量矛尖
-          ctx.rotate((1 - alpha) * 1.6 + i);
-          ctx.strokeStyle = pt.color;
-          ctx.lineWidth = 1.8 * alpha;
-          const spikes = 8;
-          for (let k = 0; k < spikes; k++) {
-            const a = (Math.PI * 2 / spikes) * k;
-            const rIn = pt.radius * 0.52;
-            const rOut = pt.radius * 1.08;
-            ctx.beginPath();
-            ctx.moveTo(Math.cos(a) * rIn, Math.sin(a) * rIn);
-            ctx.lineTo(Math.cos(a) * rOut, Math.sin(a) * rOut);
-            ctx.stroke();
-            // 波峰菱形能量矛尖
-            const tipX = Math.cos(a) * rOut;
-            const tipY = Math.sin(a) * rOut;
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(tipX - 2.5, tipY - 2.5, 5, 5);
-          }
-          ctx.restore();
-        } else {
-          ctx.save();ctx.globalAlpha=VisualSettings.effectAlpha(pt);
-          ctx.fillStyle = pt.color;
-          ctx.fillRect(pt.x - pt.size / 2, pt.y - pt.size / 2, pt.size, pt.size);
-          ctx.restore();
-        }
-      }
+      drawNativeParticles(ctx,particles); CoopSkillVfx.draw(ctx,'particle');
 
       // 浮动合并伤害数字 (使用高性能像素描边替代昂贵的 shadowBlur)
       if (GameState.dmgDisplayMode !== 'off') {
@@ -9069,76 +9203,7 @@
       const spriteKey = `${hero}_${frame}`;
       const spriteSet = SpriteCache[spriteKey] || SpriteCache.warrior_0;
 
-      // 游侠幻影分身绘制
-      if (GameState.phantomCloneTimer > 0) {
-        ctx.save();
-        ctx.globalAlpha = 0.55 * VisualSettings.selfAlpha;
-        ctx.drawImage(spriteSet.ice, player.x - 42, player.y - 26);
-        ctx.drawImage(spriteSet.ice, player.x + 14, player.y + 4);
-        ctx.restore();
-      }
-
-      // 极寒冰霜光环绘制：随身旋转的六芒星冰晶雪花领域 + 环绕冰晶棱柱
-      if (player.passives.frostAura) {
-        const auraR = 75 + (player.passives.frostAura || 1) * 10;
-        ctx.save();
-        ctx.globalAlpha *= VisualSettings.selfAlpha;
-        ctx.translate(player.x, player.y);
-        const fGrad = ctx.createRadialGradient(0, 0, auraR * 0.2, 0, 0, auraR);
-        fGrad.addColorStop(0, 'rgba(56, 189, 248, 0.04)');
-        fGrad.addColorStop(1, 'rgba(56, 189, 248, 0.22)');
-        ctx.fillStyle = fGrad;
-        ctx.beginPath();
-        ctx.arc(0, 0, auraR, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.rotate(GameState.gameTime * 1.1);
-        ctx.strokeStyle = 'rgba(125, 211, 252, 0.52)';
-        ctx.lineWidth = 1.5;
-        for (let t = 0; t < 2; t++) {
-          ctx.beginPath();
-          for (let p = 0; p < 3; p++) {
-            const a = t * (Math.PI / 3) + (p * Math.PI * 2) / 3;
-            const px = Math.cos(a) * auraR;
-            const py = Math.sin(a) * auraR;
-            if (p === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-          }
-          ctx.closePath();
-          ctx.stroke();
-        }
-        for (let k = 0; k < 6; k++) {
-          const a = (Math.PI * 2 / 6) * k;
-          ctx.fillStyle = '#bae6fd';
-          ctx.fillRect(Math.cos(a) * auraR - 3, Math.sin(a) * auraR - 3, 6, 6);
-        }
-        ctx.restore();
-      }
-
-      // 法师大招【群星坠落阵列】开启期间：脚下展开巨型双环逆旋黄金星象仪法阵！
-      if (GameState.starfallTimer > 0) {
-        ctx.save();
-        ctx.globalAlpha *= VisualSettings.selfAlpha;
-        ctx.translate(player.x, player.y);
-        ctx.rotate(GameState.gameTime * 2.2);
-        const astR = 64;
-        ctx.strokeStyle = 'rgba(250, 204, 21, 0.78)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(0, 0, astR, 0, Math.PI * 2);
-        ctx.stroke();
-        for (let t = 0; t < 2; t++) {
-          ctx.beginPath();
-          for (let p = 0; p < 3; p++) {
-            const a = t * (Math.PI / 3) + (p * Math.PI * 2) / 3;
-            const px = Math.cos(a) * astR;
-            const py = Math.sin(a) * astR;
-            if (p === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-          }
-          ctx.closePath();
-          ctx.stroke();
-        }
-        ctx.restore();
-      }
+      drawNativeAuras(ctx,player,GameState,VisualSettings.selfAlpha);
 
       ctx.save();
       ctx.translate(player.x, player.y);
@@ -9151,24 +9216,6 @@
         ctx.globalAlpha = 0.45;
       }
 
-      ctx.save();ctx.globalAlpha *= VisualSettings.selfAlpha;
-      if (GameState.berserkTimer > 0 || GameState.starfallTimer > 0) {
-        ctx.strokeStyle = '#facc15';
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.arc(0, 0, player.radius + 9, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      if (player.shield > 0) {
-        ctx.strokeStyle = '#38bdf8';
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.arc(0, 0, player.radius + 6, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      ctx.restore();
       ctx.scale(player.facing, 1);
       if (player.swingAnimTimer > 0) {
         ctx.rotate(0.18);
@@ -9384,7 +9431,7 @@
       afterimages.push({
         x, y,
         facing: player.facing,
-        img: spriteSet.ice,
+        img: spriteSet.ice, hero: GameState.selectedHero,
         color: tintColor,
         life: 0.24, maxLife: 0.24
       });
@@ -11671,74 +11718,173 @@
       }
     };
 
+    // Visual records stay outside combat arrays: they can never hit, heal or loot.
+    // Send native descriptors once (retry until ACK), then small motion/liveness
+    // updates. Cosmetic traffic has its own byte budget and drops expired work.
     var CoopSkillVfx = {
       effects:[],pending:new Map(),seen:new Map(),states:new Map(),seq:0,stateSeq:0,lastState:0,stateTail:0,animationTime:0,
+      visualSeq:0, ids:new WeakMap(), records:new Map(), budgets:new Map(),
+      kinds:['ground','orbit','wheel','beam','slash','projectile','arc','images','particle'],
+      fields:{
+        ground:['type','x','y','vx','vy','radius','life','maxLife'],
+        orbit:['angle','dist','spinSpeed','life','isEvolved'],
+        wheel:['x','y','vx','vy','radius','isEvolved','spinAngle','catchX','catchY','state','timer'],
+        beam:['type','x','y','x1','y1','x2','y2','startX','startY','radius','width','color','life','maxLife','isSuper','angle','len'],
+        slash:['x','y','angle','radius','arc','color','life','maxLife','isFinisher'],
+        projectile:['x','y','vx','vy','radius','life','color','applyBleed','applyPoison','isArcaneChain','isFreeze'],
+        arc:['x1','y1','x2','y2','color','life'],images:['x','y','facing','hero','life','maxLife'],
+        particle:['x','y','vx','vy','radius','maxRadius','isShockwave','size','color','life','maxLife']
+      },
       broadcast(kind,params){
-        if(!['s1','s2','ult','item'].includes(kind))return null;
-        const id=CoopManager.myPeerId+':vfx:'+(++this.seq),packet={type:'SKILL_EVENT',skillKind:kind,hero:GameState.selectedHero,colorIdx:CoopManager.myColorIdx,x:player.x,y:player.y,...params,vfxId:id,session:WorldCoop.session};
-        const targets=new Set(CoopManager.allies.map(p=>p.id));if(targets.size)this.pending.set(id,{packet,targets,at:performance.now(),last:performance.now(),tries:1});CoopManager.sendPacket(packet);return true;
+        if(!['atk','charge','s1','s2','ult','item'].includes(kind))return null;
+        if(!WorldCoop.active()||!CoopManager.allies.length)return true;
+        if(!['atk','charge'].includes(kind))for(const budget of this.budgets.values())budget.meta=-Infinity;
+        const id=CoopManager.myPeerId+':vfx:'+(++this.seq),packet={type:'SKILL_EVENT',skillKind:kind,hero:GameState.selectedHero,x:player.x,y:player.y,...params,vfxId:id,session:WorldCoop.session};
+        const targets=new Set(CoopManager.allies.map(p=>p.id));this.pending.set(id,{packet,targets,at:performance.now(),last:performance.now(),tries:1});CoopManager.sendPacket(packet);return true;
+      },
+      pack(kind,id,obj){
+        const row=[this.kinds.indexOf(kind),id,...this.fields[kind].map(k=>{
+          const v=obj[k];return typeof v==='number'&&Number.isFinite(v)?Math.round(v*100)/100:typeof v==='string'||typeof v==='boolean'?v:null;
+        })];while(row.at(-1)===null)row.pop();return row;
+      },
+      unpack(row){
+        if(!Array.isArray(row)||!Number.isInteger(row[0])||!this.kinds[row[0]]||!Number.isSafeInteger(row[1])||row[1]<1)return null;
+        const kind=this.kinds[row[0]],keys=this.fields[kind];if(row.length>keys.length+2)return null;
+        const o={isAlly:true};
+        for(let i=2;i<row.length;i++){
+          const v=row[i],k=keys[i-2];if(v===null)continue;
+          if(typeof v==='number'){if(!Number.isFinite(v)||Math.abs(v)>1e7)return null;o[k]=v;}
+          else if(typeof v==='boolean')o[k]=v;
+          else if(typeof v==='string'&&v.length<=48&&['color','type','hero','state'].includes(k))o[k]=v;
+          else return null;
+        }
+        if(kind==='orbit'){if(!(o.dist>=0&&o.dist<=350&&Number.isFinite(o.angle)&&Number.isFinite(o.spinSpeed)))return null;}
+        else if(['arc'].includes(kind)){if(![o.x1,o.y1,o.x2,o.y2].every(Number.isFinite))return null;}
+        else if(kind==='beam'&&['laser_beam','blink_rift','execution_cut'].includes(o.type)){if(![o.x1,o.y1,o.x2,o.y2].every(Number.isFinite))return null;}
+        else if(![o.x,o.y].every(Number.isFinite))return null;
+        if(o.radius!==undefined&&!(o.radius>0&&o.radius<=1200))return null;
+        if(o.life!==undefined&&!(o.life>0&&o.life<=30))return null;
+        if(o.maxLife!==undefined&&!(o.maxLife>0&&o.maxLife<=30))return null;
+        if(kind==='images')o.img=(SpriteCache[(o.hero||'warrior')+'_0']||SpriteCache.warrior_0).ice;
+        return {id:row[1],kind,obj:o};
       },
       receive(pkt){
+        const peer=CoopManager.allies.find(p=>p.id===pkt.peerId);
+        if(pkt.type==='SKILL_VISUAL_ACK'){
+          if(!peer||pkt.session!==WorldCoop.session||!Array.isArray(pkt.ids))return true;
+          for(const id of pkt.ids.slice(0,64))this.records.get(id)?.acked.add(peer.id);return true;
+        }
         if(pkt.type==='SKILL_VFX_STATE'){
-          const old=this.states.get(pkt.peerId);if(!CoopManager.allies.some(p=>p.id===pkt.peerId)||pkt.session!==WorldCoop.session||!Number.isSafeInteger(pkt.seq)||pkt.seq<1||(old&&pkt.seq<=old.seq)||!Number.isSafeInteger(pkt.castSeq)||!Array.isArray(pkt.items)||pkt.items.length>16)return true;
-          const items=pkt.items.filter(a=>Array.isArray(a)&&['orbit','blackhole','trap','wheel'].includes(a[0])&&a.slice(1,4).every(Number.isFinite)&&Math.abs(a[1])<1e7&&Math.abs(a[2])<1e7&&a[3]>=0&&a[3]<=350);
-          this.states.set(pkt.peerId,{seq:pkt.seq,castSeq:pkt.castSeq,items,at:performance.now()});return true;
+          if(!peer||pkt.session!==WorldCoop.session||!Number.isSafeInteger(pkt.seq)||pkt.seq<1||!Array.isArray(pkt.visuals)||pkt.visuals.length>48||JSON.stringify(pkt).length>6000)return true;
+          const old=this.states.get(peer.id);
+          if(old&&pkt.seq<=old.seq)return true;
+          const state=old||{visuals:new Map(),seen:new Map(),items:[]};state.seq=pkt.seq;state.castSeq=pkt.castSeq;state.at=performance.now();
+          if(Array.isArray(pkt.look)&&pkt.look.length===7&&pkt.look.every(Number.isFinite))state.look=pkt.look.map((v,i)=>Math.max(0,Math.min(i===5?40:30,v)));
+          if(Array.isArray(pkt.items)&&pkt.items.length<=16)state.items=pkt.items.filter(a=>Array.isArray(a)&&['orbit','blackhole','trap','wheel'].includes(a[0])&&a.slice(1,4).every(Number.isFinite));
+          if(Array.isArray(pkt.alive)&&pkt.alive.length<=320){const alive=new Set(pkt.alive);for(const [id,v]of state.visuals)if(['ground','orbit','wheel','projectile'].includes(v.kind)&&!alive.has(id))state.visuals.delete(id);}
+          const ack=[];
+          for(const row of pkt.visuals){const v=this.unpack(row);if(!v)continue;ack.push(v.id);if(!state.seen.has(v.id)&&state.visuals.size<320){state.seen.set(v.id,performance.now());state.visuals.set(v.id,v);}}
+          for(const a of Array.isArray(pkt.updates)?pkt.updates.slice(0,16):[]){const v=state.visuals.get(a[0]);if(v?.kind==='wheel'&&a.slice(1,6).every(Number.isFinite)){v.obj._errorX=a[1]-v.obj.x;v.obj._errorY=a[2]-v.obj.y;v.obj.spinAngle=a[3];v.obj.state=['outbound','rebound','grounded'][a[4]]||'grounded';v.obj.timer=Math.max(0,a[5]);}}
+          this.states.set(peer.id,state);
+          if(ack.length)CoopManager.sendPacket({type:'SKILL_VISUAL_ACK',targetPeerId:peer.id,session:WorldCoop.session,ids:ack});return true;
         }
         if(pkt.type==='SKILL_VFX_ACK'){this.pending.get(pkt.vfxId)?.targets.delete(pkt.peerId);return true;}
         if(pkt.type!=='SKILL_EVENT'||!pkt.vfxId)return false;
-        const peer=CoopManager.allies.find(p=>p.id===pkt.peerId);if(!peer||!['s1','s2','ult','item'].includes(pkt.skillKind)||pkt.session!==WorldCoop.session||typeof pkt.vfxId!=='string'||!pkt.vfxId.startsWith(peer.id+':vfx:')||pkt.vfxId.length>120)return true;
+        if(!peer||!['atk','charge','s1','s2','ult','item'].includes(pkt.skillKind)||pkt.session!==WorldCoop.session||typeof pkt.vfxId!=='string'||!pkt.vfxId.startsWith(peer.id+':vfx:')||pkt.vfxId.length>120)return true;
         CoopManager.sendPacket({type:'SKILL_VFX_ACK',targetPeerId:peer.id,vfxId:pkt.vfxId});if(this.seen.has(pkt.vfxId))return true;this.seen.set(pkt.vfxId,performance.now());this.replay(peer,pkt);return true;
       },
       replay(peer,p){
-        const hero=['warrior','mage','ranger'].includes(p.hero)?p.hero:peer.hero,kind=p.skillKind,ev={id:peer.id,seq:Number(String(p.vfxId||'').split(':').at(-1))||0,hero,kind,x:Number.isFinite(p.x)?p.x:peer.x,y:Number.isFinite(p.y)?p.y:peer.y,angle:Number.isFinite(p.angle)?p.angle:Math.atan2(Number(p.dirY)||0,Number(p.dirX)||1),level:Math.max(1,Math.min(5,Number(p.level)||1)),evolved:Boolean(p.isEvolved),time:0};
-        ev.duration=kind==='s2'?(hero==='warrior'?6:hero==='mage'?3.5:2.8):kind==='ult'?(hero==='warrior'?5.5:hero==='mage'?2:1.3):kind==='s1'?(hero==='ranger'?6:.7):.8;
-        if(Number.isFinite(p.duration)&&kind==='s2')ev.duration=Math.max(.2,Math.min(20,p.duration));if(ev.evolved&&kind==='ult'&&hero==='warrior')ev.duration=8;
-        if(kind==='s2')this.effects=this.effects.filter(e=>!(e.id===peer.id&&e.kind===kind));this.effects.push(ev);if(this.effects.length>48)this.effects.shift();
+        peer.swingAnimTimer=.18;
+        const hero=['warrior','mage','ranger'].includes(p.hero)?p.hero:peer.hero,kind=p.skillKind;
+        this.effects.push({id:peer.id,hero,kind,evolved:Boolean(p.isEvolved),time:0,duration:kind==='ult'?11:kind==='s2'?9:kind==='s1'?8:1});if(this.effects.length>48)this.effects.shift();
       },
-      reset(){this.effects=[];this.pending.clear();this.seen.clear();this.states.clear();this.stateSeq=0;this.stateTail=0;this.lastState=0;},
-      syncState(now){
-        if(!WorldCoop.active()||!CoopManager.allies.length||now-this.lastState<350)return;this.lastState=now;const items=[];
-        if(!player.isDowned&&!UpgradeChoice.active){
-          if(orbitingBlades.length)items.push(['orbit',player.x,player.y,Math.max(...orbitingBlades.map(b=>b.dist)),orbitingBlades.some(b=>b.isEvolved)?1:0]);
-          for(const g of groundEffects)if(!g.isAlly&&['trap','blackhole'].includes(g.type)&&g.life>0&&items.length<12)items.push([g.type,Math.round(g.x),Math.round(g.y),Math.min(350,g.radius||25),player.skills[g.type==='trap'?'skill1':'skill2'].isEvolved?1:0]);
-          for(const b of boomerangs.slice(0,4))items.push(['wheel',Math.round(b.x),Math.round(b.y),b.radius,b.isEvolved?1:0]);
+      reset(){this.effects=[];this.pending.clear();this.seen.clear();this.states.clear();this.ids=new WeakMap();this.records.clear();this.budgets.clear();this.stateTail=0;this.lastState=0;},
+      capture(){
+        const alive=new Set(),groups=[['ground',groundEffects],['orbit',orbitingBlades],['wheel',boomerangs],['beam',skyBeams],['slash',slashVisuals],['projectile',projectiles],['arc',lightningArcs],['images',afterimages],['particle',particles.filter(p=>p.isShockwave).concat(particles.filter(p=>!p.isShockwave).slice(-24))]];
+        if(!player.isDowned)for(const [kind,list]of groups)for(const obj of list){
+          if(obj.isEnemy||obj.isAlly||(Number.isFinite(obj.life)&&obj.life<=0)||alive.size>=320)continue;
+          let id=this.ids.get(obj);if(!id){id=++this.visualSeq;this.ids.set(obj,id);}if(!this.records.has(id))this.records.set(id,{kind,obj,acked:new Set(),sent:new Map()});
+          alive.add(id);
         }
-        if(items.length)this.stateTail=3;else if(this.stateTail>0)this.stateTail--;else return;
-        CoopManager.sendPacket({type:'SKILL_VFX_STATE',session:WorldCoop.session,seq:++this.stateSeq,castSeq:this.seq,items});
+        for(const id of this.records.keys())if(!alive.has(id))this.records.delete(id);
+      },
+      syncState(now){
+        if(!WorldCoop.active()||WorldCoop.ended||!CoopManager.allies.length||now-this.lastState<75)return;this.lastState=now;this.capture();
+        const items=[];if(orbitingBlades.length)items.push(['orbit',player.x,player.y,Math.max(...orbitingBlades.map(b=>b.dist)),orbitingBlades.some(b=>b.isEvolved)?1:0]);
+        for(const g of groundEffects)if(['trap','blackhole'].includes(g.type)&&items.length<12)items.push([g.type,Math.round(g.x),Math.round(g.y),Math.min(350,g.radius||25),0]);
+        for(const b of boomerangs.slice(0,4))items.push(['wheel',Math.round(b.x),Math.round(b.y),b.radius,b.isEvolved?1:0]);
+        const look=[player.passives.frostAura||0,GameState.berserkTimer||0,GameState.starfallTimer||0,GameState.phantomCloneTimer||0,player.shield||0,player.radius,MenuPause.blocked()||UpgradeChoice.active?1:0];
+        const alive=[...this.records].filter(([,v])=>['ground','orbit','wheel','projectile'].includes(v.kind)).map(([id])=>id);
+        const updates=[...this.records].filter(([,v])=>v.kind==='wheel').slice(0,16).map(([id,{obj:b}])=>[id,Math.round(b.x*10)/10,Math.round(b.y*10)/10,Math.round(b.spinAngle*100)/100,['outbound','rebound','grounded'].indexOf(b.state),Math.round(b.timer*100)/100]);
+        for(const peer of CoopManager.allies){
+          const route=CoopManager.routeFor(peer.id,false),rate=route.kind==='mqtt'?4000:12000,burst=route.kind==='mqtt'?2800:6000;
+          const b=this.budgets.get(peer.id)||{at:now,credit:burst,meta:-Infinity,motion:-Infinity};b.credit=Math.min(burst,b.credit+Math.max(0,now-b.at)*rate/1000);b.at=now;this.budgets.set(peer.id,b);
+          if(!['rtc','local','mqtt'].includes(route.kind)||route.dc?.bufferedAmount>4096)continue;
+          const meta=now-b.meta>=350,packet={type:'SKILL_VFX_STATE',session:WorldCoop.session,targetPeerId:peer.id,seq:++this.stateSeq,castSeq:this.seq,visuals:[]};
+          const motion=updates.length&&now-b.motion>=150;
+          if(meta)Object.assign(packet,{items:items.slice(0,16),look,alive});if(motion)packet.updates=updates;
+          const chosen=[];let bytes=JSON.stringify(packet).length+240;
+          for(const [id,v]of this.records){
+            if(v.acked.has(peer.id)||now-(v.sent.get(peer.id)??-Infinity)<450)continue;
+            const row=this.pack(v.kind,id,v.obj),size=JSON.stringify(row).length+1;
+            if(bytes+size>Math.min(3900,b.credit)||chosen.length>=40)continue;
+            bytes+=size;packet.visuals.push(row);chosen.push(v);
+          }
+          if((!meta&&!motion&&!chosen.length)||bytes>b.credit)continue;
+          b.credit-=bytes;if(meta)b.meta=now;if(motion)b.motion=now;for(const v of chosen)v.sent.set(peer.id,now);
+          // A bounded reliable channel is separate from movement's unordered channel.
+          // No public fallback copies: stale visual work is retried only while alive.
+          CoopManager.sendPacket(packet);
+        }
+        for(const id of this.budgets.keys())if(!CoopManager.allies.some(p=>p.id===id))this.budgets.delete(id);
       },
       tick(dt){
-        if(!WorldCoop.simulationPaused()){this.animationTime+=dt;for(const e of this.effects)e.time+=dt;}this.effects=this.effects.filter(e=>e.time<e.duration&&CoopManager.allies.some(p=>p.id===e.id&&!p.downed));
-        const now=performance.now();this.syncState(now);for(const [id,p]of this.pending){for(const target of p.targets)if(!CoopManager.allies.some(a=>a.id===target))p.targets.delete(target);if(!p.targets.size||now-p.at>2500){this.pending.delete(id);continue;}if(now-p.last>600&&p.tries<4){p.last=now;p.tries++;for(const targetPeerId of p.targets)CoopManager.sendPacket({...p.packet,targetPeerId});}}
+        const paused=WorldCoop.simulationPaused(),scaled=dt*Math.max(1,GameState.timeScale||1);
+        if(!paused){this.animationTime+=scaled;for(const e of this.effects)e.time+=scaled;}
+        this.effects=this.effects.filter(e=>e.time<e.duration&&CoopManager.allies.some(p=>p.id===e.id&&!p.downed));
+        const now=performance.now();this.syncState(now);
+        for(const [id,s]of this.states){
+          const peer=CoopManager.allies.find(p=>p.id===id);if(!peer||peer.downed||(!paused&&now-s.at>2500)){this.states.delete(id);continue;}
+          for(const [id,at]of s.seen)if(now-at>15000)s.seen.delete(id);
+          if(paused)continue;const frozen=Boolean(s.look?.[6]);
+          if(s.look)for(const k of [1,2,3])s.look[k]=Math.max(0,s.look[k]-scaled);
+          for(const [key,v]of s.visuals){const o=v.obj,d=scaled;
+            if(['orbit','wheel'].includes(v.kind)&&frozen)continue;
+            if(Number.isFinite(o.life))o.life-=d;
+            if(v.kind==='orbit')o.angle+=o.spinSpeed*d;
+            if(v.kind==='wheel'){
+              o.spinAngle+=16*d;o.timer-=d;
+              if(o.state==='outbound'){o.x+=o.vx*d;o.y+=o.vy*d;if(o.timer<=0){o.state='rebound';o.timer=.55;}}
+              else if(o.state==='rebound'){const dx=o.catchX-o.x,dy=o.catchY-o.y,len=Math.hypot(dx,dy);if(len<=14||o.timer<=0){o.x=o.catchX;o.y=o.catchY;o.state='grounded';o.timer=o.isEvolved?4:2.8;}else{o.x+=dx/len*430*d;o.y+=dy/len*430*d;}}
+              const blend=1-Math.exp(-16*d),cx=(o._errorX||0)*blend,cy=(o._errorY||0)*blend;o.x+=cx;o.y+=cy;o._errorX=(o._errorX||0)-cx;o._errorY=(o._errorY||0)-cy;
+            }
+            if(v.kind==='projectile'){o.trail??=[];o.trail.push({x:o.x,y:o.y});if(o.trail.length>5)o.trail.shift();o.x+=o.vx*d;o.y+=o.vy*d;}
+            if(v.kind==='ground'&&!frozen){o.x+=(o.vx||0)*d;o.y+=(o.vy||0)*d;}
+            if(v.kind==='particle'){if(o.isShockwave)o.radius+=((o.maxRadius-o.radius)/(o.life+.05))*d*3;else{o.x+=(o.vx||0)*d;o.y+=(o.vy||0)*d;}}
+            if(v.kind==='beam'&&o.type==='soul_wisp'){o.y-=38*d;o.x+=Math.sin(GameState.gameTime*10)*18*d;}
+            if(Number.isFinite(o.life)&&o.life<=0)s.visuals.delete(key);
+          }
+        }
+        for(const [id,p]of this.pending){for(const target of p.targets)if(!CoopManager.allies.some(a=>a.id===target))p.targets.delete(target);if(!p.targets.size||now-p.at>2500){this.pending.delete(id);continue;}if(now-p.last>600&&p.tries<4){p.last=now;p.tries++;for(const targetPeerId of p.targets)CoopManager.sendPacket({...p.packet,targetPeerId});}}
         for(const [id,at]of this.seen)if(now-at>15000)this.seen.delete(id);
-        for(const id of this.states.keys())if(!CoopManager.allies.some(p=>p.id===id))this.states.delete(id);
       },
-      draw(c){
-        if(!CoopManager.allyVfxAlpha)return;
-        const now=performance.now(),effects=this.effects.filter(e=>{const s=this.states.get(e.id);return !(s&&(WorldCoop.simulationPaused()||now-s.at<2500)&&s.castSeq>=e.seq&&(e.kind==='s2'||(e.kind==='s1'&&e.hero==='ranger')));});
-        for(const [id,s]of this.states)if(WorldCoop.simulationPaused()||now-s.at<2500)for(const a of s.items)effects.push({id,hero:{orbit:'warrior',blackhole:'mage',trap:'ranger',wheel:'ranger'}[a[0]],kind:a[0]==='trap'?'s1':'s2',stateful:true,x:a[1],y:a[2],radius:a[3],evolved:Boolean(a[4]),level:a[0]==='orbit'?Math.max(1,Math.ceil((a[3]-50)/20)):1,time:this.animationTime,duration:Infinity});
-        for(const e of effects){const peer=CoopManager.allies.find(p=>p.id===e.id);if(!peer||peer.downed)continue;
-          const follow=(e.kind==='s2'&&e.hero==='warrior')||(e.kind==='ult'&&e.hero==='warrior'),x=follow?peer.x:e.x,y=follow?peer.y:e.y,t=e.time,color=(PLAYER_COLOR_THEMES[peer.colorIdx]||PLAYER_COLOR_THEMES[1]).primary;
-          c.save();c.globalAlpha=CoopManager.allyVfxAlpha*Math.min(1,(e.duration-t)*3);c.strokeStyle=color;c.fillStyle=color;c.lineWidth=3;c.translate(x,y);
-          const ring=r=>{c.beginPath();c.arc(0,0,Math.max(1,r),0,Math.PI*2);c.stroke();};
-          if(e.kind==='s2'&&e.hero==='warrior'){
-            const layers=e.evolved?3:Math.ceil(e.level/2);for(let j=0;j<layers;j++){const radius=65+j*28;ring(radius);for(let i=0;i<4+j;i++){const a=t*(j%2?-3:3)+i*Math.PI*2/(4+j);c.save();c.rotate(a);c.translate(radius,0);c.rotate(.6);c.fillStyle=e.evolved?'#fb923c':color;c.fillRect(-4,-22,8,37);c.fillStyle='#fff';c.fillRect(-1,-20,2,30);c.restore();}}
-          }else if(e.kind==='s2'&&e.hero==='mage'){
-            if(!e.stateful)c.translate(Math.cos(e.angle)*Math.min(190,t*80),Math.sin(e.angle)*Math.min(190,t*80));c.rotate(t*2);for(let j=0;j<4;j++){c.beginPath();c.ellipse(0,0,100-j*20,25+j*8,j*.8,0,Math.PI*2);c.stroke();}c.fillStyle=e.evolved?'#e9d5ff':'#1e1b4b';c.beginPath();c.arc(0,0,30,0,Math.PI*2);c.fill();
-          }else if(e.kind==='s2'&&e.hero==='ranger'){
-            if(!e.stateful){const travel=Math.sin(Math.min(1,t/e.duration)*Math.PI)*270;c.translate(Math.cos(e.angle)*travel,Math.sin(e.angle)*travel);}c.rotate(t*12);ring(e.evolved?38:25);c.fillRect(-4,-43,8,86);c.fillRect(-43,-4,86,8);
-          }else if(e.kind==='s1'){
-            if(e.hero==='ranger'){for(let j=0;j<(e.stateful?1:e.evolved?4:2);j++){c.save();if(!e.stateful)c.translate((j-1)*30,0);ring(20);c.beginPath();c.moveTo(-14,-14);c.lineTo(14,14);c.moveTo(14,-14);c.lineTo(-14,14);c.stroke();c.restore();}}
-            else if(e.hero==='mage'){ring(20+t*140);for(let i=0;i<8;i++){c.rotate(Math.PI/4);c.beginPath();c.moveTo(0,0);c.lineTo(0,25+t*135);c.stroke();}}
-            else{c.rotate(e.angle);for(let i=0;i<5;i++){c.globalAlpha*=.87;c.strokeRect(t*210-i*25,-14,34,28);}}
-          }else if(e.kind==='ult'){
-            if(e.hero==='warrior'){ring(37+Math.sin(t*8)*5);if(t<1.2)for(let i=1;i<=5;i++){c.save();c.translate(Math.cos(e.angle)*i*70,Math.sin(e.angle)*i*70);c.fillRect(-8,-190,16,210);c.fillRect(-22,-25,44,7);c.restore();}}
-            else if(e.hero==='mage'){for(let i=0;i<5;i++){const a=i*Math.PI*2/5;c.save();c.translate(Math.cos(a)*120,Math.sin(a)*120);ring(15+(t%1)*55);c.beginPath();c.moveTo(-60,-130+(t%1)*130);c.lineTo(0,0);c.stroke();c.restore();}}
-            else for(let i=0;i<16;i++){c.save();c.rotate(i*Math.PI*2/16);c.fillRect(25+t*280,-3,30,6);c.restore();}
-          }else{ring(24+t*55);}
+      drawAuras(c,peer){
+        const s=this.states.get(peer.id),v=s?.look,alpha=CoopManager.allyVfxAlpha;if(!v||!alpha)return;
+        drawNativeAuras(c,{...peer,radius:v[5]||12,shield:v[4],passives:{frostAura:v[0]}},{selectedHero:peer.hero,berserkTimer:v[1],starfallTimer:v[2],phantomCloneTimer:v[3],gameTime:GameState.gameTime},alpha);
+      },
+      draw(c,kind){
+        const alpha=CoopManager.allyVfxAlpha;if(!alpha)return;
+        if(!kind){for(const k of this.kinds)this.draw(c,k);return;}
+        for(const [id,s]of this.states){const peer=CoopManager.allies.find(p=>p.id===id);if(!peer||peer.downed||(peer.upgrading&&performance.now()<peer.upgradeUntil))continue;
+          const list=[...s.visuals.values()].filter(v=>v.kind===kind).map(v=>v.obj);if(!list.length)continue;
+          c.save();
+          if(kind==='ground')drawNativeGround(c,list);else if(kind==='orbit')drawNativeOrbitWheels(c,list,[],peer,alpha);else if(kind==='wheel')drawNativeOrbitWheels(c,[],list,peer,alpha);
+          else if(kind==='beam')drawNativeBeams(c,list);else if(kind==='slash')drawNativeSlashes(c,list);else if(kind==='projectile')drawNativeProjectiles(c,list);else if(kind==='arc')drawNativeArcs(c,list);else if(kind==='images')drawNativeImages(c,list);else if(kind==='particle')drawNativeParticles(c,list);
           c.restore();
         }
       }
     };
+
 
     var CoopSpectate = {
       id:null, lastOptions:'', obstacleKey:'', cachedObstacles:[],
@@ -13244,136 +13390,7 @@
         });
       },
 
-      // 在本机画面高透明度重现远程真人队友释放的技能与三角色大招
-      replayPeerSkill(peer, ev) {
-        peer.swingAnimTimer = 0.18;
-        const theme = PLAYER_COLOR_THEMES[peer.colorIdx] || PLAYER_COLOR_THEMES[1];
-        const themeCol = theme.primary;
-        const hero = ev.hero || peer.hero || 'warrior';
-        const px = ev.x !== undefined ? ev.x : peer.x;
-        const py = ev.y !== undefined ? ev.y : peer.y;
-        const ang = ev.angle !== undefined ? ev.angle : (peer.aimAngle || 0);
-        const lvMul = 1 + ((peer.level || 1) - 1) * 0.08;
-
-        if (ev.skillKind === 'atk' || ev.skillKind === 'charge') {
-          const isChg = ev.skillKind === 'charge';
-          if (hero === 'warrior') {
-            slashVisuals.push({
-              isAlly: true,
-              x: px, y: py, angle: ang,
-              radius: isChg ? 82 : 56,
-              arc: isChg ? Math.PI * 1.4 : Math.PI * 0.85,
-              life: 0.18, maxLife: 0.18,
-              color: themeCol, isFinisher: isChg
-            });
-            projectiles.push({
-              isAlly: true, isSecondary: true,
-              x: px, y: py,
-              vx: Math.cos(ang) * 500, vy: Math.sin(ang) * 500,
-              damage: Math.round((isChg ? 28 : 14) * lvMul),
-              radius: isChg ? 16 : 12, life: 0.65, pierce: isChg ? 5 : 2,
-              color: themeCol, applyBleed: true
-            });
-          } else if (hero === 'mage') {
-            if (isChg) {
-              const endX = px + Math.cos(ang) * 320, endY = py + Math.sin(ang) * 320;
-              skyBeams.push({ isAlly: true, type: 'laser_beam', x1: px, y1: py, x2: endX, y2: endY, width: 18, color: themeCol, life: 0.28, maxLife: 0.28 });
-            }
-            const cnt = isChg ? 4 : 2;
-            for (let i = 0; i < cnt; i++) {
-              const sp = (i - (cnt - 1) / 2) * 0.16;
-              projectiles.push({
-                isAlly: true, isSecondary: true,
-                x: px, y: py,
-                vx: Math.cos(ang + sp) * 480, vy: Math.sin(ang + sp) * 480,
-                damage: Math.round((isChg ? 28 : 12) * lvMul),
-                radius: 10, life: 0.85, pierce: 3, chainBounces: 3,
-                color: themeCol, isArcaneChain: true
-              });
-            }
-          } else {
-            const cnt = isChg ? 5 : 2;
-            for (let i = 0; i < cnt; i++) {
-              const sp = (i - (cnt - 1) / 2) * 0.14;
-              projectiles.push({
-                isAlly: true, isSecondary: true,
-                x: px, y: py,
-                vx: Math.cos(ang + sp) * 650, vy: Math.sin(ang + sp) * 650,
-                damage: Math.round((isChg ? 26 : 12) * lvMul),
-                radius: 9, life: 0.8, pierce: 5,
-                color: themeCol, applyPoison: true
-              });
-            }
-          }
-        } else if (ev.skillKind === 's1') {
-          if (hero === 'mage') {
-            skyBeams.push({
-              isAlly: true, type: 'frost_nova_matrix',
-              x: px, y: py, radius: 88, color: themeCol, life: 0.5, maxLife: 0.5
-            });
-
-          } else if (hero === 'warrior') {
-            particles.push({ isShockwave: true, isAlly: true, x: px, y: py, radius: 8, maxRadius: 85, color: themeCol, life: 0.28, maxLife: 0.28 });
-
-          } else if (hero === 'ranger' && groundEffects.length < 18) {
-            groundEffects.push({
-              isAlly: true, type: 'trap',
-              x: px, y: py, radius: 25,
-              damage: Math.round(34 * lvMul), life: 6.0, maxLife: 6.0, tickTimer: 0
-            });
-          }
-        } else if (ev.skillKind === 's2') {
-          if (hero === 'mage' && groundEffects.length < 16) {
-            groundEffects.push({
-              isAlly: true, type: 'blackhole',
-              x: px + Math.cos(ang) * 45, y: py + Math.sin(ang) * 45,
-              vx: Math.cos(ang) * 85, vy: Math.sin(ang) * 85,
-              radius: 120, damage: Math.round(48 * lvMul),
-              life: 2.8, maxLife: 2.8, tickTimer: 0, pulledCount: 0
-            });
-          } else {
-            particles.push({ isShockwave: true, isAlly: true, x: px, y: py, radius: 10, maxRadius: 105, color: themeCol, life: 0.32, maxLife: 0.32 });
-
-          }
-        } else if (ev.skillKind === 'ult') {
-          if (hero === 'warrior') {
-            for (let step = 1; step <= 4; step++) {
-              const cx = px + Math.cos(ang) * (step * 70);
-              const cy = py + Math.sin(ang) * (step * 70);
-              skyBeams.push({
-                isAlly: true, type: 'sword_pillar',
-                x: cx, y: cy, width: 42, color: themeCol, life: 0.45, maxLife: 0.45
-              });
-
-            }
-          } else if (hero === 'mage') {
-            for (let m = 0; m < 3; m++) {
-              const tx = px + (Math.random() - 0.5) * 180;
-              const ty = py + (Math.random() - 0.5) * 180;
-              skyBeams.push({
-                isAlly: true, type: 'meteor',
-                startX: tx - 110, startY: ty - 220, x: tx, y: ty,
-                radius: 90, color: themeCol, life: 0.32, maxLife: 0.32
-              });
-
-            }
-          } else {
-            for (let b = 0; b < 12; b++) {
-              const bAng = (Math.PI * 2 / 12) * b;
-              projectiles.push({
-                isAlly: true, isSecondary: true,
-                x: px, y: py,
-                vx: Math.cos(bAng) * 560, vy: Math.sin(bAng) * 560,
-                damage: Math.round(75 * lvMul), radius: 8, life: 0.85, pierce: 6,
-                color: themeCol, applyPoison: true
-              });
-            }
-          }
-        } else if (ev.skillKind === 'item') {
-          peer.shield = 34;
-          particles.push({ isShockwave: true, isAlly: true, x: px, y: py, radius: 8, maxRadius: 80, color: '#34d399', life: 0.25, maxLife: 0.25 });
-        }
-      },
+      replayPeerSkill(peer, ev) { peer.swingAnimTimer=.18; },
 
       prevCoopMul: 1.0,
       syncDifficultyScaling() {
@@ -13425,6 +13442,7 @@
           const baseKey = `${al.hero}_${frame}`;
           const spriteSet = SpriteCache[baseKey] || SpriteCache.warrior_0;
           const coloredImg = SpriteCache[`${baseKey}_c${al.colorIdx}`] || spriteSet.normal;
+          CoopSkillVfx.drawAuras(ctx,al);
 
           ctx.save();
           ctx.translate(al.x, al.y);
@@ -13435,13 +13453,6 @@
           ctx.ellipse(0, 11, 13, 6, 0, 0, Math.PI * 2);
           ctx.stroke();
 
-          if (al.shield > 0) {
-            ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(0, 0, 17, 0, Math.PI * 2);
-            ctx.stroke();
-          }
 
           ctx.save();
           ctx.scale(al.facing || 1, 1);
@@ -14825,7 +14836,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 12, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 13, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
