@@ -1,6 +1,5 @@
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict'),{chromium}=require('playwright');
-const repo=path.resolve(__dirname,'..'),root=repo,dest=path.join(repo,'assets/screenshots'),errors=[],shots=[];
-fs.mkdirSync(dest,{recursive:true});fs.mkdirSync(path.join(repo,'test-results'),{recursive:true});
+const repo=path.resolve(__dirname,'..'),root=repo,dest=path.join(repo,'assets/screenshots'),errors=[],shots=[];fs.mkdirSync(dest,{recursive:true});fs.mkdirSync(path.join(repo,'test-results'),{recursive:true});
 const server=http.createServer((q,r)=>{r.setHeader('content-type','text/html;charset=utf-8');r.end(fs.readFileSync(path.join(repo,'index.html')))});let browser;
 (async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH||undefined,headless:true});const page=await browser.newPage({viewport:{width:1280,height:800}});page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{requestAnimationFrame=()=>0});await page.goto('http://127.0.0.1:'+server.address().port);
  async function shot(file){await page.evaluate(()=>{if(GameState.isStarted&&!GameState.isOver){camera.x=player.x-camera.viewportWidth/2;camera.y=player.y-camera.viewportHeight/2;draw();}});await page.screenshot({path:path.join(dest,file)});shots.push(file);}

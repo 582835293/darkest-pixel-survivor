@@ -16589,6 +16589,21 @@
 
     Campaign.reset();Campaign.permanent();
 
+    // Return desktop IME/key focus from closed overlays, rather than leaving it on hidden controls.
+    CombatKeys.resume=function(){
+      if(!GameState.isStarted||GameState.isPaused||GameState.isOver||CoopMap.open||[...document.querySelectorAll('.modal-overlay')].some(e=>e.style.display==='flex'))return;
+      const active=document.activeElement;if(CombatKeys.typing(active))return;
+      if(active!==canvas)active?.blur();this.reset();this.focus();
+    };
+    for(const name of ['closeSkillTreeModal','closeShopModal','closeSaveModal','closeCoopModal','closeDevModal']){
+      const original=({closeSkillTreeModal,closeShopModal,closeSaveModal,closeCoopModal,closeDevModal})[name],wrapped=(...a)=>{const result=original(...a);CombatKeys.resume();return result;};
+      if(name==='closeSkillTreeModal')closeSkillTreeModal=wrapped;if(name==='closeShopModal')closeShopModal=wrapped;if(name==='closeSaveModal')closeSaveModal=wrapped;if(name==='closeCoopModal')closeCoopModal=wrapped;if(name==='closeDevModal')closeDevModal=wrapped;
+    }
+    for(const [object,key] of [[AudioSettings,'close'],[Campaign,'closeBook'],[CampMarket,'close'],[CoopMap,'toggle'],[CoopSocial,'toggle']]){
+      const original=object[key];object[key]=function(...a){const result=original.apply(this,a);if(key!=='toggle'||!this.open)CombatKeys.resume();return result;};
+    }
+    const keyResumePause=togglePause;togglePause=function(...a){const result=keyResumePause(...a);CombatKeys.resume();return result;};
+
     PixelIcons.start();
     setupHero('warrior');
     syncHeroAndBiomeSelectionUI();
