@@ -1,0 +1,25 @@
+const fs=require('node:fs'),http=require('node:http'),path=require('node:path'),assert=require('node:assert/strict'),{chromium}=require('playwright');
+const repo=path.resolve(__dirname,'..'),dest=path.join(repo,'assets/screenshots');fs.mkdirSync(dest,{recursive:true});fs.mkdirSync(path.join(repo,'test-results'),{recursive:true});
+const html=fs.readFileSync(path.join(repo,'index.html')),server=http.createServer((q,r)=>{r.setHeader('content-type','text/html;charset=utf-8');r.end(html)});let browser;const errors=[],shots=[];
+(async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH,headless:true});
+for(const hero of ['warrior','mage','engineer']){
+ const page=await(await browser.newContext({viewport:{width:1280,height:800}})).newPage();page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{window.requestAnimationFrame=()=>0});await page.goto('http://127.0.0.1:'+server.address().port);
+ const prepared=await page.evaluate(hero=>{
+  GameState.isStarted=true;GameState.isOver=false;GameState.isPaused=false;GameState.godMode=false;GameState.autoAttack=false;GameState.gameTime=1200;GameState.timeScale=1;GameState.activeBiome=hero==='mage'?'tundra':'dungeon';GameState.kills=0;GameState.spawnedBossMinutes={5:true,10:true,15:true,20:true};spawnEnemyBatch=()=>{};CoopManager.myName='构筑演示';setupHero(hero);player.x=player.y=0;player.aimAngle=-.25;player.expToNext=1000000000;player.reviveLeft=0;
+  for(const el of document.querySelectorAll('.modal-overlay'))el.style.display='none';for(const k of SYNERGY_KEYS)player.passives[k]=0;
+  function choose(id){const c=generateUpgradePool().find(c=>c.id===id);if(!c)return false;c.apply();return true;}
+  let upgrades=0;for(const id of ['atk_up','charge_base_up','s1_up','s2_up','ult_up'])for(let i=0;i<8&&choose(id);i++)upgrades++;
+  const gear=hero==='mage'?['p_frost_aura','p_swift_boots','p_lava_heart']:['p_crit_glove','p_swift_boots','p_lava_heart'];for(const id of gear)for(let i=0;i<5&&choose(id);i++)upgrades++;
+  const flows=hero==='engineer'?['syn_emberEcho','syn_stellarBastion']:hero==='mage'?['syn_ice','syn_huntPulse']:['syn_thunder','syn_blood'];for(const id of flows)for(let i=0;i<3&&choose(id);i++)upgrades++;
+  for(let i=0;i<12;i++){const c=generateUpgradePool().find(c=>c.id.startsWith('super_'));if(!c)break;c.apply();upgrades++;}if(choose('charge_branch_a'))upgrades++;for(let i=0;i<2&&choose('charge_branch_up');i++)upgrades++;
+  player.level=1+upgrades;player.expToNext=38;for(let i=1;i<player.level;i++)player.expToNext=Math.round(player.expToNext*1.22+24);updateLoadoutHUD();updateExpUI();updateHpUI();updateActiveObstacles();
+  const types=getCurrentWaveInfo().types;
+  for(let i=0;i<236;i++){const ring=Math.floor(i/40),a=(i%40)*Math.PI*2/40+ring*.16,r=155+ring*43+(i%3)*7;createEnemy(Math.cos(a)*r,Math.sin(a)*r*.72,types[i%types.length]);}
+  if(hero==='engineer'){for(const [x,y]of [[-140,60],[115,45],[-30,-125]]){player.x=x;player.y=y;player.skills.skill2.timer=0;executeSkill2();}player.x=player.y=0;executeSkill1();}else{executeSkill2();if(hero==='mage')executeSkill1();}
+  executeUlt();GameState.autoAttack=true;document.getElementById('auto-atk-text').textContent='连发:开';document.getElementById('btn-auto-atk').classList.add('active-toggle');document.getElementById('toast-msg').style.opacity='0';GameState.screenShake=0;return{hero,upgrades,level:player.level,enemyStart:enemies.length,synergies:SYNERGY_KEYS.filter(k=>player.passives[k]>0)};
+ },hero);
+ for(let i=0;i<7;i++){await page.evaluate(()=>{update(.05);GameState.screenShake=0;document.getElementById('toast-msg').style.opacity='0';draw()});await new Promise(r=>setTimeout(r,50));}
+ await page.evaluate(()=>{GameState.screenShake=0;document.getElementById('toast-msg').style.opacity='0';draw()});await page.screenshot({path:path.join(dest,hero+'-endgame.png')});const after=await page.evaluate(()=>({enemies:enemies.filter(e=>!e.isDead).length,hp:player.hp,over:GameState.isOver,damage:GameState.totalDamageDealt,turrets:groundEffects.filter(g=>g.type==='turret'&&g.life>0).length,gameTime:GameState.gameTime}));assert(!after.over);assert(after.enemies>100);shots.push({...prepared,...after,file:'assets/screenshots/'+hero+'-endgame.png'});console.log('CAPTURE',JSON.stringify(shots.at(-1)));await page.close();
+}
+assert.deepEqual(errors,[]);fs.writeFileSync(path.join(repo,'test-results/screenshot-scenes.json'),JSON.stringify({shots,errors,scope:'Actual canvas game captures in isolated browser contexts, staged full-build demonstration using real upgrade cards and 236 actual monsters. Solo scene, no public rooms. No AI-generated artwork.'},null,2));
+})().catch(e=>{console.error(e);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});

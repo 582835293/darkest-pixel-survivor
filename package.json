@@ -1,12 +1,13 @@
 {
   "name": "darkest-pixel-survivor",
-  "version": "26.4.13",
+  "version": "26.4.14",
   "private": true,
   "license": "MIT",
   "description": "A single-file pixel survivor game with browser co-op, spectator mode, text chat and WebRTC voice.",
   "scripts": {
     "check": "node scripts/check.mjs",
-    "test": "node tests/rooms.cjs && node tests/lobby.cjs && node tests/social.cjs && node tests/gameplay.cjs && node tests/healing-ui.cjs && node tests/upgrades.cjs && node tests/rescue.cjs && node tests/enhancements.cjs && node tests/solo-ui.cjs && node tests/party-rounds.cjs && node tests/menu-magnet.cjs && node tests/native-vfx.cjs"
+    "test": "node tests/rooms.cjs && node tests/lobby.cjs && node tests/social.cjs && node tests/gameplay.cjs && node tests/healing-ui.cjs && node tests/upgrades.cjs && node tests/rescue.cjs && node tests/enhancements.cjs && node tests/solo-ui.cjs && node tests/party-rounds.cjs && node tests/menu-magnet.cjs && node tests/native-vfx.cjs && node tests/engineer.cjs",
+    "screenshots": "node scripts/capture-screenshots.cjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

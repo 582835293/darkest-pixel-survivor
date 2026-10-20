@@ -1,0 +1,79 @@
+const fs=require('node:fs');
+const original=fs.readFileSync('tests/gameplay.cjs','utf8'),prefix=original.slice(0,original.indexOf(' await clean();'));
+const tail=String.raw`
+ await clean();const solo=await makePage({width:390,height:844});
+ await check('fourth hero is selectable in camp and room; native pixel frames and all three skin variants exist',async()=>{
+  assert.equal(await solo.locator('.hero-card').count(),4);assert.equal(await solo.locator('.coop-hero-pick').count(),4);await solo.locator('.hero-card[data-hero=engineer]').click();assert.equal(await solo.evaluate(()=>GameState.selectedHero),'engineer');
+  const r=await solo.evaluate(()=>({hp:player.maxHp,labels:[...document.querySelectorAll('#label-attack,#label-skill1,#label-skill2,#label-ult')].map(e=>e.textContent),sprites:[0,1].every(i=>SpriteCache['engineer_'+i]&&[0,1,2].every(c=>SpriteCache['engineer_'+i+'_c'+c])),widths:SPRITE_MATRICES.engineer_0.map(s=>s.length)}));assert.equal(r.hp,110);assert(r.sprites);assert(r.widths.every(n=>n===16));assert(r.labels.includes('哨戒炮台'));
+  await solo.locator('#btn-start-game').click();await solo.evaluate(()=>{spawnEnemyBatch=()=>{};GameState.autoAttack=false;GameState.godMode=true;enemies.length=0});
+ });
+ async function fresh(p=solo){await p.evaluate(()=>{GameState.isPaused=false;GameState.isOver=false;GameState.autoAttack=false;GameState.godMode=true;player.isDowned=false;setupHero('engineer');player.level=1;player.expToNext=100000;player.x=player.y=0;player.vx=player.vy=0;input.keys={};input.x=input.y=0;for(const a of [projectiles,groundEffects,particles,skyBeams,orbitingBlades,boomerangs,slashVisuals])a.length=0;for(const k of SYNERGY_KEYS)player.passives[k]=0;enemies.length=0;NewSynergies.reset();});}
+ await fresh();
+ await check('rivet attack scales from two to four projectiles and awakened rounds pierce three targets',async()=>{
+  const r=await solo.evaluate(()=>{executeAttack();const base=projectiles.map(p=>({rivet:p.isRivet,pierce:p.pierce}));projectiles.length=0;player.skills.attack.timer=0;player.skills.attack.level=5;executeAttack();const high=projectiles.length;projectiles.length=0;player.skills.attack.timer=0;player.skills.attack.isEvolved=true;executeAttack();return{base,high,super:projectiles.map(p=>[p.pierce,p.color])}});assert.equal(r.base.length,2);assert(r.base.every(v=>v.rivet&&v.pierce===1));assert.equal(r.high,4);assert.equal(r.super.length,4);assert(r.super.every(v=>v[0]===3&&v[1]==='#fde047'));
+ });
+ await fresh();
+ await check('base heavy cannon has real splash damage; charge branches use distinct rail and grenade mechanics',async()=>{
+  const r=await solo.evaluate(()=>{const e=createEnemy(0,0,'imp');e.hp=e.maxHp=10000;const n=createEnemy(25,0,'imp');n.hp=n.maxHp=10000;player.critChance=0;executeChargedAttack();projectiles[0].x=e.x;projectiles[0].y=e.y;projectiles[0].vx=projectiles[0].vy=0;update(.01);const splash=n.hp<10000;projectiles.length=0;player.skills.charge.branch='A';player.skills.charge.branchLv=1;player.aimAngle=0;const b=createEnemy(250,0,'imp');b.hp=b.maxHp=10000;executeChargedAttack();const rail=b.hp<10000&&skyBeams.some(s=>s.type==='laser_beam');projectiles.length=0;player.skills.charge.branch='B';player.skills.charge.branchLv=3;executeChargedAttack();return{splash,rail,grenades:projectiles.filter(p=>p.isGrenade).length}});assert(r.splash);assert(r.rail);assert.equal(r.grenades,7);
+ });
+ await fresh();
+ await check('mines arm before triggering, explode once, grant a small shield and obey the placement cap',async()=>{
+  const r=await solo.evaluate(()=>{executeSkill1();const m=groundEffects[0],e=createEnemy(m.x,m.y,'imp');e.hp=e.maxHp=10000;EngineerKit.tickGround(m,.01);const safe=e.hp;for(let i=0;i<8;i++){player.skills.skill1.timer=0;executeSkill1()}const cap=groundEffects.filter(g=>g.type==='mine'&&g.life>0).length;m.tickTimer=0;EngineerKit.tickGround(m,.01);return{safe,after:e.hp,cap,shield:player.shield,dead:m.life===0}});assert.equal(r.safe,10000);assert(r.after<r.safe);assert.equal(r.cap,8);assert(r.shield>0);assert(r.dead);
+ });
+ await fresh();
+ await check('turrets acquire targets, fire real projectiles, respect two/three limits and gain twin barrels after awakening',async()=>{
+  const r=await solo.evaluate(()=>{for(let i=0;i<4;i++){player.skills.skill2.timer=0;executeSkill2()}const base=groundEffects.filter(g=>g.type==='turret'&&g.life>0).length;groundEffects.length=0;player.skills.skill2.isEvolved=true;for(let i=0;i<5;i++){player.skills.skill2.timer=0;executeSkill2()}const superCount=groundEffects.filter(g=>g.type==='turret'&&g.life>0).length;const g=groundEffects.find(g=>g.life>0);const e=createEnemy(g.x+100,g.y+20,'imp');e.hp=e.maxHp=10000;g.tickTimer=0;EngineerKit.tickGround(g,.01);return{base,superCount,shots:projectiles.length,flags:projectiles.every(p=>p.isRivet&&p.pierce===3),angle:g.angle}});assert.equal(r.base,2);assert.equal(r.superCount,3);assert.equal(r.shots,2);assert(r.flags);assert(r.angle>0);
+ });
+ await fresh();
+ await check('overdrive is temporary, accelerates firing, adds one/two support turrets without bypassing normal caps',async()=>{
+  const r=await solo.evaluate(()=>{executeSkill2();executeUlt();const base=GameState.forgeOverdriveTimer,count=groundEffects.filter(g=>g.temporary&&g.life>0).length;const g=groundEffects.find(g=>g.type==='turret'),e=createEnemy(g.x+100,g.y,'imp');e.hp=e.maxHp=10000;g.tickTimer=0;EngineerKit.tickGround(g,.01);const cd=g.tickTimer;player.skills.ult.timer=0;player.skills.ult.isEvolved=true;executeUlt();const high=groundEffects.filter(g=>g.temporary&&g.life>0).length;GameState.forgeOverdriveTimer=.01;update(.05);g.tickTimer=0;EngineerKit.tickGround(g,.01);return{base,count,high,cd,normal:g.tickTimer,expired:GameState.forgeOverdriveTimer===0}});assert.equal(r.base,6);assert.equal(r.count,1);assert.equal(r.high,2);assert(r.cd<r.normal);assert(r.expired);
+ });
+ await fresh();
+ await check('engineer upgrade pool includes all core upgrades and both exclusive charge branches; four awakenings require the shown gear',async()=>{
+  const r=await solo.evaluate(()=>{const initial=generateUpgradePool();const ids=initial.map(c=>c.id);for(const key of ['attack','skill1','skill2'])player.skills[key].level=4;player.skills.ult.level=3;const locked=generateUpgradePool().filter(c=>c.id.startsWith('super_')).map(c=>c.id);player.passives.critGlove=player.passives.swiftBoots=player.passives.lavaHeart=1;const ready=generateUpgradePool().filter(c=>c.id.startsWith('super_')).map(c=>c.id);player.skills.charge.level=5;const branches=generateUpgradePool().filter(c=>c.id.startsWith('charge_branch')).map(c=>c.id);return{ids,locked,ready,branches,descs:initial.every(c=>typeof c.desc==='string'&&c.desc.length)}});assert(r.descs);for(const id of ['atk_up','charge_base_up','s1_up','s2_up','ult_up'])assert(r.ids.includes(id));assert.deepEqual(r.locked,['super_forge']);assert.equal(r.ready.length,4);assert.deepEqual(r.branches,['charge_branch_a','charge_branch_b']);
+ });
+ await fresh();
+ await check('all heroes can learn the three new builds and the shared two-synergy cap blocks a third build',async()=>{
+  const r=await solo.evaluate(()=>{const result=[];for(const h of Object.keys(HERO_CONFIGS)){setupHero(h);for(const k of SYNERGY_KEYS)player.passives[k]=0;const all=generateUpgradePool();const ids=NEW_SYNERGIES.map(s=>'syn_'+s.key);result.push(ids.every(id=>all.some(c=>c.id===id)));all.find(c=>c.id==='syn_emberEcho').apply();generateUpgradePool().find(c=>c.id==='syn_stellarBastion').apply();result.push(!generateUpgradePool().some(c=>['syn_huntPulse','syn_fire','syn_blood','syn_ice','syn_thunder'].includes(c.id)));}return result});assert(r.every(Boolean));
+ });
+ await fresh();
+ await check('ember echo triggers on the fourth primary hit, never recurses on secondary damage and has a cooldown',async()=>{
+  const r=await solo.evaluate(()=>{player.passives.emberEcho=1;player.critChance=0;NewSynergies.reset();const a=createEnemy(200,0,'imp'),b=createEnemy(220,0,'imp');a.hp=a.maxHp=b.hp=b.maxHp=100000;for(let i=0;i<3;i++)damageEnemy(a,5,0,0);const before=b.hp;damageEnemy(a,5,0,0);const after=b.hp;for(let i=0;i<20;i++)damageEnemy(a,1,0,0,true);const secondary=b.hp;for(let i=0;i<4;i++)damageEnemy(a,1,0,0);return{before,after,secondary,cooldown:b.hp,hits:NewSynergies.hits}});assert.equal(r.before,100000);assert(r.after<r.before);assert.equal(r.secondary,r.after);assert.equal(r.cooldown,r.after);assert.equal(r.hits,4);
+ });
+ await fresh();
+ await check('stellar bastion grants personal shields every six active seconds, has a cap and stops during menus/upgrades',async()=>{
+  const r=await solo.evaluate(()=>{player.passives.stellarBastion=1;player.shield=0;NewSynergies.reset();for(let i=0;i<59;i++)NewSynergies.tick(.1);const before=player.shield;NewSynergies.tick(.1);const after=player.shield;GameState.isPaused=true;for(let i=0;i<120;i++)NewSynergies.tick(.1);const menu=player.shield;GameState.isPaused=false;UpgradeChoice.active=true;for(let i=0;i<120;i++)NewSynergies.tick(.1);const upgrade=player.shield;UpgradeChoice.active=false;for(let i=0;i<1200;i++)NewSynergies.tick(.1);return{before,after,menu,upgrade,cap:player.shield,limit:Math.round(player.maxHp*.3)+10}});assert.equal(r.before,0);assert.equal(r.after,10);assert.equal(r.menu,10);assert.equal(r.upgrade,10);assert(r.cap<=r.limit);
+ });
+ await fresh();
+ await check('hunt pulse requires real travel, hits its configured targets and cannot farm distance from teleporting or menus',async()=>{
+  const r=await solo.evaluate(()=>{player.passives.huntPulse=2;NewSynergies.reset();for(let i=0;i<3;i++){const e=createEnemy(200+i*12,0,'imp');e.hp=e.maxHp=10000;}for(let i=0;i<30;i++)NewSynergies.tick(.1);const idle=lightningArcs.length;for(let i=0;i<8;i++){player.x+=20;NewSynergies.tick(.1)}const moving=lightningArcs.length;NewSynergies.reset();player.x+=999;NewSynergies.tick(.1);const teleport=NewSynergies.distance;GameState.isPaused=true;for(let i=0;i<10;i++){player.x+=20;NewSynergies.tick(.1)}GameState.isPaused=false;return{idle,moving,teleport,paused:NewSynergies.distance}});assert.equal(r.idle,0);assert.equal(r.moving,2);assert.equal(r.teleport,40);assert.equal(r.paused,40);
+ });
+ await fresh();
+ await check('new hero and seven-flow compendium render all tabs, slot badges and saved build data without undefined text',async()=>{
+  const r=await solo.evaluate(()=>{player.passives.emberEcho=2;player.passives.stellarBastion=1;updateLoadoutHUD();const texts=[];for(const tab of ['active','synergy','equip','relic']){renderSkillTreeModal(tab);texts.push(document.getElementById('skilltree-content').textContent)}SaveManager.saveBattleSnapshot(true);const snap=SaveManager.hasBattleSnapshot();return{texts,hero:snap.selectedHero,pass:snap.player.passives,slots:document.getElementById('loadout-synergy-group').textContent}});assert(r.texts.every(t=>!t.includes('undefined')));assert(r.texts[0].includes('磁轨蜂群'));assert(r.texts[1].includes('追猎脉冲'));assert.equal(r.hero,'engineer');assert.equal(r.pass.emberEcho,2);assert(r.slots.includes('2/2'));
+ });
+ await check('loading the new battle snapshot restores hero skills and new synergy levels; old snapshots keep defaults',async()=>{
+  const r=await solo.evaluate(()=>{player.skills.charge.level=5;player.skills.charge.branch='B';player.skills.charge.branchLv=2;SaveManager.saveBattleSnapshot(true);const snap=SaveManager.hasBattleSnapshot();setupHero('warrior');restoreBattleSnapshot();const restored={hero:GameState.selectedHero,branch:player.skills.charge.branch,ember:player.passives.emberEcho};const old=JSON.parse(JSON.stringify(snap));old.selectedHero='warrior';delete old.player.passives.emberEcho;delete old.player.passives.stellarBastion;delete old.player.passives.huntPulse;SaveManager._memBattleSnap=old;restoreBattleSnapshot();return{restored,oldHero:GameState.selectedHero,oldNew:player.passives.emberEcho||0}});assert.deepEqual(r.restored,{hero:'engineer',branch:'B',ember:2});assert.equal(r.oldHero,'warrior');assert.equal(r.oldNew,0);
+ });
+ await clean();
+ await check('guest engineer joins with its real hero sprite, turret/mines/rivets synchronize as visual-only objects',async()=>{
+  await guest.evaluate(()=>{setupHero('engineer');player.x=650;player.expToNext=100000;GameState.autoAttack=false;CoopManager.sendPresenceNow();executeSkill2();executeSkill1();executeAttack()});
+  await host.waitForFunction(()=>CoopManager.allies[0]?.hero==='engineer');const id=await guest.evaluate(()=>CoopManager.myPeerId);await host.waitForFunction(id=>[...(CoopSkillVfx.states.get(id)?.visuals.values()||[])].some(v=>v.obj.type==='turret'),id);
+  const r=await host.evaluate(id=>{const vs=[...CoopSkillVfx.states.get(id).visuals.values()];return{types:vs.map(v=>v.obj.type),physical:groundEffects.filter(g=>g.type==='turret'||g.type==='mine').length,sprite:Boolean(SpriteCache.engineer_0),rivet:vs.some(v=>v.obj.isRivet)}},id);assert(r.types.includes('turret'));assert(r.types.includes('mine'));assert.equal(r.physical,0);assert(r.sprite);assert(r.rivet);
+ });
+ await check('turret aiming and overdrive mutations reach the teammate without replacing the turret or calculating another hit',async()=>{
+  const id=await guest.evaluate(()=>CoopManager.myPeerId);await host.evaluate(()=>{const e=createEnemy(800,120,'imp');e.hp=e.maxHp=50000;e.freezeTimer=999;WorldCoop.broadcastWorld()});await guest.waitForFunction(()=>enemies.length===1);await guest.evaluate(()=>executeUlt());await host.waitForFunction(id=>[...(CoopSkillVfx.states.get(id)?.visuals.values()||[])].some(v=>v.obj.type==='turret'&&v.obj.overdrive&&v.obj.angle>0),id);assert.equal(await host.evaluate(()=>groundEffects.filter(g=>g.type==='turret').length),0);
+ });
+ await clean();
+ await check('guest turret kills credit that guest lifesteal rather than healing the host',async()=>{
+  await host.evaluate(()=>{groundEffects.length=0;player.hp=50;player.passives.bloodPact=1});
+  await guest.evaluate(()=>{setupHero('engineer');player.x=650;player.hp=50;player.maxHp=100;player.passives.bloodPact=1;groundEffects.length=0;player.skills.skill2.damage=100;player.skills.skill2.timer=0;CoopManager.sendPresenceNow();executeSkill2()});
+  await host.evaluate(()=>{for(let i=0;i<10;i++){const e=createEnemy(830,i*5-25,'imp');e.hp=e.maxHp=1;e.freezeTimer=999;}WorldCoop.broadcastWorld()});await guest.waitForFunction(()=>player.hp===54,null,{timeout:15000});assert.equal(await host.evaluate(()=>player.hp),50);
+ });
+ await check('menu, upgrade protection and downed state stop local turrets and new synergy actions',async()=>{
+  const r=await guest.evaluate(()=>{const g=groundEffects.find(g=>g.type==='turret');projectiles.length=0;GameState.isPaused=true;const before=g?.tickTimer;update(.1);const menu=projectiles.length;GameState.isPaused=false;UpgradeChoice.active=true;update(.1);const upgrade=projectiles.length;UpgradeChoice.active=false;player.isDowned=true;update(.1);const down=projectiles.length;player.isDowned=false;return{menu,upgrade,down}});assert.deepEqual(r,{menu:0,upgrade:0,down:0});
+ });
+ assert.deepEqual(errors,[]);fs.writeFileSync('test-results/engineer.json',JSON.stringify({results,errors,scope:'Real local RTC and isolated solo browser; fourth hero UI, native art, build progression, save migration, autonomous combat, personal reward ownership and protection gates.'},null,2));
+})().catch(e=>{console.error(e);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});
+`;
+new Function('require',prefix+tail)(require);

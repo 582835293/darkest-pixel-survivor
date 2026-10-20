@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R13 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R14 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -608,7 +608,7 @@
     /* 角色选择卡片 */
     .hero-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 8px;
       margin-bottom: 12px;
     }
@@ -1243,7 +1243,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R13</span></div>
+        <div class="modal-title">⚔️ 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R14</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -1262,6 +1262,10 @@
             <div class="hero-avatar">🏹</div>
             <div class="hero-title">暗夜巡林</div>
             <div class="hero-perk">穿透毒箭破甲腐蚀<br>后空翻布设电网陷阱<br>接回旋镖按比例回战技CD</div>
+          </div>
+          <div class="hero-card" data-hero="engineer">
+            <div class="hero-avatar">⚙️</div><div class="hero-title">烬铁机匠</div>
+            <div class="hero-perk">铆钉连射 · 磁雷控场<br>部署炮台构筑交叉火力<br>熔星过载召来支援炮台</div>
           </div>
         </div>
 
@@ -1365,6 +1369,7 @@
               <div class="biome-card coop-hero-pick selected" data-hero="warrior">🗡️ 苍红剑客</div>
               <div class="biome-card coop-hero-pick" data-hero="mage">🔮 星界魔导</div>
               <div class="biome-card coop-hero-pick" data-hero="ranger">🏹 暗夜巡林</div>
+              <div class="biome-card coop-hero-pick" data-hero="engineer">⚙️ 烬铁机匠</div>
             </div>
             <div class="coop-picks-grid" style="margin-top:8px;">
               <div class="biome-card coop-biome-pick selected" data-biome="dungeon">🏰 熔火地牢</div>
@@ -1470,7 +1475,7 @@
         <div class="modal-subtitle">查看当前已升/未升节点、超武合成公式，以及流派(上限2)与装备(上限3)槽位状态</div>
         <div class="tree-tabs" style="flex-wrap: wrap;">
           <button class="tree-tab-btn active" id="tab-btn-active" data-tab="active">⚔️ 职业战技与超武</button>
-          <button class="tree-tab-btn" id="tab-btn-synergy" data-tab="synergy">🔮 四大元素流派 (限2)</button>
+          <button class="tree-tab-btn" id="tab-btn-synergy" data-tab="synergy">🔮 七大构筑流派 (限2)</button>
           <button class="tree-tab-btn" id="tab-btn-equip" data-tab="equip">🛡️ 奇物装备栏 (限3)</button>
           <button class="tree-tab-btn" id="tab-btn-relic" data-tab="relic">🗺️ 地图特殊秘宝 (限2)</button>
         </div>
@@ -2236,6 +2241,19 @@
       }
     };
 
+    HERO_CONFIGS.engineer = {
+      name:'烬铁机匠',color:'#f59e0b',speed:146,maxHp:110,critChance:.08,armor:.06,
+      icons:{atk:'🔩',s1:'💣',s2:'⚙️',ult:'☀️',item:'🛡️'},labels:{atk:'铆钉连射',s1:'震荡磁雷',s2:'哨戒炮台',ult:'熔星过载'},
+      initSkills:()=>({
+        attack:{name:'铆钉连射',level:1,maxLevel:5,damage:11,cd:.48,timer:0,range:290,count:2,isEvolved:false},
+        charge:{name:'蓄力·震爆重炮',level:1,maxLevel:5,branch:null,branchLv:0,maxBranchLv:3,branchAName:'贯穿磁轨炮',branchBName:'爆破弹幕'},
+        skill1:{name:'震荡磁雷',level:1,maxLevel:5,damage:46,cd:5.5,timer:0,isDashing:false,dashTimer:0,isEvolved:false},
+        skill2:{name:'哨戒炮台',level:1,maxLevel:5,damage:16,cd:6.5,timer:0,radius:280,isEvolved:false},
+        ult:{name:'熔星过载',level:1,maxLevel:3,damage:105,cd:24,timer:0,isEvolved:false},
+        item:{name:'合金壁障',level:1,cd:18,timer:0,duration:2.8,activeTimer:0}
+      })
+    };
+
     const player = {
       x: 0, y: 0, vx: 0, vy: 0,
       radius: 12, facing: 1, aimAngle: 0,
@@ -2265,7 +2283,7 @@
         thunderChain: 0,
         iceShatter: 0,
         bloodPact: 0,
-        fireTrail: 0
+        fireTrail: 0, emberEcho:0, stellarBastion:0, huntPulse:0
       }
     };
 
@@ -2299,6 +2317,84 @@
     SaveManager.load();
 
     // 5. 升级卡牌库：阶段性形态改造 + 四大流派共鸣 + 超武觉醒（精简直观描述版）
+    const NEW_SYNERGIES = [
+      {key:'emberEcho',icon:'💥',name:'余烬回响',nodes:['每4次主命中引发64半径爆破（0.8秒间隔）','爆破伤害提高，半径扩大至72','爆破伤害提高，半径扩大至80']},
+      {key:'stellarBastion',icon:'✨',name:'星辉壁垒',nodes:['每6秒获得10护盾（有上限）','每6秒获得20护盾，提高上限','每6秒获得30护盾，提高上限']},
+      {key:'huntPulse',icon:'💠',name:'追猎脉冲',nodes:['移动180距离，脉冲击中1名敌人','移动160距离，脉冲击中2名敌人','移动140距离，脉冲击中3名敌人']}
+    ];
+    const SYNERGY_KEYS=['thunderChain','iceShatter','bloodPact','fireTrail',...NEW_SYNERGIES.map(s=>s.key)];
+    var NewSynergies={
+      reset(){this.hits=0;this.echoCd=0;this.shieldTime=0;this.distance=0;this.pulseCd=0;this.x=player.x;this.y=player.y;},
+      hit(en){
+        const lv=player.passives.emberEcho||0;if(!lv||!WorldCoop.canAct())return;
+        this.hits=Math.min(4,(this.hits||0)+1);if(this.hits<4||this.echoCd>0)return;
+        this.hits=0;this.echoCd=.8;const radius=56+8*Math.min(6,lv);
+        createShockwave(en.x,en.y,radius,'#fb923c');
+        for(const e of [...enemies])if(!e.isDead&&Math.hypot(e.x-en.x,e.y-en.y)<=radius+e.radius)damageEnemy(e,12+8*lv,0,25,true);
+      },
+      tick(dt){
+        const moved=Math.min(40,Math.hypot(player.x-(this.x??player.x),player.y-(this.y??player.y)));this.x=player.x;this.y=player.y;
+        if(!WorldCoop.canAct())return;
+        this.echoCd=Math.max(0,(this.echoCd||0)-dt);this.pulseCd=Math.max(0,(this.pulseCd||0)-dt);
+        const p=player.passives,shieldLv=p.stellarBastion||0,huntLv=p.huntPulse||0;
+        if(shieldLv){this.shieldTime=(this.shieldTime||0)+dt;if(this.shieldTime>=6-1e-6){this.shieldTime=Math.max(0,this.shieldTime-6);const cap=Math.round(player.maxHp*.3)+shieldLv*10;player.shield=Math.max(player.shield,Math.min(cap,player.shield+shieldLv*10));player.shieldMax=Math.max(player.shieldMax,player.shield);createShockwave(player.x,player.y,35,'#fef08a');updateHpUI();}}
+        if(huntLv){this.distance=(this.distance||0)+moved;const need=Math.max(90,200-huntLv*20);if(this.distance>=need&&this.pulseCd<=0){const targets=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<=340).sort((a,b)=>Math.hypot(a.x-player.x,a.y-player.y)-Math.hypot(b.x-player.x,b.y-player.y)).slice(0,Math.min(4,huntLv));if(targets.length){this.distance%=need;this.pulseCd=.9;for(const e of targets){lightningArcs.push({x1:player.x,y1:player.y,x2:e.x,y2:e.y,color:'#67e8f9',life:.22});damageEnemy(e,22+10*huntLv,0,15,true);}}}}
+      }
+    };
+    var EngineerKit={
+      shoot(x,y,angle,damage,evolved=false,grenade=false){projectiles.push({x,y,vx:Math.cos(angle)*(grenade?390:690),vy:Math.sin(angle)*(grenade?390:690),radius:grenade?11:7,damage,life:grenade?.75:.7,pierce:grenade?1:evolved?3:1,color:evolved?'#fde047':'#fb923c',isRivet:true,isGrenade:grenade});},
+      attack(angle){const a=player.skills.attack,n=a.isEvolved?4:2+Math.floor((a.level-1)/2);for(let i=0;i<n;i++)this.shoot(player.x,player.y,angle+(i-(n-1)/2)*.085,a.damage,a.isEvolved);audio.playShoot();},
+      charge(angle){
+        const c=player.skills.charge,damage=Math.round(player.skills.attack.damage*(2.5+c.level*.35)*(1+(c.branchLv||0)*.32));
+        if(c.branch==='A'){
+          const length=500+(c.branchLv||1)*55,ux=Math.cos(angle),uy=Math.sin(angle);skyBeams.push({type:'laser_beam',x1:player.x,y1:player.y,x2:player.x+ux*length,y2:player.y+uy*length,width:20+(c.branchLv||1)*5,color:'#fde047',life:.32,maxLife:.32});
+          for(const e of enemies)if(!e.isDead){const dx=e.x-player.x,dy=e.y-player.y,t=dx*ux+dy*uy;if(t>=0&&t<=length&&Math.abs(dx*uy-dy*ux)<=18+e.radius)damageEnemy(e,damage*1.3,angle,100);}
+        }else{const n=c.branch==='B'?4+(c.branchLv||1):1+Math.floor((c.level-1)/2);for(let i=0;i<n;i++)this.shoot(player.x,player.y,angle+(i-(n-1)/2)*.2,damage,c.branch==='B',true);}
+        audio.playExplosion();
+      },
+      mine(){
+        const s=player.skills.skill1,n=s.isEvolved?3:s.level>=3?2:1;
+        for(let i=0;i<n;i++){const a=player.aimAngle+(i-(n-1)/2)*.7;groundEffects.push({type:'mine',x:player.x+Math.cos(a)*55,y:player.y+Math.sin(a)*55,radius:18,damage:s.damage,blastRadius:s.isEvolved?100:76,life:8,maxLife:8,tickTimer:.25,isEvolved:s.isEvolved});}
+        const mines=groundEffects.filter(g=>g.type==='mine');for(const old of mines.slice(0,Math.max(0,mines.length-8)))old.life=0;
+        player.shield=Math.max(player.shield,10+s.level*2);player.shieldMax=Math.max(player.shieldMax,player.shield);updateHpUI();audio.playShoot();
+      },
+      place(x,y,temporary=false){
+        const s=player.skills.skill2,life=temporary?(player.skills.ult.isEvolved?9:6):11+s.level*.6;
+        groundEffects.push({type:'turret',x,y,radius:19,damage:s.damage,range:s.radius||280,life,maxLife:life,tickTimer:.12,angle:player.aimAngle,isEvolved:s.isEvolved,temporary,overdrive:GameState.forgeOverdriveTimer>0});
+        if(!temporary){const turrets=groundEffects.filter(g=>g.type==='turret'&&!g.temporary&&g.life>0),cap=s.isEvolved?3:2;for(const g of turrets.slice(0,Math.max(0,turrets.length-cap)))g.life=0;}
+        createShockwave(x,y,40,'#fbbf24');
+      },
+      turret(){this.place(player.x+Math.cos(player.aimAngle)*65,player.y+Math.sin(player.aimAngle)*65);audio.playShoot();},
+      ult(){
+        const u=player.skills.ult;GameState.forgeOverdriveTimer=u.isEvolved?9:6;player.invulnerableTimer=Math.max(player.invulnerableTimer,1.2);
+        for(const g of groundEffects.filter(g=>g.type==='turret'&&g.temporary))g.life=0;
+        const n=u.isEvolved?2:1;for(let i=0;i<n;i++){const a=player.aimAngle+Math.PI/2+(i?Math.PI:0);this.place(player.x+Math.cos(a)*72,player.y+Math.sin(a)*72,true);}
+        createShockwave(player.x,player.y,180,'#fde047');damageInRadius(player.x,player.y,180,u.damage,120);showToast(u.isEvolved?'⚙️【日冕工厂】双支援炮台就位，过载9秒！':'⚙️ 熔星过载：支援炮台就位，火控加速6秒！');
+      },
+      explode(x,y,radius,damage,except=null){createShockwave(x,y,radius,'#fb923c');audio.playExplosion();for(const e of [...enemies])if(e!==except&&!e.isDead&&Math.hypot(e.x-x,e.y-y)<=radius+e.radius)damageEnemy(e,damage,Math.atan2(e.y-y,e.x-x),90,true);},
+      tickGround(g,dt){
+        if(g.type==='mine'){if(g.tickTimer>0)return;const near=enemies.some(e=>!e.isDead&&Math.hypot(e.x-g.x,e.y-g.y)<42+e.radius);if(near){this.explode(g.x,g.y,g.blastRadius||76,g.damage);g.life=0;}return;}
+        g.overdrive=GameState.forgeOverdriveTimer>0;const target=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-g.x,e.y-g.y)<(g.range||280)).sort((a,b)=>Math.hypot(a.x-g.x,a.y-g.y)-Math.hypot(b.x-g.x,b.y-g.y))[0];if(!target)return;
+        g.angle=Math.atan2(target.y-g.y,target.x-g.x);if(g.tickTimer>0)return;
+        g.tickTimer=(g.isEvolved?.58:.74)*(g.overdrive?.55:1);const count=g.isEvolved?2:1;
+        for(let i=0;i<count;i++)this.shoot(g.x+Math.cos(g.angle)*21,g.y+Math.sin(g.angle)*21,g.angle+(i-(count-1)/2)*.09,g.damage,g.isEvolved);
+      },
+      draw(c,g,alpha){
+        c.save();c.globalAlpha=alpha;c.translate(g.x,g.y);const hot=g.isEvolved||g.overdrive;
+        if(g.type==='turret'){
+          c.fillStyle='rgba(0,0,0,.5)';c.fillRect(-24,14,48,6);c.strokeStyle=hot?'#fde047':'#b45309';c.lineWidth=3;
+          if(g.overdrive){c.save();c.rotate(GameState.gameTime*2);c.setLineDash([6,5]);c.beginPath();c.arc(0,0,30,0,Math.PI*2);c.stroke();c.restore();}
+          c.fillStyle='#334155';c.fillRect(-19,4,38,13);c.fillStyle='#94a3b8';c.fillRect(-16,14,8,8);c.fillRect(8,14,8,8);
+          c.fillStyle=hot?'#f59e0b':'#b45309';c.fillRect(-15,-9,30,24);c.fillStyle='#fef08a';c.fillRect(-10,-5,20,5);
+          c.save();c.rotate(g.angle||0);c.fillStyle='#1e293b';c.fillRect(-8,-7,35,14);c.fillStyle=hot?'#fff7ae':'#fb923c';c.fillRect(10,-4,24,8);if(g.isEvolved){c.fillRect(8,-11,21,5);c.fillRect(8,6,21,5);}c.restore();
+        }else{
+          c.strokeStyle=hot?'#fde047':'#fb923c';c.lineWidth=2;c.setLineDash([4,4]);c.beginPath();c.arc(0,0,27,0,Math.PI*2);c.stroke();c.setLineDash([]);
+          c.fillStyle='#334155';c.fillRect(-14,-7,28,18);c.fillStyle='#94a3b8';c.fillRect(-9,-12,18,6);c.fillStyle=Math.sin(GameState.gameTime*12)>0?'#fff7ae':'#f97316';c.fillRect(-4,-5,8,8);c.strokeStyle='#fbbf24';c.beginPath();c.moveTo(-22,0);c.lineTo(-14,0);c.moveTo(14,0);c.lineTo(22,0);c.stroke();
+        }c.restore();
+      }
+    };
+
+
     function generateUpgradePool() {
       const pool = [];
       const skills = player.skills;
@@ -2507,10 +2603,16 @@
         }
       }
 
+      if(hero==='engineer'){
+        const forms=[['attack','critGlove','super_rivet','磁轨蜂群','铆钉变为4枚金色贯穿弹，可穿透3个目标。'],['skill1','swiftBoots','super_mine','日冕磁雷阵','同时部署3枚磁雷，爆破半径扩大至100。'],['skill2','lavaHeart','super_turret','双联重装哨戒','炮台上限升至3座，双联装穿透弹。'],['ult',null,'super_forge','日冕工厂','过载延长到9秒，同时召来2座支援炮台。']];
+        for(const [key,equip,id,name,desc]of forms){const sk=skills[key];if(!sk.isEvolved&&sk.level>=(key==='ult'?3:4)&&(!equip||pass[equip]>0))pool.push({id,name:'【超武】'+name,desc,type:'super',icon:'⚙️',isTrueSuper:true,apply:()=>{sk.isEvolved=true;sk.damage=Math.round(sk.damage*1.25);showSuperWeaponFanfare('机匠觉醒：'+name+'！');}});}
+      }
+
       // --- 1. 普通攻击升级 (Lv.1 -> Lv.5，明确标注【普通攻击】且保证优先刷新) ---
       if (skills.attack.level < skills.attack.maxLevel) {
         const nextLv = skills.attack.level + 1;
         const morphDescs = {
+          engineer:['铆钉伤害+22%，射速提高。','铆钉伤害+22%，弹数提高至3枚。','铆钉伤害+22%，射速提高（手套可合成超武）。','铆钉伤害+22%，弹数提高至4枚。'],
           warrior: [
             '伤害+22%，每击发射穿透剑气，流血伤害翻倍。',
             '伤害+22%，挥砍范围扩大，第3击震退周围敌人。',
@@ -2557,6 +2659,7 @@
       if (chg && chg.level < chg.maxLevel) {
         const nextClv = chg.level + 1;
         const chargeMorphDescs = {
+          engineer:['重炮伤害成长，蓄力更快。','增加1枚震爆弹，命中产生范围爆破。','蓄力更快，重炮伤害成长。','增加第3枚震爆弹；下次可选择磁轨或弹幕觉醒。'],
           warrior: [
             '范围扩大，扇形发射 3 道裂空剑气并叠流血。',
             '挥砍额外触发前方【十字裂隙斩】二段爆炸。',
@@ -2596,6 +2699,7 @@
       // 蓄力升满 Lv.5 后，下一级直接置顶解锁两种蓄力流派二选一（无需普攻满级）
       if (chg && chg.level >= chg.maxLevel && !chg.branch) {
         const branchSpecs = {
+          engineer:{A:{name:'【蓄力觉醒A】贯穿磁轨炮',icon:'⚡',desc:'【二选一】发射金色贯穿光束，直击路径上所有敌人。'},B:{name:'【蓄力觉醒B】爆破弹幕',icon:'💥',desc:'【二选一】扇形发射5—7枚金色震爆弹，逐枚范围爆破。'}},
           warrior: {
             A: { name: '【蓄力觉醒A】八荒万剑流', icon: '🗡️', desc: '【二选一】爆发360°剑阵，向八方齐射8~12道黄金剑气。' },
             B: { name: '【蓄力觉醒B】鬼神一刀流', icon: '👹', desc: '【二选一】蓄力移速+35%，瞬步突进斩首，对首领伤害大增。' }
@@ -2657,6 +2761,7 @@
       if (skills.skill1.level < skills.skill1.maxLevel) {
         const nextLv = skills.skill1.level + 1;
         const s1Descs = {
+          engineer:'磁雷伤害+22%，冷却缩短；Lv.3布雷数增至2枚。',
           warrior: '伤害+22%，冷却缩短，冲刺引爆流血范围扩大并回CD。',
           mage: '伤害+22%，冷却缩短，起点与终点冰冻延长至3.5秒。',
           ranger: '伤害+22%，冷却缩短，布设陷阱数+1并散射雷针。'
@@ -2678,6 +2783,7 @@
       if (skills.skill2.level < skills.skill2.maxLevel) {
         const nextLv = skills.skill2.level + 1;
         const s2Descs = {
+          engineer:'炮台伤害+22%，射程扩大，部署冷却缩短。',
           warrior: `伤害+22%，转速加快${nextLv === 3 ? '，新增第2圈外环剑阵' : (nextLv === 5 ? '，新增第3圈外环剑阵' : '，路过敌人减速42%')}。`,
           mage: '伤害+22%，冷却缩短，黑洞牵引范围扩大30%。',
           ranger: '伤害+22%，飞轮数+1，接住飞轮回血并刷战技CD。'
@@ -2716,7 +2822,7 @@
 
       // --- 4. 四大元素流派 (单局上限 2 种) ---
       const MAX_SYNERGY_SLOTS = 2;
-      const activeSynergies = ['thunderChain', 'iceShatter', 'bloodPact', 'fireTrail'].filter(k => pass[k] > 0);
+      const activeSynergies = SYNERGY_KEYS.filter(k => pass[k] > 0);
       const canLearnNewSynergy = activeSynergies.length < MAX_SYNERGY_SLOTS;
 
       if (pass.thunderChain < 3 && (pass.thunderChain > 0 || canLearnNewSynergy)) {
@@ -2760,12 +2866,14 @@
         });
       }
 
+      for(const spec of NEW_SYNERGIES){const lv=pass[spec.key]||0;if(lv<3&&(lv>0||canLearnNewSynergy))pool.push({id:'syn_'+spec.key,name:spec.name+' Lv.'+(lv+1)+'/3',type:'passive',icon:spec.icon,desc:spec.nodes[lv],apply:()=>{pass[spec.key]=lv+1;updateLoadoutHUD();}});}
+
       // --- 5. 专武装备配件 (上限 3 件) ---
       const MAX_EQUIP_SLOTS = 3;
       const MAX_EQUIP_LV = 5;
       const equippedCount = ['critGlove', 'swiftBoots', 'lavaHeart', 'frostAura', 'pierceQuiver'].filter(k => (pass[k] || 0) > 0).length;
 
-      if ((hero === 'warrior' || hero === 'ranger') && (pass.critGlove || 0) < MAX_EQUIP_LV && ((pass.critGlove || 0) > 0 || equippedCount < MAX_EQUIP_SLOTS)) {
+      if ((hero === 'warrior' || hero === 'ranger' || hero === 'engineer') && (pass.critGlove || 0) < MAX_EQUIP_LV && ((pass.critGlove || 0) > 0 || equippedCount < MAX_EQUIP_SLOTS)) {
         const nextLv = (pass.critGlove || 0) + 1;
         pool.push({
           id: 'p_crit_glove',
@@ -2797,7 +2905,7 @@
           }
         });
       }
-      if ((hero === 'warrior' || hero === 'mage') && (pass.lavaHeart || 0) < MAX_EQUIP_LV && ((pass.lavaHeart || 0) > 0 || equippedCount < MAX_EQUIP_SLOTS)) {
+      if ((hero === 'warrior' || hero === 'mage' || hero === 'engineer') && (pass.lavaHeart || 0) < MAX_EQUIP_LV && ((pass.lavaHeart || 0) > 0 || equippedCount < MAX_EQUIP_SLOTS)) {
         const nextLv = (pass.lavaHeart || 0) + 1;
         pool.push({
           id: 'p_lava_heart',
@@ -2954,16 +3062,16 @@
           }
         });
 
-        ['thunderChain', 'iceShatter', 'bloodPact', 'fireTrail'].forEach(synKey => {
+        SYNERGY_KEYS.forEach(synKey => {
           if (pass[synKey] >= 3) {
-            const synNames = { thunderChain: '雷霆连锁', iceShatter: '极寒碎冰', bloodPact: '猩红血棘', fireTrail: '业火流星' };
-            const synIcons = { thunderChain: '⚡', iceShatter: '🧊', bloodPact: '🩸', fireTrail: '🔥' };
+            const synNames = { thunderChain: '雷霆连锁', iceShatter: '极寒碎冰', bloodPact: '猩红血棘', fireTrail: '业火流星',...Object.fromEntries(NEW_SYNERGIES.map(s=>[s.key,s.name])) };
+            const synIcons = { thunderChain: '⚡', iceShatter: '🧊', bloodPact: '🩸', fireTrail: '🔥',...Object.fromEntries(NEW_SYNERGIES.map(s=>[s.key,s.icon])) };
             pool.push({
               id: `lb_${synKey}`,
               name: `【流派突破】${synNames[synKey]} +${pass[synKey] - 2}`,
               type: 'passive',
               icon: synIcons[synKey],
-              desc: `${synNames[synKey]}伤害与触发威力+25%。`,
+              desc: `${synNames[synKey]}等级+1，进一步强化已有流派效果。`,
               apply: () => {
                 pass[synKey]++;
                 updateLoadoutHUD();
@@ -3231,6 +3339,7 @@
       const hero = GameState.selectedHero;
       if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) CoopManager.broadcastSkill('atk', { angle: +attackAngle.toFixed(3), comboStep: atk.comboStep || 0, level: atk.level || 1, isEvolved: Boolean(atk.isEvolved) });
 
+      if(hero==='engineer'){EngineerKit.attack(attackAngle);return;}
       if (hero === 'warrior') {
         audio.playSlash();
         atk.comboStep = (atk.comboStep + 1) % 3;
@@ -3376,6 +3485,7 @@
       const totalMul = talentChargeMul * baseLvMul * branchMul * lbChargeMul;
       if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) CoopManager.broadcastSkill('charge', { angle: +attackAngle.toFixed(3), branch: chg.branch, branchLv: chg.branchLv || 0, level: chg.level || 1 });
 
+      if(hero==='engineer'){EngineerKit.charge(attackAngle);return;}
       if (hero === 'warrior') {
         const chargeRange = (atk.range * 1.85) * (1 + (chg.level - 1) * 0.08);
         const heavyDmg = Math.round(atk.damage * 2.6 * totalMul);
@@ -3758,6 +3868,7 @@
       dirX /= len; dirY /= len;
       if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) CoopManager.broadcastSkill('s1', { dirX: +dirX.toFixed(3), dirY: +dirY.toFixed(3), level: s1.level || 1, isEvolved: Boolean(s1.isEvolved) });
 
+      if(hero==='engineer'){EngineerKit.mine();return;}
       if (hero === 'warrior') {
         // 苍红剑客：向目标方向高速突进，引爆沿途流血敌人并返还CD！
         audio.playSlash();
@@ -3900,6 +4011,7 @@
       s2.timer = s2.cd;
       if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) CoopManager.broadcastSkill('s2', { angle: +player.aimAngle.toFixed(3), level: s2.level || 1, isEvolved: Boolean(s2.isEvolved), duration: hero==='warrior'?(s2.duration||4.5)+(s2.level||1)*.4:hero==='mage'?(s2.duration||3.5):2.8 });
 
+      if(hero==='engineer'){EngineerKit.turret();return;}
       if (hero === 'warrior') {
         // 苍红剑客：多圈差速旋转重剑大阵（Lv.1~2单圈，Lv.3~4内外双圈，Lv.5/超武三圈同心剑狱！）
         // 剑圈内魔物受到剑风引力被吸附到剑轨半径上切割，且移速大幅降低！
@@ -4022,6 +4134,7 @@
       if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) {
         CoopManager.broadcastSkill('ult', { angle: +player.aimAngle.toFixed(3), level: ult.level || 1, isEvolved: isSuperUlt });
       }
+      if(hero==='engineer'){EngineerKit.ult();return;}
       if (hero === 'warrior') {
         // 断界天陨斩（超武觉醒：三向扇形18道黄金圣剑光柱 + 8秒战神金身）
         GameState.berserkTimer = isSuperUlt ? 8.0 : 5.5;
@@ -4753,6 +4866,7 @@
       if (WorldCoop.guest()) WorldCoop.reportHit(en, finalDmg, pushAngle, pushForce);
       else en.hp -= finalDmg;
       GameState.totalDamageDealt += finalDmg;
+      if(!isSecondary)NewSynergies.hit(en);
 
       // 击退改为概率触发：普攻与常规弹道仅 25% 概率触发击退（三连斩第3击 38%，重型战技 55%），杜绝无限推怪超标！
       if (pushForce > 0 && (!en.affixes || !en.affixes.includes('unstoppable'))) {
@@ -5681,7 +5795,7 @@
 
       const pool = generateUpgradePool();
       const selected = UpgradeDraft.draw(pool, excludeIds);
-      const synergyCount=['thunderChain','iceShatter','bloodPact','fireTrail'].filter(k=>player.passives[k]>0).length;
+      const synergyCount=SYNERGY_KEYS.filter(k=>player.passives[k]>0).length;
       const equipCount=['critGlove','swiftBoots','lavaHeart','frostAura','pierceQuiver'].filter(k=>player.passives[k]>0).length;
       const locks=[];if(synergyCount>=2)locks.push('流派已满，未学的新流派不会出现');if(equipCount>=3)locks.push('配件已满，只能升级已有配件');
       document.getElementById('upgrade-draft-hint').textContent=(pool.length<=3?'已显示全部可选项':'刷新优先换成未出现的选项')+' · 流派 '+synergyCount+'/2 · 配件 '+equipCount+'/3'+(locks.length?'。'+locks.join('；'):'');
@@ -5765,6 +5879,7 @@
       if (GameState.fireBurstCd > 0) GameState.fireBurstCd -= dt;
       if (GameState.hurtFlashTimer > 0) GameState.hurtFlashTimer = Math.max(0, GameState.hurtFlashTimer - dt);
       if (GameState.berserkTimer > 0) GameState.berserkTimer -= dt;
+      if(GameState.forgeOverdriveTimer>0)GameState.forgeOverdriveTimer=Math.max(0,GameState.forgeOverdriveTimer-dt);
       if (GameState.powerShrineTimer > 0) GameState.powerShrineTimer -= dt;
       if (GameState.speedShrineTimer > 0) GameState.speedShrineTimer -= dt;
       if (GameState.phantomCloneTimer > 0) GameState.phantomCloneTimer -= dt;
@@ -5949,6 +6064,7 @@
 
       player.x += player.vx * dt;
       player.y += player.vy * dt;
+      NewSynergies.tick(dt);
       updateActiveObstacles();
       // 玩家非冲刺状态下受到围栏、冰块、树木等实体地形阻挡，需走位绕行！
       if (!player.isDowned && !UpgradeChoice.active && !player.skills.skill1.isDashing) {
@@ -6102,7 +6218,8 @@
         ge.life -= dt;
         ge.tickTimer = (ge.tickTimer || 0) - dt;
 
-        if (ge.type === 'lava') {
+        if (ge.type === 'turret'||ge.type === 'mine') { EngineerKit.tickGround(ge,dt); }
+        else if (ge.type === 'lava') {
           if (ge.tickTimer <= 0) {
             ge.tickTimer = 0.3;
             enemies.forEach(en => {
@@ -6402,6 +6519,7 @@
             if (!en.isDead && !p.hitEnemies.has(en) && Math.hypot(p.x - en.x, p.y - en.y) < p.radius + en.radius) {
               p.hitEnemies.add(en);
               damageEnemy(en, p.damage, Math.atan2(p.vy, p.vx), 110, Boolean(p.isSecondary));
+              if(p.isGrenade&&!p.hasExploded){p.hasExploded=true;EngineerKit.explode(en.x,en.y,p.color==='#fde047'?78:56,Math.round(p.damage*.65),en);p.life=0;}
               if (p.applyBleed) { en.bleedStacks = Math.min(5, (en.bleedStacks || 0) + 1); en.bleedTimer = 4.0; WorldCoop.markBleed(en); }
               if (p.applyPoison) { en.poisonStacks = Math.min(4, (en.poisonStacks || 0) + 1); }
               if (p.isFreeze) { en.freezeTimer = 1.5; }
@@ -6417,6 +6535,7 @@
             }
           }
         }
+        if(p.life<=0&&p.isGrenade&&!p.hasExploded&&WorldCoop.canAct()){p.hasExploded=true;EngineerKit.explode(p.x,p.y,p.color==='#fde047'?78:56,Math.round(p.damage*.65));}
         if (p.life <= 0) projectiles.splice(i, 1);
       }
 
@@ -6646,7 +6765,8 @@
         const pulse = 0.92 + Math.sin(GameState.gameTime * 10 + i) * 0.08;
         const allyMul = VisualSettings.effectAlpha(ge);
         const fadeAlpha = Math.min(1, ge.life / Math.min(0.6, ge.maxLife * 0.3)) * allyMul;
-        if (ge.type === 'lava') {
+        if(ge.type==='turret'||ge.type==='mine'){EngineerKit.draw(ctx,ge,fadeAlpha);}
+        else if (ge.type === 'lava') {
           ctx.save();
           ctx.translate(ge.x, ge.y);
           ctx.globalAlpha = fadeAlpha;
@@ -6935,7 +7055,10 @@
         ctx.translate(p.x, p.y);
         ctx.rotate(ang);
 
-        if (p.applyBleed) {
+        if(p.isRivet){
+          ctx.fillStyle='#1e293b';ctx.fillRect(-14,-5,28,10);ctx.fillStyle=p.color;
+          if(p.isGrenade){ctx.fillRect(-10,-7,20,14);ctx.fillStyle='#fff7ae';ctx.fillRect(-4,-5,7,10);}else{ctx.fillRect(-13,-3,24,6);ctx.fillStyle='#fff7ae';ctx.fillRect(7,-5,7,10);ctx.fillStyle='#94a3b8';ctx.fillRect(-14,-5,4,10);}
+        }else if (p.applyBleed) {
           // 剑客：多层新月弯刀剑气波
           ctx.strokeStyle = p.color;
           ctx.lineWidth = 6;
@@ -7375,7 +7498,7 @@
 
       ctx.save();ctx.translate(player.x,player.y);
       ctx.save();ctx.globalAlpha *= opacity;
-      if (state.berserkTimer > 0 || state.starfallTimer > 0) {
+      if (state.berserkTimer > 0 || state.starfallTimer > 0 || state.forgeOverdriveTimer > 0) {
         ctx.strokeStyle = '#facc15';
         ctx.lineWidth = 2.5;
         ctx.beginPath();
@@ -8174,6 +8297,7 @@
       'i': '#64748b', // 暗铁灰
       'd': '#334155', // 深钢甲
       'r': '#dc2626', // 鲜血红
+      'o': '#ea580c', // 机匠橙色工装
       'm': '#7f1d1d', // 暗血褐红
       'g': '#f59e0b', // 皇家暗金
       'y': '#fde047', // 璀璨亮金
@@ -8191,6 +8315,9 @@
     };
 
     const SPRITE_MATRICES = {
+      // 黄铜护目镜、焊接面罩、橙色工装和肩背蓄能罐。
+      engineer_0:[".....kkkkkk.....","....kggggggk....","...kddggggddk...","...kgwwggwwgk...","...kddkkkkddk...","....kdssssdk....","..kkkkddddkkkk..",".kmmkooooookmmk.",".kmmkoggggokddk.",".kmmkoddddokggk.","..kkkoddddokwwk.","...kdkkggkkddkk.","...kddkddkddk...","...kddkkkkddk...","...kddk..kddk...","..kdddk..kdddk..","..kkkkk..kkkkk.."],
+      engineer_1:[".....kkkkkk.....","....kggggggk....","...kddggggddk...","...kgwwggwwgk...","...kddkkkkddk...","....kdssssdk....","..kkkkddddkkkk..",".kmmkooooookmmk.",".kmmkoggggokddk.","..kmkoddddokggk.","...kkoddddokwwk.","...kdkkggkkddkk.","...kddkddkddk...","..kdddk..kdddk..","..kddk....kddk..",".kdddk....kdddk.",".kkkkk....kkkkk."],
       // 苍红十字军剑客 (16x18, 铁面头盔+红翎+残破披风+双手巨剑)
       warrior_0: [
         "......kkkk......",
@@ -9077,7 +9204,7 @@
           white: bakeSpriteVariant(SPRITE_MATRICES[key], scale, 'white'),
           ice: bakeSpriteVariant(SPRITE_MATRICES[key], scale, 'ice')
         };
-        if (key.startsWith('warrior_') || key.startsWith('mage_') || key.startsWith('ranger_')) {
+        if (key.startsWith('warrior_') || key.startsWith('mage_') || key.startsWith('ranger_') || key.startsWith('engineer_')) {
           PLAYER_COLOR_THEMES.forEach(theme => {
             SpriteCache[`${key}_c${theme.idx}`] = bakeHeroColorVariant(SPRITE_MATRICES[key], scale, theme);
           });
@@ -9540,6 +9667,7 @@
     function setupHero(heroKey) {
       const cfg = HERO_CONFIGS[heroKey];
       GameState.selectedHero = heroKey;
+      GameState.forgeOverdriveTimer=0;NewSynergies.reset();
 
       const t = SaveManager.data.talents;
       const baseDmgMul = 1 + (t.might * 0.06);
@@ -9741,7 +9869,7 @@
         { key: 'thunderChain', icon: '⚡', name: '雷霆连锁' },
         { key: 'iceShatter',   icon: '🧊', name: '极寒碎冰' },
         { key: 'bloodPact',    icon: '🩸', name: '猩红圣杯' },
-        { key: 'fireTrail',    icon: '🔥', name: '业火流星' }
+        { key: 'fireTrail',    icon: '🔥', name: '业火流星' },...NEW_SYNERGIES
       ];
       const activeSyns = synMeta.filter(m => pass[m.key] > 0);
       const synGroupLabel = document.querySelector('#loadout-synergy-group > span');
@@ -9823,6 +9951,7 @@
 
       if (tab === 'active') {
         const superFormulas = {
+          engineer:{attack:{reqName:'🥊 狂暴手套',hasReq:pass.critGlove,superName:'⚙️【超武】磁轨蜂群',superDesc:'4枚金色铆钉，穿透3个目标'},skill1:{reqName:'👟 疾行之靴',hasReq:pass.swiftBoots,superName:'💣【超武】日冕磁雷阵',superDesc:'同时部署3枚100半径高爆磁雷'},skill2:{reqName:'💖 熔岩之心',hasReq:pass.lavaHeart,superName:'⚙️【超武】双联重装哨戒',superDesc:'最多部署3座炮台，双联装贯穿弹'},ult:{reqName:'⭐ 大招升至满级(Lv.3)',hasReq:skills.ult.level>=3,superName:'☀️【终极超武】日冕工厂',superDesc:'过载持续9秒，额外部署2座支援炮台'}},
           warrior: {
             attack: { reqName: '🥊 狂暴手套', hasReq: pass.critGlove, superName: '👑【超武】灭世斩神剑', superDesc: '每次挥砍释放半屏金色月牙气刃，必暴击且附带流血处决' },
             skill1: { reqName: '👟 疾行之靴', hasReq: pass.swiftBoots, superName: '⚡【超武】虚空血影闪', superDesc: '冲刺CD降至1.8s，沿途留下一排连环血雷阵引爆全场' },
@@ -9914,12 +10043,12 @@
         });
 
       } else if (tab === 'synergy') {
-        const activeCount = ['thunderChain', 'iceShatter', 'bloodPact', 'fireTrail'].filter(k => pass[k] > 0).length;
+        const activeCount = SYNERGY_KEYS.filter(k => pass[k] > 0).length;
         const synBranches = [
           { key: 'thunderChain', icon: '⚡', name: '雷霆连锁流', nodes: ['Lv.1: 3次闪电链弹射+感电', 'Lv.2: 4次闪电链弹射+麻痹', 'Lv.3: 5次全屏雷链+高额雷伤'] },
           { key: 'iceShatter',   icon: '🧊', name: '极寒碎冰流', nodes: ['Lv.1: 普攻寒霜减速+碎冰6刺', 'Lv.2: 碎冰伤害翻倍+对冰暴击+20%', 'Lv.3: 永冬碎冰风暴连环传染'] },
           { key: 'bloodPact',    icon: '🩸', name: '猩红血棘流', nodes: ['Lv.1: 击杀回血+溢出转护盾', 'Lv.2: 护盾破裂释放高伤血棘波', 'Lv.3: 生命上限大增+雙倍血棘反伤'] },
-          { key: 'fireTrail',    icon: '🔥', name: '业火流星流', nodes: ['Lv.1: 移动铺设火径+燃烧尸爆', 'Lv.2: 火径伤害翻倍+尸爆范围扩大', 'Lv.3: 炼狱火海+连环多米诺尸爆'] }
+          { key: 'fireTrail',    icon: '🔥', name: '业火流星流', nodes: ['Lv.1: 移动铺设火径+燃烧尸爆', 'Lv.2: 火径伤害翻倍+尸爆范围扩大', 'Lv.3: 炼狱火海+连环多米诺尸爆'] },...NEW_SYNERGIES
         ];
         synBranches.forEach(b => {
           const curLv = pass[b.key] || 0;
@@ -9946,6 +10075,7 @@
       } else if (tab === 'equip') {
         const eqCount = ['critGlove', 'swiftBoots', 'lavaHeart', 'frostAura', 'pierceQuiver'].filter(k => pass[k]).length;
         const heroEquipMap = {
+          engineer:[{key:'critGlove',icon:'🥊',name:'狂暴手套',desc:'暴击率与暴伤提高',pair:'普攻超武【磁轨蜂群】配件'},{key:'swiftBoots',icon:'👟',name:'疾行之靴',desc:'移速与拾取范围提高',pair:'磁雷超武【日冕磁雷阵】配件'},{key:'lavaHeart',icon:'💖',name:'熔岩之心',desc:'生命上限提高，周期热浪',pair:'炮台超武【双联重装哨戒】配件'}],
           warrior: [
             { key: 'critGlove',  icon: '🥊', name: '狂暴手套', desc: '暴击率+12%，暴击伤害提升至210%', pair: '苍红剑客 普攻超武【灭世斩神剑】核心配件' },
             { key: 'swiftBoots', icon: '👟', name: '疾行之靴', desc: '移速+18%，拾取磁吸范围+24px', pair: '苍红剑客 1技能超武【虚空血影闪】核心配件' },
@@ -10147,7 +10277,7 @@
         thunderChain: 0,
         iceShatter: 0,
         bloodPact: 0,
-        fireTrail: 0
+        fireTrail: 0, emberEcho:0, stellarBastion:0, huntPulse:0
       };
 
       setupHero(GameState.selectedHero);
@@ -10401,11 +10531,12 @@
       sk.ult.level = 3; sk.ult.isEvolved = true; sk.ult.damage = Math.round(sk.ult.damage * 2.4);
       if (hero === 'warrior') { pass.critGlove = 5; pass.swiftBoots = 5; pass.lavaHeart = 5; sk.attack.range += 35; }
       if (hero === 'mage') { pass.frostAura = 5; pass.swiftBoots = 5; pass.lavaHeart = 5; sk.attack.count = 9; sk.attack.bounces = 7; }
+      if(hero==='engineer'){pass.critGlove=5;pass.swiftBoots=5;pass.lavaHeart=5;}
       if (hero === 'ranger') { pass.pierceQuiver = 5; pass.swiftBoots = 5; pass.critGlove = 5; sk.attack.count = 6; }
       pass.thunderChain = 3; pass.iceShatter = 3;
       updateLoadoutHUD();
       audio.init(); audio.playSuperWeapon();
-      showToast('👑 全技能已一键升至满级并觉醒全部 3 大超武！');
+      showToast('👑 全技能已一键升至满级并觉醒全部主动技能！');
     });
 
     document.getElementById('btn-dev-rerolls').addEventListener('click', () => {
@@ -11726,12 +11857,12 @@
       visualSeq:0, ids:new WeakMap(), records:new Map(), budgets:new Map(),
       kinds:['ground','orbit','wheel','beam','slash','projectile','arc','images','particle'],
       fields:{
-        ground:['type','x','y','vx','vy','radius','life','maxLife'],
+        ground:['type','x','y','vx','vy','radius','life','maxLife','angle','isEvolved','overdrive'],
         orbit:['angle','dist','spinSpeed','life','isEvolved'],
         wheel:['x','y','vx','vy','radius','isEvolved','spinAngle','catchX','catchY','state','timer'],
         beam:['type','x','y','x1','y1','x2','y2','startX','startY','radius','width','color','life','maxLife','isSuper','angle','len'],
         slash:['x','y','angle','radius','arc','color','life','maxLife','isFinisher'],
-        projectile:['x','y','vx','vy','radius','life','color','applyBleed','applyPoison','isArcaneChain','isFreeze'],
+        projectile:['x','y','vx','vy','radius','life','color','applyBleed','applyPoison','isArcaneChain','isFreeze','isRivet','isGrenade'],
         arc:['x1','y1','x2','y2','color','life'],images:['x','y','facing','hero','life','maxLife'],
         particle:['x','y','vx','vy','radius','maxRadius','isShockwave','size','color','life','maxLife']
       },
@@ -11779,12 +11910,12 @@
           const old=this.states.get(peer.id);
           if(old&&pkt.seq<=old.seq)return true;
           const state=old||{visuals:new Map(),seen:new Map(),items:[]};state.seq=pkt.seq;state.castSeq=pkt.castSeq;state.at=performance.now();
-          if(Array.isArray(pkt.look)&&pkt.look.length===7&&pkt.look.every(Number.isFinite))state.look=pkt.look.map((v,i)=>Math.max(0,Math.min(i===5?40:30,v)));
+          if(Array.isArray(pkt.look)&&(pkt.look.length===7||pkt.look.length===8)&&pkt.look.every(Number.isFinite))state.look=pkt.look.map((v,i)=>Math.max(0,Math.min(i===5?40:30,v)));
           if(Array.isArray(pkt.items)&&pkt.items.length<=16)state.items=pkt.items.filter(a=>Array.isArray(a)&&['orbit','blackhole','trap','wheel'].includes(a[0])&&a.slice(1,4).every(Number.isFinite));
           if(Array.isArray(pkt.alive)&&pkt.alive.length<=320){const alive=new Set(pkt.alive);for(const [id,v]of state.visuals)if(['ground','orbit','wheel','projectile'].includes(v.kind)&&!alive.has(id))state.visuals.delete(id);}
           const ack=[];
           for(const row of pkt.visuals){const v=this.unpack(row);if(!v)continue;ack.push(v.id);if(!state.seen.has(v.id)&&state.visuals.size<320){state.seen.set(v.id,performance.now());state.visuals.set(v.id,v);}}
-          for(const a of Array.isArray(pkt.updates)?pkt.updates.slice(0,16):[]){const v=state.visuals.get(a[0]);if(v?.kind==='wheel'&&a.slice(1,6).every(Number.isFinite)){v.obj._errorX=a[1]-v.obj.x;v.obj._errorY=a[2]-v.obj.y;v.obj.spinAngle=a[3];v.obj.state=['outbound','rebound','grounded'][a[4]]||'grounded';v.obj.timer=Math.max(0,a[5]);}}
+          for(const a of Array.isArray(pkt.updates)?pkt.updates.slice(0,16):[]){const v=state.visuals.get(a[0]);if(v?.kind==='ground'&&v.obj.type==='turret'&&a.slice(1,6).every(Number.isFinite)){v.obj.angle=a[3];v.obj.overdrive=Boolean(a[4]);v.obj.life=Math.max(.01,a[5]);}if(v?.kind==='wheel'&&a.slice(1,6).every(Number.isFinite)){v.obj._errorX=a[1]-v.obj.x;v.obj._errorY=a[2]-v.obj.y;v.obj.spinAngle=a[3];v.obj.state=['outbound','rebound','grounded'][a[4]]||'grounded';v.obj.timer=Math.max(0,a[5]);}}
           this.states.set(peer.id,state);
           if(ack.length)CoopManager.sendPacket({type:'SKILL_VISUAL_ACK',targetPeerId:peer.id,session:WorldCoop.session,ids:ack});return true;
         }
@@ -11795,7 +11926,7 @@
       },
       replay(peer,p){
         peer.swingAnimTimer=.18;
-        const hero=['warrior','mage','ranger'].includes(p.hero)?p.hero:peer.hero,kind=p.skillKind;
+        const hero=Object.hasOwn(HERO_CONFIGS,p.hero)?p.hero:peer.hero,kind=p.skillKind;
         this.effects.push({id:peer.id,hero,kind,evolved:Boolean(p.isEvolved),time:0,duration:kind==='ult'?11:kind==='s2'?9:kind==='s1'?8:1});if(this.effects.length>48)this.effects.shift();
       },
       reset(){this.effects=[];this.pending.clear();this.seen.clear();this.states.clear();this.ids=new WeakMap();this.records.clear();this.budgets.clear();this.stateTail=0;this.lastState=0;},
@@ -11813,9 +11944,9 @@
         const items=[];if(orbitingBlades.length)items.push(['orbit',player.x,player.y,Math.max(...orbitingBlades.map(b=>b.dist)),orbitingBlades.some(b=>b.isEvolved)?1:0]);
         for(const g of groundEffects)if(['trap','blackhole'].includes(g.type)&&items.length<12)items.push([g.type,Math.round(g.x),Math.round(g.y),Math.min(350,g.radius||25),0]);
         for(const b of boomerangs.slice(0,4))items.push(['wheel',Math.round(b.x),Math.round(b.y),b.radius,b.isEvolved?1:0]);
-        const look=[player.passives.frostAura||0,GameState.berserkTimer||0,GameState.starfallTimer||0,GameState.phantomCloneTimer||0,player.shield||0,player.radius,MenuPause.blocked()||UpgradeChoice.active?1:0];
+        const look=[player.passives.frostAura||0,GameState.berserkTimer||0,GameState.starfallTimer||0,GameState.phantomCloneTimer||0,player.shield||0,player.radius,MenuPause.blocked()||UpgradeChoice.active?1:0,GameState.forgeOverdriveTimer||0];
         const alive=[...this.records].filter(([,v])=>['ground','orbit','wheel','projectile'].includes(v.kind)).map(([id])=>id);
-        const updates=[...this.records].filter(([,v])=>v.kind==='wheel').slice(0,16).map(([id,{obj:b}])=>[id,Math.round(b.x*10)/10,Math.round(b.y*10)/10,Math.round(b.spinAngle*100)/100,['outbound','rebound','grounded'].indexOf(b.state),Math.round(b.timer*100)/100]);
+        const updates=[...this.records].filter(([,v])=>v.kind==='wheel'||(v.kind==='ground'&&v.obj.type==='turret')).slice(0,16).map(([id,{obj:b,kind}])=>kind==='wheel'?[id,Math.round(b.x*10)/10,Math.round(b.y*10)/10,Math.round(b.spinAngle*100)/100,['outbound','rebound','grounded'].indexOf(b.state),Math.round(b.timer*100)/100]:[id,b.x,b.y,Math.round((b.angle||0)*100)/100,b.overdrive?1:0,Math.round(b.life*100)/100]);
         for(const peer of CoopManager.allies){
           const route=CoopManager.routeFor(peer.id,false),rate=route.kind==='mqtt'?4000:12000,burst=route.kind==='mqtt'?2800:6000;
           const b=this.budgets.get(peer.id)||{at:now,credit:burst,meta:-Infinity,motion:-Infinity};b.credit=Math.min(burst,b.credit+Math.max(0,now-b.at)*rate/1000);b.at=now;this.budgets.set(peer.id,b);
@@ -11847,7 +11978,7 @@
           const peer=CoopManager.allies.find(p=>p.id===id);if(!peer||peer.downed||(!paused&&now-s.at>2500)){this.states.delete(id);continue;}
           for(const [id,at]of s.seen)if(now-at>15000)s.seen.delete(id);
           if(paused)continue;const frozen=Boolean(s.look?.[6]);
-          if(s.look)for(const k of [1,2,3])s.look[k]=Math.max(0,s.look[k]-scaled);
+          if(s.look)for(const k of [1,2,3,7])if(Number.isFinite(s.look[k]))s.look[k]=Math.max(0,s.look[k]-scaled);
           for(const [key,v]of s.visuals){const o=v.obj,d=scaled;
             if(['orbit','wheel'].includes(v.kind)&&frozen)continue;
             if(Number.isFinite(o.life))o.life-=d;
@@ -11870,7 +12001,7 @@
       },
       drawAuras(c,peer){
         const s=this.states.get(peer.id),v=s?.look,alpha=CoopManager.allyVfxAlpha;if(!v||!alpha)return;
-        drawNativeAuras(c,{...peer,radius:v[5]||12,shield:v[4],passives:{frostAura:v[0]}},{selectedHero:peer.hero,berserkTimer:v[1],starfallTimer:v[2],phantomCloneTimer:v[3],gameTime:GameState.gameTime},alpha);
+        drawNativeAuras(c,{...peer,radius:v[5]||12,shield:v[4],passives:{frostAura:v[0]}},{selectedHero:peer.hero,berserkTimer:v[1],starfallTimer:v[2],phantomCloneTimer:v[3],forgeOverdriveTimer:v[7]||0,gameTime:GameState.gameTime},alpha);
       },
       draw(c,kind){
         const alpha=CoopManager.allyVfxAlpha;if(!alpha)return;
@@ -12285,7 +12416,7 @@
         this.renderRoutes();syncHeroAndBiomeSelectionUI();updatePartyReturnUI();
         const c=CoopManager,themes=PLAYER_COLOR_THEMES,swatches=document.getElementById('coop-color-swatches');swatches.replaceChildren();
         for(const theme of themes){const button=document.createElement('button');button.type='button';button.title=theme.name;button.textContent=theme.tag;button.style.cssText='padding:3px 7px;border-radius:8px;font-size:10px;color:white;background:'+theme.primary+';border:2px solid '+(c.myColorIdx===theme.idx?'white':'transparent')+';cursor:pointer;';button.addEventListener('click',()=>{c.myColorIdx=theme.idx;c.saveProfile();if(c.roomCode)c.sendPresenceNow('HELLO_WELCOME');this.render();});swatches.append(button);}
-        const count=c.getActivePlayerCount(),heroNames={warrior:'苍红剑客',mage:'星界魔导',ranger:'暗夜巡林'},biomeNames={dungeon:'熔火地牢',tundra:'永冬冻原',graveyard:'血月墓园'};
+        const count=c.getActivePlayerCount(),heroNames={warrior:'苍红剑客',mage:'星界魔导',ranger:'暗夜巡林',engineer:'烬铁机匠'},biomeNames={dungeon:'熔火地牢',tundra:'永冬冻原',graveyard:'血月墓园'};
         document.getElementById('coop-picks-summary').textContent=heroNames[GameState.selectedHero]+' · '+biomeNames[GameState.activeBiome];
         document.getElementById('coop-party-count').textContent=String(count);
         document.getElementById('coop-room-banner').textContent=!c.roomCode?'尚未加入房间':(c.isHost?'房主 · ':'')+'房间 #'+c.roomCode+(count===1?' · 等待朋友加入':' · 队伍已连接');
@@ -14836,7 +14967,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 13, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 14, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
