@@ -1,0 +1,174 @@
+[
+  {
+    "id": "kill1",
+    "reward": 20
+  },
+  {
+    "id": "kill100",
+    "reward": 40
+  },
+  {
+    "id": "kill1000",
+    "reward": 100
+  },
+  {
+    "id": "kill10000",
+    "reward": 300
+  },
+  {
+    "id": "damage10000",
+    "reward": 40
+  },
+  {
+    "id": "damage100000",
+    "reward": 100
+  },
+  {
+    "id": "damage1000000",
+    "reward": 250
+  },
+  {
+    "id": "heal100",
+    "reward": 40
+  },
+  {
+    "id": "heal1000",
+    "reward": 100
+  },
+  {
+    "id": "heal10000",
+    "reward": 300
+  },
+  {
+    "id": "shield100",
+    "reward": 40
+  },
+  {
+    "id": "shield1000",
+    "reward": 100
+  },
+  {
+    "id": "shield5000",
+    "reward": 200
+  },
+  {
+    "id": "rescue1",
+    "reward": 50
+  },
+  {
+    "id": "rescue5",
+    "reward": 100
+  },
+  {
+    "id": "rescue20",
+    "reward": 250
+  },
+  {
+    "id": "boss1",
+    "reward": 80
+  },
+  {
+    "id": "boss5",
+    "reward": 150
+  },
+  {
+    "id": "boss18",
+    "reward": 400
+  },
+  {
+    "id": "win1",
+    "reward": 100
+  },
+  {
+    "id": "win3",
+    "reward": 200
+  },
+  {
+    "id": "win10",
+    "reward": 500
+  },
+  {
+    "id": "survive5",
+    "reward": 40
+  },
+  {
+    "id": "survive15",
+    "reward": 80
+  },
+  {
+    "id": "survive30",
+    "reward": 150
+  },
+  {
+    "id": "level10",
+    "reward": 30
+  },
+  {
+    "id": "level30",
+    "reward": 80
+  },
+  {
+    "id": "level50",
+    "reward": 150
+  },
+  {
+    "id": "buy1",
+    "reward": 40
+  },
+  {
+    "id": "buy5",
+    "reward": 80
+  },
+  {
+    "id": "buy10",
+    "reward": 150
+  },
+  {
+    "id": "hire1",
+    "reward": 100
+  },
+  {
+    "id": "hire3",
+    "reward": 200
+  },
+  {
+    "id": "remove1",
+    "reward": 60
+  },
+  {
+    "id": "coop1",
+    "reward": 60
+  },
+  {
+    "id": "coop10",
+    "reward": 180
+  },
+  {
+    "id": "heroes5",
+    "reward": 150
+  },
+  {
+    "id": "wins5",
+    "reward": 500
+  },
+  {
+    "id": "awaken1",
+    "reward": 60
+  },
+  {
+    "id": "awaken4",
+    "reward": 180
+  },
+  {
+    "id": "maxed5",
+    "reward": 200
+  },
+  {
+    "id": "relic2",
+    "reward": 80
+  },
+  {
+    "id": "splus1",
+    "reward": 250
+  }
+]

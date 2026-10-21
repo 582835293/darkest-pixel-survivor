@@ -10,7 +10,7 @@ fs.mkdirSync('test-results',{recursive:true});
   const ctx=await browser.newContext({viewport:spec.viewport,hasTouch:spec.touch,isMobile:spec.touch});const p=await ctx.newPage();p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:'+server.address().port);
   const press=async(id,opts)=>spec.touch?p.locator(id).tap(opts):p.locator(id).click(opts);
   await check(spec.name+': audio and VFX have one pause-system entry and no outside speaker buttons',async()=>{
-   assert.equal(await p.locator('#game-build').textContent(),'R25');
+   assert.equal(await p.locator('#game-build').textContent(),'R26');
    assert.equal(await p.locator('#btn-lobby-settings-top,#btn-lobby-settings,#btn-hud-settings,#top-hud #btn-bgm-toggle,#coop-effects-details').count(),0);
    assert.equal(await p.locator('#settings-modal #btn-bgm-toggle,#settings-modal #coop-alpha-slider,#settings-modal #self-alpha-slider').count(),3);
    assert.equal((await p.locator('#btn-pause-settings').textContent()).trim(),'系统设置');assert.equal(await p.locator('#btn-pause-settings [data-pixel-icon=gear]').count(),1);assert.equal(await p.evaluate(()=>CoopManager.roomCode),null);
@@ -44,7 +44,7 @@ fs.mkdirSync('test-results',{recursive:true});
   if(spec.name==='portrait touch'){
    await check('self and ally opacity are independent, presets work and saved ally settings migrate to system settings',async()=>{
     await p.evaluate(()=>{GameState.isPaused=false;document.getElementById('pause-modal').style.display='none'});await press('#btn-pause');await press('#btn-pause-settings');
-    await press('.self-alpha-preset[data-value="50"]');assert.equal(await p.evaluate(()=>VisualSettings.selfAlpha),.5);assert(Math.abs(await p.evaluate(()=>CoopManager.allyVfxAlpha)-.3)<.001);
+    await press('.self-alpha-preset[data-value="50"]');assert.equal(await p.evaluate(()=>VisualSettings.selfAlpha),.5);assert(Math.abs(await p.evaluate(()=>CoopManager.allyVfxAlpha)-.75)<.001);
     await press('.coop-alpha-preset[data-value="100"]');assert.equal(await p.evaluate(()=>CoopManager.allyVfxAlpha),0);assert.equal(await p.evaluate(()=>VisualSettings.selfAlpha),.5);
     await press('.self-alpha-preset[data-value="100"]');await p.evaluate(()=>{const e=document.getElementById('coop-alpha-slider');e.value=37;e.dispatchEvent(new Event('input',{bubbles:true}))});assert.equal(await p.evaluate(()=>VisualSettings.selfAlpha),0);assert.equal(await p.evaluate(()=>CoopManager.allyVfxAlpha),.63);
     await p.locator('#settings-modal .modal-card').screenshot({path:'test-results/r10-system-settings.png'});await p.reload();assert.equal(await p.evaluate(()=>VisualSettings.selfAlpha),0);assert.equal(await p.evaluate(()=>CoopManager.allyVfxAlpha),.63);
