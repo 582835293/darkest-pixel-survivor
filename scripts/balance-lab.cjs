@@ -13,6 +13,7 @@ const stages=[{id:'early',minute:2,level:6},{id:'middle',minute:10,level:20},{id
   damagePlayer=function(...args){const hp=player.hp,shield=player.shield;const r=Lab.damagePlayer(...args);Lab.received+=(Math.max(0,hp-player.hp)+Math.max(0,shield-player.shield));if(player.hp<=0&&Lab.diedAt===null)Lab.diedAt=Lab.time;return r;};
   HealerKit.applyGrant=function(...args){const hp=player.hp;const r=Lab.heal.apply(this,args);Lab.healed+=Math.max(0,player.hp-hp);return r;};
   const armyHit=NecroKit.hit||NecroKit.strike,armyMethod=NecroKit.hit?'hit':'strike';NecroKit[armyMethod]=function(...args){const before=GameState.totalDamageDealt;const r=armyHit.apply(this,args);Lab.armyDamage+=GameState.totalDamageDealt-before;return r;};
+  if(typeof FriendlyBossKit!=='undefined'){const deal=FriendlyBossKit.deal;FriendlyBossKit.deal=function(u,...args){const before=GameState.totalDamageDealt,r=deal.call(this,u,...args);if(u.source==='leader')Lab.armyDamage+=GameState.totalDamageDealt-before;return r;};}
   window.labRun=({hero,stage,scene,build,seed,rotation,army})=>{
    Lab.time=0;Lab.jobs.clear();Lab.armyDamage=0;Lab.received=0;Lab.healed=0;Lab.diedAt=null;let rng=seed>>>0;Math.random=()=>{rng=(Math.imul(rng,1664525)+1013904223)>>>0;return rng/4294967296;};
    resetGameSession(false);for(const k of Object.keys(SaveManager.data.talents))SaveManager.data.talents[k]=0;setupHero(hero);HealerKit.reset();EngineerKit.reset();NewSynergies.reset();MenuPause.reset();UpgradeChoice.reset();

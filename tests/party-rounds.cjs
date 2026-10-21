@@ -48,9 +48,9 @@ const tail=String.raw`
   await a.evaluate(old=>{for(const type of ['WORLD_START','WORLD_CHUNK'])CoopManager.onReceivePacket({type,peerId:RoomHub.hostId,protocol:32,roomCode:RoomHub.identity(),session:old,biome:'graveyard',sentAt:1e12,frame:1e8,msgId:'retired-'+type},{kind:'rtc'})},first);
   assert.equal(await a.evaluate(()=>WorldCoop.session),second);assert.equal(await a.evaluate(()=>GameState.activeBiome),'tundra');assert.equal(await a.evaluate(()=>GameState.isOver),false);
  });
- await check('pause return opens the retained party and departure resumes the same run rather than disconnecting',async()=>{
-  await host.locator('#btn-pause').click();await host.locator('#btn-pause-lobby').click();assert(await host.locator('#coop-modal').isVisible());await sameParty();assert.equal(await host.evaluate(()=>WorldCoop.session),second);assert.equal(await host.evaluate(()=>GameState.isPaused),true);
-  await host.locator('#btn-coop-start-now').click();await host.waitForFunction(()=>!GameState.isPaused);assert.equal(await host.evaluate(()=>WorldCoop.session),second);
+ await check('host menu ends the round and returns all three to the retained party for a fresh run',async()=>{
+  await host.locator('#btn-pause').click();await host.locator('#btn-pause-lobby').click();await Promise.all(pages.map(p=>p.waitForFunction(()=>WorldCoop.camped&&WorldCoop.ended==='retreat')));await sameParty();for(const p of pages){assert(await p.locator('#coop-modal').isVisible());assert.equal(await p.evaluate(()=>GameState.isStarted||GameState.isOver),false);}
+  await host.locator('#btn-coop-start-now').click();await Promise.all(pages.map(p=>p.waitForFunction(old=>WorldCoop.active()&&GameState.isStarted&&WorldCoop.session!==old,second)));second=await host.evaluate(()=>WorldCoop.session);await quiet();
  });
  const beforeAwards=await Promise.all(pages.map(p=>p.evaluate(()=>Campaign.achievements().filter(a=>Campaign.permanent().achievements[a.id]).reduce((n,a)=>n+a.reward,0))));
  const beforeGold=await Promise.all(pages.map(p=>p.evaluate(()=>SaveManager.data.gold)));
