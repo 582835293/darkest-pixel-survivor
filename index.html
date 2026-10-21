@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R27 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R28 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -23,6 +23,18 @@
       touch-action: pan-y !important;
       -webkit-overflow-scrolling: touch;
     }
+    #over-modal, #over-modal * {touch-action:pan-x pan-y !important;}
+    #run-report {min-width:0;max-width:100%;}
+    #run-report .campaign-scroll {width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#64748b #172033;}
+    #run-report .campaign-scroll::-webkit-scrollbar {height:8px;}
+    #run-report .campaign-scroll::-webkit-scrollbar-thumb {background:#64748b;border-radius:4px;}
+    .report-scroll-hint {font-size:11px;color:#94a9c4;text-align:right;margin-top:5px;}
+    #talent-list .talent-step-row {display:flex;gap:6px;align-items:stretch;margin-top:auto;}
+    #talent-list .talent-step-row button {min-height:44px;margin:0;padding:6px 3px;border-radius:6px;cursor:pointer;line-height:1.3;font-size:20px;}
+    #talent-list .talent-step-row button small {display:block;font-size:10px;overflow-wrap:anywhere;}
+    #talent-list .talent-minus {flex:1;min-width:44px;background:#243146;border:1px solid #64748b;color:#cbd5e1;}
+    #talent-list .talent-step-row .talent-btn {flex:2;width:auto;min-width:0;}
+    #talent-list .talent-step-row button:disabled {opacity:.4;cursor:default;}
     body, html {
       width: 100%;
       height: 100%;
@@ -1269,7 +1281,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R27</span></div>
+        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R28</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -10679,6 +10691,8 @@
     }
 
     function getTotalInvestedGold() {
+      const ledger=SaveManager.data.talentPurchases;
+      if(ledger&&TALENT_SPECS.every(spec=>Array.isArray(ledger[spec.key])&&ledger[spec.key].length===Math.max(0,Math.min(spec.maxLv,Math.floor(Number(SaveManager.data.talents[spec.key])||0)))&&ledger[spec.key].every(n=>Number.isSafeInteger(n)&&n>=0)))return TALENT_SPECS.reduce((sum,spec)=>sum+ledger[spec.key].reduce((n,v)=>n+v,0),0);
       if (SaveManager.data.totalSpentGold && SaveManager.data.totalSpentGold > 0) {
         return SaveManager.data.totalSpentGold;
       }
@@ -10694,69 +10708,56 @@
       return total;
     }
 
-    function renderTalentList() {
-      const container = document.getElementById('talent-list');
-      container.innerHTML = '';
-      const totalSpent = getTotalInvestedGold();
-      const totalLv = getTotalTalentLevels();
-      const spentEl = document.getElementById('talent-spent-gold');
-      if (spentEl) spentEl.innerText = `${totalSpent} (全局总等级 Lv.${totalLv} · 费用倍率 ×${Math.pow(1.25, totalLv).toFixed(2)})`;
-
-      const resetBtn = document.getElementById('btn-reset-talents');
-      if (resetBtn) {
-        resetBtn.disabled = totalSpent <= 0;
-        resetBtn.style.opacity = totalSpent > 0 ? '1' : '0.45';
-        resetBtn.innerText = `[px:refresh] 重置全部天赋 (退回 ${totalSpent} [px:coin])`;
+    const TalentAdjust={
+      level(spec){return Math.max(0,Math.min(spec.maxLv,Math.floor(Number(SaveManager.data.talents[spec.key])||0)));},
+      valid(){const ledger=SaveManager.data.talentPurchases;return ledger&&TALENT_SPECS.every(spec=>Array.isArray(ledger[spec.key])&&ledger[spec.key].length===this.level(spec)&&ledger[spec.key].every(n=>Number.isSafeInteger(n)&&n>=0));},
+      total(){return TALENT_SPECS.reduce((sum,spec)=>sum+SaveManager.data.talentPurchases[spec.key].reduce((n,v)=>n+v,0),0);},
+      ensure(){
+        if(this.valid()){SaveManager.data.totalSpentGold=this.total();return;}
+        // Older saves know total investment but not purchase order. Partition that
+        // exact existing budget; never invent extra refund money during migration.
+        const budget=Math.max(0,Math.floor(getTotalInvestedGold())),entries=[];let step=0;
+        for(const spec of TALENT_SPECS){const lv=this.level(spec);SaveManager.data.talents[spec.key]=lv;for(let i=0;i<lv;i++)entries.push({key:spec.key,weight:Math.round(spec.costs[i]*Math.pow(1.25,step++))});}
+        const weight=entries.reduce((n,e)=>n+e.weight,0);let remaining=budget;
+        const ledger=Object.fromEntries(TALENT_SPECS.map(spec=>[spec.key,[]]));
+        entries.forEach((e,i)=>{const paid=i===entries.length-1?remaining:Math.floor(budget*e.weight/Math.max(1,weight));ledger[e.key].push(paid);remaining-=paid;});
+        SaveManager.data.talentPurchases=ledger;SaveManager.data.totalSpentGold=this.total();SaveManager.save();
+      },
+      change(key,delta){
+        const spec=TALENT_SPECS.find(s=>s.key===key);if(!spec||![1,-1].includes(delta)||(GameState.isStarted&&!GameState.isOver))return false;
+        this.ensure();const level=this.level(spec),ledger=SaveManager.data.talentPurchases[key];let amount=0;
+        if(delta===1){
+          if(level>=spec.maxLv||(key==='revive'&&CoopManager.roomCode))return false;
+          amount=getDynamicTalentCost(spec,level);if(SaveManager.data.gold<amount)return false;
+          SaveManager.data.gold-=amount;ledger.push(amount);
+        }else{
+          if(level<=0)return false;amount=ledger.pop();SaveManager.data.gold+=amount;
+        }
+        SaveManager.data.talents[key]=level+delta;SaveManager.data.totalSpentGold=this.total();SaveManager.save();
+        setupHero(GameState.selectedHero);renderTalentList();if(delta>0)audio.playLevelUp();else audio.playCoin();
+        return true;
+      },
+      reset(){
+        if(GameState.isStarted&&!GameState.isOver)return false;this.ensure();const refund=this.total();if(getTotalTalentLevels()<=0)return false;
+        SaveManager.data.gold+=refund;for(const spec of TALENT_SPECS){SaveManager.data.talents[spec.key]=0;SaveManager.data.talentPurchases[spec.key]=[];}
+        SaveManager.data.totalSpentGold=0;SaveManager.save();setupHero(GameState.selectedHero);renderTalentList();audio.playCoin();showToast('[px:refresh] 已重置所有圣殿天赋，退回 '+refund+' 枚金币');return true;
       }
-
-      TALENT_SPECS.forEach(spec => {
-        const lvl = Math.min(spec.maxLv, SaveManager.data.talents[spec.key] || 0);
-        const isMax = lvl >= spec.maxLv;
-        const soloOnly = spec.key === 'revive' && Boolean(CoopManager.roomCode);
-        const cost = getDynamicTalentCost(spec, lvl);
-        const card = document.createElement('div');
-        card.className = 'talent-card';
-        card.innerHTML = `
-          <div class="talent-name">
-            <span>${spec.name}</span>
-            <span style="color:${isMax ? '#facc15' : '#60a5fa'};">Lv.${lvl}/${spec.maxLv}</span>
-          </div>
-          <div class="talent-desc">${spec.desc}${soloOnly ? '；联机仅使用队友救援，已购等级保留给单人' : ''}</div>
-          <button class="talent-btn" data-key="${spec.key}" ${(soloOnly || isMax || SaveManager.data.gold < cost) ? 'disabled' : ''}>
-            ${soloOnly ? '联机不适用 · 队友救援' : isMax ? '已满级 MAX' : `升级 ([px:coin] ${cost})`}
-          </button>
-        `;
-        card.querySelector('.talent-btn').addEventListener('click', () => {
-          const curCost = getDynamicTalentCost(spec, lvl);
-          if (!(spec.key === 'revive' && CoopManager.roomCode) && !isMax && SaveManager.data.gold >= curCost) {
-            SaveManager.data.gold -= curCost;
-            SaveManager.data.totalSpentGold = getTotalInvestedGold() + curCost;
-            SaveManager.data.talents[spec.key] = lvl + 1;
-            SaveManager.save();
-            setupHero(GameState.selectedHero);
-            renderTalentList();
-            audio.playLevelUp();
-          }
-        });
-        container.appendChild(card);
-      });
+    };
+    function renderTalentList() {
+      TalentAdjust.ensure();
+      const container=document.getElementById('talent-list');container.innerHTML='';
+      const totalSpent=getTotalInvestedGold(),totalLv=getTotalTalentLevels();
+      document.getElementById('talent-spent-gold').innerText=totalSpent+' (全局总等级 Lv.'+totalLv+' · 费用倍率 ×'+Math.pow(1.25,totalLv).toFixed(2)+')';
+      const resetBtn=document.getElementById('btn-reset-talents');resetBtn.disabled=totalLv<=0;resetBtn.style.opacity=totalLv>0?'1':'.45';resetBtn.innerText='[px:refresh] 重置全部天赋 (退回 '+totalSpent+' [px:coin])';
+      for(const spec of TALENT_SPECS){
+        const lvl=TalentAdjust.level(spec),isMax=lvl>=spec.maxLv,soloOnly=spec.key==='revive'&&Boolean(CoopManager.roomCode),cost=getDynamicTalentCost(spec,lvl),refund=SaveManager.data.talentPurchases[spec.key].at(-1)||0;
+        const card=document.createElement('div');card.className='talent-card';
+        card.innerHTML=`<div class="talent-name"><span>${spec.name}</span><span style="color:${isMax?'#facc15':'#60a5fa'}">Lv.${lvl}/${spec.maxLv}</span></div><div class="talent-desc">${spec.desc}${soloOnly?'；联机仅使用队友救援，已购等级保留给单人':''}</div><div class="talent-step-row"><button type="button" class="talent-minus" data-talent-minus="${spec.key}" aria-label="${spec.name}降低一级，退回${refund}金币" ${lvl<=0?'disabled':''}>−<small>退 ${refund}</small></button><button type="button" class="talent-btn" data-key="${spec.key}" aria-label="${spec.name}增加一级，花费${cost}金币" ${(soloOnly||isMax||SaveManager.data.gold<cost)?'disabled':''}>＋<small>${soloOnly?'联机不适用':isMax?'已满级':cost+' 金币'}</small></button></div>`;
+        card.querySelector('.talent-minus').onclick=()=>TalentAdjust.change(spec.key,-1);card.querySelector('.talent-btn').onclick=()=>TalentAdjust.change(spec.key,1);container.appendChild(card);
+      }
       SaveManager.updateUI();
     }
-
-    document.getElementById('btn-reset-talents').addEventListener('click', () => {
-      const refund = getTotalInvestedGold();
-      if (refund <= 0) return;
-      SaveManager.data.gold += refund;
-      SaveManager.data.totalSpentGold = 0;
-      for (const k in SaveManager.data.talents) {
-        SaveManager.data.talents[k] = 0;
-      }
-      SaveManager.save();
-      setupHero(GameState.selectedHero);
-      renderTalentList();
-      audio.playCoin();
-      showToast(`[px:refresh] 已重置所有圣殿天赋，全额退回 ${refund} 枚金币！`);
-    });
+    document.getElementById('btn-reset-talents').addEventListener('click',()=>TalentAdjust.reset());
 
     // 刷新左上角【流派被动槽(上限3)】与【奇物装备槽(上限3)】显示
     function updateLoadoutHUD() {
@@ -16648,7 +16649,7 @@
       receiveSnapshot(d){if(!d||typeof d.round!=='string'||!Array.isArray(d.rows)||d.rows.length>3)return;const newlySettled=Boolean(d.end?.settled&&!this.ended?.settled);this.round=d.round;for(const row of d.rows)if(typeof row.id==='string'&&['damage','healing','shielding','kills','rescues','downs'].every(k=>Number.isFinite(row[k])&&row[k]>=0))this.rows.set(row.id,{...row,name:String(row.name||'猎手').slice(0,24)});if(Array.isArray(d.bosses))this.bosses=d.bosses.filter(id=>this.bossCatalog().some(b=>b.id===id)).slice(0,18);if(Array.isArray(d.merchants))this.merchants=d.merchants.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)).slice(0,6);if(Array.isArray(d.friends))this.friends=d.friends.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)&&this.bossCatalog().some(b=>b.id===m.boss)).slice(0,6);if(Array.isArray(d.feedback))d.feedback.slice(-8).forEach(e=>this.showFeedback(e));if(d.end){const changed=JSON.stringify(this.ended)!==JSON.stringify(d.end);this.ended=d.end;if(changed)this.renderEnd();}if(newlySettled||performance.now()-this.lastPermanent>2000){this.lastPermanent=performance.now();this.syncPermanent();}},
       grades(victory){const rows=[...this.rows.values()];const maxima={};for(const k of ['damage','healing','shielding','kills','rescues'])maxima[k]=Math.max(1,...rows.map(r=>r[k]));const rated=rows.map(r=>{const role=r.hero==='healer';const contribution=(role?.22:.48)*r.damage/maxima.damage+(role?.32:.10)*r.healing/maxima.healing+(role?.15:.07)*r.shielding/maxima.shielding+.13*r.kills/maxima.kills+.18*r.rescues/maxima.rescues;const score=Math.min(99,Math.round((victory?55:Math.min(40,GameState.gameTime/45))+contribution*40+Math.min(8,r.seconds/180)-Math.min(18,r.downs*4)));const grade=score>=90?'S':score>=83?'S-':score>=77?'A+':score>=70?'A':score>=63?'A-':score>=55?'B+':score>=47?'B':score>=39?'B-':'C';return{...r,score,grade,contribution};}).sort((a,b)=>b.score-a.score||b.contribution-a.contribution||b.damage-a.damage||a.id.localeCompare(b.id));if(victory&&rated.length)rated[0].grade='S+';return rated;},
       beginEnd(victory){if(!this.ended){this.ended={victory,settled:false,at:Date.now(),rows:[]};const ending=this.ended;setTimeout(()=>{if(this.ended===ending)this.networkTick();},1850);}if(WorldCoop.authority())this.ended.rows=this.grades(victory);this.renderEnd();},
-      renderEnd(){if(this.ended){for(const id of ['btn-over-lobby','btn-restart'])document.getElementById(id).disabled=!this.ended.settled;document.getElementById('over-healing').textContent=Math.round(this.rows.get(CoopManager.myPeerId)?.healing||0).toLocaleString();}const el=document.getElementById('run-report');if(!el||!this.ended)return;el.innerHTML='<div class="campaign-note">'+(this.ended.settled?'本局评定 · 治疗计有效恢复，护盾计实际新增':'战局统计汇总中…')+' · S+仅通关且全队唯一</div><div class="campaign-scroll"><table><thead><tr><th>猎手 / 评分</th><th>伤害</th><th>治疗</th><th>护盾</th><th>击杀 / 救援</th></tr></thead><tbody>'+this.ended.rows.map(r=>'<tr><td><b class="rank-label">'+r.grade+'</b> '+this.esc(r.name)+(r.id===CoopManager.myPeerId?'（你）':'')+'</td><td>'+Math.round(r.damage).toLocaleString()+'</td><td>'+Math.round(r.healing).toLocaleString()+'</td><td>'+Math.round(r.shielding).toLocaleString()+'</td><td>'+r.kills+' / '+r.rescues+'</td></tr>').join('')+'</tbody></table></div>';},
+      renderEnd(){if(this.ended){for(const id of ['btn-over-lobby','btn-restart'])document.getElementById(id).disabled=!this.ended.settled;document.getElementById('over-healing').textContent=Math.round(this.rows.get(CoopManager.myPeerId)?.healing||0).toLocaleString();}const el=document.getElementById('run-report');if(!el||!this.ended)return;el.innerHTML='<div class="campaign-note">'+(this.ended.settled?'本局评定 · 治疗计有效恢复，护盾计实际新增':'战局统计汇总中…')+' · S+仅通关且全队唯一</div><div class="campaign-scroll" tabindex="0" role="region" aria-label="战局评分，左右滑动查看全部数据"><table><thead><tr><th>猎手 / 评分</th><th>伤害</th><th>治疗</th><th>护盾</th><th>击杀 / 救援</th></tr></thead><tbody>'+this.ended.rows.map(r=>'<tr><td><b class="rank-label">'+r.grade+'</b> '+this.esc(r.name)+(r.id===CoopManager.myPeerId?'（你）':'')+'</td><td>'+Math.round(r.damage).toLocaleString()+'</td><td>'+Math.round(r.healing).toLocaleString()+'</td><td>'+Math.round(r.shielding).toLocaleString()+'</td><td>'+r.kills+' / '+r.rescues+'</td></tr>').join('')+'</tbody></table></div><div class="report-scroll-hint">左右滑动查看完整战绩</div>';},
       syncPermanent(){if(!this.round)return;const p=this.permanent(),r=this.rows.get(CoopManager.myPeerId);if(!r)return;const round=p.rounds[this.round]||(p.rounds[this.round]={values:{},started:true});for(const k of ['damage','healing','shielding','kills','rescues','downs','bosses','purchases','hires','removals']){const value=Math.floor(r[k]||0),old=round.values[k]||0;if(value>old){p.counters[k]=(p.counters[k]||0)+value-old;round.values[k]=value;}}p.heroes[r.hero]=true;p.counters.maxLevel=Math.max(p.counters.maxLevel||0,player.level);p.counters.survival=Math.max(p.counters.survival||0,GameState.gameTime);p.counters.awakened=Math.max(p.counters.awakened||0,Object.values(player.skills).filter(s=>s.isEvolved).length);p.counters.maxed=Math.max(p.counters.maxed||0,Object.values(player.skills).filter(s=>s.level>=5).length);p.counters.relics=Math.max(p.counters.relics||0,player.mapRelics.length);for(const id of this.bosses)p.bosses[id]=true;for(const e of enemies)if(!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<500)p.seen[e.type]=true;
         if(this.ended?.settled&&!round.finished){round.finished=true;p.counters.runs=(p.counters.runs||0)+1;if(this.rows.size>1)p.counters.coop=(p.counters.coop||0)+1;if(this.ended.victory){p.counters.wins=(p.counters.wins||0)+1;p.wins[r.hero]=true;}if(this.ended.rows.find(x=>x.id===r.id)?.grade==='S+')p.counters.splus=(p.counters.splus||0)+1;}
         const keys=Object.keys(p.rounds);while(keys.length>40)delete p.rounds[keys.shift()];this.awardAchievements();SaveManager.save();},
