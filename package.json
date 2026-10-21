@@ -1,6 +1,6 @@
 {
   "name": "darkest-pixel-survivor",
-  "version": "26.4.24",
+  "version": "26.4.25",
   "private": true,
   "license": "MIT",
   "description": "A single-file pixel survivor game with browser co-op, spectator mode, text chat and WebRTC voice.",

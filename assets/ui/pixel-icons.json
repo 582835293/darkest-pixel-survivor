@@ -994,7 +994,7 @@
     },
     {
       "name": "crosier",
-      "label": "流辉圣矢",
+      "label": "降辉圣光",
       "x": 222,
       "y": 142,
       "width": 16,
@@ -1025,17 +1025,49 @@
       "height": 16
     },
     {
-      "name": "hero-warrior",
-      "label": "苍红剑客",
+      "name": "soul-bone",
+      "label": "摄魂骨矢",
       "x": 302,
       "y": 142,
       "width": 16,
       "height": 16
     },
     {
+      "name": "soul-command",
+      "label": "冥契号令",
+      "x": 2,
+      "y": 162,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "raise-dead",
+      "label": "亡骸复苏",
+      "x": 22,
+      "y": 162,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "dead-legion",
+      "label": "亡者大军",
+      "x": 42,
+      "y": 162,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "hero-warrior",
+      "label": "苍红剑客",
+      "x": 62,
+      "y": 162,
+      "width": 16,
+      "height": 16
+    },
+    {
       "name": "hero-mage",
       "label": "星界魔导",
-      "x": 2,
+      "x": 82,
       "y": 162,
       "width": 16,
       "height": 16
@@ -1043,7 +1075,7 @@
     {
       "name": "hero-ranger",
       "label": "暗夜巡林",
-      "x": 22,
+      "x": 102,
       "y": 162,
       "width": 16,
       "height": 16
@@ -1051,7 +1083,7 @@
     {
       "name": "hero-engineer",
       "label": "烬铁机匠",
-      "x": 42,
+      "x": 122,
       "y": 162,
       "width": 16,
       "height": 16
@@ -1059,7 +1091,15 @@
     {
       "name": "hero-healer",
       "label": "曙光祷师",
-      "x": 62,
+      "x": 142,
+      "y": 162,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "hero-necromancer",
+      "label": "冥契术士",
+      "x": 162,
       "y": 162,
       "width": 16,
       "height": 16

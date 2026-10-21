@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R24 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R25 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1269,7 +1269,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R24</span></div>
+        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R25</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -1293,6 +1293,7 @@
             <div class="hero-avatar">[px:hero-engineer]</div><div class="hero-title">烬铁机匠</div>
             <div class="hero-perk">锁定钉攒热 · 炮群集火<br>磁雷聚怪 · 满热炮网齐射<br>成型6炮台 + 4座重装支援</div>
           </div>
+          <div class="hero-card" data-hero="necromancer"><div class="hero-avatar">[px:hero-necromancer]</div><div class="hero-title">冥契术士 · 死灵法师</div><div class="hero-perk">击杀收魂 · 复苏亡军<br>五分 / 大招Lv.3 唤醒领主</div></div>
           <div class="hero-card" data-hero="healer"><div class="hero-avatar">[px:hero-healer]</div><div class="hero-title">曙光祷师 · 治疗辅助</div><div class="hero-perk">圣矢攒祷光 · 溢疗转盾<br>救援速度×2 · 六翼圣光审判</div></div>
         </div>
 
@@ -1396,6 +1397,7 @@
               <div class="biome-card coop-hero-pick" data-hero="mage">[px:hero-mage] 星界魔导</div>
               <div class="biome-card coop-hero-pick" data-hero="ranger">[px:hero-ranger] 暗夜巡林</div>
               <div class="biome-card coop-hero-pick" data-hero="engineer">[px:hero-engineer] 烬铁机匠</div>
+              <div class="biome-card coop-hero-pick" data-hero="necromancer">[px:hero-necromancer] 冥契术士</div>
               <div class="biome-card coop-hero-pick" data-hero="healer">[px:hero-healer] 曙光祷师</div>
             </div>
             <div class="coop-picks-grid" style="margin-top:8px;">
@@ -1824,7 +1826,11 @@
         add('mending','回春祷言',g=>{g.rect(6,2,4,12,'i');g.rect(2,6,12,4,'i');g.rect(7,3,2,10,'w');g.rect(3,7,10,2,'w');g.line(1,4,3,2,'g');g.line(12,13,14,11,'g');});
         add('sanctuary','庇护圣域',g=>{g.poly([[1,5],[7,0],[14,5]],'g');g.rect(2,5,12,9,'c');g.rect(4,5,8,9,'d');g.rect(6,7,4,7,'g');g.rect(0,14,16,2,'s');g.rect(7,3,2,4,'w');});
         add('seraph','六翼曙光',g=>{for(const y of [3,6,9]){g.poly([[7,y+3],[0,y],[2,y+4],[6,y+5]],'i');g.poly([[8,y+3],[15,y],[13,y+4],[9,y+5]],'y');}g.rect(6,4,4,9,'g');g.rect(7,5,2,6,'w');g.line(5,1,10,1,'g');});
-        for(const hero of ['warrior','mage','ranger','engineer','healer'])add('hero-'+hero,{warrior:'苍红剑客',mage:'星界魔导',ranger:'暗夜巡林',engineer:'烬铁机匠',healer:'曙光祷师'}[hero],g=>{
+        add('soul-bone','摄魂骨矢',g=>{g.line(3,12,12,3,'i',3);for(const [x,y]of [[1,11],[3,13],[10,1],[12,3]])g.disk(x,y,2,'w');g.rect(6,6,3,3,'p');});
+        add('soul-command','冥契号令',g=>{g.line(7,3,7,14,'p',2);g.disk(7,3,3,'i');g.rect(5,2,5,3,'k');g.rect(5,3,1,1,'g');g.rect(9,3,1,1,'g');g.line(0,6,3,8,'c');g.line(15,6,12,8,'c');});
+        add('raise-dead','亡骸复苏',g=>{g.rect(2,12,12,3,'s');g.rect(5,6,6,8,'p');g.rect(4,1,8,7,'i');g.rect(5,3,2,2,'k');g.rect(9,3,2,2,'k');g.rect(7,6,2,2,'g');});
+        add('dead-legion','亡者大军',g=>{for(const [x,y]of [[1,7],[10,7],[5,1]]){g.rect(x,y,5,5,'i');g.rect(x+1,y+1,1,2,'k');g.rect(x+3,y+1,1,2,'k');g.rect(x+1,y+5,3,2,'p');}g.rect(1,15,14,1,'g');});
+        for(const hero of ['warrior','mage','ranger','engineer','healer','necromancer'])add('hero-'+hero,{warrior:'苍红剑客',mage:'星界魔导',ranger:'暗夜巡林',engineer:'烬铁机匠',healer:'曙光祷师',necromancer:'冥契术士'}[hero],g=>{
           const rows=SPRITE_MATRICES[hero+'_0'];for(let y=0;y<Math.min(16,rows.length);y++)for(let x=0;x<16;x++){const ch=rows[y][x];if(ch!=='.')g.dot(x,y,PALETTE[ch]||'#71879d');}
         });
         this.rasterize();
@@ -2577,15 +2583,15 @@
         if(!WorldCoop.canAct()){for(const f of this.localFields)f.visual.life=0;this.localFields=[];for(const [id,z]of this.zones)if(z.owner===CoopManager.myPeerId)this.zones.delete(id);return;}
         for(const f of this.localFields){f.life-=dt;f.tick-=dt;if(f.tick<=0){f.tick=.7;if(f.kind==='s2')damageInRadius(f.x,f.y,f.radius,f.damage*.65,20);else{
           const targets=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-f.x,e.y-f.y)<f.radius).slice(0,2+(f.level||1)+(f.evolved?1:0));
-          for(const [i,e]of targets.entries()){this.visual('lance',{x:e.x,y:e.y,x1:e.x-35,y1:e.y-170,x2:e.x,y2:e.y,width:14,color:'#fde68a'},.4);damageEnemy(e,f.damage*.48,0,20,true);}
+                    const hit=new Set(),radius=42+f.level*4;for(const e of targets){this.visual('judgment',{x:e.x,y:e.y,radius,width:22+f.level*4,stage:f.level,isSuper:f.evolved,color:'#fde68a'},.4);for(const other of enemies)if(!other.isDead&&!hit.has(other)&&Math.hypot(other.x-e.x,other.y-e.y)<=radius+other.radius){hit.add(other);damageEnemy(other,f.damage*.48,0,20,true);}}
         }}}
         this.localFields=this.localFields.filter(f=>f.life>0);if(!WorldCoop.active())this.authorityTick(dt,true);
       },
       networkTick(){const now=performance.now();for(const [id,p]of this.pending){if(now-p.at>4000||!WorldCoop.canAct()){this.pending.delete(id);continue;}if(now-p.last>450){p.last=now;WorldCoop.toHost(p.packet);}}},
       draw(c,s,ratio){
         const t=GameState.gameTime,r=s.radius||120;c.globalAlpha*=Math.min(1,ratio*4);
-        if(s.type==='healer_smite'){
-          c.translate(s.x,s.y);const w=(s.width||8)*Math.min(1,ratio*3),h=170+(s.stage||1)*12;c.fillStyle='rgba(255,226,129,.15)';c.fillRect(-w*2,-h,w*4,h);c.fillStyle='#e8bf56';c.fillRect(-w,-h,w*2,h);c.fillStyle='#fff9d8';c.fillRect(-w*.4,-h,w*.8,h);c.fillStyle='#ffffff';c.fillRect(-2,-h,4,h);c.fillStyle='#fde68a';c.fillRect(-14,-h+20,28,4);c.fillRect(-2,-h+9,4,26);
+        if(s.type==='healer_smite'||s.type==='healer_judgment'){
+          c.translate(s.x,s.y);const w=(s.width||8)*Math.min(1,ratio*3),h=(s.type==='healer_judgment'?82:64)+(s.stage||1)*4;c.fillStyle='rgba(255,226,129,.15)';c.fillRect(-w*2,-h,w*4,h);c.fillStyle='#e8bf56';c.fillRect(-w,-h,w*2,h);c.fillStyle='#fff9d8';c.fillRect(-w*.4,-h,w*.8,h);c.fillStyle='#ffffff';c.fillRect(-2,-h,4,h);c.fillStyle='#fde68a';c.fillRect(-14,-h+20,28,4);c.fillRect(-2,-h+9,4,26);
           c.strokeStyle='#fff2ad';c.lineWidth=2;c.save();c.scale(1,.5);c.rotate(t*.6);c.strokeRect(-r*.6,-r*.6,r*1.2,r*1.2);for(let i=0;i<(s.stage||1)+2;i++){c.rotate(Math.PI*2/((s.stage||1)+2));c.fillRect(r,-2,5,4);}c.restore();return;
         }
         if(s.type==='healer_lance'){c.translate(s.x1,s.y1);c.rotate(Math.atan2(s.y2-s.y1,s.x2-s.x1));const len=Math.hypot(s.x2-s.x1,s.y2-s.y1),w=(s.width||18)*ratio;c.fillStyle='rgba(167,243,208,.28)';c.fillRect(0,-w,len,w*2);c.fillStyle='#fcd34d';c.fillRect(0,-w*.35,len,w*.7);c.fillStyle='#fffde7';c.fillRect(0,-2,len,4);return;}
@@ -2742,6 +2748,101 @@
         if(placed)this.elapsed=0;
         else if(this.elapsed>=.35){this.spawn(x2,y2);this.elapsed=0;this.distance=0;}
       }
+    };
+
+    HERO_CONFIGS.necromancer={
+      name:'冥契术士',color:'#a78bfa',speed:148,maxHp:90,critChance:.10,armor:.02,
+      icons:{atk:'[px:soul-bone]',s1:'[px:soul-command]',s2:'[px:raise-dead]',ult:'[px:dead-legion]',item:'[px:shield]'},
+      labels:{atk:'摄魂骨矢',s1:'冥契号令',s2:'亡骸复苏',ult:'亡者大军'},
+      initSkills:()=>({
+        attack:{name:'摄魂骨矢',level:1,maxLevel:5,damage:18,cd:.52,timer:0,range:290,isEvolved:false},
+        charge:{name:'蓄力·冥河收割',level:1,maxLevel:5,branch:null,branchLv:0,maxBranchLv:3,branchAName:'万魂穿刺',branchBName:'白骨君临'},
+        skill1:{name:'冥契号令',level:1,maxLevel:5,damage:30,cd:7,timer:0,isDashing:false,isEvolved:false},
+        skill2:{name:'亡骸复苏',level:1,maxLevel:5,damage:14,cd:8,timer:0,radius:220,isEvolved:false},
+        ult:{name:'亡者大军',level:1,maxLevel:5,damage:90,cd:27,timer:0,isEvolved:false},
+        item:{name:'幽骨壁障',level:1,cd:18,timer:0,duration:2.8,activeTimer:0}
+      })
+    };
+    // Owner-simulated army. Teammates receive bounded visual poses, never a second AI.
+    var NecroKit={
+      summons:[],archive:[],bossArchive:[],souls:0,sequence:0,kills:0,seen:new Set(),procCd:0,fireCd:0,volleyCd:0,attackCounter:0,haste:0,focus:null,epoch:0,
+      reset(){this.summons=[];this.archive=[];this.bossArchive=[];this.souls=0;this.kills=0;this.seen.clear();this.procCd=0;this.fireCd=0;this.volleyCd=0;this.attackCounter=0;this.haste=0;this.focus=null;this.epoch=player.lifeEpoch||0;},
+      active(){return GameState.selectedHero==='necromancer'&&GameState.isStarted&&!GameState.isOver&&!player.isDowned;},
+      guard(){if(!this.active()||this.epoch!==(player.lifeEpoch||0)){this.summons=[];this.focus=null;this.epoch=player.lifeEpoch||0;}},
+      cap(){return 2+Math.floor(player.skills.skill2.level/2)+(player.skills.skill2.isEvolved?2:0);},
+      leaderReady(){return GameState.gameTime>=300&&player.skills.ult.level>=3;},
+      formation(){return 1/(1+.055*Math.max(0,this.summons.length-1));},
+      health(boss=false){return Math.round(player.maxHp*(boss?1.25:.60));},
+      baseDamage(m){return player.skills.attack.damage*(m.boss?2.2:1.25)*this.formation()*(Math.pow(1.38,player.skills.skill2.level-1)*(player.skills.skill2.isEvolved?1.3:1))*Math.pow(1.22,player.skills.skill2.limitBreak||0)*(this.haste>0?1.15:1);},
+      attackInterval(){return Math.max(.32,player.skills.attack.cd*1.65*attackCooldownMultiplier())*(this.haste>0?.72:1);},
+      fx(type,data,life=.35){if(skyBeams.filter(s=>s.type?.startsWith('necro_')).length>=60)return;skyBeams.push({type:'necro_'+type,life,maxLife:life,...data});},
+      ownedKill(en,id,epoch){
+        if(!WorldCoop.authority())return;
+        const local=id===CoopManager.myPeerId,hero=local?GameState.selectedHero:CoopManager.allies.find(p=>p.id===id)?.hero;
+        if(hero!=='necromancer')return;const actor=WorldCoop.active()?WorldCoop.participants.get(id):{id,epoch:player.lifeEpoch||0};
+        if(!actor||actor.downed||WorldCoop.phased(actor)||epoch!==null&&epoch!==actor.epoch)return;
+        const value={id:(WorldCoop.session||'solo')+':soul:'+WorldCoop.identify(en),skin:en.type,boss:en.isBoss?en.bossProfile||Campaign.bossCatalog().find(b=>b.key===en.type)?.id:null,lifeEpoch:actor.epoch,x:en.x,y:en.y};
+        if(WorldCoop.active())CoopLoot.grant(actor,'necroSoul',value);else this.soul(value);
+      },
+      soul(v){
+        if(!this.active()||v.lifeEpoch!==(player.lifeEpoch||0)||typeof v.id!=='string'||this.seen.has(v.id)||typeof v.skin!=='string'||!SpriteCache[v.skin+'_0'])return false;
+        this.seen.add(v.id);while(this.seen.size>256)this.seen.delete(this.seen.values().next().value);this.kills++;this.souls=Math.min(9,this.souls+1);
+        if(v.boss&&Campaign.bossCatalog().some(b=>b.id===v.boss)){if(!this.bossArchive.includes(v.boss))this.bossArchive.push(v.boss);this.bossArchive=this.bossArchive.slice(-3);}
+        else {if(!this.archive.includes(v.skin))this.archive.push(v.skin);this.archive=this.archive.slice(-10);}
+        this.fx('soul',{x:v.x,y:v.y,x1:v.x,y1:v.y,x2:player.x,y2:player.y,radius:12},.5);
+        if(this.souls>=3&&this.summons.filter(m=>m.source==='guard').length<this.cap()&&WorldCoop.canAct()){this.souls-=3;this.spawn(false,'guard',v.boss?null:v.skin,v.x,v.y);}
+        return true;
+      },
+      spawn(boss=false,source='guard',skin=null,x=null,y=null){
+        if(!this.active())return null;
+        if(boss){const old=this.summons.find(m=>m.boss);if(old)this.summons.splice(this.summons.indexOf(old),1);const b=Campaign.bossCatalog().find(b=>b.id===this.bossArchive.at(-1));skin=b?.key||Campaign.bossCatalog()[0].key;source='leader';}
+        if(!boss&&source==='guard'&&this.summons.filter(m=>m.source==='guard').length>=this.cap())return null;
+        if(this.summons.length>=12){const old=this.summons.filter(m=>!m.boss).sort((a,b)=>a.life-b.life)[0];if(!old)return null;this.summons.splice(this.summons.indexOf(old),1);}
+        if(!skin||!SpriteCache[skin+'_0'])skin=this.archive.length?this.archive[(++this.sequence)%this.archive.length]:'skeleton';
+        const a=(++this.sequence)*2.399,origin=Arena.safe(Number.isFinite(x)?x:player.x+Math.cos(a)*65,Number.isFinite(y)?y:player.y+Math.sin(a)*65,boss?24:12),life=boss?12+player.skills.ult.level:source==='army'?8+player.skills.ult.level*1.2:14;
+        const m={id:this.sequence,type:'necro_minion',skin,x:origin.x,y:origin.y,vx:0,vy:0,radius:boss?22:11,life,maxLife:life,hp:this.health(boss),maxHp:this.health(boss),boss,source,stage:boss?player.skills.ult.level:player.skills.skill2.level,evolved:player.skills.skill2.isEvolved,angle:0,timer:.25+(this.sequence%5)*.08,hurtCd:0,flash:0};
+        this.summons.push(m);this.fx('rise',{x:m.x,y:m.y,radius:boss?45:23,stage:boss?2:1},.38);return m;
+      },
+      strike(m,en){
+        const primary=this.procCd<=0;if(primary)this.procCd=.18;
+        const damage=this.baseDamage(m),targets=[en];
+        if(m.boss){for(const e of enemies)if(e!==en&&!e.isDead&&Math.hypot(e.x-en.x,e.y-en.y)<65+m.stage*5)targets.push(e);}
+        else if(m.evolved){for(const e of enemies)if(e!==en&&!e.isDead&&Math.hypot(e.x-en.x,e.y-en.y)<56+m.stage*4&&targets.length<8)targets.push(e);}
+        if(player.passives.pierceQuiver&&targets.length<1+player.passives.pierceQuiver){const ux=Math.cos(m.angle),uy=Math.sin(m.angle);for(const e of enemies)if(e!==en&&!e.isDead&&!targets.includes(e)){const dx=e.x-m.x,dy=e.y-m.y;if(dx*ux+dy*uy>0&&dx*ux+dy*uy<160&&Math.abs(dx*uy-dy*ux)<20+e.radius)targets.push(e);if(targets.length>=1+player.passives.pierceQuiver)break;}}
+        m.flash=.22;this.fx(m.boss||m.evolved?'cleave':'bolt',{x:m.x,y:m.y,x1:m.x,y1:m.y-7,x2:en.x,y2:en.y,radius:m.boss?65+m.stage*5:m.evolved?56+m.stage*4:16,stage:m.stage},.24);
+        for(const [i,e] of targets.entries())damageEnemy(e,damage*(e.isBoss?.8:1),m.angle,20,!primary||i>0,CoopManager.myPeerId,player.lifeEpoch||0);
+        if(primary&&player.passives.fireTrail&&this.fireCd<=0){this.fireCd=.8;FireTrail.spawn(en.x,en.y);en.isBurning=true;this.fx('brand',{x:en.x,y:en.y,radius:20},.35);}
+      },
+      attack(){const a=player.skills.attack,n=a.isEvolved?4:Math.ceil(a.level/2);for(const e of enemies.filter(e=>!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<a.range+35).sort((a,b)=>Math.hypot(a.x-player.x,a.y-player.y)-Math.hypot(b.x-player.x,b.y-player.y)).slice(0,n)){this.fx('bolt',{x:player.x,y:player.y,x1:player.x,y1:player.y-10,x2:e.x,y2:e.y,radius:16,stage:a.level},.28);damageEnemy(e,a.damage,Math.atan2(e.y-player.y,e.x-player.x),25);}
+        this.attackCounter++;if(a.level>=3&&this.attackCounter%3===0&&this.volleyCd<=0){this.volleyCd=1.2;for(const m of this.summons.slice(0,2+a.level*2)){const target=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<550).sort((a,b)=>Math.hypot(a.x-m.x,a.y-m.y)-Math.hypot(b.x-m.x,b.y-m.y))[0];if(target){m.angle=Math.atan2(target.y-m.y,target.x-m.x);this.strike(m,target);}}}
+        audio.playShoot();},
+      charge(angle){const c=player.skills.charge,damage=player.skills.attack.damage*(4+c.level*.6)*(1+(c.branchLv||0)*.25)*Math.pow(1.24,c.limitBreak||0)*(1+(SaveManager.data.talents.charge||0)*.12),radius=160+c.level*14;
+        damageInRadius(player.x,player.y,radius,damage,70);this.fx('ritual',{x:player.x,y:player.y,radius,stage:c.level},.65);
+        if(c.branch==='A'){const targets=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<420).slice(0,4+(c.branchLv||1));for(const e of targets){this.fx('bolt',{x:player.x,y:player.y,x1:player.x,y1:player.y-12,x2:e.x,y2:e.y,radius:24,stage:5},.4);damageEnemy(e,damage*.45,angle,40,true);}}
+        if(c.branch==='B'){this.haste=Math.max(this.haste,4+(c.branchLv||1));for(let i=0;i<2;i++)this.spawn(false,'guard');}return true;
+      },
+      skill1(){const s=player.skills.skill1;damageInRadius(player.x,player.y,150+s.level*12,s.damage,60);this.haste=3+(s.isEvolved?2:0);const target=findNearestEnemy(500);this.focus=target?WorldCoop.identify(target):null;if(target)this.fx('brand',{x:target.x,y:target.y,radius:30,stage:s.level},.8);for(const m of this.summons){m.hp=Math.min(m.maxHp,m.hp+m.maxHp*.25);m.timer=Math.min(m.timer,.1);}this.fx('command',{x:player.x,y:player.y,radius:150+s.level*12,stage:s.level},.65);},
+      skill2(){const s=player.skills.skill2;for(let i=0;i<2+Math.floor(s.level/2)+(s.isEvolved?1:0);i++){if(this.spawn(false,'guard'))this.souls=Math.max(0,this.souls-1);}this.fx('ritual',{x:player.x,y:player.y,radius:105+s.level*12,stage:s.level},.8);},
+      ult(){const s=player.skills.ult;for(let i=0;i<4+s.level+(s.isEvolved?2:0);i++)this.spawn(false,'army');if(this.leaderReady())this.spawn(true);this.haste=Math.max(this.haste,2);damageInRadius(player.x,player.y,240,s.damage,100);this.fx('legion',{x:player.x,y:player.y,radius:230+s.level*12,stage:s.level},1.1);},
+      tick(dt){this.guard();if(!this.active()||WorldCoop.simulationPaused())return;this.procCd=Math.max(0,this.procCd-dt);this.volleyCd=Math.max(0,this.volleyCd-dt);this.fireCd=Math.max(0,this.fireCd-dt);this.haste=Math.max(0,this.haste-dt);
+        const can=WorldCoop.canAct(),near=can?enemies.filter(e=>!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<650):[];for(const m of [...this.summons]){if(!this.summons.includes(m))continue;m.life-=dt;m.flash=Math.max(0,m.flash-dt);if(!can){m.vx=m.vy=0;continue;}const hp=this.health(m.boss);if(hp!==m.maxHp){m.hp=hp*Math.max(0,m.hp/m.maxHp);m.maxHp=hp;}
+          m.timer-=dt;m.hurtCd=Math.max(0,m.hurtCd-dt);let target=near.find(e=>e.netId===this.focus&&!e.isDead),closest=Infinity;if(!target)for(const e of near)if(!e.isDead){const d=(e.x-m.x)**2+(e.y-m.y)**2;if(d<closest){closest=d;target=e;}}const range=m.boss?120:90;
+          let gx=player.x+Math.cos(m.id*2.4)*65,gy=player.y+Math.sin(m.id*2.4)*65;if(target){m.angle=Math.atan2(target.y-m.y,target.x-m.x);const d=Math.hypot(target.x-m.x,target.y-m.y);if(d>range){gx=target.x-Math.cos(m.angle)*range*.75;gy=target.y-Math.sin(m.angle)*range*.75;}else{gx=m.x;gy=m.y;if(m.timer<=0){m.timer=this.attackInterval()*(m.boss?1.3:1);this.strike(m,target);}}}
+          if(Math.hypot(m.x-player.x,m.y-player.y)>600){const p=Arena.safe(player.x+40,player.y+40,m.radius);m.x=p.x;m.y=p.y;}
+          const dx=gx-m.x,dy=gy-m.y,d=Math.hypot(dx,dy),speed=Math.min(d/dt,player.speed*1.2+25);m.vx=d>4?dx/d*speed:0;m.vy=d>4?dy/d*speed:0;m.x+=m.vx*dt;m.y+=m.vy*dt;Arena.clamp(m,m.radius);
+          if(m.hurtCd<=0&&GameState.globalFreezeTimer<=0){const e=near.find(e=>!e.freezeTimer&&Math.hypot(e.x-m.x,e.y-m.y)<e.radius+m.radius+8);if(e){m.hp-=Math.max(0,(Number.isFinite(e.damage)?e.damage:10)*(1-player.armor));m.hurtCd=.8;}}
+        }this.summons=this.summons.filter(m=>m.life>0&&m.hp>0);
+      },
+      draw(c,list=this.summons,alpha=VisualSettings.selfAlpha){if(!alpha)return;for(const m of list){const sp=SpriteCache[m.skin+'_0'];if(!sp)continue;c.save();c.globalAlpha*=alpha;c.translate(m.x,m.y);const boss=Boolean(m.boss),r=boss?27:15,img=m.flash>0?sp.ice:sp.normal,scale=Math.min(boss?1.4:1, (boss?64:34)/Math.max(img.width,img.height));
+        c.fillStyle='rgba(72,211,165,.15)';c.beginPath();c.ellipse(0,12,r+6,r*.38,0,0,Math.PI*2);c.fill();c.strokeStyle=boss?'#d8b4fe':'#6ee7b7';c.lineWidth=1;c.strokeRect(-r-3,-r-5,(r+3)*2,(r+5)*2);c.drawImage(img,-img.width*scale/2,-img.height*scale/2,img.width*scale,img.height*scale);
+        c.fillStyle='#122d32';c.fillRect(-r,-r-10,r*2,3);c.fillStyle=boss?'#c4b5fd':'#86efac';c.fillRect(-r,-r-10,r*2*Math.max(0,m.hp/m.maxHp),3);
+        if(boss){c.fillStyle='#e9d5ff';for(let i=0;i<3;i++)c.fillRect(-10+i*9,-r-19,4,5+i%2*3);}
+        if(m.evolved||m.stage>=4){c.fillStyle='#baf7df';for(let i=0;i<3;i++){const a=GameState.gameTime*2+i*Math.PI*2/3;c.fillRect(Math.cos(a)*(r+7)-2,Math.sin(a)*(r+7)-2,3,3);}}
+        c.restore();}},
+      drawFx(c,s,ratio){c.save();c.globalAlpha*=Math.min(1,ratio*3);const r=s.radius||50,lv=s.stage||1;
+        if(['necro_bolt','necro_cleave','necro_soul'].includes(s.type)){const dx=s.x2-s.x1,dy=s.y2-s.y1;c.translate(s.x1,s.y1);c.rotate(Math.atan2(dy,dx));const len=Math.hypot(dx,dy);c.strokeStyle=s.type==='necro_soul'?'#c4b5fd':'#6ee7b7';c.lineWidth=s.type==='necro_cleave'?5:2;c.beginPath();c.moveTo(0,0);c.lineTo(len,0);c.stroke();c.fillStyle='#e0fff0';for(let i=0;i<3;i++){const x=len*(1-ratio)+i*5;c.fillRect(Math.min(len,x),-3,7,6);}c.fillStyle='#a78bfa';c.fillRect(len-6,-8,12,3);c.fillRect(len-6,5,12,3);if(s.type==='necro_cleave'){c.translate(len,0);c.strokeStyle='#8ff4c2';c.lineWidth=2;c.beginPath();c.ellipse(0,0,r,r*.6,0,0,Math.PI*2);c.stroke();for(let i=0;i<4;i++){c.rotate(Math.PI/2);c.fillRect(r*.65,-2,9,4);}}
+        }else{c.translate(s.x,s.y);c.strokeStyle='#9e87d9';c.fillStyle='rgba(69,192,144,.09)';c.beginPath();c.ellipse(0,0,r,r*.6,0,0,Math.PI*2);c.fill();c.stroke();for(let k=0;k<(s.type==='necro_rise'?1:Math.min(3,Math.ceil(lv/2)));k++){c.save();c.scale(1,.6);c.rotate(GameState.gameTime*.3+k*.3);c.strokeRect(-r*.65,-r*.65,r*1.3,r*1.3);for(let i=0;i<5+lv;i++){c.rotate(Math.PI*2/(5+lv));c.fillStyle=i%2?'#c4b5fd':'#6ee7b7';c.fillRect(r*.8,-3,9,6);}c.restore();}if(s.type==='necro_legion'||s.type==='necro_rise'){c.fillStyle='#d9fbe9';c.fillRect(-9,-20,18,12);c.fillStyle='#142b31';c.fillRect(-6,-16,4,4);c.fillRect(2,-16,4,4);c.fillStyle='#d9fbe9';c.fillRect(-5,-8,10,7);}}
+        c.restore();}
     };
 
     var EngineerKit={
@@ -3199,17 +3300,21 @@
         for(const [key,equip,id,name,desc]of forms){const sk=skills[key];if(!sk.isEvolved&&sk.level>=(key==='ult'?5:4)&&(!equip||pass[equip]>0))pool.push({id,name:'【超武】'+name,desc,type:'super',icon:'[px:gear]',isTrueSuper:true,apply:()=>{sk.isEvolved=true;sk.damage=Math.round(sk.damage*1.25);showSuperWeaponFanfare('机匠觉醒：'+name+'！');}});}
       }
 
+      if(hero==='necromancer')for(const [key,equip,id,name,desc]of [
+        ['attack','critGlove','super_necro_atk','四棺追魂','每次摄魂4个目标。'],['skill1','swiftBoots','super_necro_s1','永夜敕令','号令加速延长至5秒。'],['skill2','lavaHeart','super_necro_s2','六骸禁卫','常驻骨仆上限+2，灵纹围绕亡军。'],['ult',null,'super_necro_ult','冥府开门','大招额外复苏2个小怪；仍最多12个召唤物和1位领主。']]){const sk=skills[key];if(!sk.isEvolved&&sk.level>=(key==='ult'?5:4)&&(!equip||pass[equip]>0))pool.push({id,name:'【超武】'+name,desc,type:'super',icon:HERO_CONFIGS.necromancer.icons[key==='attack'?'atk':key==='skill1'?'s1':key==='skill2'?'s2':'ult'],isTrueSuper:true,apply:()=>{sk.isEvolved=true;sk.damage=Math.round(sk.damage*1.2);showSuperWeaponFanfare('冥契觉醒：'+name+'！');}});}
+
       if(hero==='healer')for(const [key,equip,id,name,desc]of [
         ['attack','critGlove','super_healer_atk','七曜圣裁','七道圣光直接审判魔物，快速积攒祷光。'],
         ['skill1','swiftBoots','super_healer_s1','不灭回春','群疗提高10点，并额外施加12点护盾。'],
         ['skill2','lavaHeart','super_healer_s2','常青圣殿','圣域半径+40，脉冲治疗提高2点。'],
-        ['ult',null,'super_healer_ult','炽天使降临','六翼阵延长至9秒，同时审判8个目标。']]){const sk=skills[key];if(!sk.isEvolved&&sk.level>=(key==='ult'?5:4)&&(!equip||pass[equip]>0))pool.push({id,name:'【超武】'+name,desc,type:'super',icon:HERO_CONFIGS.healer.icons[key==='attack'?'atk':key==='skill1'?'s1':key==='skill2'?'s2':'ult'],isTrueSuper:true,apply:()=>{sk.isEvolved=true;sk.damage=Math.round(sk.damage*1.25);showSuperWeaponFanfare('祷师觉醒：'+name+'！');}});}
+        ['ult',null,'super_healer_ult','炽天使降临','六翼阵延长至9秒，最多选择8处范围审判。']]){const sk=skills[key];if(!sk.isEvolved&&sk.level>=(key==='ult'?5:4)&&(!equip||pass[equip]>0))pool.push({id,name:'【超武】'+name,desc,type:'super',icon:HERO_CONFIGS.healer.icons[key==='attack'?'atk':key==='skill1'?'s1':key==='skill2'?'s2':'ult'],isTrueSuper:true,apply:()=>{sk.isEvolved=true;sk.damage=Math.round(sk.damage*1.25);showSuperWeaponFanfare('祷师觉醒：'+name+'！');}});}
 
       // --- 1. 普通攻击升级 (Lv.1 -> Lv.5，明确标注【普通攻击】且保证优先刷新) ---
       if (skills.attack.level < skills.attack.maxLevel) {
         const nextLv = skills.attack.level + 1;
         const morphDescs = {
-          healer:['圣矢伤害+22%，提高射速并积攒祷光。','同时射出3枚贯穿圣矢。','伤害与射速提高，可配手套觉醒。','同时射出5枚圣矢；蓄力消耗祷光治疗。'],
+          necromancer:['骨矢伤害+22%，射速提高。','每次同时摄魂2个目标；每3次普攻指挥亡军齐射。','骨矢伤害与射速成长，手套可觉醒。','同时摄魂3个目标；亡军继承新的普攻伤害。'],
+          healer:['同时照落2道短圣光，伤害与射速提高。','同时照落3道短圣光。','同时照落4道短圣光，手套可觉醒。','同时照落5道短圣光；蓄力消耗祷光治疗。'],
           engineer:['锁定钉伤害+22%，射速提高；命中标记并积攒热能。','弹数提高至4枚，每第三次攻击附带追踪火箭。','锁定钉伤害+22%，射速提高（手套可合成超武）。','弹数提高至5枚；满热令炮网进行三轮齐射。'],
           warrior: [
             '伤害+22%，每击发射穿透剑气，流血伤害翻倍。',
@@ -3257,6 +3362,7 @@
       if (chg && chg.level < chg.maxLevel) {
         const nextClv = chg.level + 1;
         const chargeMorphDescs = {
+          necromancer:['冥河收割伤害与范围成长。','扩大收割圆阵，亡魂随军推进。','蓄力更快，收割伤害成长。','下次可选万魂穿刺或白骨君临。'],
           healer:['圣光绽放伤害、治疗与范围成长。','范围继续扩大，祷光提高爆发伤害。','蓄力更快，兼顾清怪与周围群疗。','下一次升级二选一：救赎圣歌 / 审判光轮。'],
           engineer:['消耗热能增伤，发射追踪重炮并指挥炮台集火。','增加1枚追踪重炮，命中产生范围爆破。','蓄力更快，热能增伤与重炮伤害成长。','发射3枚追踪重炮；下次选择炮网齐射或火箭弹幕。'],
           warrior: [
@@ -3298,6 +3404,7 @@
       // 蓄力升满 Lv.5 后，下一级直接置顶解锁两种蓄力流派二选一（无需普攻满级）
       if (chg && chg.level >= chg.maxLevel && !chg.branch) {
         const branchSpecs = {
+          necromancer:{A:{name:'【蓄力觉醒A】万魂穿刺',icon:'[px:soul-bone]',desc:'收割后额外穿刺5–7个敌人。'},B:{name:'【蓄力觉醒B】白骨君临',icon:'[px:dead-legion]',desc:'收割后令亡军加速5–7秒，并补充至多2个骨仆。'}},
           healer:{A:{name:'【蓄力觉醒A】救赎圣歌',icon:'[px:mending]',desc:'【二选一】治疗范围扩大至360，祷光治疗提高50%，保留圣光范围伤害。'},B:{name:'【蓄力觉醒B】审判光轮',icon:'[px:seraph]',desc:'【二选一】向八方发出10–14道贯穿圣光；祷光仍可转为周围群疗。'}},
           engineer:{A:{name:'【蓄力觉醒A】炮网贯穿齐射',icon:'[px:lightning]',desc:'【二选一】自己与全部炮台同步发射金色磁轨束，消耗热能增伤。'},B:{name:'【蓄力觉醒B】追踪火箭弹幕',icon:'[px:burst]',desc:'【二选一】6—10枚追踪火箭绕弧轰炸，同时命令炮群三轮集火。'}},
           warrior: {
@@ -3361,6 +3468,7 @@
       if (skills.skill1.level < skills.skill1.maxLevel) {
         const nextLv = skills.skill1.level + 1;
         const s1Descs = {
+          necromancer:'号令伤害+22%，冷却缩短；为亡军治疗25%生命并短暂加速。',
           healer:'治疗每级+6，护盾每级+2，冷却缩短；震退附近怪物。',
           engineer:'磁雷伤害+22%，冷却缩短；牵引后爆破，Lv.3布雷增至3枚。',
           warrior: '伤害+22%，冷却缩短，冲刺引爆流血范围扩大并回CD。',
@@ -3384,6 +3492,7 @@
       if (skills.skill2.level < skills.skill2.maxLevel) {
         const nextLv = skills.skill2.level + 1;
         const s2Descs = {
+          necromancer:'骨仆伤害每级×1.38，上限逐级增至4个；觉醒至6个并获得范围斩击。军团总上限12。',
           healer:'圣域每秒治疗+1、半径+18，冷却缩短，持续灼伤敌人。',
           engineer:'炮台伤害+22%，冷却缩短；Lv.3上限4座/双管，Lv.5上限5座。',
           warrior: `伤害+22%，转速加快${nextLv === 3 ? '，新增第2圈外环剑阵' : (nextLv === 5 ? '，新增第3圈外环剑阵' : '，路过敌人减速42%')}。`,
@@ -3413,7 +3522,7 @@
           name: `【大招】${skills.ult.name} Lv.${nextLv}/5`,
           type: 'evolve',
           icon: HERO_CONFIGS[hero].icons.ult,
-          desc: hero==='healer'?'群疗与护盾提升，审判伤害+18%，冷却缩短1.5秒，光翼逐级增强。':'大招伤害+18%，冷却缩短1.5秒，形态逐级增强，Lv.5后可觉醒。',
+          desc: hero==='necromancer'?'亡军数量与持续成长；存活5分钟且大招Lv.3起召唤1位领主，全部属性取自玩家。':hero==='healer'?'群疗与护盾提升，审判伤害+18%，冷却缩短1.5秒，光翼逐级增强。':'大招伤害+18%，冷却缩短1.5秒，形态逐级增强，Lv.5后可觉醒。',
           apply: () => {
             skills.ult.level++;
             skills.ult.cd = Math.max(12.0, skills.ult.cd - 1.5);
@@ -3475,7 +3584,7 @@
       const MAX_EQUIP_LV = 5;
       const equippedCount = ['critGlove', 'swiftBoots', 'lavaHeart', 'frostAura', 'pierceQuiver'].filter(k => (pass[k] || 0) > 0).length;
 
-      if ((hero === 'warrior' || hero === 'ranger' || hero === 'engineer' || hero === 'healer') && (pass.critGlove || 0) < MAX_EQUIP_LV && ((pass.critGlove || 0) > 0 || equippedCount < MAX_EQUIP_SLOTS)) {
+      if ((hero === 'warrior' || hero === 'ranger' || hero === 'engineer' || hero === 'healer' || hero === 'necromancer') && (pass.critGlove || 0) < MAX_EQUIP_LV && ((pass.critGlove || 0) > 0 || equippedCount < MAX_EQUIP_SLOTS)) {
         const nextLv = (pass.critGlove || 0) + 1;
         pool.push({
           id: 'p_crit_glove',
@@ -3507,7 +3616,7 @@
           }
         });
       }
-      if ((hero === 'warrior' || hero === 'mage' || hero === 'engineer' || hero === 'healer') && (pass.lavaHeart || 0) < MAX_EQUIP_LV && ((pass.lavaHeart || 0) > 0 || equippedCount < MAX_EQUIP_SLOTS)) {
+      if ((hero === 'warrior' || hero === 'mage' || hero === 'engineer' || hero === 'healer' || hero === 'necromancer') && (pass.lavaHeart || 0) < MAX_EQUIP_LV && ((pass.lavaHeart || 0) > 0 || equippedCount < MAX_EQUIP_SLOTS)) {
         const nextLv = (pass.lavaHeart || 0) + 1;
         pool.push({
           id: 'p_lava_heart',
@@ -3537,7 +3646,7 @@
           }
         });
       }
-      if (hero === 'ranger' && (pass.pierceQuiver || 0) < MAX_EQUIP_LV && ((pass.pierceQuiver || 0) > 0 || equippedCount < MAX_EQUIP_SLOTS)) {
+      if ((hero === 'ranger'||hero==='necromancer') && (pass.pierceQuiver || 0) < MAX_EQUIP_LV && ((pass.pierceQuiver || 0) > 0 || equippedCount < MAX_EQUIP_SLOTS)) {
         const nextLv = (pass.pierceQuiver || 0) + 1;
         pool.push({
           id: 'p_pierce_quiver',
@@ -3909,6 +4018,7 @@
       const hero = GameState.selectedHero;
       if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) CoopManager.broadcastSkill('atk', { angle: +attackAngle.toFixed(3), comboStep: atk.comboStep || 0, level: atk.level || 1, isEvolved: Boolean(atk.isEvolved) });
 
+      if(hero==='necromancer'){NecroKit.attack(attackAngle);return;}
       if(hero==='healer'){HealerKit.attack(attackAngle);return;}
       if(hero==='engineer'){EngineerKit.attack(attackAngle);return;}
       if (hero === 'warrior') {
@@ -4056,6 +4166,7 @@
       const totalMul = talentChargeMul * baseLvMul * branchMul * lbChargeMul;
       if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) CoopManager.broadcastSkill('charge', { angle: +attackAngle.toFixed(3), branch: chg.branch, branchLv: chg.branchLv || 0, level: chg.level || 1 });
 
+      if(hero==='necromancer')return NecroKit.charge(attackAngle);
       if(hero==='healer')return HealerKit.charge(attackAngle);
       if(hero==='engineer'){EngineerKit.charge(attackAngle);return;}
       if (hero === 'warrior') {
@@ -4442,6 +4553,7 @@
       dirX /= len; dirY /= len;
       if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) CoopManager.broadcastSkill('s1', { dirX: +dirX.toFixed(3), dirY: +dirY.toFixed(3), level: s1.level || 1, isEvolved: Boolean(s1.isEvolved) });
 
+      if(hero==='necromancer')return NecroKit.skill1();
       if(hero==='healer'){HealerKit.skill1();return;}
       if(hero==='engineer'){EngineerKit.mine();return;}
       if (hero === 'warrior') {
@@ -4587,6 +4699,7 @@
       s2.timer = s2.cd;
       if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) CoopManager.broadcastSkill('s2', { angle: +player.aimAngle.toFixed(3), level: s2.level || 1, isEvolved: Boolean(s2.isEvolved), duration: hero==='warrior'?(s2.duration||4.5)+(s2.level||1)*.4:hero==='mage'?(s2.duration||3.5):2.8 });
 
+      if(hero==='necromancer')return NecroKit.skill2();
       if(hero==='healer'){HealerKit.skill2();return;}
       if(hero==='engineer'){EngineerKit.turret();return;}
       if (hero === 'warrior') {
@@ -4712,6 +4825,7 @@
       if (typeof CoopManager !== 'undefined' && CoopManager.broadcastSkill) {
         CoopManager.broadcastSkill('ult', { angle: +player.aimAngle.toFixed(3), level: ult.level || 1, isEvolved: isSuperUlt });
       }
+      if(hero==='necromancer')return NecroKit.ult();
       if(hero==='healer'){HealerKit.ult();return;}
       if(hero==='engineer'){EngineerKit.ult();return;}
       if (hero === 'warrior') {
@@ -5629,7 +5743,7 @@
 
     function killEnemy(en, killerId = CoopManager.myPeerId, killEpoch = null) {
       if (!en || en.isDead || WorldCoop.guest()) return;
-      Campaign?.kill(en,killerId);
+      Campaign?.kill(en,killerId);NecroKit.ownedKill(en,killerId,killEpoch);
       en.isDead = true;
       if(en.isBoss)BossCombat.cancel(en);
       en.activeFloatText = null;
@@ -6669,7 +6783,7 @@
       if (GameState.hurtFlashTimer > 0) GameState.hurtFlashTimer = Math.max(0, GameState.hurtFlashTimer - dt);
       if (GameState.berserkTimer > 0) GameState.berserkTimer -= dt;
       if(GameState.forgeOverdriveTimer>0)GameState.forgeOverdriveTimer=Math.max(0,GameState.forgeOverdriveTimer-dt);
-      EngineerKit.tick(dt);HealerKit.tick(dt);
+      EngineerKit.tick(dt);HealerKit.tick(dt);NecroKit.tick(dt);
       if (GameState.powerShrineTimer > 0) GameState.powerShrineTimer -= dt;
       if (GameState.speedShrineTimer > 0) GameState.speedShrineTimer -= dt;
       if (GameState.phantomCloneTimer > 0) GameState.phantomCloneTimer -= dt;
@@ -7460,6 +7574,7 @@
       if (GameState.speedShrineTimer > 0) html += `<div class="status-pill" style="border-color:#22c55e; color:#86efac;">[px:wind] 疾风神速 ${GameState.speedShrineTimer.toFixed(1)}s</div>`;
       if (player.reviveLeft > 0) html += `<div class="status-pill" style="border-color:#a855f7; color:#d8b4fe;">[px:cross] 重生: ${player.reviveLeft}</div>`;
       if(GameState.selectedHero==='engineer'){const heat=Math.round(EngineerKit.heat||0),guns=EngineerKit.turrets();html+=`<div class="status-pill" style="border-color:#f59e0b;color:#fef3c7;background:linear-gradient(90deg,rgba(234,88,12,.7) ${heat}%,rgba(15,23,42,.88) ${heat}%)" title="普攻命中锁定并攒热；满热炮网三轮齐射，蓄力消耗热能强化">[px:gear] 热能 ${heat}/100 · 炮台 ${guns.filter(g=>!g.temporary).length}/${EngineerKit.cap()}${guns.some(g=>g.temporary)?' +支援'+guns.filter(g=>g.temporary).length:''}${GameState.forgeOverdriveTimer>0?' · 过载'+GameState.forgeOverdriveTimer.toFixed(1)+'s':''}</div>`;}
+      if(GameState.selectedHero==='necromancer')html+=`<div class="status-pill" style="border-color:#9d8bd2;color:#c4f7df">[px:dead-legion] 残魂 ${NecroKit.souls}/9 · 亡军 ${NecroKit.summons.length}/12 · ${NecroKit.leaderReady()?'领主可唤醒':'领主需5分 / 大招Lv.3'}</div>`;
       if(GameState.selectedHero==='healer')html+=`<div class="status-pill" style="border-color:#6ee7b7;color:#d1fae5" title="普攻攒祷光；蓄力消耗至少25点用于群疗，溢疗一半转盾（上限35%生命）。祷师救援速度×2。">[px:crosier] 祷光 ${Math.round(HealerKit.prayer)}/100 · 溢疗转盾</div>`;
       tray.innerHTML = html;
     }
@@ -7955,6 +8070,7 @@
         if(sb.type==='hunt_thrust'){HuntPulse.draw(ctx,sb,ratio);}
         else if(sb.type==='growth_sigil'){Campaign.drawGrowth(ctx,sb,ratio);}
         else if(sb.type?.startsWith('healer_')){HealerKit.draw(ctx,sb,ratio);}
+        else if(sb.type?.startsWith('necro_')){NecroKit.drawFx(ctx,sb,ratio);}
         else if(sb.type?.startsWith('forge_')){EngineerKit.drawBeam(ctx,sb,ratio);}
         else if (sb.type === 'sword_pillar') {
           // 断界天陨斩：贯穿天地的黄金巨剑光柱
@@ -8787,6 +8903,7 @@
       // 绘制主角及分身
       drawPlayer();
 
+      NecroKit.draw(ctx);CoopSkillVfx.draw(ctx,'summon');
       drawNativeOrbitWheels(ctx,orbitingBlades,boomerangs,player,VisualSettings.selfAlpha); CoopSkillVfx.draw(ctx,'orbit'); CoopSkillVfx.draw(ctx,'wheel');
 
       drawNativeProjectiles(ctx,projectiles); CoopSkillVfx.draw(ctx,'projectile');
@@ -9073,6 +9190,8 @@
     };
 
     const SPRITE_MATRICES = {
+      necromancer_0:["......vvvv......", ".....vvppvv.....", "....vvkkkkvv....", "....vkiiiikv..g.", "....vkiikiiv.gg.", "...vvkkggkkv.g..", "...vvvkkkkvv.g..", "..vvvppppvvv.g..", "..vvppvvppvv.g..", "..vvppvvppvv.g..", "...vppppppv..g..", "...vppvvppv..g..", "...vppvvppv..g..", "..vvppvvppvv.g..", "..vvppvvppvv.g..", "...vddkkddv..g..", "...ksskkssk.....", "...kkkkkkkk....."],
+      necromancer_1:["......vvvv......", ".....vvppvv.....", "....vvkkkkvv....", "....vkiiiikv..g.", "....vkiikiiv.gg.", "...vvkkggkkv.g..", "...vvvkkkkvv.g..", "..vvvppppvvv.g..", "..vvppvvppvv.g..", "..vvppvvppvv.g..", "...vppppppv..g..", "...vppvvppv..g..", "...vppvvppv..g..", "..vvppvvppvv.g..", ".vvvppvvppvvvg..", "..kkddkkddkk.g..", "..kssskksssk....", "..kkkkkkkkkk...."],
       healer_0:["......gggg......", ".....gyyyyg.....", "....kwwwwwwk....", "....kwsssswk.yg.", "...kwwddddwwkgg.", "...kwwsssswwk.g.", "...kweffffewk.g.", "..kwefwwffewkkg.", "..kwffggffwwk.g.", "..kwffwwffwwk.g.", "...kffwwfffk..g.", "...kffggfffk..g.", "...kffwwfffk..g.", "...kffwwfffk....", "...kfffkfffk....", "....kddkddk.....", "...ksssksssk....", "...kkkkkkkkk...."],
       healer_1:["......gggg......", ".....gyyyyg.....", "....kwwwwwwk....", "....kwsssswk.yg.", "...kwwddddwwkgg.", "...kwwsssswwk.g.", "...kweffffewk.g.", "..kwefwwffewkkg.", "..kwffggffwwk.g.", "..kwffwwffwwk.g.", "...kffwwfffk..g.", "...kffggfffk..g.", "...kffwwfffk..g.", "...kffwwfffk....", "..kffffkffffk...", "..kkddk.kddkk...", "..ksssk.ksssk...", "..kkkkk.kkkkk..."],
       // 黄铜护目镜、焊接面罩、橙色工装和肩背蓄能罐。
@@ -9964,7 +10083,7 @@
           white: bakeSpriteVariant(SPRITE_MATRICES[key], scale, 'white'),
           ice: bakeSpriteVariant(SPRITE_MATRICES[key], scale, 'ice')
         };
-        if (key.startsWith('warrior_') || key.startsWith('mage_') || key.startsWith('ranger_') || key.startsWith('engineer_') || key.startsWith('healer_')) {
+        if (key.startsWith('warrior_') || key.startsWith('mage_') || key.startsWith('ranger_') || key.startsWith('engineer_') || key.startsWith('healer_') || key.startsWith('necromancer_')) {
           PLAYER_COLOR_THEMES.forEach(theme => {
             SpriteCache[`${key}_c${theme.idx}`] = bakeHeroColorVariant(SPRITE_MATRICES[key], scale, theme);
           });
@@ -10428,7 +10547,7 @@
     function setupHero(heroKey) {
       const cfg = HERO_CONFIGS[heroKey];
       GameState.selectedHero = heroKey;
-      GameState.forgeOverdriveTimer=0;NewSynergies.reset();EngineerKit.reset();HealerKit.resetLocal();FireTrail.reset();
+      GameState.forgeOverdriveTimer=0;NewSynergies.reset();EngineerKit.reset();HealerKit.resetLocal();FireTrail.reset();NecroKit.reset();
 
       const t = SaveManager.data.talents;
       const baseDmgMul = 1 + (t.might * 0.06);
@@ -10810,7 +10929,8 @@
 
       if (tab === 'active') {
         const superFormulas = {
-          healer:{attack:{reqName:'[px:glove] 狂暴手套',hasReq:pass.critGlove,superName:'七曜圣裁',superDesc:'七道圣光直接照射，蓄力转化祷光'},skill1:{reqName:'[px:boots] 疾行之靴',hasReq:pass.swiftBoots,superName:'不灭回春',superDesc:'提高群疗与护盾，溢疗一半转盾'},skill2:{reqName:'[px:heart-lava] 熔岩之心',hasReq:pass.lavaHeart,superName:'常青圣殿',superDesc:'扩大圣域，治疗与灼烧成长'},ult:{reqName:'大招Lv.5',hasReq:skills.ult.level>=5,superName:'炽天使降临',superDesc:'9秒羽翼阵，每轮审判8目标；施放时群疗加盾'}},
+          necromancer:{attack:{reqName:'[px:glove] 狂暴手套',hasReq:pass.critGlove,superName:'四棺追魂',superDesc:'每次摄魂4目标'},skill1:{reqName:'[px:boots] 疾行之靴',hasReq:pass.swiftBoots,superName:'永夜敕令',superDesc:'号令加速持续5秒'},skill2:{reqName:'[px:heart-lava] 熔岩之心',hasReq:pass.lavaHeart,superName:'六骸禁卫',superDesc:'常驻骨仆最多6个'},ult:{reqName:'大招Lv.5',hasReq:skills.ult.level>=5,superName:'冥府开门',superDesc:'额外2个小怪；亡军最多12个、领主最多1位'}},
+          healer:{attack:{reqName:'[px:glove] 狂暴手套',hasReq:pass.critGlove,superName:'七曜圣裁',superDesc:'七道圣光直接照射，蓄力转化祷光'},skill1:{reqName:'[px:boots] 疾行之靴',hasReq:pass.swiftBoots,superName:'不灭回春',superDesc:'提高群疗与护盾，溢疗一半转盾'},skill2:{reqName:'[px:heart-lava] 熔岩之心',hasReq:pass.lavaHeart,superName:'常青圣殿',superDesc:'扩大圣域，治疗与灼烧成长'},ult:{reqName:'大招Lv.5',hasReq:skills.ult.level>=5,superName:'炽天使降临',superDesc:'9秒羽翼阵，每轮最多8处范围审判；施放时群疗加盾'}},
           engineer:{attack:{reqName:'[px:glove] 狂暴手套',hasReq:pass.critGlove,superName:'[px:gear]【超武】磁轨蜂群',superDesc:'6枚贯穿锁定钉，三连击附双追踪火箭'},skill1:{reqName:'[px:boots] 疾行之靴',hasReq:pass.swiftBoots,superName:'[px:bomb]【超武】日冕磁雷阵',superDesc:'4枚聚怪磁雷，132半径爆破'},skill2:{reqName:'[px:heart-lava] 熔岩之心',hasReq:pass.lavaHeart,superName:'[px:gear]【超武】六联重装哨戒',superDesc:'6座三管炮台，每次部署3座，附带追踪导弹'},ult:{reqName:'[px:star] 大招升至满级(Lv.5)',hasReq:skills.ult.level>=5,superName:'[px:sun]【终极超武】日冕工厂',superDesc:'9秒重装机甲、4座支援炮台与巡航轰炸'}},
           warrior: {
             attack: { reqName: '[px:glove] 狂暴手套', hasReq: pass.critGlove, superName: '[px:crown]【超武】灭世斩神剑', superDesc: '每次挥砍释放半屏金色月牙气刃，必暴击且附带流血处决' },
@@ -10936,6 +11056,7 @@
       } else if (tab === 'equip') {
         const eqCount = ['critGlove', 'swiftBoots', 'lavaHeart', 'frostAura', 'pierceQuiver'].filter(k => pass[k]).length;
         const heroEquipMap = {
+          necromancer:[{key:'critGlove',icon:'[px:glove]',name:'狂暴手套',desc:'玩家与亡军均继承暴击成长',pair:'四棺追魂觉醒配件'},{key:'swiftBoots',icon:'[px:boots]',name:'疾行之靴',desc:'提高玩家与跟随亡军的机动',pair:'永夜敕令觉醒配件'},{key:'lavaHeart',icon:'[px:heart-lava]',name:'熔岩之心',desc:'生命上限同时影响亡灵生命',pair:'六骸禁卫觉醒配件'}],
           healer:[{key:'critGlove',icon:'[px:glove]',name:'狂暴手套',desc:'提高圣矢暴击',pair:'七曜圣裁觉醒配件'},{key:'swiftBoots',icon:'[px:boots]',name:'疾行之靴',desc:'提高机动与拾取范围',pair:'不灭回春觉醒配件'},{key:'lavaHeart',icon:'[px:heart-lava]',name:'熔岩之心',desc:'提高生命上限并释放热浪',pair:'常青圣殿觉醒配件'}],
           engineer:[{key:'critGlove',icon:'[px:glove]',name:'狂暴手套',desc:'暴击率与暴伤提高',pair:'普攻超武【磁轨蜂群】配件'},{key:'swiftBoots',icon:'[px:boots]',name:'疾行之靴',desc:'移速与拾取范围提高',pair:'磁雷超武【日冕磁雷阵】配件'},{key:'lavaHeart',icon:'[px:heart-lava]',name:'熔岩之心',desc:'生命上限提高，周期热浪',pair:'炮台超武【六联重装哨戒】配件'}],
           warrior: [
@@ -11502,7 +11623,7 @@
         }
       }
       if(!sp.balanceRulesVersion&&['mage','ranger'].includes(GameState.selectedHero))for(const sk of Object.values(player.skills))if(sk.isEvolved&&sk.damage)sk.damage=Math.round(sk.damage*1.30/1.65);
-      player.skills.ult.maxLevel=5;if(!sp.campaignRulesVersion){const u=player.skills.ult,wasEvolved=u.isEvolved;u.damage=Math.round(u.damage*Math.pow(1.18/1.26,Math.max(0,u.level-1)));if(u.level<5&&wasEvolved){u.damage=Math.round(u.damage/({warrior:1.65,mage:1.30,ranger:1.30,engineer:1.25,healer:1.25})[GameState.selectedHero]);u.isEvolved=false;}u.cd=Math.max(12,HERO_CONFIGS[GameState.selectedHero].initSkills().ult.cd-1.5*(u.level-1)-(u.isEvolved&&['warrior','mage','ranger'].includes(GameState.selectedHero)?2:0));}
+      player.skills.ult.maxLevel=5;if(!sp.campaignRulesVersion){const u=player.skills.ult,wasEvolved=u.isEvolved;u.damage=Math.round(u.damage*Math.pow(1.18/1.26,Math.max(0,u.level-1)));if(u.level<5&&wasEvolved){u.damage=Math.round(u.damage/({warrior:1.65,mage:1.30,ranger:1.30,engineer:1.25,healer:1.25,necromancer:1.2})[GameState.selectedHero]);u.isEvolved=false;}u.cd=Math.max(12,HERO_CONFIGS[GameState.selectedHero].initSkills().ult.cd-1.5*(u.level-1)-(u.isEvolved&&['warrior','mage','ranger'].includes(GameState.selectedHero)?2:0));}
       if(GameState.selectedHero==='engineer')EngineerKit.normalizeSkills();
       if (sp.passives) Object.assign(player.passives, sp.passives);
       player.mapRelics = sp.mapRelics || [];
@@ -12740,8 +12861,9 @@
     var CoopSkillVfx = {
       effects:[],pending:new Map(),seen:new Map(),states:new Map(),seq:0,stateSeq:0,lastState:0,stateTail:0,animationTime:0,
       visualSeq:0, ids:new WeakMap(), records:new Map(), budgets:new Map(),
-      kinds:['ground','orbit','wheel','beam','slash','projectile','arc','images','particle'],
+      kinds:['ground','orbit','wheel','beam','slash','projectile','arc','images','particle','summon'],
       fields:{
+        summon:['type','skin','x','y','vx','vy','radius','life','maxLife','angle','hp','maxHp','boss','stage','evolved','flash'],
         ground:['type','x','y','vx','vy','radius','life','maxLife','angle','isEvolved','overdrive','forgeStage','flash'],
         orbit:['angle','dist','spinSpeed','life','isEvolved'],
         wheel:['x','y','vx','vy','radius','isEvolved','spinAngle','catchX','catchY','state','timer'],
@@ -12771,13 +12893,14 @@
           const v=row[i],k=keys[i-2];if(v===null)continue;
           if(typeof v==='number'){if(!Number.isFinite(v)||Math.abs(v)>1e7)return null;o[k]=v;}
           else if(typeof v==='boolean')o[k]=v;
-          else if(typeof v==='string'&&v.length<=48&&['color','type','hero','state'].includes(k))o[k]=v;
+          else if(typeof v==='string'&&v.length<=48&&['color','type','hero','state','skin'].includes(k))o[k]=v;
           else return null;
         }
         if(kind==='orbit'){if(!(o.dist>=0&&o.dist<=350&&Number.isFinite(o.angle)&&Number.isFinite(o.spinSpeed)))return null;}
         else if(['arc'].includes(kind)){if(![o.x1,o.y1,o.x2,o.y2].every(Number.isFinite))return null;}
         else if(kind==='beam'&&['laser_beam','blink_rift','execution_cut','forge_rail','forge_link','healer_lance'].includes(o.type)){if(![o.x1,o.y1,o.x2,o.y2].every(Number.isFinite))return null;}
         else if(![o.x,o.y].every(Number.isFinite))return null;
+        if(kind==='summon'&&(o.type!=='necro_minion'||!SpriteCache[o.skin+'_0']||![o.hp,o.maxHp].every(Number.isFinite)||o.hp<0||o.maxHp<=0))return null;
         if(o.radius!==undefined&&!(o.radius>0&&o.radius<=1200))return null;
         if(o.life!==undefined&&!(o.life>0&&o.life<=30))return null;
         if(o.maxLife!==undefined&&!(o.maxLife>0&&o.maxLife<=30))return null;
@@ -12800,12 +12923,13 @@
             const fresh=pkt.rig[0]>(state.rigSeq??0);state.rigSeq=Math.max(state.rigSeq||0,pkt.rig[0]);state.rig={evolved:Boolean(pkt.rig[2]),count:pkt.rig.length===8?pkt.rig[3]:4,ports:pkt.rig.slice(pkt.rig.length===8?4:3).map((a,i)=>[a,fresh&&(pkt.rig[1]&(1<<i)) ? .18 : (state.rig?.ports?.[i]?.[1]||0)])};
           }
           if(Array.isArray(pkt.items)&&pkt.items.length<=16)state.items=pkt.items.filter(a=>Array.isArray(a)&&['orbit','blackhole','trap','wheel'].includes(a[0])&&a.slice(1,4).every(Number.isFinite));
-          if(Array.isArray(pkt.alive)&&pkt.alive.length<=320){const alive=new Set(pkt.alive);for(const [id,v]of state.visuals)if((['ground','orbit','wheel','projectile'].includes(v.kind)||['healer_sanctuary','healer_wings'].includes(v.obj.type))&&!alive.has(id))state.visuals.delete(id);}
+          if(Array.isArray(pkt.alive)&&pkt.alive.length<=320){const alive=new Set(pkt.alive);for(const [id,v]of state.visuals)if((['summon','ground','orbit','wheel','projectile'].includes(v.kind)||['healer_sanctuary','healer_wings'].includes(v.obj.type))&&!alive.has(id))state.visuals.delete(id);}
           const ack=[];
           for(const row of pkt.visuals){const v=this.unpack(row);if(!v)continue;ack.push(v.id);if(!state.seen.has(v.id)&&state.visuals.size<320){state.seen.set(v.id,performance.now());state.visuals.set(v.id,v);}}
           for(const a of Array.isArray(pkt.updates)?pkt.updates.slice(0,16):[]){
             const v=state.visuals.get(a[0]);if(!v||a.length<6||!a.slice(1,6).every(Number.isFinite))continue;const o=v.obj;
-            if(v.kind==='ground'&&['turret','mine'].includes(o.type)){o.angle=a[3];o.overdrive=Boolean(a[4]);o.life=Math.max(.01,a[5]);if(Number.isFinite(a[6]))o.forgeStage=a[6];if(Number.isFinite(a[7]))o.flash=a[7];}
+            if(v.kind==='summon'){o._errorX=a[1]-o.x;o._errorY=a[2]-o.y;o.angle=a[3];if(Number.isFinite(a[9])&&a[9]>0)o.maxHp=a[9];o.hp=Math.max(0,Math.min(o.maxHp,a[4]));o.life=Math.max(.01,a[5]);o.vx=Number.isFinite(a[6])?a[6]:0;o.vy=Number.isFinite(a[7])?a[7]:0;o.flash=Number.isFinite(a[8])?a[8]:0;}
+            else if(v.kind==='ground'&&['turret','mine'].includes(o.type)){o.angle=a[3];o.overdrive=Boolean(a[4]);o.life=Math.max(.01,a[5]);if(Number.isFinite(a[6]))o.forgeStage=a[6];if(Number.isFinite(a[7]))o.flash=a[7];}
             else if(v.kind==='wheel'){o._errorX=a[1]-o.x;o._errorY=a[2]-o.y;o.spinAngle=a[3];o.state=['outbound','rebound','grounded'][a[4]]||'grounded';o.timer=Math.max(0,a[5]);}
             else if(v.kind==='projectile'&&o.forgeRocket&&a.length===8&&a.slice(6).every(Number.isFinite)){o._errorX=a[1]-o.x;o._errorY=a[2]-o.y;o.vx=a[3];o.vy=a[4];o.life=Math.max(.01,a[5]);o.targetX=a[6];o.targetY=a[7];}
             else if(v.kind==='beam'&&o.type==='forge_lock'){o.x=a[1];o.y=a[2];o.life=Math.max(.01,a[5]);}
@@ -12825,7 +12949,7 @@
       },
       reset(){this.effects=[];this.pending.clear();this.seen.clear();this.states.clear();this.ids=new WeakMap();this.records.clear();this.budgets.clear();this.stateTail=0;this.lastState=0;},
       capture(){
-        const alive=new Set(),groups=[['ground',groundEffects],['orbit',orbitingBlades],['wheel',boomerangs],['beam',skyBeams],['slash',slashVisuals],['projectile',projectiles],['arc',lightningArcs],['images',afterimages],['particle',particles.filter(p=>p.isShockwave).concat(particles.filter(p=>!p.isShockwave).slice(-24))]];
+        const alive=new Set(),groups=[['summon',NecroKit.summons],['ground',groundEffects],['orbit',orbitingBlades],['wheel',boomerangs],['beam',skyBeams],['slash',slashVisuals],['projectile',projectiles],['arc',lightningArcs],['images',afterimages],['particle',particles.filter(p=>p.isShockwave).concat(particles.filter(p=>!p.isShockwave).slice(-24))]];
         if(!player.isDowned)for(const [kind,list]of groups)for(const obj of list){
           if(obj.isEnemy||obj.isAlly||(Number.isFinite(obj.life)&&obj.life<=0)||alive.size>=320)continue;
           let id=this.ids.get(obj);if(!id){id=++this.visualSeq;this.ids.set(obj,id);}if(!this.records.has(id))this.records.set(id,{kind,obj,acked:new Set(),sent:new Map()});
@@ -12840,10 +12964,11 @@
         for(const g of groundEffects)if(['trap','blackhole'].includes(g.type)&&items.length<12)items.push([g.type,Math.round(g.x),Math.round(g.y),Math.min(350,g.radius||25),0]);
         for(const b of boomerangs.slice(0,4))items.push(['wheel',Math.round(b.x),Math.round(b.y),b.radius,b.isEvolved?1:0]);
         const look=[player.passives.frostAura||0,GameState.berserkTimer||0,GameState.starfallTimer||0,GameState.phantomCloneTimer||0,player.shield||0,player.radius,MenuPause.blocked()||UpgradeChoice.active?1:0,GameState.forgeOverdriveTimer||0];
-        const alive=[...this.records].filter(([,v])=>(['ground','orbit','wheel','projectile'].includes(v.kind)||['healer_sanctuary','healer_wings'].includes(v.obj.type))).map(([id])=>id);
-        const motionRecords=[...this.records].filter(([,v])=>v.kind==='wheel'||(v.kind==='ground'&&['turret','mine'].includes(v.obj.type))||(v.kind==='beam'&&v.obj.type==='forge_lock'));
+        const alive=[...this.records].filter(([,v])=>(['summon','ground','orbit','wheel','projectile'].includes(v.kind)||['healer_sanctuary','healer_wings'].includes(v.obj.type))).map(([id])=>id);
+        const motionRecords=[...this.records].filter(([,v])=>v.kind==='summon'||v.kind==='wheel'||(v.kind==='ground'&&['turret','mine'].includes(v.obj.type))||(v.kind==='beam'&&v.obj.type==='forge_lock'));
         const rockets=[...this.records].filter(([,v])=>v.kind==='projectile'&&v.obj.forgeRocket).slice(-4);
         const updates=motionRecords.slice(0,12).concat(rockets).map(([id,{obj:b,kind}])=>{
+          if(kind==='summon')return[id,Math.round(b.x*10)/10,Math.round(b.y*10)/10,b.angle,b.hp,Math.round(b.life*100)/100,b.vx,b.vy,b.flash,b.maxHp];
           if(kind==='wheel')return[id,Math.round(b.x*10)/10,Math.round(b.y*10)/10,Math.round(b.spinAngle*100)/100,['outbound','rebound','grounded'].indexOf(b.state),Math.round(b.timer*100)/100];
           if(kind==='projectile')return[id,Math.round(b.x),Math.round(b.y),Math.round(b.vx),Math.round(b.vy),Math.round(b.life*100)/100,Math.round(b.targetX),Math.round(b.targetY)];
           return[id,Math.round(b.x),Math.round(b.y),Math.round((b.angle||0)*100)/100,b.overdrive?1:0,Math.round(b.life*100)/100,b.forgeStage||0,Math.round((b.flash||0)*100)/100];
@@ -12857,7 +12982,7 @@
           if(meta)Object.assign(packet,{items:items.slice(0,16),look,alive});if(motion)packet.updates=updates;
           if((motion||meta)&&GameState.selectedHero==='engineer'&&GameState.forgeOverdriveTimer>0)packet.rig=this.rigPayload();
           const chosen=[];let bytes=JSON.stringify(packet).length+240;
-          const visualPriority=v=>v.kind==='ground'||v.kind==='orbit'||v.kind==='wheel'?0:v.kind==='beam'?1:(v.obj.forgeRocket||v.obj.forgeCannon)?2:v.kind==='particle'?4:3;
+          const visualPriority=v=>v.kind==='summon'?-1:v.kind==='ground'||v.kind==='orbit'||v.kind==='wheel'?0:v.kind==='beam'?1:(v.obj.forgeRocket||v.obj.forgeCannon)?2:v.kind==='particle'?4:3;
           for(const [id,v]of [...this.records].sort((a,b)=>visualPriority(a[1])-visualPriority(b[1]))){
             if(v.acked.has(peer.id)||now-(v.sent.get(peer.id)??-Infinity)<450)continue;
             const row=this.pack(v.kind,id,v.obj),size=JSON.stringify(row).length+1;
@@ -12884,6 +13009,7 @@
           if(s.rig)for(const pose of s.rig.ports)pose[1]=Math.max(0,pose[1]-scaled);
           if(s.look)for(const k of [1,2,3,7])if(Number.isFinite(s.look[k]))s.look[k]=Math.max(0,s.look[k]-scaled);
           for(const [key,v]of s.visuals){const o=v.obj,d=scaled;
+            if(v.kind==='summon'){if(frozen){o.vx=o.vy=0;}const blend=1-Math.exp(-20*d);o.x+=(o._errorX||0)*blend;o.y+=(o._errorY||0)*blend;o._errorX=(o._errorX||0)*(1-blend);o._errorY=(o._errorY||0)*(1-blend);o.x+=(o.vx||0)*d;o.y+=(o.vy||0)*d;o.flash=Math.max(0,(o.flash||0)-d);}
             if(['orbit','wheel'].includes(v.kind)&&frozen)continue;
             if(Number.isFinite(o.life))o.life-=d;
             if(v.kind==='orbit')o.angle+=o.spinSpeed*d;
@@ -12914,7 +13040,7 @@
         for(const [id,s]of this.states){const peer=CoopManager.allies.find(p=>p.id===id);if(!peer||peer.downed||(peer.upgrading&&performance.now()<peer.upgradeUntil))continue;
           const list=[...s.visuals.values()].filter(v=>v.kind===kind).map(v=>v.obj);if(!list.length)continue;
           c.save();
-          if(kind==='ground')drawNativeGround(c,list);else if(kind==='orbit')drawNativeOrbitWheels(c,list,[],peer,alpha);else if(kind==='wheel')drawNativeOrbitWheels(c,[],list,peer,alpha);
+          if(kind==='summon')NecroKit.draw(c,list,alpha);else if(kind==='ground')drawNativeGround(c,list);else if(kind==='orbit')drawNativeOrbitWheels(c,list,[],peer,alpha);else if(kind==='wheel')drawNativeOrbitWheels(c,[],list,peer,alpha);
           else if(kind==='beam')drawNativeBeams(c,list);else if(kind==='slash')drawNativeSlashes(c,list);else if(kind==='projectile')drawNativeProjectiles(c,list);else if(kind==='arc')drawNativeArcs(c,list);else if(kind==='images')drawNativeImages(c,list);else if(kind==='particle')drawNativeParticles(c,list);
           c.restore();
         }
@@ -13322,7 +13448,7 @@
         this.renderRoutes();syncHeroAndBiomeSelectionUI();updatePartyReturnUI();
         const c=CoopManager,themes=PLAYER_COLOR_THEMES,swatches=document.getElementById('coop-color-swatches');swatches.replaceChildren();
         for(const theme of themes){const button=document.createElement('button');button.type='button';button.title=theme.name;button.textContent=theme.tag;button.style.cssText='padding:3px 7px;border-radius:8px;font-size:10px;color:white;background:'+theme.primary+';border:2px solid '+(c.myColorIdx===theme.idx?'white':'transparent')+';cursor:pointer;';button.addEventListener('click',()=>{c.myColorIdx=theme.idx;c.saveProfile();if(c.roomCode)c.sendPresenceNow('HELLO_WELCOME');this.render();});swatches.append(button);}
-        const count=c.getActivePlayerCount(),heroNames={warrior:'苍红剑客',mage:'星界魔导',ranger:'暗夜巡林',engineer:'烬铁机匠',healer:'曙光祷师'},biomeNames={dungeon:'熔火地牢',tundra:'永冬冻原',graveyard:'血月墓园'};
+        const count=c.getActivePlayerCount(),heroNames={warrior:'苍红剑客',mage:'星界魔导',ranger:'暗夜巡林',engineer:'烬铁机匠',healer:'曙光祷师',necromancer:'冥契术士'},biomeNames={dungeon:'熔火地牢',tundra:'永冬冻原',graveyard:'血月墓园'};
         document.getElementById('coop-picks-summary').textContent=heroNames[GameState.selectedHero]+' · '+biomeNames[GameState.activeBiome];
         document.getElementById('coop-party-count').textContent=String(count);
         document.getElementById('coop-room-banner').textContent=!c.roomCode?'尚未加入房间':(c.isHost?'房主 · ':'')+'房间 #'+c.roomCode+(count===1?' · 等待朋友加入':' · 队伍已连接');
@@ -15752,13 +15878,15 @@
         for (;;) {
           const grant = this.inbox.get(this.received + 1); if (!grant) break;
           const [seq, kind, value] = grant;
+          const staleSoul=kind==='necroSoul'&&(!GameState.isStarted||GameState.isOver||player.isDowned||value.lifeEpoch!==(player.lifeEpoch||0));
           const staleHeal = ['killHeal','support'].includes(kind) && (player.isDowned || value.lifeEpoch !== (player.lifeEpoch || 0) || (kind==='support'&&(!GameState.isStarted||GameState.isOver||UpgradeChoice.active||MenuPause.blocked())));
-          if (!staleHeal && kind !== 'xp' && kind !== 'gold' && kind !== 'campaignShop' && (UpgradeChoice.active || player.isDowned || GameState.isPaused || WorldCoop.paused())) break;
+          if (!staleHeal && !staleSoul && kind!=='necroSoul' && kind !== 'xp' && kind !== 'gold' && kind !== 'campaignShop' && (UpgradeChoice.active || player.isDowned || GameState.isPaused || WorldCoop.paused())) break;
           this.inbox.delete(seq); this.received = seq;
           if (kind === 'xp') addExp(value);
           else if (kind === 'gold') { SaveManager.addGold(value); audio.playCoin(); }
           else if (kind === 'killHeal' && !staleHeal) healPlayer(value.amount);
           else if (kind === 'support' && !staleHeal) HealerKit.applyGrant(value);
+          else if(kind==='necroSoul')NecroKit.soul(value);
           else if (kind === 'item') triggerPickupEffect({ ...value, worldApplied: true });
           else if (kind === 'relic') equipMapRelic({ ...value });
           else if (kind === 'campaignShop') CampMarket.apply(value);
@@ -15887,7 +16015,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 24, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 25, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
@@ -16458,11 +16586,11 @@
       damage(id,value){if(!WorldCoop.authority()||!Number.isFinite(value)||value<=0)return;this.ensure();this.stat(id).damage+=Math.round(value);},
       kill(en,id){if(!WorldCoop.authority())return;this.ensure();const r=this.stat(id);r.kills++;if(en.isBoss){r.bosses++;const key=en.bossProfile||this.bossCatalog().find(b=>b.key===en.type)?.id;if(key&&!this.bosses.includes(key))this.bosses.push(key);}this.permanent().seen[en.type]=true;},
       registerSupport(actor,v){if(v.supportId)this.support.set(v.supportId,{source:v.sourceId,target:actor.id,epoch:v.lifeEpoch,heal:Math.min(200,v.amount||0),shield:Math.min(150,v.shield||0),at:performance.now()});},
-      supportApplied(v,heal,shield){if(!v.supportId)return;const pkt={type:'WORLD_R22_RECEIPT',id:v.supportId,heal,shield,lifeEpoch:v.lifeEpoch};if(WorldCoop.active()){if(CoopManager.isHost)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId});else this.receipts.set(pkt.id,{pkt,last:-Infinity});}else{this.stat(v.sourceId).healing+=heal;this.stat(v.sourceId).shielding+=shield;}},
-      acceptReceipt(p){const v=this.support.get(p.id);if(!v||v.target!==p.peerId||v.epoch!==p.lifeEpoch)return false;const ack=()=>CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_ACK',targetPeerId:p.peerId,id:p.id}));if(this.receiptSeen.has(p.id)){ack();return true;}if(!Number.isFinite(p.heal)||!Number.isFinite(p.shield)||p.heal<0||p.shield<0||p.heal>v.heal||p.shield>v.shield+v.heal*.5+.01)return false;this.receiptSeen.add(p.id);const r=this.stat(v.source);r.healing+=p.heal;r.shielding+=p.shield;ack();return true;},
-      showFeedback(){}, // Older feedback packets are harmless; support receipts still account for real HP and shield.
-      snapshot(){return{round:this.round,rows:[...this.rows.values()].slice(0,3),bosses:this.bosses.slice(0,18),merchants:this.merchants.slice(0,6).map(m=>({id:m.id,x:m.x,y:m.y,gone:m.gone,busy:Boolean(m.lease)})),friends:this.friends.slice(0,6).map(({id,owner,boss,x,y,timer})=>({id,owner,boss,x,y,timer})),end:this.ended};},
-      receiveSnapshot(d){if(!d||typeof d.round!=='string'||!Array.isArray(d.rows)||d.rows.length>3)return;const newlySettled=Boolean(d.end?.settled&&!this.ended?.settled);this.round=d.round;for(const row of d.rows)if(typeof row.id==='string'&&['damage','healing','shielding','kills','rescues','downs'].every(k=>Number.isFinite(row[k])&&row[k]>=0))this.rows.set(row.id,{...row,name:String(row.name||'猎手').slice(0,24)});if(Array.isArray(d.bosses))this.bosses=d.bosses.filter(id=>this.bossCatalog().some(b=>b.id===id)).slice(0,18);if(Array.isArray(d.merchants))this.merchants=d.merchants.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)).slice(0,6);if(Array.isArray(d.friends))this.friends=d.friends.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)&&this.bossCatalog().some(b=>b.id===m.boss)).slice(0,6);if(d.end){const changed=JSON.stringify(this.ended)!==JSON.stringify(d.end);this.ended=d.end;if(changed)this.renderEnd();}if(newlySettled||performance.now()-this.lastPermanent>2000){this.lastPermanent=performance.now();this.syncPermanent();}},
+      supportApplied(v,heal,shield){if(!v.supportId)return;const pkt={type:'WORLD_R22_RECEIPT',id:v.supportId,heal,shield,lifeEpoch:v.lifeEpoch};if(WorldCoop.active()){if(CoopManager.isHost)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId});else this.receipts.set(pkt.id,{pkt,last:-Infinity});}else{this.stat(v.sourceId).healing+=heal;this.stat(v.sourceId).shielding+=shield;this.showFeedback({id:v.supportId,source:v.sourceId,target:CoopManager.myPeerId,heal,shield,x:player.x,y:player.y});}},
+      acceptReceipt(p){const v=this.support.get(p.id);if(!v||v.target!==p.peerId||v.epoch!==p.lifeEpoch)return false;const ack=()=>CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_ACK',targetPeerId:p.peerId,id:p.id}));if(this.receiptSeen.has(p.id)){ack();return true;}if(!Number.isFinite(p.heal)||!Number.isFinite(p.shield)||p.heal<0||p.shield<0||p.heal>v.heal||p.shield>v.shield+v.heal*.5+.01)return false;this.receiptSeen.add(p.id);const r=this.stat(v.source);r.healing+=p.heal;r.shielding+=p.shield;const target=WorldCoop.participants.get(v.target)||player,event={id:p.id,source:v.source,target:v.target,heal:p.heal,shield:p.shield,x:target.x,y:target.y};this.showFeedback(event);CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_FEEDBACK',event}));ack();return true;},
+      showFeedback(e){if(!e||typeof e.id!=='string'||this.feedbackSeen.has(e.id)||![e.heal,e.shield,e.x,e.y].every(Number.isFinite)||e.heal<0||e.shield<0||e.heal+e.shield<=0)return;this.feedbackSeen.add(e.id);while(this.feedbackSeen.size>512)this.feedbackSeen.delete(this.feedbackSeen.values().next().value);const now=performance.now();this.feedback.push({...e,at:now});this.feedback=this.feedback.filter(f=>now-f.at<2200).slice(-16);for(const [key,color,shift]of [['heal','#86efac',-29],['shield','#93c5fd',-45]])if(e[key]>0){const old=floatingTexts.find(t=>t.supportTarget===e.target&&t.supportKind===key&&now-t.supportAt<220&&t.life>0);if(old){old.supportAmount+=e[key];old.text='+'+Math.round(old.supportAmount)+(key==='shield'?' 盾':'');old.life=.75;}else{if(floatingTexts.length>=MAX_FLOATING_TEXTS)floatingTexts.shift();floatingTexts.push({x:e.x,y:e.y+shift,text:'+'+Math.round(e[key])+(key==='shield'?' 盾':''),color,scale:1,life:.85,maxLife:.85,supportKind:key,supportTarget:e.target,supportAmount:e[key],supportAt:now});}}},
+      snapshot(){return{round:this.round,rows:[...this.rows.values()].slice(0,3),bosses:this.bosses.slice(0,18),merchants:this.merchants.slice(0,6).map(m=>({id:m.id,x:m.x,y:m.y,gone:m.gone,busy:Boolean(m.lease)})),friends:this.friends.slice(0,6).map(({id,owner,boss,x,y,timer})=>({id,owner,boss,x,y,timer})),end:this.ended,feedback:this.feedback.filter(f=>performance.now()-f.at<2000).slice(-8).map(({at,...e})=>e)};},
+      receiveSnapshot(d){if(!d||typeof d.round!=='string'||!Array.isArray(d.rows)||d.rows.length>3)return;const newlySettled=Boolean(d.end?.settled&&!this.ended?.settled);this.round=d.round;for(const row of d.rows)if(typeof row.id==='string'&&['damage','healing','shielding','kills','rescues','downs'].every(k=>Number.isFinite(row[k])&&row[k]>=0))this.rows.set(row.id,{...row,name:String(row.name||'猎手').slice(0,24)});if(Array.isArray(d.bosses))this.bosses=d.bosses.filter(id=>this.bossCatalog().some(b=>b.id===id)).slice(0,18);if(Array.isArray(d.merchants))this.merchants=d.merchants.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)).slice(0,6);if(Array.isArray(d.friends))this.friends=d.friends.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)&&this.bossCatalog().some(b=>b.id===m.boss)).slice(0,6);if(Array.isArray(d.feedback))d.feedback.slice(-8).forEach(e=>this.showFeedback(e));if(d.end){const changed=JSON.stringify(this.ended)!==JSON.stringify(d.end);this.ended=d.end;if(changed)this.renderEnd();}if(newlySettled||performance.now()-this.lastPermanent>2000){this.lastPermanent=performance.now();this.syncPermanent();}},
       grades(victory){const rows=[...this.rows.values()];const maxima={};for(const k of ['damage','healing','shielding','kills','rescues'])maxima[k]=Math.max(1,...rows.map(r=>r[k]));const rated=rows.map(r=>{const role=r.hero==='healer';const contribution=(role?.22:.48)*r.damage/maxima.damage+(role?.32:.10)*r.healing/maxima.healing+(role?.15:.07)*r.shielding/maxima.shielding+.13*r.kills/maxima.kills+.18*r.rescues/maxima.rescues;const score=Math.min(99,Math.round((victory?55:Math.min(40,GameState.gameTime/45))+contribution*40+Math.min(8,r.seconds/180)-Math.min(18,r.downs*4)));const grade=score>=90?'S':score>=83?'S-':score>=77?'A+':score>=70?'A':score>=63?'A-':score>=55?'B+':score>=47?'B':score>=39?'B-':'C';return{...r,score,grade,contribution};}).sort((a,b)=>b.score-a.score||b.contribution-a.contribution||b.damage-a.damage||a.id.localeCompare(b.id));if(victory&&rated.length)rated[0].grade='S+';return rated;},
       beginEnd(victory){if(!this.ended){this.ended={victory,settled:false,at:Date.now(),rows:[]};const ending=this.ended;setTimeout(()=>{if(this.ended===ending)this.networkTick();},1850);}if(WorldCoop.authority())this.ended.rows=this.grades(victory);this.renderEnd();},
       renderEnd(){if(this.ended){for(const id of ['btn-over-lobby','btn-restart'])document.getElementById(id).disabled=!this.ended.settled;document.getElementById('over-healing').textContent=Math.round(this.rows.get(CoopManager.myPeerId)?.healing||0).toLocaleString();}const el=document.getElementById('run-report');if(!el||!this.ended)return;el.innerHTML='<div class="campaign-note">'+(this.ended.settled?'本局评定 · 治疗计有效恢复，护盾计实际新增':'战局统计汇总中…')+' · S+仅通关且全队唯一</div><div class="campaign-scroll"><table><thead><tr><th>猎手 / 评分</th><th>伤害</th><th>治疗</th><th>护盾</th><th>击杀 / 救援</th></tr></thead><tbody>'+this.ended.rows.map(r=>'<tr><td><b class="rank-label">'+r.grade+'</b> '+this.esc(r.name)+(r.id===CoopManager.myPeerId?'（你）':'')+'</td><td>'+Math.round(r.damage).toLocaleString()+'</td><td>'+Math.round(r.healing).toLocaleString()+'</td><td>'+Math.round(r.shielding).toLocaleString()+'</td><td>'+r.kills+' / '+r.rescues+'</td></tr>').join('')+'</tbody></table></div>';},
@@ -16480,7 +16608,7 @@
         for(const [v,g]of [[5,40],[15,80],[30,150]])add('survive'+v,'坚持 '+v+' 分钟','survival',v*60,g);
         for(const [v,g]of [[10,30],[30,80],[50,150]])add('level'+v,'达到 Lv.'+v,'maxLevel',v,g);
         for(const [v,g]of [[1,40],[5,80],[10,150]])add('buy'+v,'商人交易 '+v+' 次','purchases',v,g);
-        add('hire1','昔日之敌，今日之友','hires',1,100);add('hire3','首领雇佣团','hires',3,200);add('remove1','重整行装','removals',1,60);add('coop1','并肩作战','coop',1,60);add('coop10','可靠的队友','coop',10,180);add('heroes5','五种命运','uniqueHeroes',5,150);add('wins5','全职业破晓','heroWins',5,500);add('awaken1','第一次觉醒','awakened',1,60);add('awaken4','四重觉醒','awakened',4,180);add('maxed5','五级大师','maxed',5,200);add('relic2','双秘宝同行','relics',2,80);add('splus1','唯一的破晓之星','splus',1,250);return list;},
+        add('hire1','昔日之敌，今日之友','hires',1,100);add('hire3','首领雇佣团','hires',3,200);add('remove1','重整行装','removals',1,60);add('coop1','并肩作战','coop',1,60);add('coop10','可靠的队友','coop',10,180);add('heroes5','五种命运','uniqueHeroes',5,150);add('wins5','五职破晓','heroWins',5,500);add('awaken1','第一次觉醒','awakened',1,60);add('awaken4','四重觉醒','awakened',4,180);add('maxed5','五级大师','maxed',5,200);add('relic2','双秘宝同行','relics',2,80);add('splus1','唯一的破晓之星','splus',1,250);return list;},
       progress(a){const p=this.permanent();return a.key==='uniqueBosses'?Object.keys(p.bosses).length:a.key==='uniqueHeroes'?Object.keys(p.heroes).length:a.key==='heroWins'?Object.keys(p.wins).length:p.counters[a.key]||0;},
       awardAchievements(){const p=this.permanent(),earned=[];let gold=0;for(const a of this.achievements())if(!p.achievements[a.id]&&this.progress(a)>=a.target){p.achievements[a.id]=Date.now();gold+=a.reward;earned.push(a);}if(earned.length){SaveManager.data.gold+=gold;AchievementNotices.enqueue(earned);}},
       bossCatalog(){return Object.entries(BIOME_BOSS_ROSTER).flatMap(([biome,rows])=>Object.entries(rows).map(([minute,cfg])=>({...cfg,id:biome+'_'+minute,biome,minute:Number(minute)})));},
@@ -16490,7 +16618,7 @@
         kills:'累计亲自击杀'+t+'只魔物。',damage:'累计对魔物造成'+t+'点实际伤害。',healing:'累计恢复'+t+'点有效生命；满血溢出不计。',shielding:'通过祷师支援累计新增'+t+'点护盾。',rescues:'累计成功救起倒地队友'+t+'次。',uniqueBosses:'战胜'+t+'种不同首领；重复击败同一位不增加。',wins:'累计通关'+t+'局战役。',survival:'在一局中坚持'+(a.target/60)+'分钟。',maxLevel:'在一局中达到Lv.'+t+'。',purchases:'在神秘商人处完成'+t+'次交易。',hires:'累计雇佣'+t+'位已解锁首领友军。',removals:'在商人处付费卸下一项技能、流派、装备或秘宝。',coop:'完成'+t+'局多人战役，胜负均可。',uniqueHeroes:'分别使用全部五位角色进入战场。',heroWins:'分别用五位角色各通关一次。',awakened:'在一局中同时拥有'+t+'项觉醒技能。',maxed:'在一局中使五项技能达到五级。',relics:'在一局中同时携带两件地图秘宝。',splus:'通关并获得本局唯一的S+评定。'};
         const icons={kills:'sword',damage:'burst',healing:'heart-green',shielding:'shield',rescues:'rescue',uniqueBosses:'boss',wins:'trophy',survival:'clock',maxLevel:'star',purchases:'shop',hires:'ally',removals:'gear',coop:'ally',uniqueHeroes:'book',heroWins:'trophy',awakened:'star',maxed:'star',relics:'chest',splus:'trophy'};
         return{method:methods[a.key]||a.name,icon:icons[a.key]||'trophy',progress:a.key==='survival'?(Math.min(a.target,this.progress(a))/60).toFixed(1)+' / '+a.target/60+' 分钟':Math.floor(Math.min(a.target,this.progress(a))).toLocaleString()+' / '+t};},
-      bookRows(tab){const p=this.permanent();if(tab==='heroes')return Object.entries(HERO_CONFIGS).map(([id,h])=>({id,name:h.name,portrait:'hero:'+id,unlocked:true,desc:({warrior:'近战连斩与流血引爆，剑阵护身，突袭穿过敌群。',mage:'远程奥术连锁、冰闪控场、黑洞聚怪与群星坠落。',ranger:'穿透毒箭与后跃陷阱；接回飞轮连续刷新战技。',engineer:'锁定钉积攒热能，磁雷聚怪，部署炮网与成长浮游炮。',healer:'圣光直接审判，群体治疗护盾，救援速度加倍。'})[id],stats:[['基础生命',h.maxHp],['移动速度',h.speed+' px/秒'],['基础护甲',Math.round(h.armor*100)+'%'],['基础暴击',Math.round(h.critChance*100)+'%']],skills:Object.values(h.initSkills()).filter(s=>Number.isFinite(s.cd)).map(s=>s.name+'：'+(Number.isFinite(s.damage)?'伤害基数 '+s.damage+'，':'')+'冷却 '+s.cd+' 秒')}));
+      bookRows(tab){const p=this.permanent();if(tab==='heroes')return Object.entries(HERO_CONFIGS).map(([id,h])=>({id,name:h.name,portrait:'hero:'+id,unlocked:true,desc:({warrior:'近战连斩与流血引爆，剑阵护身，突袭穿过敌群。',mage:'远程奥术连锁、冰闪控场、黑洞聚怪与群星坠落。',ranger:'穿透毒箭与后跃陷阱；接回飞轮连续刷新战技。',engineer:'锁定钉积攒热能，磁雷聚怪，部署炮网与成长浮游炮。',healer:'短圣光直接审判，宽光柱范围裁决，群体治疗护盾与加速救援。',necromancer:'亲自击杀收集怪物残魂，复苏亡军；五分钟且大招Lv.3后召唤一位领主。亡军属性继承玩家，命中可触发装备与流派。'})[id],stats:[['基础生命',h.maxHp],['移动速度',h.speed+' px/秒'],['基础护甲',Math.round(h.armor*100)+'%'],['基础暴击',Math.round(h.critChance*100)+'%']],skills:Object.values(h.initSkills()).filter(s=>Number.isFinite(s.cd)).map(s=>id==='necromancer'&&s.name==='亡骸复苏'?'亡骸复苏：复苏2名骨仆，持续14秒；冷却8秒':s.name+'：'+(Number.isFinite(s.damage)?'伤害基数 '+s.damage+'，':'')+'冷却 '+s.cd+' 秒')}));
         if(tab==='bosses')return this.bossCatalog().map(b=>({id:b.id,name:b.title.split(' · ').at(-1),portrait:b.key,unlocked:Boolean(p.bosses[b.id]),desc:'战胜后解锁图鉴与商人雇佣资格。'+b.title,stats:[['基础生命',b.hp],['接触伤害',b.dmg],['移动速度',b.speed+' px/秒'],['出现时间',b.minute+' 分钟']]}));
         return Object.entries(MONSTER_SPECS).map(([type,m])=>({id:type,name:this.monsterName(type),portrait:type==='mage'?'mage_en':type,unlocked:Boolean(p.seen[type]),desc:'第'+m.tier+'阶'+(m.isFlying?'飞行':'地面')+'魔物。',stats:[['基础生命',m.hp],['接触伤害',m.dmg],['移动速度',m.speed+' px/秒'],['基础经验',m.exp]]}));
       },
@@ -16508,7 +16636,7 @@
       draw(c){const now=performance.now();for(const m of this.merchants)if(!m.gone){c.save();c.translate(m.x,m.y);c.fillStyle='#0a1325';c.fillRect(-24,-40,48,60);c.fillStyle='#7e5999';c.fillRect(-20,-37,40,44);c.fillStyle='#cba65e';c.fillRect(-23,-21,46,5);c.fillRect(-28,15,56,9);c.fillStyle='#fff2ac';c.fillRect(-10,-13,6,4);c.fillRect(5,-13,6,4);c.fillStyle='#46354c';c.fillRect(-17,2,34,17);c.fillStyle='#fbbf24';for(let i=0;i<3;i++)c.fillRect(-18+i*14,11,8,6);c.textAlign='center';c.font='bold 12px sans-serif';c.fillStyle='#fde68a';c.fillText('神秘商人 · 一次访问',0,-49);c.restore();}
         for(const f of this.friends){const b=this.bossCatalog().find(b=>b.id===f.boss),base=b?.key,sp=SpriteCache[base+'_0']||SpriteCache.skeleton_0;if(!sp)continue;const img=sp.normal;c.save();c.translate(f.x,f.y);c.strokeStyle='#86efac';c.lineWidth=2;c.strokeRect(-26,-29,52,57);c.globalAlpha=.8;c.drawImage(img,-img.width/2,-img.height/2);c.fillStyle='#bbf7d0';c.font='bold 11px sans-serif';c.textAlign='center';c.fillText('友军',0,-34);c.restore();}
       },
-      growthFx(kind){const sk=player.skills[{atk:'attack',s1:'skill1',s2:'skill2',ult:'ult',charge:'charge'}[kind]];if(!sk||sk.level<2||kind==='atk')return;skyBeams.push({type:'growth_sigil',x:player.x,y:player.y,radius:28+sk.level*9,stage:sk.level,color:({warrior:'#fda4af',mage:'#7dd3fc',ranger:'#86efac',engineer:'#fbbf24',healer:'#fff0ac'})[GameState.selectedHero],life:.4,maxLife:.4});},
+      growthFx(kind){const sk=player.skills[{atk:'attack',s1:'skill1',s2:'skill2',ult:'ult',charge:'charge'}[kind]];if(!sk||sk.level<2||kind==='atk')return;skyBeams.push({type:'growth_sigil',x:player.x,y:player.y,radius:28+sk.level*9,stage:sk.level,color:({warrior:'#fda4af',mage:'#7dd3fc',ranger:'#86efac',engineer:'#fbbf24',healer:'#fff0ac',necromancer:'#b8f7d7'})[GameState.selectedHero],life:.4,maxLife:.4});},
       drawGrowth(c,s,ratio){const n=s.stage||1;c.save();c.translate(s.x,s.y);c.globalAlpha*=ratio;c.strokeStyle=s.color;c.fillStyle=s.color;c.lineWidth=n>=4?2:1;for(let ring=0;ring<Math.ceil(n/2);ring++){c.save();c.rotate(GameState.gameTime*.5+ring*.4);const r=s.radius+ring*8;c.strokeRect(-r*.7,-r*.7,r*1.4,r*1.4);for(let i=0;i<n+2;i++){c.rotate(Math.PI*2/(n+2));c.fillRect(r,-2,3+ring*2,4);}c.restore();}c.restore();}
     };
 
@@ -16535,7 +16663,7 @@
       buy(offer){if(!this.open||this.pending||GameState.isOver||this.open.offers.find(o=>o.id===offer)?.locked)return;const p={type:'WORLD_R22_SHOP_BUY',id:this.open.id,nonce:this.open.nonce,offer,removal:this.removals().find(r=>r.id===offer),requestId:CoopManager.myPeerId+':buy:'+(++this.sequence),lifeEpoch:player.lifeEpoch||0};this.pending=p;this.lastTry=-Infinity;this.send(p);this.render();},
       apply(tx){let ok=this.applied.has(tx.transaction);if(!ok&&tx.owner===CoopManager.myPeerId&&!GameState.isOver&&SaveManager.data.gold>=tx.price){const offer=tx.id,card=generateUpgradePool().find(c=>c.id===offer),canHire=offer.startsWith('hire:')&&Campaign.permanent().bosses[offer.slice(5)],canRemove=offer.startsWith('remove:')&&this.removals().some(r=>r.id===offer);if(card||canHire||canRemove){SaveManager.data.gold-=tx.price;this.applied.add(tx.transaction);if(card)card.apply();else if(canRemove)this.remove(offer);SaveManager.save();updateLoadoutHUD();updateHpUI();ok=true;showToast('[px:coin] '+tx.name+' · -'+tx.price+' 金币');}}this.pending=null;this.render();const pkt={type:'WORLD_R22_SHOP_RECEIPT',id:tx.transaction,ok};if(tx.solo)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId},true);else if(CoopManager.isHost)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId});else Campaign.receipts.set(pkt.id,{pkt,last:-Infinity});return ok;},
       acceptReceipt(p,solo=false){const tx=this.transactions.get(p.id);if(!tx||tx.owner!==p.peerId)return;const ack=()=>{if(!solo)CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_ACK',targetPeerId:p.peerId,id:p.id}));};if(tx.done){ack();return;}tx.done=true;if(p.ok===true){const r=Campaign.stat(p.peerId);r.purchases++;if(tx.id.startsWith('hire:')&&Campaign.hire(p.peerId,tx.id.slice(5)))r.hires++;if(tx.id.startsWith('remove:'))r.removals++;}else{const m=Campaign.merchants.find(m=>m.id===tx.merchant);if(m?.lease)m.lease.balance+=tx.price;}this.reply(p.peerId,{bought:true,requestId:p.id},solo);ack();},
-      remove(id){const [,kind,key]=id.split(':'),p=player.passives,lv=p[key]||0,lb=p.equipLB?.[key]||0;if(kind==='skill'){const skill=HERO_CONFIGS[GameState.selectedHero].initSkills()[key];skill.damage=Math.round(skill.damage*(1+(SaveManager.data.talents.might||0)*.06));Object.assign(player.skills[key],skill,{disabled:true,level:0,timer:0,isEvolved:false});if(key==='skill1')player.skills.skill1.isDashing=false;if(key==='skill2'){if(GameState.selectedHero==='healer')HealerKit.localFields=[];if(GameState.selectedHero==='engineer')for(const g of EngineerKit.turrets())g.life=0;}return;}
+      remove(id){const [,kind,key]=id.split(':'),p=player.passives,lv=p[key]||0,lb=p.equipLB?.[key]||0;if(kind==='skill'){const skill=HERO_CONFIGS[GameState.selectedHero].initSkills()[key];skill.damage=Math.round(skill.damage*(1+(SaveManager.data.talents.might||0)*.06));Object.assign(player.skills[key],skill,{disabled:true,level:0,timer:0,isEvolved:false});if(key==='skill1')player.skills.skill1.isDashing=false;if(key==='skill2'){if(GameState.selectedHero==='necromancer')NecroKit.summons=NecroKit.summons.filter(m=>m.source!=='guard');if(GameState.selectedHero==='healer')HealerKit.localFields=[];if(GameState.selectedHero==='engineer')for(const g of EngineerKit.turrets())g.life=0;}return;}
         if(kind==='relic'){const r=player.mapRelics.find(r=>r.id===key);if(!r)return;const n=r.level||1;if(key==='dungeon_thorn')player.armor=Math.max(HERO_CONFIGS[GameState.selectedHero].armor,player.armor-(r.armorGranted??(.05+.04*(n-1))));if(key==='dungeon_horn')player.critChance=Math.max(0,player.critChance-(.04+.035*(n-1)));if(key==='tundra_totem')player.speed=Math.round(player.speed/(1.06*Math.pow(1.05,n-1)));if(key==='grave_cloak')player.speed=Math.round(player.speed/(1.05*Math.pow(1.04,n-1)));player.mapRelics=player.mapRelics.filter(r=>r.id!==key);return;}
         if(key==='critGlove'){player.critChance=Math.max(0,player.critChance-lv*.03-lb*.02);player.critMultiplier=+(player.critMultiplier-lv*.08-lb*.12).toFixed(2);}if(key==='swiftBoots'){player.speed=Math.round(player.speed/Math.pow(1.04,lv+lb));player.magnetRange=Math.max(0,player.magnetRange-lv*6-lb*10);}if(key==='lavaHeart')player.maxHp=Math.max(1,player.maxHp-lv*8-lb*15);if(key==='bloodPact')player.maxHp=Math.max(1,player.maxHp-lv*15);if(key==='pierceQuiver')player.skills.attack.damage=Math.round(player.skills.attack.damage/Math.pow(1.05,lv)/Math.pow(1.08,lb));p[key]=0;if(p.equipLB)p.equipLB[key]=0;player.hp=Math.min(player.hp,player.maxHp);player.shield=Math.min(player.shield,Math.round(player.maxHp*.35));},
       close(){if(!this.open)return;this.send({type:'WORLD_R22_SHOP_CLOSE',id:this.open.id});this.open=null;document.getElementById('merchant-modal').style.display='none';GameState.isPaused=this.paused||false;CoopSocial.clearInput();CoopManager.sendPresenceNow();CombatKeys.focus();this.hint();},
@@ -16573,7 +16701,7 @@
     // Extend existing authoritative state and reward logs instead of adding another transport.
     const r22Encode=WorldCoop.encodeWorld;WorldCoop.encodeWorld=function(){Campaign.ensure();return{...r22Encode.call(this),campaign:Campaign.snapshot()};};
     const r22Apply=WorldCoop.applyWorld;WorldCoop.applyWorld=function(d){r22Apply.call(this,d);if(this.receivedFrame===d.seq&&d.session===this.session&&d.campaign)Campaign.receiveSnapshot(d.campaign);};
-    const r22Receive=WorldCoop.receive;WorldCoop.receive=function(p){if(p.type?.startsWith('WORLD_R22_')){if(!this.active()||p.session!==this.session||!CoopManager.allies.some(a=>a.id===p.peerId))return true;if(CoopManager.isHost){if(p.type==='WORLD_R22_RECEIPT')Campaign.acceptReceipt(p);if(p.type==='WORLD_R22_SHOP_RECEIPT')CampMarket.acceptReceipt(p);if(['WORLD_R22_SHOP_OPEN','WORLD_R22_SHOP_BUY','WORLD_R22_SHOP_CLOSE'].includes(p.type))CampMarket.handle(p);}else if(p.peerId===this.hostId){if(p.type==='WORLD_R22_ACK')Campaign.receipts.delete(p.id);if(p.type==='WORLD_R22_SHOP_REPLY')CampMarket.receive(p);}return true;}if(p.type==='WORLD_END'&&p.peerId===this.hostId&&p.session===this.session&&p.campaign)Campaign.receiveSnapshot(p.campaign);return r22Receive.call(this,p);};
+    const r22Receive=WorldCoop.receive;WorldCoop.receive=function(p){if(p.type?.startsWith('WORLD_R22_')){if(!this.active()||p.session!==this.session||!CoopManager.allies.some(a=>a.id===p.peerId))return true;if(CoopManager.isHost){if(p.type==='WORLD_R22_RECEIPT')Campaign.acceptReceipt(p);if(p.type==='WORLD_R22_SHOP_RECEIPT')CampMarket.acceptReceipt(p);if(['WORLD_R22_SHOP_OPEN','WORLD_R22_SHOP_BUY','WORLD_R22_SHOP_CLOSE'].includes(p.type))CampMarket.handle(p);}else if(p.peerId===this.hostId){if(p.type==='WORLD_R22_ACK')Campaign.receipts.delete(p.id);if(p.type==='WORLD_R22_FEEDBACK'&&p.event)Campaign.showFeedback(p.event);if(p.type==='WORLD_R22_SHOP_REPLY')CampMarket.receive(p);}return true;}if(p.type==='WORLD_END'&&p.peerId===this.hostId&&p.session===this.session&&p.campaign)Campaign.receiveSnapshot(p.campaign);return r22Receive.call(this,p);};
     const r22Finish=WorldCoop.finish;WorldCoop.finish=function(v){if(this.ended)return;Campaign.beginEnd(v);return r22Finish.call(this,v);};
     const r22Reset=WorldCoop.reset;WorldCoop.reset=function(){Campaign.reset();return r22Reset.call(this);};
     const r22Round=resetGameSession;resetGameSession=function(...args){const r=r22Round(...args);Campaign.reset();return r;};
@@ -16632,7 +16760,11 @@
     }
     const keyResumePause=togglePause;togglePause=function(...a){const result=keyResumePause(...a);CombatKeys.resume();return result;};
 
-    const r23WorldTick=WorldCoop.tick;WorldCoop.tick=function(dt){HuntPulse.guard();return r23WorldTick.call(this,dt);};
+    const r25Tick=WorldCoop.tick;WorldCoop.tick=function(dt){HuntPulse.guard();NecroKit.guard();return r25Tick.call(this,dt);};
+    const r25Reset=WorldCoop.reset;WorldCoop.reset=function(){NecroKit.reset();return r25Reset.call(this);};
+    const r25Save=SaveManager.saveBattleSnapshot;SaveManager.saveBattleSnapshot=function(...args){const r=r25Save.apply(this,args);if(this._memBattleSnap&&!WorldCoop.active()){this._memBattleSnap.necro={archive:NecroKit.archive,bossArchive:NecroKit.bossArchive,souls:NecroKit.souls,kills:NecroKit.kills,summons:NecroKit.summons};try{localStorage.setItem(this.BATTLE_KEY,JSON.stringify(this._memBattleSnap));}catch{}}return r;};
+    const r25Restore=restoreBattleSnapshot;restoreBattleSnapshot=function(){const snap=SaveManager.hasBattleSnapshot(),r=r25Restore(),d=snap?.necro;if(r&&d&&GameState.selectedHero==='necromancer'){NecroKit.archive=(d.archive||[]).filter(k=>typeof k==='string'&&SpriteCache[k+'_0']).slice(-10);NecroKit.bossArchive=(d.bossArchive||[]).filter(id=>Campaign.bossCatalog().some(b=>b.id===id)).slice(-3);NecroKit.souls=Math.max(0,Math.min(9,Math.floor(d.souls)||0));NecroKit.kills=Math.max(0,Math.floor(d.kills)||0);NecroKit.summons=(d.summons||[]).filter(m=>m.type==='necro_minion'&&SpriteCache[m.skin+'_0']&&[m.x,m.y,m.hp,m.maxHp,m.life,m.id].every(Number.isFinite)&&m.hp>0&&m.maxHp>0&&m.life>0&&m.life<=30).slice(0,12);let boss=false;NecroKit.summons=NecroKit.summons.filter(m=>{if(m.boss&&boss)return false;if(m.boss)boss=true;Arena.clamp(m,m.radius);return true;});NecroKit.sequence=Math.max(NecroKit.sequence,...NecroKit.summons.map(m=>m.id));NecroKit.epoch=player.lifeEpoch||0;}return r;};
+    const r25Details=SkillDetails.describe;SkillDetails.describe=function(kind,key){const d=r25Details.call(this,kind,key);if(GameState.selectedHero!=='necromancer'||kind!=='active')return d;const a=player.skills.attack,s=player.skills[key];if(!s)return d;if(key==='attack')d.rows.push(['摄魂目标数',a.isEvolved?4:Math.ceil(a.level/2)]);if(key==='charge')d.rows.push(['收割伤害基数',Math.round(a.damage*(4+s.level*.6)*(1+(s.branchLv||0)*.25)*Math.pow(1.24,s.limitBreak||0)*(1+(SaveManager.data.talents.charge||0)*.12))],['收割半径',160+s.level*14+' px']);if(key==='skill1')d.rows.push(['亡军治疗','各自最大生命的25%'],['亡军加速',s.isEvolved?'5秒':'3秒']);if(key==='skill2')d.rows=d.rows.filter(row=>row[0]!=='伤害基数（单段）'&&row[0]!=='作用半径');if(key==='skill2'||key==='ult')d.rows.push(['常备骨仆上限',NecroKit.cap()],['军团总上限 / 领主','12 / 1'],['普通亡灵生命',NecroKit.health()],['领主生命',NecroKit.health(true)],['普通亡灵伤害基数',+NecroKit.baseDamage({boss:false}).toFixed(1)],['攻击间隔',+NecroKit.attackInterval().toFixed(2)+'秒'],['军势系数',+NecroKit.formation().toFixed(3)],['领主条件','存活5分钟，大招Lv.3及以上'],['大招小怪数量',4+player.skills.ult.level+(player.skills.ult.isEvolved?2:0)]);d.notes.push('常备骨仆持续14秒；大招小怪持续8+1.2×大招等级秒，领主持续12+大招等级秒。没有记录时使用基础骨仆与领主外形。Lv.3起普攻每3次最多指挥12位亡灵齐射，共用1.2秒齐射间隔。亡军对敌方首领伤害×0.8。亡军沿用玩家的等级增伤、暴击、装备、流派与秘宝主命中效果；全军共用0.18秒主命中触发间隔，连锁伤害不能再次触发连锁。普通亡灵基础生命为玩家60%，领主125%，不继承敌方随时间增长的数值。');return d;};
     PixelIcons.start();
     setupHero('warrior');
     syncHeroAndBiomeSelectionUI();
