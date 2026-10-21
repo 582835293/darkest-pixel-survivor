@@ -6,7 +6,7 @@
   "padding": 2,
   "columns": 16,
   "width": 320,
-  "height": 200,
+  "height": 220,
   "icons": [
     {
       "name": "hero-billiard",
@@ -1269,6 +1269,38 @@
       "label": "吸血鬼在哪里",
       "x": 262,
       "y": 182,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "suit-diamond",
+      "label": "方片",
+      "x": 282,
+      "y": 182,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "suit-club",
+      "label": "梅花",
+      "x": 302,
+      "y": 182,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "suit-spade",
+      "label": "黑桃",
+      "x": 2,
+      "y": 202,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "suit-heart",
+      "label": "红桃",
+      "x": 22,
+      "y": 202,
       "width": 16,
       "height": 16
     }

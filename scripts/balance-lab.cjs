@@ -9,7 +9,7 @@ const stages=[{id:'early',minute:2,level:6},{id:'middle',minute:10,level:20},{id
  await page.evaluate(()=>{
   window.Lab={time:0,jobs:new Map(),seq:0};setTimeout=(fn,ms=0,...args)=>{const id=++Lab.seq;Lab.jobs.set(id,{at:Lab.time+Math.max(0,Number(ms)||0)/1000,fn:()=>fn(...args)});return id;};clearTimeout=id=>Lab.jobs.delete(id);
   for(const name of Object.keys(audio))if(name.startsWith('play'))audio[name]=()=>{};audio.init=()=>{};
-  Lab.target=WorldCoop.target;Lab.damagePlayer=damagePlayer;Lab.heal=HealerKit.applyGrant;
+  Lab.fieldDrops=updateFieldDrops;Lab.target=WorldCoop.target;Lab.damagePlayer=damagePlayer;Lab.heal=HealerKit.applyGrant;
   damagePlayer=function(...args){const hp=player.hp,shield=player.shield;const r=Lab.damagePlayer(...args);Lab.received+=(Math.max(0,hp-player.hp)+Math.max(0,shield-player.shield));if(player.hp<=0&&Lab.diedAt===null)Lab.diedAt=Lab.time;return r;};
   HealerKit.applyGrant=function(...args){const hp=player.hp;const r=Lab.heal.apply(this,args);Lab.healed+=Math.max(0,player.hp-hp);return r;};
   const armyHit=NecroKit.hit||NecroKit.strike,armyMethod=NecroKit.hit?'hit':'strike';NecroKit[armyMethod]=function(...args){const before=GameState.totalDamageDealt;const r=armyHit.apply(this,args);Lab.armyDamage+=GameState.totalDamageDealt-before;return r;};
@@ -35,7 +35,7 @@ const stages=[{id:'early',minute:2,level:6},{id:'middle',minute:10,level:20},{id
    Lab.jobs.clear();player.level=stage.level;player.pendingLevelUps=0;UpgradeChoice.reset();GameState.isPaused=false;player.hp=player.maxHp;updateHpUI();
    const anchors=[];const create=(x,y)=>{const e=createEnemy(x,y,'imp');Object.assign(e,{hp:1e10,maxHp:1e10,speed:0,damage:0,expReward:0,isElite:false,isShiny:false,tier:1,affixes:['unstoppable'],radius:scene==='boss'?26:10});if(scene==='boss'){e.isBoss=true;e.bossProfile='';}anchors.push({e,x:e.x,y:e.y});};
    if(scene==='boss')create(65,0);else for(let x=0;x<5;x++)for(let y=0;y<5;y++)create(65+x*32,(y-2)*32);
-   const live=scene==='skirmish';GameState.godMode=!live;WorldCoop.target=live?Lab.target:()=>null;
+   const live=scene==='skirmish';updateFieldDrops=live?Lab.fieldDrops:()=>{};dropSpawnTimer=shrineSpawnTimer=0;destructibles.length=shrines.length=fieldPickups.length=0;GameState.godMode=!live;WorldCoop.target=live?Lab.target:()=>null;
    if(hero==='necromancer'&&army==='full'){for(let i=0;i<3;i++)NecroKit.ult();}
    const dt=1/30,duration=live?45:20;let wasHolding=false,spawned=0;
    if(live){enemies.length=0;anchors.length=0;}

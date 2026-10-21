@@ -13,7 +13,7 @@ async function audioEvidence(page,id,timeout=12000){
  throw new Error('No received audio RTP from '+id);
 }
 (async()=>{
- await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH||undefined,headless:true,args:['--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream','--autoplay-policy=no-user-gesture-required']});
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));while([6000,6665,6666,6667,6668,6669,6697,10080].includes(server.address().port)){await new Promise(r=>server.close(r));await new Promise(r=>server.listen(0,'127.0.0.1',r));}browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH||undefined,headless:true,args:['--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream','--autoplay-policy=no-user-gesture-required']});
  for(let i=0;i<3;i++){
   const ctx=await browser.newContext({viewport:{width:390,height:844},permissions:['microphone']});await ctx.addInitScript(()=>{window.BroadcastChannel=undefined});
   const p=await ctx.newPage();pages.push(p);p.on('pageerror',e=>{errors.push(e.message);console.log('PAGEERROR',e.message)});

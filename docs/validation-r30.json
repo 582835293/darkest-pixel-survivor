@@ -1,0 +1,320 @@
+{
+  "version": "26.4.30",
+  "sourceHash": "32b2eb7724ac847943179b01cd5daf3b6f84b49983624165ca22ce8071ab20c5",
+  "fullSuiteSourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+  "suites": 40,
+  "checks": 592,
+  "runs": [
+    {
+      "file": "tests/rooms.cjs",
+      "at": "2026-10-21T08:41:55.000Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 15
+    },
+    {
+      "file": "tests/lobby.cjs",
+      "at": "2026-10-21T09:01:25.829Z",
+      "sourceHash": "32b2eb7724ac847943179b01cd5daf3b6f84b49983624165ca22ce8071ab20c5",
+      "exit": 0,
+      "checks": 11,
+      "log": "test-results/lobby-r30-final.log"
+    },
+    {
+      "file": "tests/social.cjs",
+      "at": "2026-10-21T08:42:47.124Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 14
+    },
+    {
+      "file": "tests/gameplay.cjs",
+      "at": "2026-10-21T08:43:07.429Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 19
+    },
+    {
+      "file": "tests/healing-ui.cjs",
+      "at": "2026-10-21T08:44:09.843Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 10
+    },
+    {
+      "file": "tests/upgrades.cjs",
+      "at": "2026-10-21T08:44:30.666Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 8
+    },
+    {
+      "file": "tests/rescue.cjs",
+      "at": "2026-10-21T08:44:59.286Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 6
+    },
+    {
+      "file": "tests/enhancements.cjs",
+      "at": "2026-10-21T08:45:14.639Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 15
+    },
+    {
+      "file": "tests/solo-ui.cjs",
+      "at": "2026-10-21T09:01:25.847Z",
+      "sourceHash": "32b2eb7724ac847943179b01cd5daf3b6f84b49983624165ca22ce8071ab20c5",
+      "exit": 0,
+      "checks": 16,
+      "log": "test-results/solo-ui-r30-final.log"
+    },
+    {
+      "file": "tests/party-rounds.cjs",
+      "at": "2026-10-21T08:45:40.252Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 13
+    },
+    {
+      "file": "tests/menu-magnet.cjs",
+      "at": "2026-10-21T08:46:13.436Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 13
+    },
+    {
+      "file": "tests/native-vfx.cjs",
+      "at": "2026-10-21T08:46:42.700Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 14
+    },
+    {
+      "file": "tests/engineer.cjs",
+      "at": "2026-10-21T08:47:04.467Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 17
+    },
+    {
+      "file": "tests/forge.cjs",
+      "at": "2026-10-21T08:47:25.299Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 14
+    },
+    {
+      "file": "tests/bosses.cjs",
+      "at": "2026-10-21T08:47:44.710Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 36
+    },
+    {
+      "file": "tests/pixel-icons.cjs",
+      "at": "2026-10-21T09:01:44.766Z",
+      "sourceHash": "32b2eb7724ac847943179b01cd5daf3b6f84b49983624165ca22ce8071ab20c5",
+      "exit": 0,
+      "checks": 14,
+      "log": "test-results/pixel-icons-r30-final.log"
+    },
+    {
+      "file": "tests/camp-flow.cjs",
+      "at": "2026-10-21T08:48:19.584Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 9
+    },
+    {
+      "file": "tests/healer.cjs",
+      "at": "2026-10-21T08:48:42.251Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 22
+    },
+    {
+      "file": "tests/arena.cjs",
+      "at": "2026-10-21T08:49:08.159Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 10
+    },
+    {
+      "file": "tests/details-combat.cjs",
+      "at": "2026-10-21T08:49:23.478Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 28
+    },
+    {
+      "file": "tests/dev-access.cjs",
+      "at": "2026-10-21T08:49:42.027Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 8
+    },
+    {
+      "file": "tests/freeze-combat.cjs",
+      "at": "2026-10-21T08:49:57.325Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 8
+    },
+    {
+      "file": "tests/mech-cannons.cjs",
+      "at": "2026-10-21T08:50:13.696Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 16
+    },
+    {
+      "file": "tests/keyboard.cjs",
+      "at": "2026-10-21T08:50:29.087Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 8
+    },
+    {
+      "file": "tests/balance.cjs",
+      "at": "2026-10-21T08:50:44.531Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 10
+    },
+    {
+      "file": "tests/campaign.cjs",
+      "at": "2026-10-21T08:50:59.944Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 15
+    },
+    {
+      "file": "tests/merchant.cjs",
+      "at": "2026-10-21T08:51:17.587Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 12
+    },
+    {
+      "file": "tests/hunt-pulse.cjs",
+      "at": "2026-10-21T08:51:34.258Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 7
+    },
+    {
+      "file": "tests/desktop-input.cjs",
+      "at": "2026-10-21T08:51:50.582Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 6
+    },
+    {
+      "file": "tests/refinements.cjs",
+      "at": "2026-10-21T08:52:06.615Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 16
+    },
+    {
+      "file": "tests/feedback-market.cjs",
+      "at": "2026-10-21T08:52:22.349Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 17
+    },
+    {
+      "file": "tests/necromancer.cjs",
+      "at": "2026-10-21T08:52:40.826Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 21
+    },
+    {
+      "file": "tests/necro-refinements.cjs",
+      "at": "2026-10-21T08:52:56.468Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 21
+    },
+    {
+      "file": "tests/companions-relics.cjs",
+      "at": "2026-10-21T08:53:21.975Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 23
+    },
+    {
+      "file": "tests/death-party.cjs",
+      "at": "2026-10-21T09:01:46.936Z",
+      "sourceHash": "32b2eb7724ac847943179b01cd5daf3b6f84b49983624165ca22ce8071ab20c5",
+      "exit": 0,
+      "checks": 15,
+      "log": "test-results/death-party-r30-final.log"
+    },
+    {
+      "file": "tests/report-scroll.cjs",
+      "at": "2026-10-21T08:54:26.817Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 10
+    },
+    {
+      "file": "tests/talent-adjust.cjs",
+      "at": "2026-10-21T08:54:51.675Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 14
+    },
+    {
+      "file": "tests/expansion-r29.cjs",
+      "at": "2026-10-21T08:54:55.181Z",
+      "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+      "exit": 0,
+      "checks": 31
+    },
+    {
+      "file": "tests/survivor-tribute.cjs",
+      "at": "2026-10-21T09:02:02.784Z",
+      "sourceHash": "32b2eb7724ac847943179b01cd5daf3b6f84b49983624165ca22ce8071ab20c5",
+      "exit": 0,
+      "checks": 14,
+      "log": "test-results/survivor-tribute-r30-final.log"
+    },
+    {
+      "file": "tests/rework-r30.cjs",
+      "at": "2026-10-21T09:02:09.186Z",
+      "sourceHash": "32b2eb7724ac847943179b01cd5daf3b6f84b49983624165ca22ce8071ab20c5",
+      "exit": 0,
+      "checks": 16,
+      "log": "test-results/rework-r30-r30-final.log"
+    }
+  ],
+  "initialFailures": [
+    "tests/lobby.cjs",
+    "tests/solo-ui.cjs",
+    "tests/pixel-icons.cjs",
+    "tests/death-party.cjs",
+    "tests/survivor-tribute.cjs"
+  ],
+  "initialFailureNotes": [
+    "lobby: ephemeral local port 6000 rejected by Chromium, shared fixture now excludes blocked ports.",
+    "solo-ui/pixel-icons/survivor-tribute: old R29/158-icon metadata assertions updated to R30/162.",
+    "death-party: 1e8 fixture damage could crit above intentional 1e8 packet validation ceiling; now uses normal 2000 damage on a 200-HP Boss. Test also uses a true new round and waits for its living guest profile."
+  ],
+  "finalSourceDelta": "After the full run, only title-footer literal v26.4 R29 changed to R30. Asserted byte-for-byte equality after that exact substitution. Six suites were then rechecked on final source. Gameplay and CG bytes unchanged.",
+  "balance": {
+    "sourceHash": "e4e198dff01aab736dcc84c374428a8bf8a27d29bcd04e135458ed823e695127",
+    "r30Fixed": 180,
+    "r29ControlSameEnvironment": 180,
+    "r30AIEncounters": 90
+  },
+  "additionalDesktopBrowsers": {
+    "chrome": 6,
+    "firefox": 6,
+    "countedAgain": false
+  },
+  "scope": "Windows local browsers, true local RTC with mocked discovery, actual game combat, deterministic fixed targets and 45-second real-AI encounters. Synthetic microphone. No physical Android, independent carrier latency or human 30-minute clear claims."
+}
