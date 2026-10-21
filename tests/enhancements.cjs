@@ -108,7 +108,7 @@ const tail=String.raw`
  await check('landscape map and audio sliders fit the phone viewport and settings persist after reload',async()=>{
   await a.setViewportSize({width:844,height:390});await a.evaluate(()=>CoopMap.toggle(true));assert.equal(await a.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await a.locator('#btn-close-map').click();
   await a.evaluate(()=>AudioSettings.open());await a.locator('#settings-modal .modal-card').screenshot({path:'test-results/r8-audio-landscape.png'});await a.evaluate(()=>AudioSettings.close());
-  await a.reload();assert.deepEqual(await a.evaluate(()=>AudioSettings.values),{voice:27,music:12,effects:36});assert.equal(await a.evaluate(()=>CoopDev.allowed()),false);
+  await a.reload();await a.evaluate(()=>FrontDoor.enter());assert.deepEqual(await a.evaluate(()=>AudioSettings.values),{voice:27,music:12,effects:36});assert.equal(await a.evaluate(()=>CoopDev.allowed()),false);
  });
  assert.deepEqual(errors,[]);
 })().catch(e=>{report.failure=String(e);console.error(e);process.exitCode=1}).finally(async()=>{

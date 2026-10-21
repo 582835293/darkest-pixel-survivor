@@ -20,7 +20,7 @@ async function audioEvidence(page,id,timeout=12000){
   await p.exposeFunction('relay',async ({topic,pkt})=>{for(const other of pages)await other.evaluate(({topic,pkt})=>{
     for(const c of [RoomHub.directory,CoopManager.mqttClient,CoopNodes.diagnostic])if(c&&!c.closed&&c.topic===topic)c.onMessage(CoopPoseWire.decode(pkt),{kind:'mqtt',url:'test'});
    },{topic,pkt}).catch(()=>{})});
-  await p.goto(`http://127.0.0.1:${server.address().port}`);
+  await p.goto(`http://127.0.0.1:${server.address().port}`);await p.evaluate(()=>FrontDoor.enter());
   await p.evaluate(i=>{
    LiteMQTTClient.prototype.startAllTransports=function(){this.activeSockets=[{_brokerUrl:'test',_isSubscribed:true,readyState:1,bufferedAmount:0,close(){}}]};
    LiteMQTTClient.prototype.publishWire=function(pkt){if(!this.closed)window.relay({topic:this.topic,pkt});return !this.closed};

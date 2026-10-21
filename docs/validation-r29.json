@@ -1,0 +1,313 @@
+{
+  "version": "26.4.29",
+  "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+  "suites": 39,
+  "checks": 576,
+  "runs": [
+    {
+      "file": "tests/rooms.cjs",
+      "at": "2026-10-21T07:21:27.748Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/lobby.cjs",
+      "at": "2026-10-21T07:22:15.082Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/social.cjs",
+      "at": "2026-10-21T07:22:33.860Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/gameplay.cjs",
+      "at": "2026-10-21T07:22:54.191Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/healing-ui.cjs",
+      "at": "2026-10-21T07:23:58.983Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/upgrades.cjs",
+      "at": "2026-10-21T07:24:18.989Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/rescue.cjs",
+      "at": "2026-10-21T07:24:45.955Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/enhancements.cjs",
+      "at": "2026-10-21T07:25:01.311Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/solo-ui.cjs",
+      "at": "2026-10-21T07:25:24.957Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/party-rounds.cjs",
+      "at": "2026-10-21T07:25:44.133Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/menu-magnet.cjs",
+      "at": "2026-10-21T07:26:16.740Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/native-vfx.cjs",
+      "at": "2026-10-21T07:26:46.054Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/engineer.cjs",
+      "at": "2026-10-21T07:27:06.408Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/forge.cjs",
+      "at": "2026-10-21T07:27:25.925Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/bosses.cjs",
+      "at": "2026-10-21T07:27:41.424Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/pixel-icons.cjs",
+      "at": "2026-10-21T07:28:00.328Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/camp-flow.cjs",
+      "at": "2026-10-21T07:28:16.235Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/healer.cjs",
+      "at": "2026-10-21T07:28:38.619Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/arena.cjs",
+      "at": "2026-10-21T07:29:03.330Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/details-combat.cjs",
+      "at": "2026-10-21T07:29:18.649Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/dev-access.cjs",
+      "at": "2026-10-21T07:29:36.042Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/freeze-combat.cjs",
+      "at": "2026-10-21T07:29:51.528Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/mech-cannons.cjs",
+      "at": "2026-10-21T07:30:07.438Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/keyboard.cjs",
+      "at": "2026-10-21T07:30:23.174Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/balance.cjs",
+      "at": "2026-10-21T07:30:38.456Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/campaign.cjs",
+      "at": "2026-10-21T07:30:53.766Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/merchant.cjs",
+      "at": "2026-10-21T07:31:09.667Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/hunt-pulse.cjs",
+      "at": "2026-10-21T07:31:25.584Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/desktop-input.cjs",
+      "at": "2026-10-21T07:31:41.155Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/refinements.cjs",
+      "at": "2026-10-21T07:31:57.035Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/feedback-market.cjs",
+      "at": "2026-10-21T07:32:12.378Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/necromancer.cjs",
+      "at": "2026-10-21T07:32:29.754Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/necro-refinements.cjs",
+      "at": "2026-10-21T07:32:45.207Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/companions-relics.cjs",
+      "at": "2026-10-21T07:33:10.745Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/death-party.cjs",
+      "at": "2026-10-21T07:33:28.883Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/report-scroll.cjs",
+      "at": "2026-10-21T07:33:45.051Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/talent-adjust.cjs",
+      "at": "2026-10-21T07:34:09.546Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/expansion-r29.cjs",
+      "at": "2026-10-21T07:34:19.862Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    },
+    {
+      "file": "tests/survivor-tribute.cjs",
+      "at": "2026-10-21T07:34:40.640Z",
+      "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+      "exit": 0
+    }
+  ],
+  "balance": {
+    "fixed_scenes": 180,
+    "moving_encounters": 90,
+    "sourceHash": "a7c57d21cb5b8e5a4f7ae090d3b1328224652486c930f9bb44e961cea37393dd",
+    "garlic": {
+      "rows": [
+        {
+          "level": 6,
+          "rank": 1,
+          "awake": false,
+          "damage": 360,
+          "healing": 0,
+          "spec": {
+            "level": 1,
+            "awake": false,
+            "cd": 0.85,
+            "radius": 72,
+            "damage": 11.620000000000001,
+            "heal": 0
+          }
+        },
+        {
+          "level": 20,
+          "rank": 3,
+          "awake": false,
+          "damage": 1776,
+          "healing": 0,
+          "spec": {
+            "level": 3,
+            "awake": false,
+            "cd": 0.85,
+            "radius": 92,
+            "damage": 33.250768,
+            "heal": 0
+          }
+        },
+        {
+          "level": 38,
+          "rank": 5,
+          "awake": false,
+          "damage": 4896,
+          "healing": 0,
+          "spec": {
+            "level": 5,
+            "awake": false,
+            "cd": 0.85,
+            "radius": 112,
+            "damage": 59.8826430912,
+            "heal": 0
+          }
+        },
+        {
+          "level": 49,
+          "rank": 5,
+          "awake": true,
+          "damage": 9600,
+          "healing": 48,
+          "spec": {
+            "level": 5,
+            "awake": true,
+            "cd": 0.85,
+            "radius": 147,
+            "damage": 97.17656817312002,
+            "heal": 2
+          }
+        }
+      ],
+      "scope": "Actual garlic only, 20-second fixed target at levels 6/20/38/49, no other attacks/talents/equipment. Healing is per pulse."
+    }
+  },
+  "scope": "Windows本机浏览器、本地RTCPeerConnection、虚拟麦克风与受控仿真；不代表安卓硬件、独立运营商跨网延迟或真人30分钟通关。"
+}

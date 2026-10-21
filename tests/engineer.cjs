@@ -3,7 +3,7 @@ const original=fs.readFileSync('tests/gameplay.cjs','utf8'),prefix=original.slic
 const tail=String.raw`
  await clean();const solo=await makePage({width:390,height:844});
  await check('fourth hero is selectable in camp and room; native pixel frames and all three skin variants exist',async()=>{
-  assert.equal(await solo.locator('.hero-card').count(),6);assert.equal(await solo.locator('.coop-hero-pick').count(),6);await solo.locator('.hero-card[data-hero=engineer]').click();assert.equal(await solo.evaluate(()=>GameState.selectedHero),'engineer');
+  assert.equal(await solo.locator('.hero-card').count(),9);assert.equal(await solo.locator('.coop-hero-pick').count(),9);await solo.locator('.hero-card[data-hero=engineer]').click();assert.equal(await solo.evaluate(()=>GameState.selectedHero),'engineer');
   const r=await solo.evaluate(()=>({hp:player.maxHp,labels:[...document.querySelectorAll('#label-attack,#label-skill1,#label-skill2,#label-ult')].map(e=>e.textContent),sprites:[0,1].every(i=>SpriteCache['engineer_'+i]&&[0,1,2].every(c=>SpriteCache['engineer_'+i+'_c'+c])),widths:SPRITE_MATRICES.engineer_0.map(s=>s.length)}));assert.equal(r.hp,110);assert(r.sprites);assert(r.widths.every(n=>n===16));assert(r.labels.includes('哨戒炮台'));
   await solo.locator('#btn-start-game').click();await solo.evaluate(()=>{spawnEnemyBatch=()=>{};GameState.autoAttack=false;GameState.godMode=true;enemies.length=0});
  });

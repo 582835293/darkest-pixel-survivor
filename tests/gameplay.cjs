@@ -7,7 +7,7 @@ let browser;const errors=[],results=[],pages=[];
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 async function check(name,fn){await fn();results.push(name);console.log('PASS',name);}
 (async()=>{
- await new Promise(r=>server.listen(0,'127.0.0.1',r));const url=`http://127.0.0.1:${server.address().port}`;
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));while([6000,6665,6666,6667,6668,6669,6697,10080].includes(server.address().port)){await new Promise(r=>server.close(r));await new Promise(r=>server.listen(0,'127.0.0.1',r));}const url=`http://127.0.0.1:${server.address().port}`;
  browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH||undefined,headless:true,args:['--autoplay-policy=no-user-gesture-required']});
  async function makePage(viewport={width:1200,height:800}){
   const p=await(await browser.newContext({viewport})).newPage();pages.push(p);
@@ -15,7 +15,7 @@ async function check(name,fn){await fn();results.push(name);console.log('PASS',n
   await p.exposeFunction('relay',async ({topic,pkt})=>{for(const other of pages)await other.evaluate(({topic,pkt})=>{
     for(const c of [RoomHub.directory,CoopManager.mqttClient,CoopNodes.diagnostic])if(c&&!c.closed&&c.topic===topic)c.onMessage(CoopPoseWire.decode(pkt),{kind:'mqtt',url:'test'});
    },{topic,pkt}).catch(()=>{})});
-  await p.goto(url);
+  await p.goto(url);await p.evaluate(()=>FrontDoor.enter());
   await p.evaluate(()=>{
    LiteMQTTClient.prototype.startAllTransports=function(){this.activeSockets=[{_brokerUrl:'test',_isSubscribed:true,readyState:1,close(){}}]};
    LiteMQTTClient.prototype.publishWire=function(pkt){if(!this.closed)window.relay({topic:this.topic,pkt});return !this.closed};
@@ -264,7 +264,7 @@ async function check(name,fn){await fn();results.push(name);console.log('PASS',n
   assert.equal(await mobile.evaluate(()=>CoopManager.allyVfxAlpha),0);
   await mobile.screenshot({path:'test-results/v32-mobile-slider.png'});
   assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
-  await mobile.reload();assert.equal(await mobile.evaluate(()=>CoopManager.allyVfxAlpha),0);
+  await mobile.reload();await mobile.evaluate(()=>FrontDoor.enter());assert.equal(await mobile.evaluate(()=>CoopManager.allyVfxAlpha),0);
  });
  await clean();
  await check('new session resets pending loot and upgrade state; old grants rejected',async()=>{

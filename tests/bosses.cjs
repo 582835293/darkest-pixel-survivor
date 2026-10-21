@@ -4,7 +4,7 @@ const tail=String.raw`
  await clean();const solo=await makePage({width:390,height:844});
  await solo.evaluate(()=>{GameState.isStarted=true;spawnEnemyBatch=()=>{};document.getElementById('lobby-modal').style.display='none';setupHero('warrior');GameState.autoAttack=false;GameState.godMode=true;});
  async function fresh(){await solo.evaluate(()=>{UpgradeChoice.end();GameState.isOver=GameState.isPaused=false;GameState.globalFreezeTimer=0;GameState.autoAttack=false;GameState.godMode=true;player.x=player.y=0;player.hp=player.maxHp=1000;player.armor=0;player.shield=0;player.invulnerableTimer=0;player.vx=player.vy=0;input.keys={};input.x=input.y=0;for(const a of [enemies,projectiles,groundEffects,telegraphs,skyBeams,particles])a.length=0;BossCombat.impacts=[];});}
- const profiles=await solo.evaluate(()=>Object.keys(BossCombat.profiles));assert.equal(profiles.length,18);const signatures=[];
+ const profiles=await solo.evaluate(()=>Object.keys(BossCombat.profiles));assert.equal(profiles.length,24);const signatures=[];
  for(const key of profiles)await check(key+' has its own two attacks, working shapes/projectiles and phase-two changes',async()=>{
   await fresh();const r=await solo.evaluate(key=>{const [biome,mark]=key.split('_');GameState.activeBiome=biome;spawnBoss(Number(mark));const boss=enemies.find(e=>e.isBoss);boss.x=-160;boss.y=0;boss.damage=20;boss.hp=boss.maxHp=1e9;const sig=[],phases=[];
    for(const phase of [false,true]){const both=[];boss.isPhase2=phase;for(let i=0;i<2;i++){for(const e of [...enemies])if(e!==boss)enemies.splice(enemies.indexOf(e),1);projectiles.length=telegraphs.length=0;boss.x=-160;boss.y=0;boss.bossCast={cd:999,step:i,busy:0,jobs:[],dash:null,phaseSeen:phase};const moves=BossCombat.profile(boss).moves;BossCombat.cast(boss,{x:160,y:50},moves[i]);const seen=new Set(),shots=new Set();let summons=0;
@@ -13,7 +13,7 @@ const tail=String.raw`
     phases.push(both);
    }return{key:boss.bossProfile,phases,phaseCd:BossCombat.profile(boss).cd*.8,normalCd:BossCombat.profile(boss).cd};},key);
   assert.equal(r.key,key);assert(r.phaseCd<r.normalCd);for(const row of r.phases.flat())assert(row.warnings>0||row.shots>0||row.summons>0,row.move);assert.notEqual(r.phases[0][0].move,r.phases[0][1].move);assert.notDeepEqual(r.phases[0],r.phases[1]);signatures.push(JSON.stringify(r.phases[0]));
- });assert.equal(new Set(signatures).size,18);
+ });assert.equal(new Set(signatures).size,24);
  await fresh();
  await check('damage geometry matches circle, corridor, sector and annulus including the visible safe gap',async()=>{
   const r=await solo.evaluate(()=>{const p=(x,y)=>({x,y,radius:1});return[

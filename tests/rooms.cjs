@@ -42,7 +42,7 @@ async function state(p){return p.evaluate(()=>({code:CoopManager.roomCode,id:Roo
     for(const c of [RoomHub.directory,CoopManager.mqttClient,CoopNodes.diagnostic])if(c&&!c.closed&&c.topic===topic)c.onMessage(CoopPoseWire.decode(pkt),{kind:'mqtt',url:'test'});
    },{topic,pkt}).catch(()=>{});
   });
-  await p.goto(`http://127.0.0.1:${server.address().port}`);
+  await p.goto(`http://127.0.0.1:${server.address().port}`);await p.evaluate(()=>FrontDoor.enter());
   await p.evaluate(i=>{
    LiteMQTTClient.prototype.startAllTransports=function(){this.activeSockets=[{_brokerUrl:'test',_isSubscribed:true,readyState:1,bufferedAmount:0,close(){}}]};
    LiteMQTTClient.prototype.publishWire=function(pkt){if(!this.closed)window.relay({topic:this.topic,pkt});return !this.closed};
@@ -143,7 +143,7 @@ async function state(p){return p.evaluate(()=>({code:CoopManager.roomCode,id:Roo
   const ctx=await browser.newContext(),local=[];
   for(let i=0;i<2;i++){
    const p=await ctx.newPage();local.push(p);pages.push(p);p.on('pageerror',e=>errors.push(e.message));
-   await p.goto(`http://127.0.0.1:${server.address().port}`);
+   await p.goto(`http://127.0.0.1:${server.address().port}`);await p.evaluate(()=>FrontDoor.enter());
    await p.evaluate(i=>{
     LiteMQTTClient.prototype.startAllTransports=function(){this.activeSockets=[{_brokerUrl:'test',_isSubscribed:true,readyState:1,bufferedAmount:0,close(){}}]};
     // Directory and gameplay both use only native local BroadcastChannel here.

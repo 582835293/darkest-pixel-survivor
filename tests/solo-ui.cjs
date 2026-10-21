@@ -7,10 +7,10 @@ fs.mkdirSync('test-results',{recursive:true});
 (async()=>{
  await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH||undefined,headless:true});
  for(const spec of [{name:'portrait touch',viewport:{width:390,height:844},touch:true},{name:'landscape touch',viewport:{width:844,height:390},touch:true},{name:'desktop',viewport:{width:1280,height:800},touch:false}]){
-  const ctx=await browser.newContext({viewport:spec.viewport,hasTouch:spec.touch,isMobile:spec.touch});const p=await ctx.newPage();p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:'+server.address().port);
+  const ctx=await browser.newContext({viewport:spec.viewport,hasTouch:spec.touch,isMobile:spec.touch});const p=await ctx.newPage();p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:'+server.address().port);await p.evaluate(()=>FrontDoor.enter());
   const press=async(id,opts)=>spec.touch?p.locator(id).tap(opts):p.locator(id).click(opts);
   await check(spec.name+': audio and VFX have one pause-system entry and no outside speaker buttons',async()=>{
-   assert.equal(await p.locator('#game-build').textContent(),'R28');
+   assert.equal(await p.locator('#game-build').textContent(),'R29');
    assert.equal(await p.locator('#btn-lobby-settings-top,#btn-lobby-settings,#btn-hud-settings,#top-hud #btn-bgm-toggle,#coop-effects-details').count(),0);
    assert.equal(await p.locator('#settings-modal #btn-bgm-toggle,#settings-modal #coop-alpha-slider,#settings-modal #self-alpha-slider').count(),3);
    assert.equal((await p.locator('#btn-pause-settings').textContent()).trim(),'系统设置');assert.equal(await p.locator('#btn-pause-settings [data-pixel-icon=gear]').count(),1);assert.equal(await p.evaluate(()=>CoopManager.roomCode),null);
@@ -34,7 +34,7 @@ fs.mkdirSync('test-results',{recursive:true});
   });
   await check(spec.name+': solo pause audio preserves pause and settings survive reload',async()=>{
    await press('#btn-pause');assert(await p.locator('#pause-modal').isVisible());await press('#btn-pause-settings');assert(await p.locator('#settings-modal').isVisible());await press('#btn-close-settings');assert.equal(await p.evaluate(()=>GameState.isPaused),true);assert(await p.locator('#pause-modal').isVisible());await press('#btn-resume');assert.equal(await p.evaluate(()=>GameState.isPaused),false);
-   const v=await p.evaluate(()=>AudioSettings.values.effects);await p.reload();assert.equal(await p.evaluate(()=>AudioSettings.values.effects),v);
+   const v=await p.evaluate(()=>AudioSettings.values.effects);await p.reload();await p.evaluate(()=>FrontDoor.enter());assert.equal(await p.evaluate(()=>AudioSettings.values.effects),v);
   });
   if(spec.name==='portrait touch')await check('relic direction guidance renders only icon and distance while the full name stays in the compendium',async()=>{
    const r=await p.evaluate(()=>{document.getElementById('lobby-modal').style.display='none';setupHero('warrior');GameState.isStarted=true;GameState.isPaused=true;GameState.autoAttack=false;player.x=player.y=0;camera.x=-innerWidth/2;camera.y=-innerHeight/2;mapRelicDrops.length=0;mapRelicDrops.push({id:'relic-demon-skull',icon:'⭐',name:'不该出现在方向提示的秘宝名字',x:3000,y:0,rarity:'rare'});const rows=[],original=ctx.fillText,od=PixelIcons.draw;PixelIcons.draw=function(c,key,x,y,...args){rows.push({icon:this.key(key),x,y});return od.call(this,c,key,x,y,...args)};ctx.fillText=function(text,x,y){rows.push({text:String(text),x,y});return original.call(this,text,x,y)};try{draw();}finally{ctx.fillText=original;PixelIcons.draw=od;}return rows;});
@@ -47,7 +47,7 @@ fs.mkdirSync('test-results',{recursive:true});
     await press('.self-alpha-preset[data-value="50"]');assert.equal(await p.evaluate(()=>VisualSettings.selfAlpha),.5);assert(Math.abs(await p.evaluate(()=>CoopManager.allyVfxAlpha)-.75)<.001);
     await press('.coop-alpha-preset[data-value="100"]');assert.equal(await p.evaluate(()=>CoopManager.allyVfxAlpha),0);assert.equal(await p.evaluate(()=>VisualSettings.selfAlpha),.5);
     await press('.self-alpha-preset[data-value="100"]');await p.evaluate(()=>{const e=document.getElementById('coop-alpha-slider');e.value=37;e.dispatchEvent(new Event('input',{bubbles:true}))});assert.equal(await p.evaluate(()=>VisualSettings.selfAlpha),0);assert.equal(await p.evaluate(()=>CoopManager.allyVfxAlpha),.63);
-    await p.locator('#settings-modal .modal-card').screenshot({path:'test-results/r10-system-settings.png'});await p.reload();assert.equal(await p.evaluate(()=>VisualSettings.selfAlpha),0);assert.equal(await p.evaluate(()=>CoopManager.allyVfxAlpha),.63);
+    await p.locator('#settings-modal .modal-card').screenshot({path:'test-results/r10-system-settings.png'});await p.reload();await p.evaluate(()=>FrontDoor.enter());assert.equal(await p.evaluate(()=>VisualSettings.selfAlpha),0);assert.equal(await p.evaluate(()=>CoopManager.allyVfxAlpha),.63);
    });
    await check('hiding self VFX preserves teammate effects, player sprite and enemy projectile or warning visibility',async()=>{
     const r=await p.evaluate(()=>{setupHero('warrior');CoopManager.myColorIdx=0;player.invulnerableTimer=0;GameState.hurtFlashTimer=0;GameState.isStarted=true;GameState.isPaused=true;GameState.autoAttack=false;player.isDowned=false;UpgradeChoice.active=false;VisualSettings.setSelf(100);setAllyTransparency(50);projectiles.length=0;enemies.length=0;telegraphs.length=0;groundEffects.length=0;orbitingBlades.length=0;boomerangs.length=0;
