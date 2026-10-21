@@ -10,7 +10,7 @@ fs.mkdirSync('test-results',{recursive:true});
   const ctx=await browser.newContext({viewport:spec.viewport,hasTouch:spec.touch,isMobile:spec.touch});const p=await ctx.newPage();p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:'+server.address().port);
   const press=async(id,opts)=>spec.touch?p.locator(id).tap(opts):p.locator(id).click(opts);
   await check(spec.name+': audio and VFX have one pause-system entry and no outside speaker buttons',async()=>{
-   assert.equal(await p.locator('#game-build').textContent(),'R23');
+   assert.equal(await p.locator('#game-build').textContent(),'R24');
    assert.equal(await p.locator('#btn-lobby-settings-top,#btn-lobby-settings,#btn-hud-settings,#top-hud #btn-bgm-toggle,#coop-effects-details').count(),0);
    assert.equal(await p.locator('#settings-modal #btn-bgm-toggle,#settings-modal #coop-alpha-slider,#settings-modal #self-alpha-slider').count(),3);
    assert.equal((await p.locator('#btn-pause-settings').textContent()).trim(),'系统设置');assert.equal(await p.locator('#btn-pause-settings [data-pixel-icon=gear]').count(),1);assert.equal(await p.evaluate(()=>CoopManager.roomCode),null);

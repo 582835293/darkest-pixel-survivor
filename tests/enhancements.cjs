@@ -50,7 +50,7 @@ const tail=String.raw`
  await check('voice volume affects direct and forwarded playback; music and effects use independent live gain buses',async()=>{
   await a.evaluate(()=>{AudioSettings.open();AudioSettings.set('voice',27);AudioSettings.set('music',12);AudioSettings.set('effects',36);audio.init();AudioSettings.apply()});
   const state=await a.evaluate(()=>({volumes:[...CoopVoice.peers.values()].flatMap(e=>[e.audio,e.relayAudio]).filter(Boolean).map(e=>e.volume),music:audio.musicBus.gain.value,effects:audio.effectsBus.gain.value,saved:JSON.parse(localStorage.getItem('ps_audio_levels'))}));
-  assert(state.volumes.length>=2);assert(state.volumes.every(v=>v===.27));assert(Math.abs(state.music-.12)<.001);assert(Math.abs(state.effects-.36)<.001);assert.deepEqual(state.saved,{voice:27,music:12,effects:36});await a.evaluate(()=>AudioSettings.close());
+  report.audioSettings=state;assert(state.volumes.length>=2);assert(state.volumes.every(v=>v===.27));assert(Math.abs(state.music-.12)<.001);assert(Math.abs(state.effects-.36)<.001);assert.deepEqual(state.saved,{voice:27,music:12,effects:36});await a.evaluate(()=>AudioSettings.close());
  });
  await check('map centers on the local body and preserves directions with increasing outer distance intervals',async()=>{
   await host.evaluate(()=>{GameState.godMode=true;player.x=0;player.y=0;CoopManager.allies[0].x=1000;CoopManager.allies[0].y=0;CoopManager.allies[0].targetX=1000;CoopManager.allies[0].targetY=0;CoopMap.toggle(true)});

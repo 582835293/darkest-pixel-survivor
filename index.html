@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0c10">
-  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R23 (Darkest Pixel Survivor)</title>
+  <title>血夜幸存者：暗黑像素版 v26.4 联机轻简版 R24 (Darkest Pixel Survivor)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -1269,7 +1269,7 @@
     <!-- 英雄与地图选择大厅弹窗 (开局) -->
     <div id="lobby-modal" class="modal-overlay" style="display: flex;">
       <div class="modal-card">
-        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R23</span></div>
+        <div class="modal-title">[px:swords] 血夜幸存者 · 战前备战 <span id="game-build" style="font-size:12px;color:#7dd3fc">R24</span></div>
         <div class="modal-subtitle">16位暗黑哥特精细像素 · 硬核生存数值 · 320同屏百鬼尸潮</div>
 
         <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #93c5fd;">1. 选择出征英雄（独立技能机制与连携）</div>
@@ -2559,7 +2559,7 @@
         const amount=Math.max(0,Math.min(200,Number(v.amount)||0)),old=player.hp;player.hp=Math.min(player.maxHp,player.hp+amount);
         const extra=Math.max(0,Math.min(150,Number(v.shield)||0))+Math.max(0,amount-(player.hp-old))*.5,cap=Math.round(player.maxHp*.35);
         player.shield=Math.max(player.shield,Math.min(cap,player.shield+extra));player.shieldMax=Math.max(player.shieldMax,player.shield);
-        if(player.hp>old)spawnMergedFloatingText(player,Math.round(player.hp-old),false,true);updateHpUI();return true;
+        updateHpUI();return true;
       },
       authorityTick(dt,solo=false){
         if(!GameState.isStarted||GameState.isOver||WorldCoop.simulationPaused()||WorldCoop.ended)return;
@@ -3712,7 +3712,7 @@
 
     function showSuperWeaponFanfare(text) {
       audio.playSuperWeapon();
-      GameState.screenShake = 20;
+      CameraFeedback.request(20,'event');
       showToast(`[px:star-bright] ${text}`);
       createShockwave(player.x, player.y, 280, '#facc15');
       createExplosionParticles(player.x, player.y, '#fde047', 24);
@@ -4037,7 +4037,7 @@
       const hero = GameState.selectedHero;
       if(hero==='healer'&&HealerKit.chargeCd>0)return false;
       player.swingAnimTimer = 0.3;
-      GameState.screenShake = 15;
+      CameraFeedback.request(15,'attack');
       audio.playExplosion();
 
       let attackAngle = player.aimAngle;
@@ -4688,7 +4688,7 @@
 
     function detonateBlackHole(orb) {
       audio.playExplosion();
-      GameState.screenShake = 16;
+      CameraFeedback.request(16,'attack');
       const bonusMul = 1 + Math.min(2.0, (orb.pulledCount || 0) * 0.12);
       const finalDmg = Math.round(orb.damage * 1.8 * bonusMul);
       createShockwave(orb.x, orb.y, orb.radius * 1.15, '#c084fc');
@@ -4705,7 +4705,7 @@
 
       ult.timer = ult.cd;
       audio.playSuperWeapon();
-      GameState.screenShake = 22;
+      CameraFeedback.request(22,'event');
       player.swingAnimTimer = 0.24;
       const hero = GameState.selectedHero;
       const isSuperUlt = Boolean(ult.isEvolved);
@@ -5000,7 +5000,7 @@
       RelicPower.complete(relic,true);
 
       audio.playSuperWeapon();
-      GameState.screenShake = 16;
+      CameraFeedback.request(16,'event');
       createShockwave(player.x, player.y, 180, relic.color);
       updateLoadoutHUD();
       showToast(`[px:star-bright] 获得关卡特殊秘宝：【${relic.icon}${relic.name}】(${player.mapRelics.length}/2)！`);
@@ -5350,7 +5350,7 @@
         showToast('[px:food] 拾取【焦香烤鸡】！生命值恢复 +45！');
       } else if (item.type === 'bomb') {
         audio.playExplosion();
-        GameState.screenShake = 24;
+        CameraFeedback.request(24,'event');
         showToast('[px:bomb] 拾取【地狱雷管】！小怪全秒，闪光怪削血1/2，首领削血1/5！');
         createShockwave(player.x, player.y, 320, '#f87171');
         if (item.worldApplied) return;
@@ -5567,7 +5567,7 @@
           en.speed *= 1.3;
           en.color = '#7f1d1d';
           showToast('[px:alarm] 首领进入二阶段【血月狂暴】！注意躲避红色预警弹幕！');
-          GameState.screenShake = 18;
+          CameraFeedback.request(18,'event');
         }
       }
 
@@ -6214,7 +6214,7 @@
         }
       }
       showToast(`[px:ring] 【${ringsCount}圈同心圆合围】铁桶阵正在向中心合拢！`);
-      GameState.screenShake = 10;
+      CameraFeedback.request(10,'event');
     }
 
     // 阵型3：[px:vortex] 阿基米德双/三旋臂螺旋星云阵 (Spiral Vortex Formation)
@@ -6239,7 +6239,7 @@
         }
       }
       showToast(`[px:vortex] 【螺旋星云大阵】三旋臂魔潮正沿螺旋轨迹向你旋转绞杀！`);
-      GameState.screenShake = 10;
+      CameraFeedback.request(10,'event');
     }
 
     // 阵型4：[px:pause] 平行双线夹逼大阵 (Parallel Pincer Walls —— 上下或左右两条平行封锁线夹逼玩家)
@@ -6268,7 +6268,7 @@
         }
       }
       showToast(`[px:pause] 【平行双线夹逼阵】两侧平行魔墙正在向中间夹击！寻找缺口突围！`);
-      GameState.screenShake = 11;
+      CameraFeedback.request(11,'event');
     }
 
     // 阵型5：[px:scale] 多行斜线阶梯方阵 (Multi-Row Diagonal Echelon Waves)
@@ -6298,7 +6298,7 @@
         }
       }
       showToast(`[px:scale] 【多行斜线方阵】三排斜线魔军正呈阶梯浪潮压境！`);
-      GameState.screenShake = 10;
+      CameraFeedback.request(10,'event');
     }
 
     // 阵型6：[px:ruler] 直线铁骑冲锋墙 (Single Straight Cavalry Line)
@@ -6491,7 +6491,7 @@
       enemies.push(boss);
       updateBossHud(boss);
       showToast(`[px:alarm] ${minuteMark}:00 战役首领降临：【${cfg.title}】！`);
-      GameState.screenShake = 22;
+      CameraFeedback.request(22,'event');
       audio.playSuperWeapon();
     }
 
@@ -6750,9 +6750,7 @@
         }
       }
 
-      if (GameState.screenShake > 0) {
-        GameState.screenShake = Math.max(0, GameState.screenShake - dt * 45);
-      }
+      CameraFeedback.tick(dt);
 
       for (const key in player.skills) {
         const s = player.skills[key];
@@ -7407,7 +7405,7 @@
       player.invulnerableTimer = 0.26;
       GameState.hurtFlashTimer = 0.38;
       GameState.lastHurtDmg = actualDmg;
-      GameState.screenShake = 12;
+      CameraFeedback.request(12,'hurt');
       audio.playPlayerHurt();
       updateHpUI();
       HealerKit.reflect(reflectedBasis,source);
@@ -7419,7 +7417,7 @@
           player.invulnerableTimer = 3.0;
           updateHpUI();
           audio.playSuperWeapon();
-          GameState.screenShake = 20;
+          CameraFeedback.request(20,'event');
           createShockwave(player.x, player.y, 220, '#facc15');
           damageInRadius(player.x, player.y, 220, 180, 260);
           showToast('[px:cross] 破死重生触发！恢复60%生命并震退群魔！');
@@ -8280,10 +8278,7 @@
       ctx.fillRect(0, 0, camera.viewportWidth, camera.viewportHeight);
 
       let shakeX = 0, shakeY = 0;
-      if (GameState.screenShake > 0) {
-        shakeX = (Math.random() - 0.5) * GameState.screenShake;
-        shakeY = (Math.random() - 0.5) * GameState.screenShake;
-      }
+      const cameraFeedback=CameraFeedback.offset();shakeX=cameraFeedback.x;shakeY=cameraFeedback.y;
       ctx.translate(-camera.x + shakeX, -camera.y + shakeY);
 
       drawTileMap();Arena.draw(ctx);
@@ -11097,7 +11092,7 @@
       GameState.totalDamageDealt = 0;
       GameState.combo = 0;
       GameState.comboTimer = 0;
-      GameState.screenShake = 0;
+      CameraFeedback.reset();
       GameState.globalFreezeTimer = 0;
       GameState.berserkTimer = 0;
       GameState.fireBreathTimer = 0;
@@ -11264,7 +11259,7 @@
       const next = getCurseMultipliers();
       applyLiveMonsterCurseDelta(prev, next);
       updateCurseHUD();
-      GameState.screenShake = 8;
+      CameraFeedback.request(8,'event');
       showToast(`[px:fire] 怪物数值强化 [难度${GameState.curseLevel >= 0 ? '+' + GameState.curseLevel : GameState.curseLevel}]！怪血量${Math.round(next.hpMul * 100)}% | 金币爆率${Math.round(next.goldDropRate * 100)}%(×${next.goldYieldMul.toFixed(2)}) | 经验+${Math.round((next.expMul - 1) * 100)}%！`);
     });
 
@@ -15892,7 +15887,7 @@
     // Room numbers are discovery labels. A random room identity isolates the
     // actual game even when disconnected directory networks choose the same code.
     var RoomHub = {
-      version: 1, build: 23, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
+      version: 1, build: 24, browsing: false, browseToken: 0, browseStatus: '', listSignature: '', directory: null, local: null, ads: new Map(), claims: new Map(),
       requests: new Map(), seen: new Map(), members: new Set(), roomId: null,
       hostId: null, roomName: '', roomKey: null, keyBytes: null, locked: false, busy: false,
       epoch: 0, operation: 0, status: '', pending: null, claim: null,
@@ -16463,11 +16458,11 @@
       damage(id,value){if(!WorldCoop.authority()||!Number.isFinite(value)||value<=0)return;this.ensure();this.stat(id).damage+=Math.round(value);},
       kill(en,id){if(!WorldCoop.authority())return;this.ensure();const r=this.stat(id);r.kills++;if(en.isBoss){r.bosses++;const key=en.bossProfile||this.bossCatalog().find(b=>b.key===en.type)?.id;if(key&&!this.bosses.includes(key))this.bosses.push(key);}this.permanent().seen[en.type]=true;},
       registerSupport(actor,v){if(v.supportId)this.support.set(v.supportId,{source:v.sourceId,target:actor.id,epoch:v.lifeEpoch,heal:Math.min(200,v.amount||0),shield:Math.min(150,v.shield||0),at:performance.now()});},
-      supportApplied(v,heal,shield){if(!v.supportId)return;const pkt={type:'WORLD_R22_RECEIPT',id:v.supportId,heal,shield,lifeEpoch:v.lifeEpoch};if(WorldCoop.active()){if(CoopManager.isHost)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId});else this.receipts.set(pkt.id,{pkt,last:-Infinity});}else{this.stat(v.sourceId).healing+=heal;this.stat(v.sourceId).shielding+=shield;this.showFeedback({id:v.supportId,source:v.sourceId,target:CoopManager.myPeerId,heal,shield,x:player.x,y:player.y});}},
-      acceptReceipt(p){const v=this.support.get(p.id);if(!v||v.target!==p.peerId||v.epoch!==p.lifeEpoch)return false;const ack=()=>CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_ACK',targetPeerId:p.peerId,id:p.id}));if(this.receiptSeen.has(p.id)){ack();return true;}if(!Number.isFinite(p.heal)||!Number.isFinite(p.shield)||p.heal<0||p.shield<0||p.heal>v.heal||p.shield>v.shield+v.heal*.5+.01)return false;this.receiptSeen.add(p.id);const r=this.stat(v.source);r.healing+=p.heal;r.shielding+=p.shield;const target=WorldCoop.participants.get(v.target)||player;const event={id:p.id,source:v.source,target:v.target,heal:p.heal,shield:p.shield,x:target.x,y:target.y};this.showFeedback(event);CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_FEEDBACK',event}));ack();return true;},
-      showFeedback(e){if(this.feedbackSeen.has(e.id)||!Number.isFinite(e.heal)||!Number.isFinite(e.shield)||e.heal+e.shield<=0)return;this.feedbackSeen.add(e.id);while(this.feedbackSeen.size>512)this.feedbackSeen.delete(this.feedbackSeen.values().next().value);this.feedback.push({...e,at:performance.now()});if(this.feedback.length>16)this.feedback.shift();const who=e.target===CoopManager.myPeerId?'你':CoopManager.allies.find(p=>p.id===e.target)?.name||'队友',from=e.source===CoopManager.myPeerId?'你':CoopManager.allies.find(p=>p.id===e.source)?.name||'祷师';const box=document.getElementById('support-feed');if(box){const row=document.createElement('div');row.textContent=from+' → '+who+' '+(e.heal?'治疗 +'+Math.round(e.heal)+' ':'')+(e.shield?'护盾 +'+Math.round(e.shield):'');box.append(row);while(box.children.length>3)box.firstChild.remove();setTimeout(()=>row.remove(),3000);}},
-      snapshot(){return{round:this.round,rows:[...this.rows.values()].slice(0,3),bosses:this.bosses.slice(0,18),merchants:this.merchants.slice(0,6).map(m=>({id:m.id,x:m.x,y:m.y,gone:m.gone,busy:Boolean(m.lease)})),friends:this.friends.slice(0,6).map(({id,owner,boss,x,y,timer})=>({id,owner,boss,x,y,timer})),end:this.ended,feedback:this.feedback.filter(f=>performance.now()-f.at<2000).slice(-8).map(({at,...e})=>e)};},
-      receiveSnapshot(d){if(!d||typeof d.round!=='string'||!Array.isArray(d.rows)||d.rows.length>3)return;const newlySettled=Boolean(d.end?.settled&&!this.ended?.settled);this.round=d.round;for(const row of d.rows)if(typeof row.id==='string'&&['damage','healing','shielding','kills','rescues','downs'].every(k=>Number.isFinite(row[k])&&row[k]>=0))this.rows.set(row.id,{...row,name:String(row.name||'猎手').slice(0,24)});if(Array.isArray(d.bosses))this.bosses=d.bosses.filter(id=>this.bossCatalog().some(b=>b.id===id)).slice(0,18);if(Array.isArray(d.merchants))this.merchants=d.merchants.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)).slice(0,6);if(Array.isArray(d.friends))this.friends=d.friends.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)&&this.bossCatalog().some(b=>b.id===m.boss)).slice(0,6);if(Array.isArray(d.feedback))d.feedback.forEach(e=>this.showFeedback(e));if(d.end){const changed=JSON.stringify(this.ended)!==JSON.stringify(d.end);this.ended=d.end;if(changed)this.renderEnd();}if(newlySettled||performance.now()-this.lastPermanent>2000){this.lastPermanent=performance.now();this.syncPermanent();}},
+      supportApplied(v,heal,shield){if(!v.supportId)return;const pkt={type:'WORLD_R22_RECEIPT',id:v.supportId,heal,shield,lifeEpoch:v.lifeEpoch};if(WorldCoop.active()){if(CoopManager.isHost)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId});else this.receipts.set(pkt.id,{pkt,last:-Infinity});}else{this.stat(v.sourceId).healing+=heal;this.stat(v.sourceId).shielding+=shield;}},
+      acceptReceipt(p){const v=this.support.get(p.id);if(!v||v.target!==p.peerId||v.epoch!==p.lifeEpoch)return false;const ack=()=>CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_ACK',targetPeerId:p.peerId,id:p.id}));if(this.receiptSeen.has(p.id)){ack();return true;}if(!Number.isFinite(p.heal)||!Number.isFinite(p.shield)||p.heal<0||p.shield<0||p.heal>v.heal||p.shield>v.shield+v.heal*.5+.01)return false;this.receiptSeen.add(p.id);const r=this.stat(v.source);r.healing+=p.heal;r.shielding+=p.shield;ack();return true;},
+      showFeedback(){}, // Older feedback packets are harmless; support receipts still account for real HP and shield.
+      snapshot(){return{round:this.round,rows:[...this.rows.values()].slice(0,3),bosses:this.bosses.slice(0,18),merchants:this.merchants.slice(0,6).map(m=>({id:m.id,x:m.x,y:m.y,gone:m.gone,busy:Boolean(m.lease)})),friends:this.friends.slice(0,6).map(({id,owner,boss,x,y,timer})=>({id,owner,boss,x,y,timer})),end:this.ended};},
+      receiveSnapshot(d){if(!d||typeof d.round!=='string'||!Array.isArray(d.rows)||d.rows.length>3)return;const newlySettled=Boolean(d.end?.settled&&!this.ended?.settled);this.round=d.round;for(const row of d.rows)if(typeof row.id==='string'&&['damage','healing','shielding','kills','rescues','downs'].every(k=>Number.isFinite(row[k])&&row[k]>=0))this.rows.set(row.id,{...row,name:String(row.name||'猎手').slice(0,24)});if(Array.isArray(d.bosses))this.bosses=d.bosses.filter(id=>this.bossCatalog().some(b=>b.id===id)).slice(0,18);if(Array.isArray(d.merchants))this.merchants=d.merchants.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)).slice(0,6);if(Array.isArray(d.friends))this.friends=d.friends.filter(m=>typeof m.id==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)&&this.bossCatalog().some(b=>b.id===m.boss)).slice(0,6);if(d.end){const changed=JSON.stringify(this.ended)!==JSON.stringify(d.end);this.ended=d.end;if(changed)this.renderEnd();}if(newlySettled||performance.now()-this.lastPermanent>2000){this.lastPermanent=performance.now();this.syncPermanent();}},
       grades(victory){const rows=[...this.rows.values()];const maxima={};for(const k of ['damage','healing','shielding','kills','rescues'])maxima[k]=Math.max(1,...rows.map(r=>r[k]));const rated=rows.map(r=>{const role=r.hero==='healer';const contribution=(role?.22:.48)*r.damage/maxima.damage+(role?.32:.10)*r.healing/maxima.healing+(role?.15:.07)*r.shielding/maxima.shielding+.13*r.kills/maxima.kills+.18*r.rescues/maxima.rescues;const score=Math.min(99,Math.round((victory?55:Math.min(40,GameState.gameTime/45))+contribution*40+Math.min(8,r.seconds/180)-Math.min(18,r.downs*4)));const grade=score>=90?'S':score>=83?'S-':score>=77?'A+':score>=70?'A':score>=63?'A-':score>=55?'B+':score>=47?'B':score>=39?'B-':'C';return{...r,score,grade,contribution};}).sort((a,b)=>b.score-a.score||b.contribution-a.contribution||b.damage-a.damage||a.id.localeCompare(b.id));if(victory&&rated.length)rated[0].grade='S+';return rated;},
       beginEnd(victory){if(!this.ended){this.ended={victory,settled:false,at:Date.now(),rows:[]};const ending=this.ended;setTimeout(()=>{if(this.ended===ending)this.networkTick();},1850);}if(WorldCoop.authority())this.ended.rows=this.grades(victory);this.renderEnd();},
       renderEnd(){if(this.ended){for(const id of ['btn-over-lobby','btn-restart'])document.getElementById(id).disabled=!this.ended.settled;document.getElementById('over-healing').textContent=Math.round(this.rows.get(CoopManager.myPeerId)?.healing||0).toLocaleString();}const el=document.getElementById('run-report');if(!el||!this.ended)return;el.innerHTML='<div class="campaign-note">'+(this.ended.settled?'本局评定 · 治疗计有效恢复，护盾计实际新增':'战局统计汇总中…')+' · S+仅通关且全队唯一</div><div class="campaign-scroll"><table><thead><tr><th>猎手 / 评分</th><th>伤害</th><th>治疗</th><th>护盾</th><th>击杀 / 救援</th></tr></thead><tbody>'+this.ended.rows.map(r=>'<tr><td><b class="rank-label">'+r.grade+'</b> '+this.esc(r.name)+(r.id===CoopManager.myPeerId?'（你）':'')+'</td><td>'+Math.round(r.damage).toLocaleString()+'</td><td>'+Math.round(r.healing).toLocaleString()+'</td><td>'+Math.round(r.shielding).toLocaleString()+'</td><td>'+r.kills+' / '+r.rescues+'</td></tr>').join('')+'</tbody></table></div>';},
@@ -16487,7 +16482,7 @@
         for(const [v,g]of [[1,40],[5,80],[10,150]])add('buy'+v,'商人交易 '+v+' 次','purchases',v,g);
         add('hire1','昔日之敌，今日之友','hires',1,100);add('hire3','首领雇佣团','hires',3,200);add('remove1','重整行装','removals',1,60);add('coop1','并肩作战','coop',1,60);add('coop10','可靠的队友','coop',10,180);add('heroes5','五种命运','uniqueHeroes',5,150);add('wins5','全职业破晓','heroWins',5,500);add('awaken1','第一次觉醒','awakened',1,60);add('awaken4','四重觉醒','awakened',4,180);add('maxed5','五级大师','maxed',5,200);add('relic2','双秘宝同行','relics',2,80);add('splus1','唯一的破晓之星','splus',1,250);return list;},
       progress(a){const p=this.permanent();return a.key==='uniqueBosses'?Object.keys(p.bosses).length:a.key==='uniqueHeroes'?Object.keys(p.heroes).length:a.key==='heroWins'?Object.keys(p.wins).length:p.counters[a.key]||0;},
-      awardAchievements(){const p=this.permanent();let gold=0,n=0;for(const a of this.achievements())if(!p.achievements[a.id]&&this.progress(a)>=a.target){p.achievements[a.id]=Date.now();gold+=a.reward;n++;}if(n){SaveManager.data.gold+=gold;showToast('[px:trophy] 达成 '+n+' 项成就 · 金币 +'+gold);}},
+      awardAchievements(){const p=this.permanent(),earned=[];let gold=0;for(const a of this.achievements())if(!p.achievements[a.id]&&this.progress(a)>=a.target){p.achievements[a.id]=Date.now();gold+=a.reward;earned.push(a);}if(earned.length){SaveManager.data.gold+=gold;AchievementNotices.enqueue(earned);}},
       bossCatalog(){return Object.entries(BIOME_BOSS_ROSTER).flatMap(([biome,rows])=>Object.entries(rows).map(([minute,cfg])=>({...cfg,id:biome+'_'+minute,biome,minute:Number(minute)})));},
       openBook(tab='heroes'){this.bookPaused=GameState.isPaused;GameState.isPaused=GameState.isStarted&&!GameState.isOver?true:GameState.isPaused;CoopSocial.clearInput();document.getElementById('campaign-modal').style.display='flex';this.renderBook(tab);},
       closeBook(){document.getElementById('campaign-modal').style.display='none';GameState.isPaused=this.bookPaused||false;CombatKeys.focus();},
@@ -16512,7 +16507,7 @@
       tickFriends(dt){for(const f of this.friends){const owner=WorldCoop.active()?WorldCoop.participants.get(f.owner):player;if(!owner||owner.downed||WorldCoop.phased(owner)||owner.paused)continue;const dist=Math.hypot(owner.x-f.x,owner.y-f.y);if(dist>500){f.x=owner.x+55;f.y=owner.y+30;}else if(dist>70){f.x+=(owner.x-f.x)/dist*Math.min(170*dt,dist-70);f.y+=(owner.y-f.y)/dist*Math.min(170*dt,dist-70);}Arena.clamp(f,22);f.timer-=dt;if(f.timer>0)continue;const cfg=this.bossCatalog().find(b=>b.id===f.boss),e=enemies.filter(e=>!e.isDead&&Math.hypot(e.x-f.x,e.y-f.y)<420).sort((a,b)=>Math.hypot(a.x-f.x,a.y-f.y)-Math.hypot(b.x-f.x,b.y-f.y))[0];if(!e)continue;f.timer=1.6;const damage=Math.round((28+GameState.gameTime*.14)*(1+cfg.minute/60));lightningArcs.push({x1:f.x,y1:f.y,x2:e.x,y2:e.y,color:'#86efac',life:.22});for(const t of [...enemies])if(!t.isDead&&Math.hypot(t.x-e.x,t.y-e.y)<(cfg.minute>=20?90:65)){const d=Math.min(t.hp,damage);t.hp-=damage;this.damage(f.owner,d);spawnMergedFloatingText(t,damage,false,false);if(t.hp<=0)killEnemy(t,f.owner);}}},
       draw(c){const now=performance.now();for(const m of this.merchants)if(!m.gone){c.save();c.translate(m.x,m.y);c.fillStyle='#0a1325';c.fillRect(-24,-40,48,60);c.fillStyle='#7e5999';c.fillRect(-20,-37,40,44);c.fillStyle='#cba65e';c.fillRect(-23,-21,46,5);c.fillRect(-28,15,56,9);c.fillStyle='#fff2ac';c.fillRect(-10,-13,6,4);c.fillRect(5,-13,6,4);c.fillStyle='#46354c';c.fillRect(-17,2,34,17);c.fillStyle='#fbbf24';for(let i=0;i<3;i++)c.fillRect(-18+i*14,11,8,6);c.textAlign='center';c.font='bold 12px sans-serif';c.fillStyle='#fde68a';c.fillText('神秘商人 · 一次访问',0,-49);c.restore();}
         for(const f of this.friends){const b=this.bossCatalog().find(b=>b.id===f.boss),base=b?.key,sp=SpriteCache[base+'_0']||SpriteCache.skeleton_0;if(!sp)continue;const img=sp.normal;c.save();c.translate(f.x,f.y);c.strokeStyle='#86efac';c.lineWidth=2;c.strokeRect(-26,-29,52,57);c.globalAlpha=.8;c.drawImage(img,-img.width/2,-img.height/2);c.fillStyle='#bbf7d0';c.font='bold 11px sans-serif';c.textAlign='center';c.fillText('友军',0,-34);c.restore();}
-        this.feedback=this.feedback.filter(f=>now-f.at<2200);for(const f of this.feedback){c.save();c.font='bold 14px sans-serif';c.textAlign='center';c.strokeStyle='#052e25';c.lineWidth=3;c.fillStyle='#a7f3d0';const text=(f.heal?'+'+Math.round(f.heal)+' 治疗 ':'')+(f.shield?'+'+Math.round(f.shield)+' 盾':'');const y=f.y-46-(now-f.at)/70;c.strokeText(text,f.x,y);c.fillText(text,f.x,y);c.restore();}},
+      },
       growthFx(kind){const sk=player.skills[{atk:'attack',s1:'skill1',s2:'skill2',ult:'ult',charge:'charge'}[kind]];if(!sk||sk.level<2||kind==='atk')return;skyBeams.push({type:'growth_sigil',x:player.x,y:player.y,radius:28+sk.level*9,stage:sk.level,color:({warrior:'#fda4af',mage:'#7dd3fc',ranger:'#86efac',engineer:'#fbbf24',healer:'#fff0ac'})[GameState.selectedHero],life:.4,maxLife:.4});},
       drawGrowth(c,s,ratio){const n=s.stage||1;c.save();c.translate(s.x,s.y);c.globalAlpha*=ratio;c.strokeStyle=s.color;c.fillStyle=s.color;c.lineWidth=n>=4?2:1;for(let ring=0;ring<Math.ceil(n/2);ring++){c.save();c.rotate(GameState.gameTime*.5+ring*.4);const r=s.radius+ring*8;c.strokeRect(-r*.7,-r*.7,r*1.4,r*1.4);for(let i=0;i<n+2;i++){c.rotate(Math.PI*2/(n+2));c.fillRect(r,-2,3+ring*2,4);}c.restore();}c.restore();}
     };
@@ -16524,7 +16519,7 @@
       tick(){for(const at of [90,360,720,1080,1440])if(GameState.gameTime>=at&&!Campaign.spawnedMerchants.has(at)){Campaign.spawnedMerchants.add(at);const origin=WorldCoop.spawnOrigin(),a=Math.random()*Math.PI*2,p=Arena.safe(origin.x+Math.cos(a)*260,origin.y+Math.sin(a)*260,55);Campaign.merchants.push({id:'merchant:'+at,x:p.x,y:p.y,gone:false,lease:null});showToast('[px:shop] 神秘商人在附近停留 · 靠近后访问');}for(const m of Campaign.merchants)if(m.lease&&(performance.now()>m.lease.until||WorldCoop.active()&&m.lease.owner!==CoopManager.myPeerId&&!CoopManager.allies.some(p=>p.id===m.lease.owner))){m.gone=true;m.lease=null;}},
       hint(){const b=document.getElementById('merchant-interact'),m=this.nearest();if(!b)return;b.style.display=GameState.isStarted&&!GameState.isOver&&!player.isDowned&&!this.open&&m&&Math.hypot(m.x-player.x,m.y-player.y)<125?'block':'none';},
       cardOwned(id){const pass={p_crit_glove:'critGlove',p_swift_boots:'swiftBoots',p_lava_heart:'lavaHeart',p_frost_aura:'frostAura',p_pierce_quiver:'pierceQuiver',syn_thunder:'thunderChain',syn_ice:'iceShatter',syn_blood:'bloodPact',syn_fire:'fireTrail'};return id.startsWith('syn_')?Boolean(player.passives[pass[id]||id.slice(4)]):pass[id]?Boolean(player.passives[pass[id]]):true;},
-      catalog(){return generateUpgradePool().filter(c=>!c.id.startsWith('lb_')).slice(0,32).map(c=>({id:c.id,name:c.name,desc:c.desc,type:c.type,owned:this.cardOwned(c.id)}));},
+      catalog(){return generateUpgradePool().filter(c=>!c.id.startsWith('lb_')).slice(0,32).map(c=>({id:c.id,name:c.name,desc:c.desc,icon:c.icon,type:c.type,owned:this.cardOwned(c.id)}));},
       removals(){const out=[];for(const key of ['skill1','skill2','ult']){const s=player.skills[key];if(!s.disabled)out.push({id:'remove:skill:'+key,name:'卸下 '+s.name,price:260+40*s.level,desc:'移除这项主动技，之后可在升级或商人处重新学习。'});}for(const key of [...SYNERGY_KEYS,'critGlove','swiftBoots','lavaHeart','frostAura','pierceQuiver'])if(player.passives[key]>0){const kind=SYNERGY_KEYS.includes(key)?'synergy':'equip',info=SkillDetails.describe(kind,key);out.push({id:'remove:'+kind+':'+key,name:'卸下 '+info.title,price:200+40*player.passives[key],desc:'释放一个'+(kind==='synergy'?'流派':'装备')+'格子，不返还原升级。已觉醒形态保留。'});}for(const r of player.mapRelics)out.push({id:'remove:relic:'+r.id,name:'卸下 '+r.name,price:200+40*(r.level||1),desc:'释放一个秘宝格，相关常驻属性一并移除。'});return out;},
       visit(){if(this.open||this.request||!WorldCoop.canAct()||!GameState.isStarted||GameState.isOver)return;const m=this.nearest();if(!m||Math.hypot(m.x-player.x,m.y-player.y)>125)return;CoopManager.sendPresenceNow();this.request={type:'WORLD_R22_SHOP_OPEN',id:m.id,requestId:CoopManager.myPeerId+':open:'+(++this.sequence),cards:this.catalog(),removals:this.removals(),unlocked:Object.keys(Campaign.permanent().bosses),gold:SaveManager.data.gold,lifeEpoch:player.lifeEpoch||0};this.lastTry=-Infinity;this.send(this.request);},
       send(p){if(WorldCoop.active()){if(CoopManager.isHost)this.handle({...p,peerId:CoopManager.myPeerId});else WorldCoop.toHost(p);}else this.handle({...p,peerId:CoopManager.myPeerId},true);},
@@ -16532,28 +16527,44 @@
       actor(id,solo){return solo?{...player,id,epoch:player.lifeEpoch||0,started:true}:WorldCoop.participants.get(id);},
       handle(p,solo=false){if(!solo&&(!WorldCoop.active()||!CoopManager.isHost))return;const actor=this.actor(p.peerId,solo),m=Campaign.merchants.find(m=>m.id===p.id);if(p.type==='WORLD_R22_SHOP_CLOSE'){if(m?.lease?.owner===p.peerId){m.gone=true;m.lease=null;}return;}const reject=message=>this.reply(p.peerId,{requestId:p.requestId,error:message},solo);if(!actor||!actor.started||actor.downed||actor.epoch!==p.lifeEpoch||WorldCoop.phased(actor)||GameState.isOver||WorldCoop.ended||WorldCoop.paused()||!m||m.gone||Math.hypot(m.x-actor.x,m.y-actor.y)>145)return reject('商人已离去，或当前无法交易');
         if(p.type==='WORLD_R22_SHOP_OPEN'){if(this.requests.has(p.requestId))return this.reply(p.peerId,this.requests.get(p.requestId),solo);if(m.lease&&m.lease.owner!==p.peerId)return reject('另一位队友正在访问这名商人');if(m.lease)return this.reply(p.peerId,m.lease.reply,solo);if(!Array.isArray(p.cards)||p.cards.length>32||!Number.isFinite(p.gold)||p.gold<0)return reject('交易数据无效');const valid=p.cards.filter(c=>typeof c.id==='string'&&/^(atk_up|s1_up|s2_up|ult_up|charge_|super_|syn_|p_|relic_up_|relearn_)/.test(c.id)&&typeof c.name==='string'&&c.name.length<100&&typeof c.desc==='string'&&c.desc.length<500);const shuffled=a=>a.map(x=>({x,k:Math.random()})).sort((a,b)=>a.k-b.k).map(v=>v.x),fresh=shuffled(valid.filter(c=>!c.owned)),owned=shuffled(valid.filter(c=>c.owned));const chosen=[...fresh.slice(0,4),...owned.slice(0,2)];for(const c of shuffled(valid))if(chosen.length<6&&!chosen.some(x=>x.id===c.id))chosen.push(c);const offers=chosen.map((c,i)=>({...c,price:c.id.startsWith('super_')?180:100+(i%3)*20}));
-          const unlocked=(Array.isArray(p.unlocked)?p.unlocked:[]).filter(id=>Campaign.bossCatalog().some(b=>b.id===id));for(const id of shuffled([...new Set(unlocked)]).slice(0,2)){const b=Campaign.bossCatalog().find(b=>b.id===id);offers.push({id:'hire:'+id,name:'雇佣 '+b.title.split(' · ').at(-1),desc:'本局永久跟随并攻击魔物，每人最多两位友军；你倒地或菜单期间待命。',price:420+b.minute*12});}const removals=(Array.isArray(p.removals)?p.removals:[]).filter(r=>typeof r.id==='string'&&/^remove:(skill|equip|synergy|relic):[a-zA-Z0-9_]+$/.test(r.id)).slice(0,16).map(r=>({...r,price:Math.max(240,Math.min(800,Math.round(r.price)||300))}));const nonce=Math.random().toString(36).slice(2)+':'+(++Campaign.sequence);const reply={requestId:p.requestId,open:true,id:m.id,nonce,offers,removals};m.lease={owner:p.peerId,nonce,until:performance.now()+90000,balance:p.gold,reply,offers:[...offers,...removals]};this.requests.set(p.requestId,reply);return this.reply(p.peerId,reply,solo);
+          const unlocked=(Array.isArray(p.unlocked)?p.unlocked:[]).filter(id=>Campaign.bossCatalog().some(b=>b.id===id));for(const id of shuffled([...new Set(unlocked)]).slice(0,2)){const b=Campaign.bossCatalog().find(b=>b.id===id);offers.push({id:'hire:'+id,name:'雇佣 '+b.title.split(' · ').at(-1),desc:'本局永久跟随并攻击魔物，每人最多两位友军；你倒地或菜单期间待命。',price:420+b.minute*12});}for(let i=offers.filter(o=>o.id.startsWith('hire:')).length;i<2;i++)offers.push({id:'hire:unknown_'+i,name:'未知首领',desc:'击败战役首领后解锁雇佣；本次无法购买。',price:0,locked:true});const removals=(Array.isArray(p.removals)?p.removals:[]).filter(r=>typeof r.id==='string'&&/^remove:(skill|equip|synergy|relic):[a-zA-Z0-9_]+$/.test(r.id)).slice(0,16).map(r=>({...r,price:Math.max(240,Math.min(800,Math.round(r.price)||300))}));const nonce=Math.random().toString(36).slice(2)+':'+(++Campaign.sequence);const reply={requestId:p.requestId,open:true,id:m.id,nonce,offers,removals};m.lease={owner:p.peerId,nonce,until:performance.now()+90000,balance:p.gold,unlocked,reply,offers:[...offers,...removals]};this.requests.set(p.requestId,reply);return this.reply(p.peerId,reply,solo);
         }
-        if(p.type==='WORLD_R22_SHOP_BUY'){const lease=m.lease;if(!lease||lease.owner!==p.peerId||lease.nonce!==p.nonce)return reject('这次访问已结束');if(this.transactions.has(p.requestId)){const tx=this.transactions.get(p.requestId);if(tx.done)this.reply(p.peerId,{bought:true,requestId:p.requestId},solo);return;}let offer=lease.offers.find(o=>o.id===p.offer);if(p.removal?.id===p.offer&&/^remove:(skill|equip|synergy|relic):[a-zA-Z0-9_]+$/.test(p.offer))offer={...p.removal,price:Math.max(240,Math.min(800,Math.round(p.removal.price)||300))};if(!offer||lease.balance<offer.price)return reject('金币不足或商品无效');if(offer.id.startsWith('hire:')&&Campaign.friends.filter(f=>f.owner===p.peerId).length>=2)return reject('本局最多雇佣两位首领');lease.balance-=offer.price;const tx={...offer,transaction:p.requestId,owner:p.peerId,merchant:m.id,epoch:actor.epoch,at:performance.now(),done:false,solo};this.transactions.set(p.requestId,tx);if(solo)this.apply(tx);else CoopLoot.grant(actor,'campaignShop',tx);}
+        if(p.type==='WORLD_R22_SHOP_BUY'){const lease=m.lease;if(!lease||lease.owner!==p.peerId||lease.nonce!==p.nonce)return reject('这次访问已结束');if(this.transactions.has(p.requestId)){const tx=this.transactions.get(p.requestId);if(tx.done)this.reply(p.peerId,{bought:true,requestId:p.requestId},solo);return;}let offer=lease.offers.find(o=>o.id===p.offer);if(p.removal?.id===p.offer&&/^remove:(skill|equip|synergy|relic):[a-zA-Z0-9_]+$/.test(p.offer))offer={...p.removal,price:Math.max(240,Math.min(800,Math.round(p.removal.price)||300))};if(!offer||offer.locked||offer.id.startsWith('hire:')&&!lease.unlocked.includes(offer.id.slice(5))||lease.balance<offer.price)return reject('金币不足或商品无效');if(offer.id.startsWith('hire:')&&Campaign.friends.filter(f=>f.owner===p.peerId).length>=2)return reject('本局最多雇佣两位首领');lease.balance-=offer.price;const tx={...offer,transaction:p.requestId,owner:p.peerId,merchant:m.id,epoch:actor.epoch,at:performance.now(),done:false,solo};this.transactions.set(p.requestId,tx);if(solo)this.apply(tx);else CoopLoot.grant(actor,'campaignShop',tx);}
       },
       receive(p){if(p.error){this.request=null;this.pending=null;showToast('[px:warning] '+p.error);this.render();return;}if(p.open){if(this.open?.nonce===p.nonce){this.request=null;return;}if(!this.request||this.request.requestId!==p.requestId)return;this.request=null;this.open=p;this.paused=GameState.isPaused;GameState.isPaused=true;CoopSocial.clearInput();document.getElementById('merchant-modal').style.display='flex';MenuPause.sync();CoopManager.sendPresenceNow();this.render();}if(p.bought&&this.pending?.requestId===p.requestId){this.pending=null;this.render();}},
-      buy(offer){if(!this.open||this.pending||GameState.isOver)return;const p={type:'WORLD_R22_SHOP_BUY',id:this.open.id,nonce:this.open.nonce,offer,removal:this.removals().find(r=>r.id===offer),requestId:CoopManager.myPeerId+':buy:'+(++this.sequence),lifeEpoch:player.lifeEpoch||0};this.pending=p;this.lastTry=-Infinity;this.send(p);this.render();},
+      buy(offer){if(!this.open||this.pending||GameState.isOver||this.open.offers.find(o=>o.id===offer)?.locked)return;const p={type:'WORLD_R22_SHOP_BUY',id:this.open.id,nonce:this.open.nonce,offer,removal:this.removals().find(r=>r.id===offer),requestId:CoopManager.myPeerId+':buy:'+(++this.sequence),lifeEpoch:player.lifeEpoch||0};this.pending=p;this.lastTry=-Infinity;this.send(p);this.render();},
       apply(tx){let ok=this.applied.has(tx.transaction);if(!ok&&tx.owner===CoopManager.myPeerId&&!GameState.isOver&&SaveManager.data.gold>=tx.price){const offer=tx.id,card=generateUpgradePool().find(c=>c.id===offer),canHire=offer.startsWith('hire:')&&Campaign.permanent().bosses[offer.slice(5)],canRemove=offer.startsWith('remove:')&&this.removals().some(r=>r.id===offer);if(card||canHire||canRemove){SaveManager.data.gold-=tx.price;this.applied.add(tx.transaction);if(card)card.apply();else if(canRemove)this.remove(offer);SaveManager.save();updateLoadoutHUD();updateHpUI();ok=true;showToast('[px:coin] '+tx.name+' · -'+tx.price+' 金币');}}this.pending=null;this.render();const pkt={type:'WORLD_R22_SHOP_RECEIPT',id:tx.transaction,ok};if(tx.solo)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId},true);else if(CoopManager.isHost)this.acceptReceipt({...pkt,peerId:CoopManager.myPeerId});else Campaign.receipts.set(pkt.id,{pkt,last:-Infinity});return ok;},
       acceptReceipt(p,solo=false){const tx=this.transactions.get(p.id);if(!tx||tx.owner!==p.peerId)return;const ack=()=>{if(!solo)CoopManager.sendPacket(WorldCoop.packet({type:'WORLD_R22_ACK',targetPeerId:p.peerId,id:p.id}));};if(tx.done){ack();return;}tx.done=true;if(p.ok===true){const r=Campaign.stat(p.peerId);r.purchases++;if(tx.id.startsWith('hire:')&&Campaign.hire(p.peerId,tx.id.slice(5)))r.hires++;if(tx.id.startsWith('remove:'))r.removals++;}else{const m=Campaign.merchants.find(m=>m.id===tx.merchant);if(m?.lease)m.lease.balance+=tx.price;}this.reply(p.peerId,{bought:true,requestId:p.id},solo);ack();},
       remove(id){const [,kind,key]=id.split(':'),p=player.passives,lv=p[key]||0,lb=p.equipLB?.[key]||0;if(kind==='skill'){const skill=HERO_CONFIGS[GameState.selectedHero].initSkills()[key];skill.damage=Math.round(skill.damage*(1+(SaveManager.data.talents.might||0)*.06));Object.assign(player.skills[key],skill,{disabled:true,level:0,timer:0,isEvolved:false});if(key==='skill1')player.skills.skill1.isDashing=false;if(key==='skill2'){if(GameState.selectedHero==='healer')HealerKit.localFields=[];if(GameState.selectedHero==='engineer')for(const g of EngineerKit.turrets())g.life=0;}return;}
         if(kind==='relic'){const r=player.mapRelics.find(r=>r.id===key);if(!r)return;const n=r.level||1;if(key==='dungeon_thorn')player.armor=Math.max(HERO_CONFIGS[GameState.selectedHero].armor,player.armor-(r.armorGranted??(.05+.04*(n-1))));if(key==='dungeon_horn')player.critChance=Math.max(0,player.critChance-(.04+.035*(n-1)));if(key==='tundra_totem')player.speed=Math.round(player.speed/(1.06*Math.pow(1.05,n-1)));if(key==='grave_cloak')player.speed=Math.round(player.speed/(1.05*Math.pow(1.04,n-1)));player.mapRelics=player.mapRelics.filter(r=>r.id!==key);return;}
         if(key==='critGlove'){player.critChance=Math.max(0,player.critChance-lv*.03-lb*.02);player.critMultiplier=+(player.critMultiplier-lv*.08-lb*.12).toFixed(2);}if(key==='swiftBoots'){player.speed=Math.round(player.speed/Math.pow(1.04,lv+lb));player.magnetRange=Math.max(0,player.magnetRange-lv*6-lb*10);}if(key==='lavaHeart')player.maxHp=Math.max(1,player.maxHp-lv*8-lb*15);if(key==='bloodPact')player.maxHp=Math.max(1,player.maxHp-lv*15);if(key==='pierceQuiver')player.skills.attack.damage=Math.round(player.skills.attack.damage/Math.pow(1.05,lv)/Math.pow(1.08,lb));p[key]=0;if(p.equipLB)p.equipLB[key]=0;player.hp=Math.min(player.hp,player.maxHp);player.shield=Math.min(player.shield,Math.round(player.maxHp*.35));},
       close(){if(!this.open)return;this.send({type:'WORLD_R22_SHOP_CLOSE',id:this.open.id});this.open=null;document.getElementById('merchant-modal').style.display='none';GameState.isPaused=this.paused||false;CoopSocial.clearInput();CoopManager.sendPresenceNow();CombatKeys.focus();this.hint();},
-      render(){const box=document.getElementById('merchant-content');if(!box||!this.open)return;this.open.removals=this.removals();box.innerHTML='<p class="campaign-note">可用金币 <b>'+SaveManager.data.gold+'</b> · 本次可购买多件；离开后商人离去，全队无法再次访问。</p><h3>本次货物</h3><div class="campaign-grid">'+this.open.offers.map(o=>this.cardHTML(o)).join('')+'</div><h3>卸下与腾出格子</h3><p class="campaign-note">购买时再次校验格子与当前等级；主动技卸下后需重新学习，已觉醒配件卸下不退化技能。</p><div class="campaign-grid">'+this.open.removals.map(o=>this.cardHTML(o)).join('')+'</div>';for(const b of box.querySelectorAll('[data-buy]'))b.onclick=()=>this.buy(b.dataset.buy);},
-      cardHTML(o){const ordinary=!o.id.startsWith('hire:')&&!o.id.startsWith('remove:'),current=ordinary?generateUpgradePool().find(c=>c.id===o.id):o;return'<article class="campaign-card"><strong>'+Campaign.esc(current?.name||o.name)+'</strong><p>'+Campaign.esc(current?.desc||(ordinary?'已满级、格子不足或已不满足条件':o.desc))+'</p><button class="btn-secondary" data-buy="'+Campaign.esc(o.id)+'" '+(this.pending||!current||SaveManager.data.gold<o.price?'disabled':'')+'>'+o.price+' 金币'+(this.pending?.offer===o.id?' · 交易中':'')+'</button></article>';},
+      icon(o){const id=o.id,hero=HERO_CONFIGS[GameState.selectedHero],key=id.split(':').at(-1);let token=o.icon;
+        if(id.startsWith('remove:skill:'))token=hero.icons[{skill1:'s1',skill2:'s2',ult:'ult'}[key]];
+        const pass={critGlove:'glove',swiftBoots:'boots',lavaHeart:'heart-lava',frostAura:'snow',pierceQuiver:'target',thunderChain:'lightning',iceShatter:'ice',bloodPact:'blood',fireTrail:'fire',huntPulse:'burst',stellarBastion:'shield',emberEcho:'fire'};
+        if(id.startsWith('remove:'))token=token||'[px:'+(pass[key]||(id.includes(':relic:')?'chest':'gear'))+']';
+        return /^\[px:[a-z0-9-]+\]$/.test(token||'')?token:'[px:star]';
+      },
+      render(){const box=document.getElementById('merchant-content');if(!box||!this.open)return;this.open.removals=this.removals();const goods=this.open.offers.filter(o=>!o.id.startsWith('hire:')),bosses=this.open.offers.filter(o=>o.id.startsWith('hire:'));
+        box.innerHTML='<p class="campaign-note merchant-wallet">[px:coin] <b>'+SaveManager.data.gold+'</b> · 可购买多件，结束访问后离去</p><h3>[px:shop] 技能与装备</h3><div class="merchant-grid" data-market-section="goods">'+goods.map(o=>this.cardHTML(o)).join('')+'</div><h3>[px:boss] 首领友军 <small>最多两位 · 本局跟随</small></h3><div class="merchant-grid" data-market-section="bosses">'+bosses.map(o=>this.cardHTML(o)).join('')+'</div><h3>[px:gear] 卸下与腾出格子</h3><p class="campaign-note">卸下后不返还升级，主动技需重新学习。</p><div class="merchant-grid" data-market-section="removals">'+(this.open.removals.map(o=>this.cardHTML(o)).join('')||'<p class="campaign-note">暂无可卸下的技能或装备</p>')+'</div>';
+        for(const b of box.querySelectorAll('[data-buy]'))b.onclick=()=>this.buy(b.dataset.buy);
+        for(const cv of box.querySelectorAll('[data-boss-portrait]')){const boss=Campaign.bossCatalog().find(b=>b.id===cv.dataset.bossPortrait),sp=SpriteCache[boss?.key+'_0']?.normal;if(sp){const ctx=cv.getContext('2d');ctx.imageSmoothingEnabled=false;const scale=Math.min(30/sp.width,30/sp.height);ctx.drawImage(sp,(32-sp.width*scale)/2,(32-sp.height*scale)/2,sp.width*scale,sp.height*scale);}}
+      },
+      cardHTML(o){const hire=o.id.startsWith('hire:'),ordinary=!hire&&!o.id.startsWith('remove:'),current=ordinary?generateUpgradePool().find(c=>c.id===o.id):o,locked=Boolean(o.locked),icon=locked?'[px:lock]':hire?'<canvas width="32" height="32" data-boss-portrait="'+Campaign.esc(o.id.slice(5))+'" aria-label="首领头像"></canvas>':this.icon(current||o),desc=current?.desc||(ordinary?'已满级、格子不足或已不满足条件':o.desc),disabled=locked||this.pending||!current||SaveManager.data.gold<o.price||hire&&Campaign.friends.filter(f=>f.owner===CoopManager.myPeerId).length>=2;
+        return'<article class="merchant-tile '+(locked?'locked':'')+'"><div class="merchant-tile-head"><span class="merchant-icon">'+icon+'</span><strong>'+Campaign.esc(current?.name||o.name)+'</strong></div><details><summary>效果详情</summary><p>'+Campaign.esc(desc)+'</p></details><button class="btn-secondary" data-buy="'+Campaign.esc(o.id)+'" '+(disabled?'disabled':'')+'>'+(locked?'尚未解锁':'[px:coin] '+o.price+(this.pending?.offer===o.id?' · 交易中':''))+'</button></article>';
+      },
       networkTick(){const now=performance.now();if(this.request&&now-this.lastTry>800){this.lastTry=now;this.send(this.request);}if(this.pending&&now-this.lastTry>800){this.lastTry=now;this.send(this.pending);}if(this.open&&(player.isDowned||GameState.isOver||!Campaign.merchants.some(m=>m.id===this.open.id&&!m.gone)))this.close();}
     };
 
     // UI uses the existing pixel atlas and stays usable on narrow phones.
     const campaignStyle=document.createElement('style');campaignStyle.textContent=`
-      .campaign-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:10px}.campaign-card{border:1px solid #43526b;background:#111d30;padding:14px;border-radius:7px;line-height:1.6;min-width:0}.campaign-card strong{color:#fbe5a1}.campaign-card p{font-size:12px;color:#bdcce2}.campaign-card progress{width:100%;height:8px;accent-color:#7dd3b0}.campaign-card.achieved{border-color:#66b9a0;background:#122d2a}.campaign-card.locked{filter:grayscale(1);opacity:.6}.book-portrait{height:80px;text-align:center;font-size:35px;color:#8aa0be}.book-portrait canvas{width:80px;height:80px;image-rendering:pixelated}.campaign-note{color:#b9c8dd;font-size:12px;line-height:1.7}.campaign-scroll{overflow:auto}.campaign-scroll table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}.campaign-scroll td,.campaign-scroll th{padding:9px 7px;border-bottom:1px solid #40516c;text-align:left}.rank-label{font-size:23px;color:#f8d970;margin-right:5px}#campaign-modal .modal-card,#merchant-modal .modal-card{width:min(900px,94vw);max-height:86dvh;overflow:auto}#support-feed{position:fixed;left:50%;top:28%;transform:translateX(-50%);z-index:90;pointer-events:none;font-size:12px;font-weight:bold;text-align:center;width:min(90vw,450px)}#support-feed div{background:#071e21df;border:1px solid #5aa68f;padding:5px 9px;color:#b0f8d5;margin:3px;border-radius:5px}#merchant-interact{display:none;position:fixed;left:50%;bottom:25%;transform:translateX(-50%);z-index:80;padding:10px 16px;background:#2b2140;color:#ffe2a1;border:2px solid #c79c58;border-radius:6px;font-size:14px}#campaign-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}#run-report{margin:10px 0 18px}      #campaign-modal .modal-card{width:min(740px,94vw)}.codex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:6px}.campaign-card.codex-entry{display:flex;align-items:center;gap:9px;text-align:left;padding:8px;min-height:57px;cursor:pointer;font:inherit}.codex-entry strong{font-size:12px;line-height:1.35;display:block}.codex-entry small{font-size:10px;color:#95abc4;display:block;margin-top:3px}.codex-entry.selected{border-color:#f1cf7b;background:#2c2e34}.codex-icon{width:32px;height:32px;flex:0 0 32px;display:grid;place-items:center}.codex-icon canvas{width:32px;height:32px;image-rendering:pixelated}.codex-icon .px-icon{width:24px;height:24px}.codex-detail{padding:12px;border:1px solid #a48b55;background:#192337;margin-bottom:9px;font-size:12px;line-height:1.65}.codex-detail[hidden]{display:none}.codex-detail-title{color:#ffe3a0;font-weight:bold;font-size:15px}.codex-detail p{margin:5px 0}.codex-stats{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}.codex-stats b{color:#e5edf9}.codex-skill-list{margin:7px 0;color:#c4d5e7}.codex-detail small{color:#95abc4;font-size:10px}.achievement-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:6px}.campaign-card.achievement-row{padding:8px;display:flex;gap:8px;align-items:flex-start;line-height:1.35}.achievement-icon{flex:0 0 24px;width:24px;height:24px;display:grid;place-items:center;margin-top:2px}.achievement-icon .px-icon{width:24px;height:24px}.achievement-body{min-width:0;flex:1}.achievement-body strong{display:block;font-size:12px;line-height:1.4}.achievement-method{font-size:10px;line-height:1.5;color:#b8c8dc;margin:3px 0}.achievement-meta{display:flex;justify-content:space-between;gap:7px;font-size:10px;color:#d7c69c}.achievement-meta .px-icon{width:12px;height:12px}.achievement-body progress{display:block;width:100%;height:3px;margin:5px 0 0;accent-color:#7dd3b0}@media(max-width:420px){.codex-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.campaign-card.codex-entry{gap:6px;padding:7px}.codex-entry strong{font-size:11px}.codex-stats{column-gap:6px}}
+      .campaign-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:10px}.campaign-card{border:1px solid #43526b;background:#111d30;padding:14px;border-radius:7px;line-height:1.6;min-width:0}.campaign-card strong{color:#fbe5a1}.campaign-card p{font-size:12px;color:#bdcce2}.campaign-card progress{width:100%;height:8px;accent-color:#7dd3b0}.campaign-card.achieved{border-color:#66b9a0;background:#122d2a}.campaign-card.locked{filter:grayscale(1);opacity:.6}.book-portrait{height:80px;text-align:center;font-size:35px;color:#8aa0be}.book-portrait canvas{width:80px;height:80px;image-rendering:pixelated}.campaign-note{color:#b9c8dd;font-size:12px;line-height:1.7}.campaign-scroll{overflow:auto}.campaign-scroll table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}.campaign-scroll td,.campaign-scroll th{padding:9px 7px;border-bottom:1px solid #40516c;text-align:left}.rank-label{font-size:23px;color:#f8d970;margin-right:5px}#campaign-modal .modal-card,#merchant-modal .modal-card{width:min(900px,94vw);max-height:86dvh;overflow:auto}#merchant-interact{display:none;position:fixed;left:50%;bottom:25%;transform:translateX(-50%);z-index:80;padding:10px 16px;background:#2b2140;color:#ffe2a1;border:2px solid #c79c58;border-radius:6px;font-size:14px}#campaign-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}#run-report{margin:10px 0 18px}      #campaign-modal .modal-card{width:min(740px,94vw)}.codex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:6px}.campaign-card.codex-entry{display:flex;align-items:center;gap:9px;text-align:left;padding:8px;min-height:57px;cursor:pointer;font:inherit}.codex-entry strong{font-size:12px;line-height:1.35;display:block}.codex-entry small{font-size:10px;color:#95abc4;display:block;margin-top:3px}.codex-entry.selected{border-color:#f1cf7b;background:#2c2e34}.codex-icon{width:32px;height:32px;flex:0 0 32px;display:grid;place-items:center}.codex-icon canvas{width:32px;height:32px;image-rendering:pixelated}.codex-icon .pixel-icon{width:24px;height:24px}.codex-detail{padding:12px;border:1px solid #a48b55;background:#192337;margin-bottom:9px;font-size:12px;line-height:1.65}.codex-detail[hidden]{display:none}.codex-detail-title{color:#ffe3a0;font-weight:bold;font-size:15px}.codex-detail p{margin:5px 0}.codex-stats{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}.codex-stats b{color:#e5edf9}.codex-skill-list{margin:7px 0;color:#c4d5e7}.codex-detail small{color:#95abc4;font-size:10px}.achievement-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:6px}.campaign-card.achievement-row{padding:8px;display:flex;gap:8px;align-items:flex-start;line-height:1.35}.achievement-icon{flex:0 0 24px;width:24px;height:24px;display:grid;place-items:center;margin-top:2px}.achievement-icon .pixel-icon{width:24px;height:24px}.achievement-body{min-width:0;flex:1}.achievement-body strong{display:block;font-size:12px;line-height:1.4}.achievement-method{font-size:10px;line-height:1.5;color:#b8c8dc;margin:3px 0}.achievement-meta{display:flex;justify-content:space-between;gap:7px;font-size:10px;color:#d7c69c}.achievement-meta .pixel-icon{width:12px;height:12px}.achievement-body progress{display:block;width:100%;height:3px;margin:5px 0 0;accent-color:#7dd3b0}@media(max-width:420px){.codex-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.campaign-card.codex-entry{gap:6px;padding:7px}.codex-entry strong{font-size:11px}.codex-stats{column-gap:6px}}
+
+      #merchant-content h3{font-size:14px;margin:14px 0 6px;color:#f0d69d}#merchant-content h3 small{font-size:10px;font-weight:normal;color:#9aadc4}.merchant-wallet{margin:6px 0}.merchant-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:6px}.merchant-tile{padding:8px;background:#111d30;border:1px solid #42516b;border-radius:5px;min-width:0;display:flex;flex-direction:column;gap:6px}.merchant-tile-head{display:flex;align-items:center;gap:7px;min-height:34px}.merchant-tile strong{font-size:12px;line-height:1.4;color:#fbe5a1;overflow-wrap:anywhere}.merchant-icon{flex:0 0 32px;width:32px;height:32px;display:grid;place-items:center}.merchant-icon .pixel-icon{width:24px;height:24px}.merchant-icon canvas{width:32px;height:32px;image-rendering:pixelated}.merchant-tile details{font-size:10px;color:#a5b9d1;line-height:1.5;margin-bottom:auto}.merchant-tile summary{cursor:pointer;padding:2px 0}.merchant-tile details p{margin:5px 0;color:#c2d3e7}.merchant-tile button{width:100%;padding:6px 3px;font-size:11px;min-height:29px;margin:0}.merchant-tile.locked{border-style:dashed;opacity:.65}#merchant-modal .modal-subtitle{font-size:11px;line-height:1.5}#merchant-leave{padding:9px;margin-top:12px;font-size:13px}
+      #shop-item-list{grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:6px}#shop-item-list .talent-card{padding:9px;min-width:0}#shop-item-list .talent-name{flex-wrap:wrap;gap:5px;font-size:12px}#shop-item-list .talent-name .pixel-icon{width:22px;height:22px}#shop-item-list .talent-desc{font-size:11px;line-height:1.5}#shop-item-list .talent-btn{font-size:11px;padding:7px 3px}
+      #achievement-notice{position:fixed;z-index:25000;top:max(12px,env(safe-area-inset-top));right:16px;width:min(350px,calc(100vw - 24px));padding:10px;border:2px solid #b69a50;box-shadow:0 3px 0 #312817,0 6px 25px #0009;background:#101c30f5;color:#f8e6b0;pointer-events:none;animation:achievement-enter .2s ease-out}#achievement-notice[hidden]{display:none}.achievement-notice-heading{font-size:12px;font-weight:bold;display:flex;align-items:center;gap:7px;padding-bottom:6px;border-bottom:1px solid #635638}.achievement-notice-heading button{margin-left:auto;pointer-events:auto;background:#26334a;border:1px solid #66604c;cursor:pointer;padding:3px;display:grid;place-items:center}.achievement-notice-heading .pixel-icon{width:16px;height:16px}.achievement-notice-row{display:flex;align-items:center;gap:8px;padding-top:9px}.achievement-notice-row>div{flex:1;min-width:0}.achievement-notice-row strong{font-size:13px;display:block}.achievement-notice-row small{display:block;font-size:10px;color:#acc1d8;line-height:1.5;margin-top:2px}.achievement-notice-row b{font-size:12px;white-space:nowrap;color:#f9d16c}.achievement-notice-row b .pixel-icon{width:14px;height:14px}.achievement-notice-more{font-size:10px;color:#9aafc7;margin:8px 0 0}@keyframes achievement-enter{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}@media(prefers-reduced-motion:reduce){#achievement-notice{animation:none}}@media(max-width:420px){.merchant-grid,#shop-item-list{grid-template-columns:repeat(2,minmax(0,1fr))}.merchant-tile{padding:7px}.merchant-tile-head{gap:5px}.merchant-tile strong{font-size:11px}#achievement-notice{right:12px}}
 `;document.head.append(campaignStyle);
-    document.body.insertAdjacentHTML('beforeend',`<div id="support-feed" aria-live="polite"></div><button id="merchant-interact">[px:shop] 访问神秘商人 · E</button><div id="campaign-modal" class="modal-overlay"><div class="modal-card"><button class="modal-close-x" id="campaign-close" aria-label="关闭图鉴">[px:close]</button><div class="modal-title">[px:book] 血夜图鉴与成就</div><div id="campaign-tabs"><button class="btn-secondary" data-book-tab="heroes">角色</button><button class="btn-secondary" data-book-tab="monsters">魔物</button><button class="btn-secondary" data-book-tab="bosses">首领</button><button class="btn-secondary" data-book-tab="achievements">成就</button></div><div id="campaign-content"></div></div></div><div id="merchant-modal" class="modal-overlay"><div class="modal-card"><button class="modal-close-x" id="merchant-close" aria-label="结束访问">[px:close]</button><div class="modal-title">[px:shop] 雾行商人</div><div class="modal-subtitle">每个商人仅接待一位猎手的一次访问；离开后不会回来。</div><div id="merchant-content"></div><button class="btn-primary" id="merchant-leave">结束访问，让商人离去</button></div></div>`);
+    document.body.insertAdjacentHTML('beforeend',`<aside id="achievement-notice" role="status" aria-live="polite" aria-atomic="true" hidden></aside><button id="merchant-interact">[px:shop] 访问神秘商人 · E</button><div id="campaign-modal" class="modal-overlay"><div class="modal-card"><button class="modal-close-x" id="campaign-close" aria-label="关闭图鉴">[px:close]</button><div class="modal-title">[px:book] 血夜图鉴与成就</div><div id="campaign-tabs"><button class="btn-secondary" data-book-tab="heroes">角色</button><button class="btn-secondary" data-book-tab="monsters">魔物</button><button class="btn-secondary" data-book-tab="bosses">首领</button><button class="btn-secondary" data-book-tab="achievements">成就</button></div><div id="campaign-content"></div></div></div><div id="merchant-modal" class="modal-overlay"><div class="modal-card"><button class="modal-close-x" id="merchant-close" aria-label="结束访问">[px:close]</button><div class="modal-title">[px:shop] 雾行商人</div><div class="modal-subtitle">每个商人仅接待一位猎手的一次访问；离开后不会回来。</div><div id="merchant-content"></div><button class="btn-primary" id="merchant-leave">结束访问，让商人离去</button></div></div>`);
     document.getElementById('btn-start-game').insertAdjacentHTML('afterend','<div style="display:flex;justify-content:center;gap:9px;margin:12px 0;flex-wrap:wrap"><button class="btn-secondary" id="camp-book">[px:book] 角色与魔物图鉴</button><button class="btn-secondary" id="camp-achievements">[px:trophy] 成就与金币</button></div>');
     document.getElementById('over-damage').parentElement.insertAdjacentHTML('afterend','<div>[px:heart-green] 战局有效治疗: <strong id="over-healing">0</strong></div>');document.getElementById('over-modal').querySelector('.modal-card').insertAdjacentHTML('beforeend','<div id="run-report"></div>');
     document.getElementById('camp-book').onclick=()=>Campaign.openBook('heroes');document.getElementById('camp-achievements').onclick=()=>Campaign.openBook('achievements');document.getElementById('campaign-close').onclick=()=>Campaign.closeBook();for(const b of document.querySelectorAll('[data-book-tab]'))b.onclick=()=>Campaign.renderBook(b.dataset.bookTab);document.getElementById('merchant-interact').onclick=()=>CampMarket.visit();document.getElementById('merchant-close').onclick=document.getElementById('merchant-leave').onclick=()=>CampMarket.close();
@@ -16562,7 +16573,7 @@
     // Extend existing authoritative state and reward logs instead of adding another transport.
     const r22Encode=WorldCoop.encodeWorld;WorldCoop.encodeWorld=function(){Campaign.ensure();return{...r22Encode.call(this),campaign:Campaign.snapshot()};};
     const r22Apply=WorldCoop.applyWorld;WorldCoop.applyWorld=function(d){r22Apply.call(this,d);if(this.receivedFrame===d.seq&&d.session===this.session&&d.campaign)Campaign.receiveSnapshot(d.campaign);};
-    const r22Receive=WorldCoop.receive;WorldCoop.receive=function(p){if(p.type?.startsWith('WORLD_R22_')){if(!this.active()||p.session!==this.session||!CoopManager.allies.some(a=>a.id===p.peerId))return true;if(CoopManager.isHost){if(p.type==='WORLD_R22_RECEIPT')Campaign.acceptReceipt(p);if(p.type==='WORLD_R22_SHOP_RECEIPT')CampMarket.acceptReceipt(p);if(['WORLD_R22_SHOP_OPEN','WORLD_R22_SHOP_BUY','WORLD_R22_SHOP_CLOSE'].includes(p.type))CampMarket.handle(p);}else if(p.peerId===this.hostId){if(p.type==='WORLD_R22_ACK')Campaign.receipts.delete(p.id);if(p.type==='WORLD_R22_FEEDBACK'&&p.event)Campaign.showFeedback(p.event);if(p.type==='WORLD_R22_SHOP_REPLY')CampMarket.receive(p);}return true;}if(p.type==='WORLD_END'&&p.peerId===this.hostId&&p.session===this.session&&p.campaign)Campaign.receiveSnapshot(p.campaign);return r22Receive.call(this,p);};
+    const r22Receive=WorldCoop.receive;WorldCoop.receive=function(p){if(p.type?.startsWith('WORLD_R22_')){if(!this.active()||p.session!==this.session||!CoopManager.allies.some(a=>a.id===p.peerId))return true;if(CoopManager.isHost){if(p.type==='WORLD_R22_RECEIPT')Campaign.acceptReceipt(p);if(p.type==='WORLD_R22_SHOP_RECEIPT')CampMarket.acceptReceipt(p);if(['WORLD_R22_SHOP_OPEN','WORLD_R22_SHOP_BUY','WORLD_R22_SHOP_CLOSE'].includes(p.type))CampMarket.handle(p);}else if(p.peerId===this.hostId){if(p.type==='WORLD_R22_ACK')Campaign.receipts.delete(p.id);if(p.type==='WORLD_R22_SHOP_REPLY')CampMarket.receive(p);}return true;}if(p.type==='WORLD_END'&&p.peerId===this.hostId&&p.session===this.session&&p.campaign)Campaign.receiveSnapshot(p.campaign);return r22Receive.call(this,p);};
     const r22Finish=WorldCoop.finish;WorldCoop.finish=function(v){if(this.ended)return;Campaign.beginEnd(v);return r22Finish.call(this,v);};
     const r22Reset=WorldCoop.reset;WorldCoop.reset=function(){Campaign.reset();return r22Reset.call(this);};
     const r22Round=resetGameSession;resetGameSession=function(...args){const r=r22Round(...args);Campaign.reset();return r;};
@@ -16578,6 +16589,31 @@
     const r22Tree=SkillDetails.describe;SkillDetails.describe=function(kind,key){const d=r22Tree.call(this,kind,key);if(kind==='active'&&player.skills[key]?.disabled){d.status='已卸下 · 可重新学习';d.notes.push('当前不能释放；从升级或神秘商人重新学习后恢复Lv.1。');}return d;};
     const r22SaveBattle=SaveManager.saveBattleSnapshot;SaveManager.saveBattleSnapshot=function(...a){const r=r22SaveBattle.apply(this,a);if(this._memBattleSnap&&!WorldCoop.active()){this._memBattleSnap.campaign={owner:CoopManager.myPeerId,round:Campaign.round,rows:[...Campaign.rows.values()],bosses:Campaign.bosses,merchants:Campaign.merchants.map(m=>({...m,lease:null})),friends:Campaign.friends,spawned:[...(Campaign.spawnedMerchants||[])]};try{localStorage.setItem(this.BATTLE_KEY,JSON.stringify(this._memBattleSnap));}catch{}}return r;};
     const r22Restore=restoreBattleSnapshot;restoreBattleSnapshot=function(){const snap=SaveManager.hasBattleSnapshot(),r=r22Restore();if(r&&snap?.campaign){const d=snap.campaign;Campaign.reset();Campaign.round=d.round;const oldOwner=d.owner||(d.rows||[]).find(row=>row.hero===GameState.selectedHero)?.id||d.rows?.[0]?.id,newOwner=CoopManager.myPeerId;Campaign.rows=new Map((d.rows||[]).map(row=>{const next={...row,id:row.id===oldOwner?newOwner:row.id};return[next.id,next];}));Campaign.bosses=d.bosses||[];Campaign.merchants=d.merchants||[];Campaign.friends=(d.friends||[]).map(f=>({...f,owner:f.owner===oldOwner?newOwner:f.owner}));HuntPulse.reset();Campaign.spawnedMerchants=new Set(d.spawned||[]);}return r;};
+
+    // Camera feedback is cosmetic: attack cadence never extends its envelope.
+    var CameraFeedback={
+      time:0,last:-Infinity,left:0,duration:.12,amplitude:0,
+      now(){return performance.now()/1000;},
+      reset(){this.time=0;this.last=-Infinity;this.left=0;this.amplitude=0;GameState.screenShake=0;},
+      request(strength,kind='event'){
+        if(kind==='attack'||!GameState.isStarted||GameState.isOver)return false;
+        this.time=this.now();
+        if(this.time-this.last<.65)return false;
+        this.last=this.time;this.left=this.duration;this.amplitude=Math.min(3,Math.max(1,Number(strength)||0)/8);
+        GameState.screenShake=this.amplitude;return true;
+      },
+      tick(){this.time=this.now();this.left=Math.max(0,Math.min(this.duration,this.duration-(this.time-this.last)));GameState.screenShake=this.left?this.amplitude*this.left/this.duration:0;},
+      offset(){if(!GameState.screenShake||!this.left||GameState.isPaused||GameState.isOver)return{x:0,y:0};const t=1-this.left/this.duration,a=GameState.screenShake;return{x:Math.sin(t*Math.PI*4)*a,y:Math.sin(t*Math.PI*3)*a*.55};}
+    };
+    // Achievement notices never open a game modal or take keyboard focus.
+    var AchievementNotices={
+      queue:[],seen:new Set(),timer:0,current:null,
+      enqueue(achievements){const fresh=achievements.filter(a=>!this.seen.has(a.id));for(const a of fresh)this.seen.add(a.id);for(let i=0;i<fresh.length;i+=3)this.queue.push(fresh.slice(i,i+3));if(!this.current)this.next();},
+      next(){clearTimeout(this.timer);this.current=this.queue.shift()||null;const box=document.getElementById('achievement-notice');if(!box)return;if(!this.current){box.hidden=true;box.replaceChildren();return;}
+        const list=this.current;box.hidden=false;box.innerHTML='<div class="achievement-notice-heading">[px:trophy] 成就达成 <button type="button" aria-label="收起成就通知">[px:close]</button></div>'+list.map(a=>'<div class="achievement-notice-row"><span class="achievement-icon">[px:'+Campaign.achievementInfo(a).icon+']</span><div><strong>'+Campaign.esc(a.name)+'</strong><small>'+Campaign.esc(Campaign.achievementInfo(a).method)+'</small></div><b>[px:coin] +'+a.reward+'</b></div>').join('')+(this.queue.length?'<div class="achievement-notice-more">还有 '+this.queue.reduce((n,a)=>n+a.length,0)+' 项成就 · 即将显示</div>':'');box.querySelector('button').onclick=()=>this.next();this.timer=setTimeout(()=>this.next(),list.length>1?5500:4000);
+      },
+      clear(){clearTimeout(this.timer);this.queue=[];this.current=null;this.seen.clear();const box=document.getElementById('achievement-notice');if(box){box.hidden=true;box.replaceChildren();}}
+    };
 
     Campaign.reset();Campaign.permanent();
 
