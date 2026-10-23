@@ -17732,25 +17732,48 @@
         }
         .hero-unlock-tag {
           margin-top: 3px;
-          padding: 2px 4px;
-          border-radius: 4px;
+          padding: 3px 5px;
+          border-radius: 5px;
           font-size: 9px;
-          font-weight: 800;
+          font-weight: 900;
           line-height: 1.25;
           text-align: center;
           width: 100%;
           overflow-wrap: anywhere;
+          transition: transform 0.16s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
         }
         .hero-unlock-tag.is-locked {
-          background: rgba(15, 23, 42, 0.92);
-          border: 1px solid rgba(251, 191, 36, 0.65);
-          color: #fde68a;
+          background: linear-gradient(180deg, rgba(180, 83, 9, 0.92), rgba(120, 53, 15, 0.95));
+          border: 1px solid #fbbf24;
+          color: #fef3c7;
           cursor: pointer;
+          box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+        }
+        .hero-unlock-tag.is-locked:hover {
+          transform: translateY(-1px) scale(1.03);
+          background: linear-gradient(180deg, rgba(217, 119, 6, 0.98), rgba(146, 64, 14, 0.98));
+          box-shadow: 0 0 10px rgba(251, 191, 36, 0.55);
+        }
+        .hero-unlock-tag.is-locked:active {
+          transform: translateY(1px) scale(0.96);
+        }
+        .hero-unlock-tag.is-locked.is-unaffordable-tag {
+          background: rgba(30, 41, 59, 0.95);
+          border-color: rgba(248, 113, 113, 0.65);
+          color: #fca5a5;
+          box-shadow: none;
         }
         .hero-unlock-tag.is-unlocked {
-          background: rgba(6, 78, 59, 0.55);
-          border: 1px solid rgba(52, 211, 153, 0.45);
+          background: rgba(6, 78, 59, 0.65);
+          border: 1px solid rgba(52, 211, 153, 0.55);
           color: #6ee7b7;
+        }
+        .hero-unlock-tag.is-just-bought-tag {
+          background: linear-gradient(180deg, #10b981, #059669) !important;
+          border-color: #a7f3d0 !important;
+          color: #ffffff !important;
+          box-shadow: 0 0 14px rgba(16, 185, 129, 0.8) !important;
+          animation: purchaseBtnPop 0.55s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .biome-card.stage-locked {
           border-color: rgba(148, 163, 184, 0.45) !important;
@@ -17796,9 +17819,348 @@
           filter: brightness(0) saturate(100%) drop-shadow(0 0 1px rgba(148, 163, 184, 0.45));
           opacity: 1;
         }
+
+        /* 统一购买视觉反馈：按钮状态变化、卡片高光脉冲、金币不足震动、顶部购买横幅提示、浮动扣费气泡 */
+        @keyframes purchaseBtnPop {
+          0% { transform: scale(0.92); }
+          45% { transform: scale(1.08); }
+          100% { transform: scale(1); }
+        }
+        @keyframes purchaseCardGlow {
+          0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.95), inset 0 0 22px rgba(16, 185, 129, 0.55); border-color: #34d399; transform: translateY(-2px) scale(1.015); }
+          70% { box-shadow: 0 0 24px 6px rgba(52, 211, 153, 0.35), inset 0 0 10px rgba(16, 185, 129, 0.25); border-color: #10b981; transform: translateY(0) scale(1); }
+          100% { box-shadow: none; }
+        }
+        @keyframes purchaseShakeFail {
+          0%, 100% { transform: translateX(0); }
+          20% { transform: translateX(-6px) rotate(-1deg); }
+          40% { transform: translateX(6px) rotate(1deg); }
+          60% { transform: translateX(-4px); }
+          80% { transform: translateX(4px); }
+        }
+        @keyframes purchaseFloatChipAnim {
+          0% { opacity: 0; transform: translate(-50%, 4px) scale(0.82); }
+          18% { opacity: 1; transform: translate(-50%, -8px) scale(1.06); }
+          80% { opacity: 1; transform: translate(-50%, -28px) scale(1); }
+          100% { opacity: 0; transform: translate(-50%, -40px) scale(0.94); }
+        }
+        @keyframes walletGoldPulse {
+          0% { transform: scale(1); filter: brightness(1); }
+          35% { transform: scale(1.18); filter: brightness(1.45) drop-shadow(0 0 10px rgba(251, 191, 36, 0.85)); }
+          100% { transform: scale(1); filter: brightness(1); }
+        }
+        .is-just-purchased-card {
+          animation: purchaseCardGlow 0.9s cubic-bezier(0.22, 1, 0.36, 1) !important;
+          border-color: #34d399 !important;
+        }
+        .talent-btn.is-just-purchased-btn,
+        .merchant-card button.is-just-purchased-btn,
+        .merchant-tile button.is-just-purchased-btn {
+          background: linear-gradient(180deg, #10b981, #059669) !important;
+          border-color: #a7f3d0 !important;
+          color: #ffffff !important;
+          box-shadow: 0 0 16px rgba(16, 185, 129, 0.75) !important;
+          animation: purchaseBtnPop 0.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
+        }
+        .talent-btn.is-unaffordable,
+        .merchant-card button.is-unaffordable,
+        .merchant-tile button.is-unaffordable {
+          background: rgba(51, 65, 85, 0.85) !important;
+          border-color: rgba(148, 163, 184, 0.38) !important;
+          color: #94a3b8 !important;
+          cursor: pointer !important;
+          opacity: 0.88;
+        }
+        .talent-btn.is-unaffordable:hover,
+        .merchant-card button.is-unaffordable:hover,
+        .merchant-tile button.is-unaffordable:hover {
+          border-color: rgba(248, 113, 113, 0.7) !important;
+          color: #fca5a5 !important;
+        }
+        .is-purchase-fail-shake {
+          animation: purchaseShakeFail 0.42s ease !important;
+          border-color: #f87171 !important;
+          box-shadow: 0 0 14px rgba(239, 68, 68, 0.55) !important;
+        }
+        button.is-purchase-fail-btn {
+          background: linear-gradient(180deg, #dc2626, #991b1b) !important;
+          border-color: #fca5a5 !important;
+          color: #fff !important;
+        }
+        .wallet-gold-pulse {
+          animation: walletGoldPulse 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        #purchase-banner-stack {
+          position: fixed;
+          top: 16px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 2147483646;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          pointer-events: none;
+          width: min(92vw, 520px);
+        }
+        .purchase-banner-item {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 9px 18px;
+          border-radius: 999px;
+          font-size: 13px;
+          font-weight: 900;
+          letter-spacing: 0.3px;
+          color: #fff;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
+          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65), 0 0 18px rgba(16, 185, 129, 0.45);
+          border: 1.5px solid #6ee7b7;
+          background: linear-gradient(135deg, rgba(6, 95, 70, 0.96), rgba(4, 120, 87, 0.96));
+          transform: translateY(-14px) scale(0.92);
+          opacity: 0;
+          transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+          max-width: 100%;
+          text-align: center;
+        }
+        .purchase-banner-item.is-visible {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+        }
+        .purchase-banner-item.is-fail {
+          border-color: #fca5a5;
+          background: linear-gradient(135deg, rgba(153, 27, 27, 0.96), rgba(185, 28, 28, 0.96));
+          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65), 0 0 18px rgba(239, 68, 68, 0.5);
+        }
+        .purchase-banner-item.is-hero {
+          border-color: #fde047;
+          background: linear-gradient(135deg, rgba(146, 64, 14, 0.97), rgba(180, 83, 9, 0.97));
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 22px rgba(251, 191, 36, 0.65);
+        }
+        .purchase-float-chip {
+          position: fixed;
+          z-index: 2147483647;
+          pointer-events: none;
+          padding: 4px 10px;
+          border-radius: 999px;
+          font-size: 12px;
+          font-weight: 900;
+          white-space: nowrap;
+          color: #ecfdf5;
+          background: rgba(5, 150, 105, 0.96);
+          border: 1px solid #6ee7b7;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+          animation: purchaseFloatChipAnim 1.05s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .purchase-float-chip.is-fail {
+          color: #fef2f2;
+          background: rgba(185, 28, 28, 0.96);
+          border-color: #fca5a5;
+        }
       `;
       document.head.appendChild(st);
     })();
+
+    // =========================================================================
+    // 统一购买反馈引擎 (PurchaseFeedback)：负责音效、按钮状态变化、浮动气泡、金币闪烁与顶部弹窗提示
+    // =========================================================================
+    const PurchaseFeedback = {
+      justBoughtMap: {},
+      lastClickEl: null,
+      ensureAudio() {
+        try {
+          if (typeof audio !== 'undefined' && audio) {
+            audio.init();
+            if (audio.ctx && audio.ctx.state === 'suspended') {
+              audio.ctx.resume();
+            }
+            return audio;
+          }
+        } catch (e) {}
+        return null;
+      },
+      playSuccess(kind = 'shop') {
+        const sfx = this.ensureAudio();
+        if (!sfx || !sfx.ctx) return;
+        try {
+          // 清脆钱币叮当 + 升调确认和弦
+          if (kind === 'hero') {
+            sfx.playTone(587.33, 'triangle', 0.11, 0.14);
+            setTimeout(() => sfx.playTone(880, 'triangle', 0.12, 0.14), 65);
+            setTimeout(() => sfx.playTone(1174.66, 'sine', 0.15, 0.15), 130);
+            setTimeout(() => sfx.playTone(1567.98, 'sine', 0.28, 0.16), 200);
+          } else {
+            sfx.playTone(987.77, 'sine', 0.08, 0.13);
+            setTimeout(() => sfx.playTone(1318.51, 'triangle', 0.14, 0.14), 55);
+            setTimeout(() => sfx.playTone(1567.98, 'sine', 0.2, 0.12), 115);
+          }
+        } catch (e) {}
+      },
+      playFail() {
+        const sfx = this.ensureAudio();
+        if (!sfx || !sfx.ctx) return;
+        try {
+          sfx.playTone(210, 'sawtooth', 0.11, 0.11);
+          setTimeout(() => sfx.playTone(155, 'sawtooth', 0.18, 0.12), 85);
+        } catch (e) {}
+      },
+      markBought(key, label = '✓ 购买成功！', durationMs = 1100) {
+        if (!key) return;
+        this.justBoughtMap[key] = {
+          until: Date.now() + durationMs,
+          label
+        };
+        setTimeout(() => {
+          if (this.justBoughtMap[key] && Date.now() >= this.justBoughtMap[key].until) {
+            delete this.justBoughtMap[key];
+          }
+        }, durationMs + 60);
+      },
+      isJustBought(key) {
+        const item = this.justBoughtMap[key];
+        if (!item) return null;
+        if (Date.now() > item.until) {
+          delete this.justBoughtMap[key];
+          return null;
+        }
+        return item;
+      },
+      pulseWallets() {
+        const ids = ['lobby-gold', 'shop-cur-gold', 'talent-cur-gold'];
+        ids.forEach(id => {
+          const el = document.getElementById(id)?.parentElement || document.getElementById(id);
+          if (el) {
+            el.classList.remove('wallet-gold-pulse');
+            void el.offsetWidth;
+            el.classList.add('wallet-gold-pulse');
+          }
+        });
+        document.querySelectorAll('.merchant-wallet').forEach(el => {
+          el.classList.remove('wallet-gold-pulse');
+          void el.offsetWidth;
+          el.classList.add('wallet-gold-pulse');
+        });
+      },
+      banner(msg, variant = 'success', duration = 2600) {
+        try {
+          if (typeof showToast === 'function') {
+            showToast(msg);
+            const t = document.getElementById('toast-msg');
+            if (t && typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
+              PixelIcons.hydrate(t);
+            }
+          }
+        } catch (e) {}
+        let stack = document.getElementById('purchase-banner-stack');
+        if (!stack) {
+          stack = document.createElement('div');
+          stack.id = 'purchase-banner-stack';
+          document.body.appendChild(stack);
+        }
+        while (stack.children.length >= 3) {
+          stack.firstElementChild.remove();
+        }
+        const item = document.createElement('div');
+        item.className = 'purchase-banner-item' + (variant === 'fail' ? ' is-fail' : variant === 'hero' ? ' is-hero' : '');
+        item.innerHTML = msg;
+        if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
+          PixelIcons.hydrate(item);
+        }
+        stack.appendChild(item);
+        requestAnimationFrame(() => item.classList.add('is-visible'));
+        setTimeout(() => {
+          item.classList.remove('is-visible');
+          setTimeout(() => item.remove(), 220);
+        }, duration);
+      },
+      floatAt(targetEl, text, isFail = false) {
+        const el = targetEl || this.lastClickEl;
+        let x = window.innerWidth / 2;
+        let y = window.innerHeight / 2;
+        if (el && typeof el.getBoundingClientRect === 'function') {
+          const rect = el.getBoundingClientRect();
+          if (rect.width > 0 || rect.height > 0) {
+            x = rect.left + rect.width / 2;
+            y = rect.top + Math.min(18, rect.height / 2);
+          }
+        }
+        const chip = document.createElement('div');
+        chip.className = 'purchase-float-chip' + (isFail ? ' is-fail' : '');
+        chip.style.left = `${x}px`;
+        chip.style.top = `${y}px`;
+        chip.innerHTML = text;
+        if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
+          PixelIcons.hydrate(chip);
+        }
+        document.body.appendChild(chip);
+        setTimeout(() => chip.remove(), 1100);
+      },
+      shakeElement(targetEl, btnLabelOnFail = null) {
+        const el = targetEl || this.lastClickEl;
+        if (!el) return;
+        const card = el.closest?.('.talent-card, .merchant-card, .merchant-tile, .hero-card, .coop-hero-pick') || el;
+        card.classList.remove('is-purchase-fail-shake');
+        void card.offsetWidth;
+        card.classList.add('is-purchase-fail-shake');
+        const btn = el.tagName === 'BUTTON' ? el : el.closest?.('button') || card.querySelector?.('button, .hero-unlock-tag');
+        if (btn) {
+          btn.classList.add('is-purchase-fail-btn');
+          const origHtml = btn.getAttribute('data-orig-html') || btn.innerHTML;
+          if (!btn.getAttribute('data-orig-html')) {
+            btn.setAttribute('data-orig-html', origHtml);
+          }
+          if (btnLabelOnFail) {
+            btn.innerHTML = btnLabelOnFail;
+            if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) PixelIcons.hydrate(btn);
+          }
+          setTimeout(() => {
+            btn.classList.remove('is-purchase-fail-btn');
+            const saved = btn.getAttribute('data-orig-html');
+            if (saved && btn.isConnected) {
+              btn.innerHTML = saved;
+              btn.removeAttribute('data-orig-html');
+              if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) PixelIcons.hydrate(btn);
+            }
+          }, 950);
+        }
+        setTimeout(() => card.classList.remove('is-purchase-fail-shake'), 500);
+      },
+      triggerSuccess({ key, targetEl, cost = 0, title = '购买成功', msg = '', kind = 'shop', btnText = '✓ 购买成功！' }) {
+        this.playSuccess(kind);
+        if (key) this.markBought(key, btnText, 1150);
+        this.pulseWallets();
+        const floatText = cost > 0 ? `[px:check] ${title} (-${cost.toLocaleString()}[px:coin])` : `[px:check] ${title}`;
+        this.floatAt(targetEl, floatText, false);
+        if (msg) {
+          this.banner(msg, kind === 'hero' ? 'hero' : 'success', kind === 'hero' ? 3200 : 2500);
+        }
+      },
+      triggerFail({ targetEl, msg = '[px:coin] 金币不足，无法购买！', chipText = '✕ 金币不足！', btnLabel = '✕ 金币不足' }) {
+        this.playFail();
+        this.floatAt(targetEl, chipText, true);
+        this.shakeElement(targetEl, btnLabel);
+        if (msg) {
+          this.banner(msg, 'fail', 2500);
+        }
+      }
+    };
+
+    // 兼容别名：保证任何调用 AudioEngine 或 CoopManager.showToast 的地方都正常发声与弹提示
+    window.AudioEngine = window.AudioEngine || {
+      levelUp() { PurchaseFeedback.playSuccess('hero'); },
+      gem() { PurchaseFeedback.playSuccess('shop'); },
+      hit() { PurchaseFeedback.playFail(); }
+    };
+    if (typeof CoopManager !== 'undefined' && !CoopManager.showToast) {
+      CoopManager.showToast = function(msg, duration = 2600) {
+        PurchaseFeedback.banner(msg, 'success', duration);
+      };
+    }
+    document.addEventListener('pointerdown', (e) => {
+      const t = e.target?.closest?.('button, .hero-card, .hero-unlock-tag, .merchant-card, .merchant-tile, .talent-card');
+      if (t) PurchaseFeedback.lastClickEl = t;
+    }, true);
 
     const HeroUnlocks = {
       SPECS: {
@@ -17916,8 +18278,8 @@
             if (!map[spec.key]) {
               map[spec.key] = true;
               changed = true;
-              if (notify && typeof CoopManager !== 'undefined' && CoopManager.showToast) {
-                CoopManager.showToast(`[px:crown] 通关${spec.stageName}，已免费解锁英雄【${spec.name}】！`, 3600);
+              if (notify) {
+                PurchaseFeedback.banner(`[px:crown] 通关${spec.stageName}，已免费解锁英雄【${spec.name}】！`, 'hero', 3600);
               }
             }
           }
@@ -17928,54 +18290,86 @@
         }
         return changed;
       },
-      buy(heroKey) {
+      buy(heroKey, triggerEl = null) {
         const spec = this.SPECS[heroKey];
         if (!spec) return false;
         if (this.isUnlocked(heroKey)) return true;
+        const target = triggerEl || PurchaseFeedback.lastClickEl;
         if (SaveManager.data.gold < spec.cost) {
-          if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
-            const msg = spec.mode === 'stage_or_gold'
-              ? `[px:lock] 解锁【${spec.name}】需通关${spec.stageName}，或攒够 ${spec.cost.toLocaleString()} 金币提前解锁！`
-              : `[px:lock] 解锁【${spec.name}】需要 ${spec.cost.toLocaleString()} 金币（当前 ${SaveManager.data.gold.toLocaleString()}）！`;
-            CoopManager.showToast(msg, 2800);
-          }
+          const msg = spec.mode === 'stage_or_gold'
+            ? `[px:lock] 解锁【${spec.name}】需通关${spec.stageName}，或花费 ${spec.cost.toLocaleString()} 金币（当前 ${SaveManager.data.gold.toLocaleString()} 金币不足）！`
+            : `[px:lock] 解锁【${spec.name}】需要 ${spec.cost.toLocaleString()} 金币（当前 ${SaveManager.data.gold.toLocaleString()} 金币不足）！`;
+          PurchaseFeedback.triggerFail({
+            targetEl: target,
+            msg,
+            chipText: `✕ 差 ${(spec.cost - SaveManager.data.gold).toLocaleString()} 金币`,
+            btnLabel: '✕ 金币不足'
+          });
           return false;
         }
         SaveManager.data.gold -= spec.cost;
         const map = this.ensureData();
         map[heroKey] = true;
         SaveManager.save();
-        AudioEngine.levelUp();
-        if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
-          CoopManager.showToast(`[px:crown] 成功花费 ${spec.cost.toLocaleString()} 金币解锁英雄【${spec.name}】！`, 3000);
-        }
+        PurchaseFeedback.triggerSuccess({
+          key: 'hero_' + heroKey,
+          targetEl: target,
+          cost: spec.cost,
+          title: `解锁【${spec.name}】`,
+          msg: `[px:crown] 购买成功！花费 ${spec.cost.toLocaleString()} 金币解锁新角色【${spec.name}】！`,
+          kind: 'hero',
+          btnText: '✓ 已购买解锁！'
+        });
         this.refreshUI();
+        if (typeof updateShopUnlocksUI === 'function') updateShopUnlocksUI();
         if (typeof renderShopList === 'function' && document.getElementById('shop-modal')?.style.display === 'flex') {
           renderShopList();
         }
+        setTimeout(() => {
+          this.refreshUI();
+          if (typeof renderShopList === 'function' && document.getElementById('shop-modal')?.style.display === 'flex') {
+            renderShopList();
+          }
+        }, 1200);
         return true;
       },
       refreshUI() {
         this.ensureData();
+        const curGold = Number(SaveManager.data?.gold || 0);
         document.querySelectorAll('.hero-card').forEach(card => {
           const h = card.getAttribute('data-hero');
           const spec = this.SPECS[h];
           if (!spec) return;
           const unlocked = this.isUnlocked(h);
+          const justBought = PurchaseFeedback.isJustBought('hero_' + h);
           card.classList.toggle('hero-locked', !unlocked);
+          card.classList.toggle('is-just-purchased-card', Boolean(justBought));
           let tag = card.querySelector('.hero-unlock-tag');
           if (!tag) {
             tag = document.createElement('div');
             tag.className = 'hero-unlock-tag';
             card.appendChild(tag);
           }
-          tag.className = 'hero-unlock-tag ' + (unlocked ? 'is-unlocked' : 'is-locked');
-          if (unlocked) {
+          const canAfford = curGold >= spec.cost;
+          tag.className = 'hero-unlock-tag ' + (
+            justBought
+              ? 'is-unlocked is-just-bought-tag'
+              : unlocked
+                ? 'is-unlocked'
+                : ('is-locked' + (canAfford ? '' : ' is-unaffordable-tag'))
+          );
+          if (justBought) {
+            tag.innerHTML = `[px:check] ${justBought.label || '✓ 已购买解锁！'}`;
+          } else if (unlocked) {
             tag.innerHTML = `[px:check] 已解锁`;
           } else if (spec.mode === 'stage_or_gold') {
-            tag.innerHTML = `[px:lock] ${spec.stageReqLabel || ('第' + spec.stageNum + '关通关')} / ${spec.cost.toLocaleString()}[px:coin]`;
+            tag.innerHTML = canAfford
+              ? `[px:coin] 点击购买 (${spec.cost.toLocaleString()})`
+              : `[px:lock] 第${spec.stageNum}关 / ${spec.cost.toLocaleString()}[px:coin]`;
           } else {
-            tag.innerHTML = `[px:lock] ${spec.cost.toLocaleString()}[px:coin] 解锁`;
+            tag.innerHTML = canAfford
+              ? `[px:coin] 点击购买 (${spec.cost.toLocaleString()})`
+              : `[px:lock] ${spec.cost.toLocaleString()}[px:coin] 解锁`;
           }
           if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
             PixelIcons.hydrate(tag);
@@ -17989,7 +18383,7 @@
       }
     };
 
-    // 绑定英雄卡片点击：若未解锁且金币充足，点击即可直接购买解锁；若金币不足，仍允许预览技能但保持未解锁剪影状态并提示
+    // 绑定英雄卡片点击：若未解锁且金币充足，点击即可直接购买解锁并播放音效/按钮动画/横幅提示；若金币不足，播放错误音、抖动卡片并弹出差额提示
     document.querySelectorAll('.hero-card').forEach(card => {
       card.addEventListener('click', (ev) => {
         const h = card.getAttribute('data-hero');
@@ -17998,20 +18392,15 @@
           HeroUnlocks.refreshUI();
           return;
         }
-        const clickedUnlockBadge = ev.target && ev.target.closest && ev.target.closest('.hero-unlock-tag');
+        const tagEl = card.querySelector('.hero-unlock-tag') || card;
         if (SaveManager.data.gold >= spec.cost) {
-          HeroUnlocks.buy(h);
+          HeroUnlocks.buy(h, tagEl);
           setupHero(h);
           syncHeroAndBiomeSelectionUI();
           HeroUnlocks.refreshUI();
         } else {
+          HeroUnlocks.buy(h, tagEl);
           HeroUnlocks.refreshUI();
-          if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
-            const reqText = spec.mode === 'stage_or_gold'
-              ? `通关${spec.stageName}免费解锁，或花费 ${spec.cost.toLocaleString()} 金币提前购买`
-              : `需花费 ${spec.cost.toLocaleString()} 金币购买解锁`;
-            CoopManager.showToast(`[px:lock] 【${spec.name}】未解锁（${reqText}）${clickedUnlockBadge ? '，当前金币不足！' : '，当前为剪影预览'}`, 2600);
-          }
         }
       });
     });
@@ -18946,22 +19335,43 @@
       }
     };
 
-    document.querySelectorAll('#lobby-modal .biome-card[data-biome]').forEach(card => {
-      card.addEventListener('click', () => {
-        const b = card.dataset.biome;
-        if (b && !StageUnlocks.isUnlocked(b)) {
-          const req = StageUnlocks.PREV_MAP[b];
-          if (req) {
-            const prevBest = StageUnlocks.getBestSeconds(req.prev);
-            showToast(`[px:lock] 【${StageUnlocks.NAMES[b]}】需先在${req.prevName}生存满 20 分钟解锁（当前最佳 ${StageUnlocks.formatMinSec(prevBest)} / 20:00）！`);
-          }
-        }
-        StageUnlocks.refreshUI();
+    function createFloatingText(x, y, text, color = '#fde047', size = 14) {
+      if (typeof floatingTexts === 'undefined') return;
+      if (floatingTexts.length >= (typeof MAX_FLOATING_TEXTS !== 'undefined' ? MAX_FLOATING_TEXTS : 40)) {
+        floatingTexts.shift();
+      }
+      floatingTexts.push({
+        x: Number(x) || 0,
+        y: Number(y) || 0,
+        text: String(text || ''),
+        color: color || '#fde047',
+        life: 0.72,
+        maxLife: 0.72,
+        isCrit: size >= 15
       });
-    });
+    }
+
+    function drawHeroSpriteAt(ctx, x, y, heroKey, facing = 1) {
+      const hk = heroKey || GameState.selectedHero || 'warrior';
+      const animFrame = Math.floor((GameState.gameTime || 0) * 9) % 2;
+      const spriteSet = (typeof SpriteCache !== 'undefined' && (SpriteCache[`${hk}_${animFrame}`] || SpriteCache[`${hk}_0`] || SpriteCache.warrior_0)) || null;
+      const img = spriteSet && (spriteSet.normal || spriteSet.ice || spriteSet.hit);
+      ctx.save();
+      ctx.translate(x, y);
+      if (facing < 0) ctx.scale(-1, 1);
+      if (img) {
+        ctx.drawImage(img, -18, -18, 36, 36);
+      } else {
+        ctx.fillStyle = '#c084fc';
+        ctx.beginPath();
+        ctx.arc(0, 0, 14, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
 
     // =========================================================================
-    // 第四关【时空锈月钟城】专属时空灾变机制 & 终末钟王10秒时间法则技能与时间免疫 (ClockworkChrono)
+    // 第四关【时空锈月钟城】专属时空灾变机制 & 终末钟王18秒时间法则技能与时间免疫 (ClockworkChrono)
     // =========================================================================
     const ClockworkChrono = {
       catastropheInterval: 120, // 每过 2 分钟 (120秒) 触发一次地图时间灾变
@@ -18969,7 +19379,7 @@
       activeCatastrophe: null, // 'time_accel' | 'time_slow' | 'time_stop_enemies' | 'time_stop_player'
       catastropheTimer: 0,
       catastropheMax: 0,
-      playerMoveStopTimer: 0, // 玩家被暂停移动 (5s)：不可移动，但仍可正常普攻、蓄力与释放全部技能
+      playerMoveStopTimer: 0, // 玩家被暂停移动 (3s)：不可移动，但仍可正常普攻、蓄力与释放全部技能
       bossPlayerSlowTimer: 0, // 最终Boss单独减慢玩家时间
       bossSelfHasteTimer: 0,  // 最终Boss单独加快自身时间
       lastBossSkillName: '',
@@ -19167,7 +19577,7 @@
       postUpdate(dt, snap) {
         if (!snap || !GameState.isStarted || GameState.isPaused || GameState.isOver) return;
 
-        // 1. 若玩家处于 5秒【时间暂停·禁足】状态：锁定移动坐标，但保留所有普攻、蓄力与技能释放！
+        // 1. 若玩家处于 3秒【时间暂停·禁足】状态：锁定移动坐标，但保留所有普攻、蓄力与技能释放！
         if (snap.moveLocked) {
           player.x = snap.px;
           player.y = snap.py;
@@ -19194,7 +19604,7 @@
           }
         }
 
-        // 3. 结算敌人时间流速倍率 & 最终Boss的 10秒冷却时间法则技能
+        // 3. 结算敌人时间流速倍率 & 最终Boss的 18秒冷却时间法则技能
         for (const en of enemies) {
           if (en.isDead) continue;
           const isFinal = this.isFinalBossEntity(en);
@@ -19260,7 +19670,7 @@
     };
 
     // =========================================================================
-    // 商店限时增益秘药与限时影分身系统 (ShopBuffs & ShadowCloneKit)
+    // 雾行商人专属限时增益秘药与限时影分身系统 (ShopBuffs & ShadowCloneKit)
     // =========================================================================
     const ShadowCloneKit = {
       clones: [],
@@ -19286,16 +19696,16 @@
             c.duration = Math.min(240, c.duration + durationSec);
             c.maxDuration = Math.max(c.maxDuration, c.duration);
           }
-          createParticles(player.x, player.y, '#c084fc', 24, 180, 0.55);
+          createParticles(player.x, player.y, 24, '#c084fc', 180, 0.55);
           createFloatingText(player.x, player.y - 36, `影分身契约延长 +${durationSec}s!`, '#e879f9', 15);
           return this.clones[0];
         }
         const idx = this.clones.length;
         const flankSide = idx === 0 ? 1 : -1;
-        const baseAngle = (player.facingAngle || 0) + flankSide * (Math.PI * 0.58);
+        const baseAngle = (player.facingAngle || player.aimAngle || 0) + flankSide * (Math.PI * 0.58);
         const spawnDist = 76;
-        const cx = player.x + Math.cos(baseAngle) * spawnDist;
-        const cy = player.y + Math.sin(baseAngle) * spawnDist;
+        const cx = (player.x || 0) + Math.cos(baseAngle) * spawnDist;
+        const cy = (player.y || 0) + Math.sin(baseAngle) * spawnDist;
         const clone = {
           id: 'shadow_clone_' + Date.now() + '_' + idx,
           slot: idx,
@@ -19307,14 +19717,14 @@
           duration: durationSec,
           maxDuration: durationSec,
           facing: player.facing || 1,
-          facingAngle: player.facingAngle || 0,
+          facingAngle: player.facingAngle || player.aimAngle || 0,
           autoFireTimer: 0.45 + idx * 0.25,
           pulsePhase: idx * Math.PI
         };
         this.clones.push(clone);
         this.enforceNonOverlap();
-        createParticles(clone.x, clone.y, '#a855f7', 26, 190, 0.55);
-        createParticles(clone.x, clone.y, '#38bdf8', 16, 150, 0.45);
+        createParticles(clone.x, clone.y, 26, '#a855f7', 190, 0.55);
+        createParticles(clone.x, clone.y, 16, '#38bdf8', 150, 0.45);
         createFloatingText(clone.x, clone.y - 32, '禁忌影分身降临!', '#e879f9', 15);
         return clone;
       },
@@ -19326,7 +19736,7 @@
           let dy = c.y - player.y;
           let dist = Math.hypot(dx, dy);
           if (dist < this.MIN_PLAYER_DIST) {
-            const fallbackAng = (player.facingAngle || 0) + (c.flankSide || (i === 0 ? 1 : -1)) * (Math.PI * 0.55);
+            const fallbackAng = (player.facingAngle || player.aimAngle || 0) + (c.flankSide || (i === 0 ? 1 : -1)) * (Math.PI * 0.55);
             const ux = dist > 0.001 ? dx / dist : Math.cos(fallbackAng);
             const uy = dist > 0.001 ? dy / dist : Math.sin(fallbackAng);
             c.x = player.x + ux * this.MIN_PLAYER_DIST;
@@ -19357,13 +19767,13 @@
           c.duration -= dt;
           c.pulsePhase += dt * 4.2;
           if (c.duration <= 0) {
-            createParticles(c.x, c.y, '#a855f7', 18, 140, 0.45);
+            createParticles(c.x, c.y, 18, '#a855f7', 140, 0.45);
             createFloatingText(c.x, c.y - 24, '影分身消散', '#c084fc', 12);
             this.clones.splice(i, 1);
             continue;
           }
           // 侧翼战术跟随：保持在玩家侧翼 74~82px 处，平滑移动且绝不重叠
-          const flankAngle = (player.facingAngle || 0) + (c.flankSide || (i === 0 ? 1 : -1)) * (Math.PI * 0.58) + Math.sin(c.pulsePhase * 0.5) * 0.18;
+          const flankAngle = (player.facingAngle || player.aimAngle || 0) + (c.flankSide || (i === 0 ? 1 : -1)) * (Math.PI * 0.58) + Math.sin(c.pulsePhase * 0.5) * 0.18;
           const desiredDist = 76 + (i % 2) * 8;
           const targetX = player.x + Math.cos(flankAngle) * desiredDist;
           const targetY = player.y + Math.sin(flankAngle) * desiredDist;
@@ -19371,7 +19781,7 @@
           c.x += (targetX - c.x) * followLerp;
           c.y += (targetY - c.y) * followLerp;
           c.facing = player.facing || 1;
-          c.facingAngle = player.facingAngle || 0;
+          c.facingAngle = player.facingAngle || player.aimAngle || 0;
         }
         this.enforceNonOverlap();
       },
@@ -19382,12 +19792,12 @@
           this.enforceNonOverlap();
           const origX = player.x;
           const origY = player.y;
-          const origCd = player.attackCooldown;
+          const origAtkTimer = player.skills?.attack?.timer;
           const origCharge = player.chargeTimer;
           const origCharging = player.isCharging;
-          const origS1Cd = player.skills?.skill1?.cooldown;
-          const origS2Cd = player.skills?.skill2?.cooldown;
-          const origUltCd = player.skills?.ult?.cooldown;
+          const origS1Timer = player.skills?.skill1?.timer;
+          const origS2Timer = player.skills?.skill2?.timer;
+          const origUltTimer = player.skills?.ult?.timer;
           const origUltActive = player.skills?.ult?.activeTimer;
           const origInvul = player.invulnerableTimer;
 
@@ -19396,18 +19806,18 @@
             // 将发招起点临时切到影分身的独立坐标（绝不与本体重叠）
             player.x = c.x;
             player.y = c.y;
-            if (kind === 'attack') {
-              player.attackCooldown = 0;
+            if (kind === 'attack' && player.skills?.attack) {
+              player.skills.attack.timer = 0;
             } else if (kind === 'charge') {
               if (GameState.selectedHero === 'healer' && typeof HealerKit !== 'undefined') HealerKit.chargeCd = 0;
               if (GameState.selectedHero === 'necromancer' && typeof NecroKit !== 'undefined') NecroKit.chargeCd = 0;
               if (GameState.selectedHero === 'engineer' && typeof EngineerKit !== 'undefined') EngineerKit.chargeCd = 0;
             } else if (kind === 'skill1' && player.skills?.skill1) {
-              player.skills.skill1.cooldown = 0;
+              player.skills.skill1.timer = 0;
             } else if (kind === 'skill2' && player.skills?.skill2) {
-              player.skills.skill2.cooldown = 0;
+              player.skills.skill2.timer = 0;
             } else if (kind === 'ult' && player.skills?.ult) {
-              player.skills.ult.cooldown = 0;
+              player.skills.ult.timer = 0;
             }
 
             fn.apply(null, args);
@@ -19418,18 +19828,18 @@
               c.x = player.x + (c.flankSide || 1) * 42;
               c.y = player.y + (i === 0 ? -36 : 36);
             }
-            createParticles(c.x, c.y, '#c084fc', 6, 90, 0.25);
+            createParticles(c.x, c.y, 6, '#c084fc', 90, 0.25);
           }
 
           // 恢复玩家本体真实位置与冷却状态
           player.x = origX;
           player.y = origY;
-          player.attackCooldown = origCd;
           player.chargeTimer = origCharge;
           player.isCharging = origCharging;
-          if (player.skills?.skill1 && origS1Cd !== undefined) player.skills.skill1.cooldown = origS1Cd;
-          if (player.skills?.skill2 && origS2Cd !== undefined) player.skills.skill2.cooldown = origS2Cd;
-          if (player.skills?.ult && origUltCd !== undefined) player.skills.ult.cooldown = origUltCd;
+          if (player.skills?.attack && origAtkTimer !== undefined) player.skills.attack.timer = origAtkTimer;
+          if (player.skills?.skill1 && origS1Timer !== undefined) player.skills.skill1.timer = origS1Timer;
+          if (player.skills?.skill2 && origS2Timer !== undefined) player.skills.skill2.timer = origS2Timer;
+          if (player.skills?.ult && origUltTimer !== undefined) player.skills.ult.timer = origUltTimer;
           if (player.skills?.ult && origUltActive !== undefined) player.skills.ult.activeTimer = origUltActive;
           player.invulnerableTimer = Math.max(origInvul || 0, player.invulnerableTimer || 0);
           this.enforceNonOverlap();
@@ -19477,12 +19887,7 @@
             c.x,
             c.y,
             GameState.selectedHero,
-            c.facing || player.facing || 1,
-            c.facingAngle ?? player.facingAngle ?? 0,
-            player.isCharging,
-            player.chargeTimer || 0,
-            player.skills?.ult?.activeTimer || 0,
-            false
+            c.facing || player.facing || 1
           );
           ctx.shadowBlur = 0;
 
@@ -19558,32 +19963,24 @@
         buff_wealth: 0
       },
       ensureQueue() {
-        if (!SaveManager.data) return {};
-        if (!SaveManager.data.queuedShopBuffs || typeof SaveManager.data.queuedShopBuffs !== 'object') {
-          SaveManager.data.queuedShopBuffs = {};
+        if (SaveManager.data && SaveManager.data.queuedShopBuffs) {
+          delete SaveManager.data.queuedShopBuffs;
         }
-        return SaveManager.data.queuedShopBuffs;
+        return {};
       },
       resetRunTimers() {
         this.timers.buff_exp = 0;
         this.timers.buff_dmg = 0;
         this.timers.buff_haste = 0;
         this.timers.buff_wealth = 0;
+        if (SaveManager.data && SaveManager.data.queuedShopBuffs) {
+          delete SaveManager.data.queuedShopBuffs;
+          SaveManager.save();
+        }
         ShadowCloneKit.reset();
-        this.consumeQueuedBuffsIntoRun();
       },
       consumeQueuedBuffsIntoRun() {
-        const q = this.ensureQueue();
-        let activated = false;
-        for (const spec of this.SPECS) {
-          const sec = Number(q[spec.id] || 0);
-          if (sec > 0) {
-            delete q[spec.id];
-            this.activateBuff(spec, sec, true);
-            activated = true;
-          }
-        }
-        if (activated) SaveManager.save();
+        this.ensureQueue();
       },
       activateBuff(spec, durationSec, silent = false) {
         const dur = durationSec || spec.duration;
@@ -19595,51 +19992,62 @@
             for (const g of gems) g.magnetized = true;
           }
           if (!silent && GameState.isStarted) {
-            createParticles(player.x, player.y, '#38bdf8', 18, 150, 0.45);
+            createParticles(player.x, player.y, 18, '#38bdf8', 150, 0.45);
             createFloatingText(player.x, player.y - 30, `${spec.name} +${dur}s!`, '#fde047', 14);
           }
         }
         if (typeof updateStatusTray === 'function') updateStatusTray();
       },
       getRemaining(buffId) {
-        const q = this.ensureQueue();
-        const queuedSec = Number(q[buffId] || 0);
         if (buffId === 'buff_shadow_clone') {
-          return Math.ceil(ShadowCloneKit.maxRemaining() + queuedSec);
+          return Math.ceil(ShadowCloneKit.maxRemaining());
         }
-        return Math.ceil((this.timers[buffId] || 0) + queuedSec);
+        return Math.ceil(this.timers[buffId] || 0);
       },
-      buy(buffId) {
+      buy(buffId, triggerEl = null) {
         const spec = this.SPECS.find(s => s.id === buffId);
         if (!spec) return false;
+        const target = triggerEl || PurchaseFeedback.lastClickEl;
+        if (!GameState.isStarted || GameState.isOver) {
+          PurchaseFeedback.triggerFail({
+            targetEl: target,
+            msg: '[px:camp] 增益秘药与限时影分身仅限局内【雾行商人】处当场购买启用！',
+            chipText: '✕ 仅限局内商人购买',
+            btnLabel: '✕ 仅限局内商人'
+          });
+          return false;
+        }
         if (SaveManager.data.gold < spec.cost) {
-          if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
-            CoopManager.showToast(`[px:coin] 金币不足！购买【${spec.name}】需要 ${spec.cost.toLocaleString()} 金币。`, 2400);
-          }
+          PurchaseFeedback.triggerFail({
+            targetEl: target,
+            msg: `[px:coin] 金币不足！购买【${spec.name}】需要 ${spec.cost.toLocaleString()} 金币（当前 ${SaveManager.data.gold.toLocaleString()}）。`,
+            chipText: `✕ 差 ${(spec.cost - SaveManager.data.gold).toLocaleString()} 金币`,
+            btnLabel: '✕ 金币不足'
+          });
           return false;
         }
         SaveManager.data.gold -= spec.cost;
-        if (GameState.isStarted && !GameState.isOver) {
-          this.activateBuff(spec, spec.duration, false);
-          if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
-            CoopManager.showToast(`[px:sparkles] 已启用【${spec.name}】（持续 ${spec.duration} 秒）！`, 2600);
-          }
-        } else {
-          const q = this.ensureQueue();
-          q[spec.id] = (Number(q[spec.id]) || 0) + spec.duration;
-          if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
-            CoopManager.showToast(`[px:sparkles] 已备战【${spec.name}】（开局自动生效 ${q[spec.id]} 秒）！`, 2600);
-          }
-        }
+        this.activateBuff(spec, spec.duration, false);
+        const toastMsg = `[px:sparkles] 购买成功！已启用【${spec.name}】（持续 ${spec.duration} 秒）！`;
         SaveManager.save();
-        AudioEngine.gem();
+        PurchaseFeedback.triggerSuccess({
+          key: 'buff_' + spec.id,
+          targetEl: target,
+          cost: spec.cost,
+          title: spec.name,
+          msg: toastMsg,
+          kind: 'shop',
+          btnText: '✓ 购买成功！'
+        });
         updateShopUnlocksUI();
-        if (typeof renderShopList === 'function' && document.getElementById('shop-modal')?.style.display === 'flex') {
-          renderShopList();
-        }
         if (typeof CampMarket !== 'undefined' && CampMarket.open && document.getElementById('merchant-modal')?.style.display === 'flex') {
           CampMarket.render();
         }
+        setTimeout(() => {
+          if (typeof CampMarket !== 'undefined' && CampMarket.open && document.getElementById('merchant-modal')?.style.display === 'flex') {
+            CampMarket.render();
+          }
+        }, 1200);
         return true;
       },
       tick(dt) {
@@ -19651,18 +20059,18 @@
         }
         // 极速狂飙秘药 (buff_haste)：加快普攻冷却、蓄力速度、主动技能与大招冷却恢复及移速
         if (this.timers.buff_haste > 0 && !player.isDowned) {
-          if (player.attackCooldown > 0) {
-            player.attackCooldown = Math.max(0, player.attackCooldown - dt * 0.35);
+          if (player.skills?.attack?.timer > 0) {
+            player.skills.attack.timer = Math.max(0, player.skills.attack.timer - dt * 0.35);
           }
           if (player.isCharging) {
             player.chargeTimer += dt * 0.35;
           }
           for (const sk of ['skill1', 'skill2', 'ult']) {
-            if (player.skills?.[sk]?.cooldown > 0) {
-              player.skills[sk].cooldown = Math.max(0, player.skills[sk].cooldown - dt * 0.40);
+            if (player.skills?.[sk]?.timer > 0) {
+              player.skills[sk].timer = Math.max(0, player.skills[sk].timer - dt * 0.40);
             }
           }
-          if ( (input.x || input.y) && !player.isFrozen ) {
+          if ((input.x || input.y) && !player.isFrozen) {
             player.x += (player.vx || 0) * dt * 0.22;
             player.y += (player.vy || 0) * dt * 0.22;
           }
@@ -19690,19 +20098,17 @@
       return _origAddExpForBuff.call(this, finalAmt);
     };
 
-    // 2. 伤害增幅秘药挂钩 damageEnemy (+55% 全伤害 & +15% 暴击率)
+    // 2. 伤害增幅秘药挂钩 damageEnemy (+55% 全伤害 & +15% 暴击率，严格保留原函数 8 参数签名与 killerId)
     const _origDamageEnemyForBuff = damageEnemy;
-    damageEnemy = function(e, rawDmg, isCrit = false, knockback = 0, sourceType = 'normal', vfxColor = null) {
-      let dmg = rawDmg;
-      let crit = isCrit;
-      if (ShopBuffs.timers.buff_dmg > 0 && dmg > 0) {
+    damageEnemy = function(en, baseDmg, pushAngle, pushForce, isSecondary = false, killerId = CoopManager.myPeerId, killEpoch = player.lifeEpoch || 0, fixedDamage = false) {
+      let dmg = baseDmg;
+      if (!fixedDamage && ShopBuffs.timers.buff_dmg > 0 && dmg > 0) {
         dmg = dmg * 1.55;
-        if (!crit && Math.random() < 0.15) {
-          crit = true;
-          dmg *= (player.critMultiplier || 1.75);
+        if (Math.random() < 0.15) {
+          dmg *= 1.35;
         }
       }
-      return _origDamageEnemyForBuff.call(this, e, dmg, crit, knockback, sourceType, vfxColor);
+      return _origDamageEnemyForBuff.call(this, en, dmg, pushAngle, pushForce, isSecondary, killerId, killEpoch, fixedDamage);
     };
 
     // 3. 聚财磁暴秘药挂钩 SaveManager.addGold (+75% 局内金币收益)
@@ -19846,115 +20252,251 @@
       return r;
     };
 
-    // 6. 扩展军需黑市商店 (#shop-modal renderShopList)：加入限时 Buff、限时影分身与英雄解锁商品
+    // 6. 军需黑市商店 (#shop-modal renderShopList)：仅展示快捷功能特权解锁（不放置角色购买与局内角色Buff，角色在选人界面解锁，角色Buff与影分身仅在局内雾行商人处出售）
     const _origRenderShopList = renderShopList;
     renderShopList = function() {
       _origRenderShopList.apply(this, arguments);
       const container = document.getElementById('shop-item-list');
       if (!container) return;
 
-      // (A) 限时战斗增益秘药 & 昂贵限时影分身
-      for (const spec of ShopBuffs.SPECS) {
-        const rem = ShopBuffs.getRemaining(spec.id);
-        const canAfford = SaveManager.data.gold >= spec.cost;
-        const card = document.createElement('div');
-        card.className = 'talent-card ' + (spec.isClone ? 'shop-clone-card' : 'shop-buff-card');
-        card.setAttribute('data-shop-buff', spec.id);
-        const activeTag = rem > 0
-          ? `<span style="color:#4ade80;">生效/备战 ${rem}s</span>`
-          : `<span style="color:#f472b6;">${spec.badge} · ${spec.duration}s</span>`;
-        card.innerHTML = `
-          <div class="talent-card-top">
-            <span class="talent-icon">${spec.icon}</span>
-            <div class="talent-meta">
-              <div class="talent-name">${spec.name}</div>
-              <div class="talent-lvl">${activeTag}</div>
-            </div>
-          </div>
-          <div class="talent-desc">${spec.desc}</div>
-          <button class="talent-btn" data-buy-shop-buff="${spec.id}" ${!canAfford ? 'disabled' : ''}>
-            ${rem > 0 ? `叠加时长 (${spec.cost} [px:coin])` : `购买 (${spec.cost} [px:coin])`}
-          </button>
-        `;
-        card.querySelector('[data-buy-shop-buff]').addEventListener('click', () => {
-          ShopBuffs.buy(spec.id);
-        });
-        container.appendChild(card);
-      }
-
-      // (B) 角色契约解锁（死灵/机匠/奶妈 金币解锁；球爵/拳师/牌师 通关第1/2/3关或提前金币购买解锁）
-      for (const hKey of ['engineer', 'healer', 'necromancer', 'billiard', 'pugilist', 'cardmaster']) {
-        const spec = HeroUnlocks.SPECS[hKey];
-        if (!spec) continue;
-        const unlocked = HeroUnlocks.isUnlocked(hKey);
-        const canAfford = SaveManager.data.gold >= spec.cost;
-        const card = document.createElement('div');
-        card.className = 'talent-card shop-hero-unlock-card' + (unlocked ? '' : ' is-locked-hero');
-        card.setAttribute('data-shop-hero', hKey);
-        const reqBadge = unlocked
-          ? '<span style="color:#34d399;">[px:check] 已解锁</span>'
-          : `<span style="color:#fbbf24;">[px:lock] ${spec.shortReq}</span>`;
-        card.innerHTML = `
-          <div class="talent-card-top">
-            <span class="talent-icon">${spec.icon}</span>
-            <div class="talent-meta">
-              <div class="talent-name">${spec.name}</div>
-              <div class="talent-lvl">${reqBadge}</div>
-            </div>
-          </div>
-          <div class="talent-desc">${spec.desc}</div>
-          <button class="talent-btn" data-buy-shop-hero="${hKey}" ${(unlocked || !canAfford) ? 'disabled' : ''}>
-            ${unlocked ? '已解锁角色' : `立即解锁 (${spec.cost.toLocaleString()} [px:coin])`}
-          </button>
-        `;
-        const btn = card.querySelector('[data-buy-shop-hero]');
-        if (btn && !unlocked) {
-          btn.addEventListener('click', () => {
-            HeroUnlocks.buy(hKey);
+      if (typeof SHOP_SPECS !== 'undefined' && Array.isArray(SHOP_SPECS)) {
+        const unlocks = (SaveManager.data && SaveManager.data.shopUnlocks) || {};
+        const baseCards = container.querySelectorAll('.talent-card');
+        SHOP_SPECS.forEach((spec, idx) => {
+          const card = baseCards[idx];
+          if (!card) return;
+          const isOwned = Boolean(unlocks[spec.key]);
+          const canAfford = SaveManager.data.gold >= spec.cost;
+          const justBought = PurchaseFeedback.isJustBought('spec_' + spec.key);
+          if (justBought) card.classList.add('is-just-purchased-card');
+          const oldBtn = card.querySelector('.talent-btn');
+          if (!oldBtn) return;
+          const newBtn = oldBtn.cloneNode(true);
+          if (!isOwned) {
+            newBtn.removeAttribute('disabled');
+            newBtn.classList.toggle('is-unaffordable', !canAfford && !justBought);
+          }
+          if (justBought) {
+            newBtn.classList.add('is-just-purchased-btn');
+            newBtn.innerHTML = `[px:check] ${justBought.label || '✓ 已解锁特权！'}`;
+          }
+          newBtn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            if (Boolean(unlocks[spec.key])) return;
+            if (SaveManager.data.gold < spec.cost) {
+              PurchaseFeedback.triggerFail({
+                targetEl: newBtn,
+                msg: `[px:coin] 金币不足！购买【${spec.name}】需要 ${spec.cost.toLocaleString()} 金币（当前 ${SaveManager.data.gold.toLocaleString()}）。`,
+                chipText: `✕ 差 ${(spec.cost - SaveManager.data.gold).toLocaleString()} 金币`,
+                btnLabel: '✕ 金币不足'
+              });
+              return;
+            }
+            SaveManager.data.gold -= spec.cost;
+            unlocks[spec.key] = true;
+            SaveManager.save();
+            PurchaseFeedback.triggerSuccess({
+              key: 'spec_' + spec.key,
+              targetEl: newBtn,
+              cost: spec.cost,
+              title: spec.name,
+              msg: `[px:shop] 成功购买解锁【${spec.icon}${spec.name}】！已显示在界面顶栏/工具栏！`,
+              kind: 'shop',
+              btnText: '✓ 已解锁特权！'
+            });
+            updateShopUnlocksUI();
+            renderShopList();
+            setTimeout(() => {
+              if (document.getElementById('shop-modal')?.style.display === 'flex') renderShopList();
+            }, 1200);
           });
-        }
-        container.appendChild(card);
+          oldBtn.replaceWith(newBtn);
+        });
       }
       if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
         PixelIcons.hydrate(container);
       }
     };
 
-    // 7. 扩展营地神秘行商 (CampMarket.render)：同样可购买限时增益秘药与昂贵限时影分身
-    if (typeof CampMarket !== 'undefined' && CampMarket.render) {
+    // 7. 扩展雾行商人 (CampMarket)：修复 #merchant-content 挂载容器，并为所有商人货架（技能/装备/雇佣Boss/遗忘技能/秘药增益/影分身）加上音效、按钮动效与弹窗提示
+    if (typeof CampMarket !== 'undefined') {
+      const _origCampMarketApply = CampMarket.apply;
+      CampMarket.apply = function(tx) {
+        const res = _origCampMarketApply.apply(this, arguments);
+        if (res && !res.error) {
+          const itemKey = tx.kind === 'remove' ? ('remove_' + tx.id) : (tx.kind + '_' + (tx.id || tx.bossKey || ''));
+          PurchaseFeedback.triggerSuccess({
+            key: 'merchant_' + itemKey,
+            targetEl: PurchaseFeedback.lastClickEl,
+            cost: Number(res.price || 0),
+            title: res.text || '商人交易完成',
+            msg: `[px:coin] ${res.text || '交易成功！'}`,
+            kind: 'shop',
+            btnText: '✓ 已成交！'
+          });
+        }
+        return res;
+      };
+
+      const _origCampMarketReceive = CampMarket.receive;
+      CampMarket.receive = function(p) {
+        if (p && p.error) {
+          PurchaseFeedback.triggerFail({
+            targetEl: PurchaseFeedback.lastClickEl,
+            msg: `[px:coin] ${p.error}`,
+            chipText: `✕ ${p.error}`,
+            btnLabel: `✕ ${p.error}`
+          });
+          return;
+        }
+        return _origCampMarketReceive.apply(this, arguments);
+      };
+
       const _origCampMarketRender = CampMarket.render;
       CampMarket.render = function() {
         _origCampMarketRender.apply(this, arguments);
         const m = document.getElementById('merchant-modal');
-        const body = document.getElementById('merchant-body');
+        const body = document.getElementById('merchant-content') || document.getElementById('merchant-body');
         if (!m || !body || !this.open) return;
+
+        // 注入秘药增益与禁忌影分身货架到雾行商人面板
         const buffRows = ShopBuffs.SPECS.map(spec => {
           const rem = ShopBuffs.getRemaining(spec.id);
           const canAfford = SaveManager.data.gold >= spec.cost;
-          return `<div class="merchant-tile ${spec.isClone ? 'boss' : ''}" data-offer="${spec.id}">
-            <div class="merchant-head">
-              <div class="merchant-icon">${spec.icon}</div>
-              <div class="merchant-title">
-                <b>${spec.name}</b>
-                <span class="merchant-tag">${rem > 0 ? `剩余 ${rem}s` : `${spec.badge} · ${spec.duration}s`}</span>
-              </div>
+          const justBought = PurchaseFeedback.isJustBought('buff_' + spec.id);
+          const btnClass = justBought ? 'is-just-purchased-btn' : (!canAfford ? 'is-unaffordable' : '');
+          const btnText = justBought
+            ? `[px:check] ${justBought.label || '✓ 购买成功！'}`
+            : `${spec.cost}[px:coin] ${rem > 0 ? '续时' : '购买'}`;
+          return `<div class="merchant-card ${spec.isClone ? 'boss' : ''} ${justBought ? 'is-just-purchased-card' : ''}" data-offer="${spec.id}">
+            <div class="merchant-card-top">
+              <div class="merchant-name">${spec.icon} ${spec.name}</div>
+              <div class="merchant-tag">${rem > 0 ? `剩余 ${rem}s` : `${spec.badge} · ${spec.duration}s`}</div>
             </div>
             <details><summary>效果说明</summary><p>${spec.desc}</p></details>
-            <button data-buy-buff="${spec.id}" ${!canAfford ? 'disabled' : ''}>${spec.cost}[px:coin] ${rem > 0 ? '续时' : '购买'}</button>
+            <button class="${btnClass}" data-buy-buff="${spec.id}">${btnText}</button>
           </div>`;
         }).join('');
-        const sectionHtml = `<div class="merchant-section-label">[px:sparkles] 秘药增益与禁忌影分身（即时生效，影分身绝不重叠并同步施放全技能）</div><div class="merchant-grid" data-market-section="buffs">${buffRows}</div>`;
-        const footer = body.querySelector('.merchant-footer');
-        if (footer) {
-          footer.insertAdjacentHTML('beforebegin', sectionHtml);
+        const sectionHtml = `<section class="merchant-sec"><h4>[px:sparkles] 秘药增益与禁忌影分身（即时生效，影分身绝不重叠并同步施放全技能）</h4><div class="merchant-grid" data-market-section="buffs">${buffRows}</div></section>`;
+        const actionsBar = body.querySelector('.merchant-actions') || body.querySelector('.merchant-footer');
+        if (actionsBar) {
+          actionsBar.insertAdjacentHTML('beforebegin', sectionHtml);
         } else {
           body.insertAdjacentHTML('beforeend', sectionHtml);
         }
+
+        // 让所有因金币不足而被 disabled 的商人按钮改为可点击的 .is-unaffordable 样式，点击时触发音效+按钮震动+金币不足提示
+        body.querySelectorAll('button[data-buy]').forEach(btn => {
+          const card = btn.closest('.merchant-card');
+          const txt = (btn.textContent || '').trim();
+          const isSoldOut = txt.includes('已售罄') || txt.includes('已满级');
+          if (btn.disabled && !isSoldOut) {
+            btn.removeAttribute('disabled');
+            btn.classList.add('is-unaffordable');
+          }
+          try {
+            const tx = JSON.parse(btn.dataset.buy);
+            const itemKey = 'merchant_' + (tx.kind === 'remove' ? ('remove_' + tx.id) : (tx.kind + '_' + (tx.id || tx.bossKey || '')));
+            const justBought = PurchaseFeedback.isJustBought(itemKey);
+            if (justBought) {
+              btn.classList.add('is-just-purchased-btn');
+              if (card) card.classList.add('is-just-purchased-card');
+            }
+          } catch (e) {}
+          btn.onclick = (ev) => {
+            PurchaseFeedback.lastClickEl = ev.currentTarget;
+            this.buy(JSON.parse(btn.dataset.buy));
+          };
+        });
+
+        body.querySelectorAll('[data-buy-buff]').forEach(btn => {
+          btn.onclick = (ev) => {
+            PurchaseFeedback.lastClickEl = ev.currentTarget;
+            ShopBuffs.buy(btn.dataset.buyBuff, btn);
+          };
+        });
+
         if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
           PixelIcons.hydrate(body);
         }
-        body.querySelectorAll('[data-buy-buff]').forEach(btn => {
-          btn.onclick = () => ShopBuffs.buy(btn.dataset.buyBuff);
+      };
+    }
+
+    // 8. 扩展圣殿天赋升级 (TalentAdjust & renderTalentList)：升级/降级/金币不足均提供音效、按钮状态变化、浮动气泡与横幅提示
+    if (typeof TalentAdjust !== 'undefined' && TalentAdjust.change) {
+      const _origTalentChange = TalentAdjust.change;
+      TalentAdjust.change = function(key, delta) {
+        const spec = typeof TALENT_SPECS !== 'undefined' ? TALENT_SPECS.find(s => s.key === key) : null;
+        const lvl = Number(SaveManager.data?.talents?.[key]) || 0;
+        const target = PurchaseFeedback.lastClickEl;
+        if (spec && delta > 0) {
+          if (lvl >= spec.max) {
+            PurchaseFeedback.triggerFail({
+              targetEl: target,
+              msg: `[px:crown] 【${spec.name}】已达最高等级 Lv.${spec.max}！`,
+              chipText: '已满级',
+              btnLabel: '已满级'
+            });
+            return;
+          }
+          const cost = getTalentCost(spec, lvl);
+          if ((Number(SaveManager.data?.gold) || 0) < cost) {
+            PurchaseFeedback.triggerFail({
+              targetEl: target,
+              msg: `[px:coin] 金币不足！升级【${spec.name}】需要 ${cost.toLocaleString()} 金币（当前 ${(Number(SaveManager.data?.gold) || 0).toLocaleString()}）。`,
+              chipText: `✕ 差 ${(cost - (Number(SaveManager.data?.gold) || 0)).toLocaleString()} 金币`,
+              btnLabel: '✕ 金币不足'
+            });
+            return;
+          }
+          _origTalentChange.apply(this, arguments);
+          PurchaseFeedback.triggerSuccess({
+            key: 'talent_' + key,
+            targetEl: target,
+            cost,
+            title: `${spec.name} Lv.${lvl + 1}`,
+            msg: `[px:sparkles] 升级成功！【${spec.name}】提升至 Lv.${lvl + 1}！`,
+            kind: 'shop',
+            btnText: `✓ 已升至 Lv.${lvl + 1}！`
+          });
+          if (typeof renderTalentList === 'function') renderTalentList();
+          setTimeout(() => {
+            if (document.getElementById('talent-modal')?.style.display === 'flex' && typeof renderTalentList === 'function') {
+              renderTalentList();
+            }
+          }, 1150);
+          return;
+        }
+        return _origTalentChange.apply(this, arguments);
+      };
+
+      const _origRenderTalentList = renderTalentList;
+      renderTalentList = function() {
+        _origRenderTalentList.apply(this, arguments);
+        const container = document.getElementById('talent-item-list');
+        if (!container || typeof TALENT_SPECS === 'undefined') return;
+        const cards = container.querySelectorAll('.talent-card');
+        TALENT_SPECS.forEach((spec, idx) => {
+          const card = cards[idx];
+          if (!card) return;
+          const lvl = Number(SaveManager.data?.talents?.[spec.key]) || 0;
+          const isMax = lvl >= spec.max;
+          const cost = getTalentCost(spec, lvl);
+          const canAfford = (Number(SaveManager.data?.gold) || 0) >= cost;
+          const justBought = PurchaseFeedback.isJustBought('talent_' + spec.key);
+          if (justBought) card.classList.add('is-just-purchased-card');
+          const upBtn = card.querySelector('[data-talent-up]');
+          if (upBtn) {
+            if (!isMax && upBtn.disabled) {
+              upBtn.removeAttribute('disabled');
+              upBtn.classList.add('is-unaffordable');
+            }
+            if (justBought) {
+              upBtn.classList.add('is-just-purchased-btn');
+              upBtn.innerHTML = `[px:check] ${justBought.label || '✓ 升级成功！'}`;
+              if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) PixelIcons.hydrate(upBtn);
+            }
+          }
         });
       };
     }
