@@ -1430,6 +1430,18 @@
           </div>
         </details>
 
+        <div class="coop-lobby-block" id="coop-invite-details">
+          <div class="coop-section-title" style="display:flex;align-items:center;justify-content:space-between;gap:6px;color:#fde68a;font-weight:800;font-size:12px;">
+            <span>[px:network] 手机热点 / 局域网无流量直连（免流量邀请码）</span>
+            <span style="font-size:10px;color:#38bdf8;font-weight:600;">直观免折叠 · 零流量联机</span>
+          </div>
+          <div id="coop-p2p-box" style="display:block;margin-top:6px;">
+            <div id="coop-p2p-status" class="social-note">手机连热点或同局域网时：若通过局域网地址访问可直接输入上方4位房号秒进；若无网/离线打开，房主点①复制发给队友 [px:arrow-right] 队友粘贴点②发回 [px:arrow-right] 房主粘贴点③即可零流量直连！</div>
+            <div style="display:flex;gap:5px;margin:7px 0;"><input id="coop-p2p-sdp-input" type="text" placeholder="粘贴 P2POFFER_ 邀请码或 P2PANS_ 应答码" class="coop-field" style="flex:1;min-width:0;"><button class="btn-secondary" id="btn-p2p-copy-code">复制</button></div>
+            <div class="coop-invite-actions"><button class="btn-secondary" id="btn-p2p-host-offer">① 房主生成邀请码</button><button class="btn-secondary" id="btn-p2p-guest-answer">② 队友生成应答码</button><button class="btn-secondary" id="btn-p2p-host-accept">③ 房主确认应答码</button></div>
+          </div>
+        </div>
+
         <details class="coop-fold" id="coop-connection-details">
           <summary>连接线路 <span id="coop-route-summary">自动优先直连</span></summary>
           <div class="coop-fold-body">
@@ -1440,14 +1452,6 @@
             <div id="coop-node-metrics"></div>
             <div id="coop-node-status" class="social-note"></div>
             <button class="btn-secondary" id="btn-coop-direct-retry" style="margin-top:8px;">重新尝试直连</button>
-            <details id="coop-invite-details" class="coop-invite-details" open>
-              <summary>手机热点 / 没网离线直连（免流量邀请码）</summary>
-              <div id="coop-p2p-box" style="display:block;margin-top:8px;">
-                <div id="coop-p2p-status" class="social-note">手机连热点无网时：若通过局域网地址访问可直接用4位房号；若离线单文件打开，房主点①复制发给队友 → 队友粘贴点②发回 → 房主粘贴点③即可直连</div>
-                <div style="display:flex;gap:5px;margin:7px 0;"><input id="coop-p2p-sdp-input" type="text" placeholder="粘贴 P2POFFER_ 邀请码或 P2PANS_ 应答码" class="coop-field" style="flex:1;min-width:0;"><button class="btn-secondary" id="btn-p2p-copy-code">复制</button></div>
-                <div class="coop-invite-actions"><button class="btn-secondary" id="btn-p2p-host-offer">① 房主生成邀请码</button><button class="btn-secondary" id="btn-p2p-guest-answer">② 队友生成应答码</button><button class="btn-secondary" id="btn-p2p-host-accept">③ 房主确认应答码</button></div>
-              </div>
-            </details>
           </div>
         </details>
 
@@ -1498,15 +1502,12 @@
         <button class="modal-close-x" id="btn-x-pause" title="继续战斗">[px:close]</button>
         <div class="modal-title">[px:menu] 游戏菜单</div>
         <div class="modal-subtitle" id="menu-mode-hint">单人打开菜单会暂停；多人仅停止自己的操作，获得最多 10 秒无敌。房主可单独暂停全队。</div>
-        <div style="text-align: left; font-size: 12px; color: #cbd5e1; line-height: 1.65; margin-bottom: 14px; background: #1f2937; padding: 12px; border-radius: 8px;">
-          <div>[px:fire] <strong>性能防卡死引擎</strong>: 已启用同怪伤害数字动态合并（0.25秒内多次受击累加为1个跳动数字）与音效节流池。顶部可随时切换【数字:合并 / 仅暴击 / 关闭】。</div>
-          <div>[px:lightning] <strong>职业专属连携(百分比回CD·不含圣盾)</strong>: 剑客冲刺引爆【流血】按比例恢复突袭CD(Lv.1上限22%[px:arrow-right]满级55%/超武68%)；法师发射【引力黑洞】聚怪坍缩；游侠走位接住【回旋镖】按百分比恢复战技CD(Lv.1恢复12%[px:arrow-right]满级32%/超武40%，绝不缩减圣盾CD)！</div>
-          <div>[px:alarm] <strong>红圈预警博弈</strong>: 远程怪射击与Boss冲锋前会出现红色预警线/圈，善用K键位移或I键圣盾无伤化解！</div>
-        </div>
+        <div id="pause-hero-codex-card" style="text-align: left; font-size: 12px; color: #cbd5e1; line-height: 1.6; margin-bottom: 14px; background: #141c2b; border: 1px solid #334155; padding: 12px; border-radius: 8px;"></div>
         <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
           <button class="btn-secondary" id="btn-pause-coop" style="border-color:#38bdf8; color:#7dd3fc;">[px:network] 联机房间</button>
           <button class="btn-secondary" id="btn-pause-shop" style="border-color:#facc15; color:#fde047;">[px:shop] 特权商店</button>
           <button class="btn-secondary" id="btn-pause-skilltree">[px:tree] 技能树与流派</button>
+          <button class="btn-secondary" id="btn-pause-codex" style="border-color:#f59e0b; color:#fde68a;">[px:book] 角色与魔物图鉴</button>
           <button class="btn-secondary" id="btn-pause-save" style="border-color:#34d399; color:#a7f3d0;">[px:save] 存档管理</button>
           <button class="btn-secondary" id="btn-pause-settings">[px:gear] 系统设置</button>
           <button class="btn-secondary" id="btn-pause-dev" style="border-color:#a855f7; color:#e9d5ff;">[px:tools] 开发者模式</button>
@@ -6086,7 +6087,7 @@
         15: { key: 'boss_queen',   title: '15m地牢首领 · 痛苦女王阿卡莎',   hp: 4200, speed: 102, radius: 26, dmg: 34, color: '#e11d48', skill: 'queen' },
         20: { key: 'boss',         title: '20m地牢首领 · 深渊炎魔阿兹莫丹', hp: 6400, speed: 96,  radius: 28, dmg: 40, color: '#dc2626', skill: 'baal' },
         25: { key: 'boss_eye',     title: '25m地牢首领 · 混沌魔眼克苏恩',   hp: 9200, speed: 86,  radius: 28, dmg: 46, color: '#9333ea', skill: 'eye' },
-        30: { key: 'boss',         title: '30m地牢最终Boss · 暗夜灭世魔神巴尔', hp: 13500, speed: 102, radius: 32, dmg: 54, color: '#dc2626', skill: 'baal', isFinal: true }
+        30: { key: 'boss',         title: '30m地牢最终Boss · 暗夜灭世魔神巴尔', hp: 26000, speed: 102, radius: 32, dmg: 54, color: '#dc2626', skill: 'baal', isFinal: true }
       },
       tundra: {
         5:  { key: 'golem',        title: '05m冻原首领 · 雪原巨兽比蒙',     hp: 1250, speed: 92,  radius: 26, dmg: 22, color: '#38bdf8', skill: 'butcher' },
@@ -6094,7 +6095,7 @@
         15: { key: 'boss_dragon',  title: '15m冻原首领 · 凛冬冰霜巨龙辛达苟萨', hp: 4300, speed: 100, radius: 28, dmg: 34, color: '#38bdf8', skill: 'dragon' },
         20: { key: 'boss_lich',    title: '20m冻原首领 · 极北冰皇洛基',     hp: 6500, speed: 102, radius: 26, dmg: 40, color: '#7dd3fc', skill: 'lich' },
         25: { key: 'golem',        title: '25m冻原首领 · 永冬泰坦尤弥尔',   hp: 9400, speed: 88,  radius: 30, dmg: 46, color: '#60a5fa', skill: 'butcher' },
-        30: { key: 'boss_dragon',  title: '30m冻原最终Boss · 绝对零度古神利维坦', hp: 13800, speed: 102, radius: 32, dmg: 54, color: '#0284c7', skill: 'baal', isFinal: true }
+        30: { key: 'boss_dragon',  title: '30m冻原最终Boss · 绝对零度古神利维坦', hp: 26800, speed: 102, radius: 32, dmg: 54, color: '#0284c7', skill: 'baal', isFinal: true }
       },
       graveyard: {
         5:  { key: 'boss_butcher', title: '05m墓园首领 · 腐肉缝合屠夫帕奇', hp: 1200, speed: 92,  radius: 25, dmg: 22, color: '#65a30d', skill: 'butcher' },
@@ -6102,7 +6103,7 @@
         15: { key: 'wraith',       title: '15m墓园首领 · 冥河摆渡人卡隆',   hp: 4200, speed: 104, radius: 27, dmg: 34, color: '#34d399', skill: 'queen' },
         20: { key: 'boss_queen',   title: '20m墓园首领 · 猩红鲜血女皇卡蜜拉', hp: 6400, speed: 104, radius: 26, dmg: 40, color: '#e11d48', skill: 'queen' },
         25: { key: 'boss_dragon',  title: '25m墓园首领 · 亡灵骨龙萨菲隆',   hp: 9300, speed: 96,  radius: 29, dmg: 46, color: '#a855f7', skill: 'dragon' },
-        30: { key: 'boss_lich',    title: '30m墓园最终Boss · 幽冥死神纳迦什真身', hp: 14000, speed: 102, radius: 32, dmg: 54, color: '#10b981', skill: 'baal', isFinal: true }
+        30: { key: 'boss_lich',    title: '30m墓园最终Boss · 幽冥死神纳迦什真身', hp: 27000, speed: 102, radius: 32, dmg: 54, color: '#10b981', skill: 'baal', isFinal: true }
       }
     };
 
@@ -6732,13 +6733,14 @@
       const by = WorldCoop.spawnOrigin().y + Math.sin(angle) * 290;
       const bossPoint=Arena.safe(bx,by,(cfg.radius||38)+6);
 
-      // 动态计算当前时间波次普通小怪的实际血量，将 Boss 血量设为当前普通小怪的 45 ~ 60 倍！
+      // 动态计算当前时间波次普通小怪的实际血量，将 Boss 血量设为当前普通小怪的 45 ~ 60 倍（最终 Boss 血量基数额外提升至之前 Boss 的 2.65 倍，充满终局压迫感！）
       const waveInfo = getCurrentWaveInfo();
       const { hpMul, dmgMul } = getTimeScaling();
       const avgBaseHp = waveInfo.types.reduce((acc, t) => acc + (MONSTER_SPECS[t] ? MONSTER_SPECS[t].hp : 140), 0) / waveInfo.types.length;
       const curNormalMonsterHp = Math.round(avgBaseHp * hpMul);
-      const bossMultiple = 45 + Math.round(minuteMark * 0.5); // 47x ~ 60x 当前普通小怪血量！
-      const computedBossHp = Math.max(Math.round(cfg.hp * 8), curNormalMonsterHp * bossMultiple);
+      const finalHpBoost = cfg.isFinal ? 2.65 : 1.0;
+      const bossMultiple = Math.round((45 + Math.round(minuteMark * 0.5)) * finalHpBoost);
+      const computedBossHp = Math.max(Math.round(cfg.hp * 8 * (cfg.isFinal ? 1.35 : 1.0)), curNormalMonsterHp * bossMultiple);
       // 首领伤害大幅增强并随时间与提难倍率成长！
       const computedBossDmg = Math.round(cfg.dmg * 1.85 * Math.max(1, dmgMul * 0.78));
 
@@ -17544,12 +17546,12 @@
       clock_wraith:{tier:3,hp:540,dmg:17,speed:75,radius:14,exp:18,color:'#8dc4ca',isFlying:true}
     });
     const r29WaveTypes=[['gear_rat','cog_drone'],['gear_rat','cog_drone'],['key_guard','gear_rat','cog_drone'],['gear_mage','key_guard','gear_rat'],['gear_mage','key_guard','cog_drone'],['gear_mage','key_guard','cog_drone'],['clock_wraith','gear_mage','key_guard'],['clock_wraith','key_guard','gear_mage'],['bell_brute','clock_wraith','gear_mage'],['bell_brute','clock_wraith','key_guard'],['bell_brute','clock_wraith','gear_mage'],['bell_brute','clock_wraith','key_guard']];
-    BIOME_WAVE_SCHEDULES.clockwork=r29WaveTypes.map((types,i)=>({startSec:i<10?i*120:i===10?1200:1440,maxSec:i<10?(i+1)*120:i===10?1440:1800,types,newMonster:['发条鼠群','巡游齿轮','钥匙卫兵','铜面术师','锈蚀连队','齿轮军团','失时幽影','钟城余响','铸钟巨兵','钟楼卫队','终末机潮','锈月终局'][i],label:(i*2).toString().padStart(2,'0')+'m · 钟城机潮',nextBoss:'每5分钟 · 钟城首领'}));
+    BIOME_WAVE_SCHEDULES.clockwork=r29WaveTypes.map((types,i)=>({startSec:i<10?i*120:i===10?1200:1440,maxSec:i<10?(i+1)*120:i===10?1440:1800,types,newMonster:['发条鼠群','巡游齿轮','锈钥卫兵','铜面术师','锈蚀机兵','齿轮军团','失时幽影','钟城余响','铸钟巨兵','钟塔禁卫','终末机潮','锈月终局'][i],label:(i*2).toString().padStart(2,'0')+'m · 锈月钟潮',nextBoss:'每5分钟 · 钟城首领'}));
     const r29Bosses=[
-      ['clock_sentinel','锈钥监工','key_guard','clockHands','gearRush'],['clock_bell','空响铸钟者','bell_brute','bellWaves','bellHammer'],['clock_witch','失时工坊主','gear_mage','timeGrid','timeSpiral'],['clock_engine','夜轨列车长','bell_brute','trainLanes','ticketRing'],['clock_oracle','倒转占星仪','clock_wraith','pendulum','starClock'],['clock_emperor','锈月终末钟王','key_guard','clockMidnight','clockRewind']
+      ['clock_sentinel','锈钥典狱官','key_guard','clockHands','gearRush'],['clock_bell','空响铸钟者','bell_brute','bellWaves','bellHammer'],['clock_witch','失时秘仪师','gear_mage','timeGrid','timeSpiral'],['clock_engine','幽冥夜轨长','bell_brute','trainLanes','ticketRing'],['clock_oracle','倒转星晷仪','clock_wraith','pendulum','starClock'],['clock_emperor','锈月终末钟王','key_guard','clockMidnight','clockRewind']
     ];
     BIOME_BOSS_ROSTER.clockwork={};
-    r29Bosses.forEach(([key,name,skin,move1,move2],i)=>{const minute=(i+1)*5,m=r29Matrices[skin].map(row=>row.replaceAll('p','g'));r29Bake(key,m);const b={key,title:minute.toString().padStart(2,'0')+'m钟城首领 · '+name,hp:[1250,2550,4250,6550,9400,14000][i],speed:[94,88,96,99,98,102][i],radius:25+i,dmg:[22,28,34,40,46,54][i],color:['#d1ae6a','#e8a45b','#b6a0dd','#7fa6bc','#8fd0d8','#f0cb83'][i],skill:'butcher',isFinal:i===5};BIOME_BOSS_ROSTER.clockwork[minute]=b;BossCombat.profiles['clockwork_'+minute]={name:({clockHands:'交错时针',gearRush:'齿轮突击',bellWaves:'钟声缺口',bellHammer:'三重落锤',timeGrid:'时隙棋阵',timeSpiral:'逆时弹环',trainLanes:'夜轨双线',ticketRing:'检票封锁',pendulum:'摆锤交错',starClock:'星盘分野',clockMidnight:'午夜十二响',clockRewind:'返场终钟'})[move1]+' / '+({gearRush:'齿轮突击',bellHammer:'三重落锤',timeSpiral:'逆时弹环',ticketRing:'检票封锁',starClock:'星盘分野',clockRewind:'返场终钟'})[move2],moves:[move1,move2],cd:3.8+i*.16};});
+    r29Bosses.forEach(([key,name,skin,move1,move2],i)=>{const minute=(i+1)*5,m=r29Matrices[skin].map(row=>row.replaceAll('p','g'));r29Bake(key,m);const b={key,title:minute.toString().padStart(2,'0')+'m钟城首领 · '+name,hp:[1250,2550,4250,6550,9400,27500][i],speed:[94,88,96,99,98,102][i],radius:25+i,dmg:[22,28,34,40,46,54][i],color:['#d1ae6a','#e8a45b','#b6a0dd','#7fa6bc','#8fd0d8','#f0cb83'][i],skill:'butcher',isFinal:i===5};BIOME_BOSS_ROSTER.clockwork[minute]=b;BossCombat.profiles['clockwork_'+minute]={name:({clockHands:'交错时针',gearRush:'齿轮突击',bellWaves:'钟声缺口',bellHammer:'三重落锤',timeGrid:'时隙棋阵',timeSpiral:'逆时弹环',trainLanes:'夜轨双线',ticketRing:'冥轨封锁',pendulum:'摆锤交错',starClock:'星盘分野',clockMidnight:'午夜十二响',clockRewind:'返场终钟'})[move1]+' / '+({gearRush:'齿轮突击',bellHammer:'三重落锤',timeSpiral:'逆时弹环',ticketRing:'冥轨封锁',starClock:'星盘分野',clockRewind:'返场终钟'})[move2],moves:[move1,move2],cd:3.8+i*.16};});
     const r29BossCast=BossCombat.cast;BossCombat.cast=function(en,t,move){if(!move?.startsWith('clock')&&!['gearRush','bellWaves','bellHammer','timeGrid','timeSpiral','trainLanes','ticketRing','pendulum','starClock'].includes(move))return r29BossCast.call(this,en,t,move);
       const x=t.x,y=t.y,bx=en.x,by=en.y,a=Math.atan2(y-by,x-bx),p2=en.isPhase2;en.bossMove=this.profile(en).name.split(' / ')[this.state(en).step%2];this.state(en).busy=1.2;
       if(move==='clockHands'){for(const d of [-.5,.5])this.line(en,bx,by,bx+Math.cos(a+d)*360,by+Math.sin(a+d)*360,38,1.1,.8);}
@@ -17569,12 +17571,12 @@
     };
     STAGE_SPECIAL_RELICS.clockwork=[
       {id:'clock_watch',name:'逆摆怀表',icon:'[px:clock-watch]',color:'#8bd2d8',stageName:'锈月钟城',desc:'完整觉醒：周期钟摆扫击附近敌人，额外推进战技冷却。'},
-      {id:'clock_ticket',name:'末班通票',icon:'[px:clock-ticket]',color:'#e4b66c',stageName:'锈月钟城',desc:'完整觉醒：两条夜轨贯穿战场，沿轨敌人受到一次完整冲击。'},
+      {id:'clock_ticket',name:'幽冥轨契',icon:'[px:clock-ticket]',color:'#e4b66c',stageName:'锈月钟城',desc:'完整觉醒：两条冥轨贯穿战场，沿轨敌人受到一次完整冲击。'},
       {id:'clock_spring',name:'黄铜心簧',icon:'[px:clock-spring]',color:'#c6a0df',stageName:'锈月钟城',desc:'完整觉醒：释放螺旋齿轮护环，命中时补充自身护盾。'}
     ];
     Object.assign(RelicAwakening.specs,{
       clock_watch:{name:'逆摆裁决',cd:3.1,mul:3.1,level:5,radius:205,count:1,desc:'钟摆扫击205范围；每秒额外推进战技冷却12%，不推进圣盾。'},
-      clock_ticket:{name:'末班双轨',cd:3.2,mul:3.6,level:5,radius:520,count:2,desc:'向目标打出两条夜轨；同一敌人每轮只受一次冲击。'},
+      clock_ticket:{name:'冥轨双贯穿',cd:3.2,mul:3.6,level:5,radius:520,count:2,desc:'向目标打出两条幽冥夜轨；同一敌人每轮只受一次冲击。'},
       clock_spring:{name:'黄铜机心',cd:3.6,mul:3.3,level:6,radius:195,count:1,desc:'齿轮护环震退附近敌人，并补充12%最大生命的护盾，上限35%。'}
     });
     const r29RelicPulse=RelicAwakening.pulse;RelicAwakening.pulse=function(id){if(!id.startsWith('clock_'))return r29RelicPulse.call(this,id);const spec=this.specs[id],damage=this.power(id);if(id==='clock_ticket'){const e=findNearestEnemy(600),a=e?Math.atan2(e.y-player.y,e.x-player.x):player.aimAngle,hit=new Set();for(const offset of [-36,36]){const x=player.x-Math.sin(a)*offset,y=player.y+Math.cos(a)*offset;NewHeroes.fx('trail',{x,y,x1:x,y1:y,x2:x+Math.cos(a)*520,y2:y+Math.sin(a)*520,width:30,color:'#e4b66c',stage:5},.5);for(const e of [...enemies]){const dx=e.x-x,dy=e.y-y,t=dx*Math.cos(a)+dy*Math.sin(a);if(!e.isDead&&!hit.has(e)&&t>=0&&t<520&&Math.abs(-dx*Math.sin(a)+dy*Math.cos(a))<30+e.radius){hit.add(e);damageEnemy(e,damage,a,55,true);}}}}
@@ -17583,7 +17585,18 @@
     // Reuse deterministic world chunks, with a distinct copper/cyan tile atlas.
     TileCache.clockwork=[0,1,2].map(variant=>{const cv=document.createElement('canvas');cv.width=cv.height=64;const c=cv.getContext('2d');c.fillStyle='#15212a';c.fillRect(0,0,64,64);c.strokeStyle='#090f18';c.lineWidth=3;c.strokeRect(1,1,62,30);c.strokeRect(variant?18:-14,32,62,31);c.strokeStyle='#67533b';c.lineWidth=1;c.strokeRect(5,5,54,22);c.fillStyle='#3b6870';c.fillRect(8+variant*12,12,4,4);c.fillRect(46-variant*10,48,6,2);return cv;});
     const r29NecroProfile=NecroKit.profile;NecroKit.profile=function(m){const p=r29NecroProfile.call(this,m);if(m.skin==='gear_mage'){p.ranged=true;p.shot=1;}return p;};
-    const r29BookRows=Campaign.bookRows;Campaign.bookRows=function(tab){const rows=r29BookRows.call(this,tab),flavor={billiard:'他从不赖账，只把欠条弹回对方面前。 小球连库、抽杆重球，控台后打出一杆清台。',pugilist:'拳馆按月收费，敌人通常坚持不到月底。 三式连拳攒势，崩拳消耗拳势，雷门持续压阵。',cardmaster:'牌是新的，债是旧的，规则由活下来的人解释。 同花连射、三条追债、两对护心、彩虹裁决；切牌换牌让手气也能靠技术。'};if(tab==='heroes')for(const row of rows)if(flavor[row.id])row.desc=flavor[row.id];if(tab==='bosses')for(const row of rows)if(row.id.startsWith('clockwork_')){row.desc=({'clockwork_5':'监工的钥匙能开所有门，唯独打不开下班那扇。','clockwork_10':'空响的钟每天准点报丧，准确得令人不想表扬。','clockwork_15':'工坊主掌管所有人的工时，除了她自己的。','clockwork_20':'末班车从不晚点，因为从不打算让乘客下车。','clockwork_25':'占星仪预见了你的未来，退款条例却写在过去。','clockwork_30':'终末钟王将午夜延长到永远，夜班补贴依旧按一天结算。'})[row.id]+' 战胜后可在商人处招募，友军沿用钟城原版双招式。';}if(tab==='monsters')for(const row of rows)if(Object.hasOwn(r29Matrices,row.id)&&!Object.hasOwn(R29_HEROES,row.id))row.desc=({gear_rat:'鼠标不用点，它会主动找上门。',cog_drone:'全天巡逻，不交五险一金。',key_guard:'钥匙在背上，离职手续不在。',gear_mage:'时间就是金钱，他负责让你两样都没有。',bell_brute:'只报丧不报时，省去了不少解释。',clock_wraith:'迟到太久，终于和工时融为一体。'})[row.id]+' '+(row.id==='gear_mage'?'远程铜弹；':'近身接触；')+'属性随战局成长。';return rows;};
+    const HERO_COMBO_GUIDE={
+      warrior:'【专属连携·血影破军】普攻与剑狱回旋叠加【流血】，释放1技能【血影突袭】引爆路径敌人流血层数，按比例返还突袭冷却（Lv.1返还22%→满级55%/觉醒68%，不含圣盾）！',
+      mage:'【专属连携·星蚀坍缩】普攻奥术飞弹弹射叠加【星蚀印记】并周期引爆星芒；释放2技能【引力黑洞】强力聚怪并在终结时引发星辰坍缩巨爆！',
+      ranger:'【专属连携·飞轮回旋】投掷2技能【呼啸回旋镖】后走位触碰接回飞轮，立即按百分比恢复战技冷却（Lv.1恢复12%→满级32%/觉醒40%，不含圣盾）并获得加速与生命恢复！',
+      engineer:'【专属连携·热能过载】普攻磁轨钉命中积攒【热能】（上限100），蓄力重炮消耗全部热能大幅增伤并号令全场哨戒炮台与浮游炮同步锁定齐射！',
+      healer:'【专属连携·祷光圣裁】普攻圣光每次积攒10点【祷光】（上限100），蓄力消耗祷光释放大范围神圣裁决与群体治疗；溢疗50%转化为神圣护盾，且固有能力反弹50%受击伤害！',
+      necromancer:'【专属连携·魂契统御】亲自击杀魔物收集原貌残魂，大招与战技召唤骨卫、幽魂与冥府领主；1技能【亡魂号令】令全体亡军瞬移集火并狂暴加速，亡军全面继承角色暴击与流派！',
+      billiard:'【专属连携·星轨连库】母球与彩球在视野边界与魔物间无衰减几何弹射；2技能【星轨瞄准】重置全场球体寿命、反弹次数并激光锁敌，大招【一杆清台】大幅加快攻速、蓄力与球速！',
+      pugilist:'【专属连携·八门雷暴】三段连拳附带电击并积攒【拳势】（上限6点），蓄力【崩拳】消耗拳势爆发高额伤害；大招【六道雷门】激活期间，蓄力命中直接在目标脚下引爆范围雷暴！',
+      cardmaster:'【专属连携·命运牌型】普攻四花色轮转攒牌（方片叠印、梅花溅射、黑桃穿透、红桃回血），1技能切牌锁同花、2技能留对换牌，蓄力按【同花/三条/两对/彩虹顺】打出专属必杀牌阵！'
+    };
+    const r29BookRows=Campaign.bookRows;Campaign.bookRows=function(tab){const rows=r29BookRows.call(this,tab),flavor={warrior:'身披苍红血铠的断界剑客，以三尺重剑斩裂永夜尸潮。近战连斩与流血引爆，剑阵护身，突袭穿过敌群。',mage:'执掌群星与极寒秘典的星界魔导，将深渊魔物化作星尘。远程奥术连锁、冰闪控场、黑洞聚怪与群星坠落。',ranger:'穿行于血月密林的暗夜猎手，毒箭与回旋飞轮从不落空。穿透毒箭与后跃陷阱；接回飞轮连续刷新战技。',engineer:'驾驭蒸汽与磁轨之力的烬铁机匠，以钢铁炮阵构筑不破防线。锁定钉积攒热能，磁雷聚怪，部署炮网与成长浮游炮。',healer:'沐浴破晓圣辉的曙光祷师，以慈悲圣光治愈盟友、以雷霆神罚净除邪祟。短圣光直接审判，宽光柱范围裁决，群体治疗护盾与加速救援。',necromancer:'执掌生死冥契的禁术宗师，令倒下的万千魔物化作不朽骨军。亲自击杀收集怪物残魂，复苏亡军；五分钟且大招Lv.3后召唤一位领主。',billiard:'游走于命运赌局的终局球爵，以星轨母球与几何连库裁决生死。小球连库、抽杆重球，控台后打出一杆清台。',pugilist:'淬炼雷霆武道的风暴拳师，寸拳崩山、八门雷动，以血肉之躯轰碎魔潮。三式连拳攒势，崩拳消耗拳势，雷门持续压阵。',cardmaster:'执掌猩红秘契的赤契牌师，四色命运交织成绝杀牌局。同花连射、三条追债、两对护心、彩虹裁决；切牌换牌逆转乾坤。'};if(tab==='heroes')for(const row of rows){if(flavor[row.id])row.desc=flavor[row.id]+' '+HERO_COMBO_GUIDE[row.id];if(HERO_COMBO_GUIDE[row.id]&&Array.isArray(row.skills)&&!row.skills.some(s=>s.includes('专属连携')))row.skills.push(HERO_COMBO_GUIDE[row.id]);}if(tab==='bosses')for(const row of rows)if(row.id.startsWith('clockwork_')){row.desc=({'clockwork_5':'镇守钟城外环的锈钥典狱官，挥舞巨型时针与裂甲齿轮碾碎闯入者。','clockwork_10':'铸造丧钟的青铜巨匠，每一次钟槌轰鸣都会激起撕裂空间的声浪。','clockwork_15':'迷失于时间裂隙的秘仪宗师，在战场上编织致命的时隙棋阵与逆时法环。','clockwork_20':'驾驭幽冥夜轨的铁甲列车长，召唤贯穿战场的亡魂列车与封锁结界。','clockwork_25':'悬浮于钟塔穹顶的倒转星晷仪，以巨型摆锤与星盘分野裁决万物生灭。','clockwork_30':'盘踞锈月王座的终末钟王，执掌时间加速、迟滞与时停法则的古神化身。'})[row.id]+' 战胜后可在商人处招募，友军沿用钟城原版双招式。';}if(tab==='monsters')for(const row of rows)if(Object.hasOwn(r29Matrices,row.id)&&!Object.hasOwn(R29_HEROES,row.id))row.desc=({gear_rat:'被发条机心寄生的嗜血铜鼠，在钟城废墟中成群结队地撕咬猎物。',cog_drone:'刻有古老时之符文的浮空铜轮，在永夜回廊中不知疲倦地猎杀生灵。',key_guard:'背负沉重锈蚀巨钥的发条重甲卫兵，以钢铁之躯拱卫钟塔禁地。',gear_mage:'戴着青铜假面的时之秘术师，能凝聚失时能量发射贯穿铜弹。',bell_brute:'身披重钟巨铠的发条狂暴巨兵，每一步踏击都伴随沉闷的丧钟轰鸣。',clock_wraith:'被时间乱流撕碎肉身的失时幽影，在过去与未来的夹缝中飘忽索命。'})[row.id]+' '+(row.id==='gear_mage'?'远程铜弹；':'近身接触；')+'属性随战局成长。';return rows;};
     const r29MonsterName=Campaign.monsterName;Campaign.monsterName=function(key){return({gear_rat:'发条铜鼠',cog_drone:'巡游齿轮',key_guard:'锈钥卫兵',gear_mage:'铜面术师',bell_brute:'铸钟巨兵',clock_wraith:'失时幽影'})[key]||r29MonsterName.call(this,key);};
 
     const R29_TEXT={billiard:['小球碰怪/视野反弹且碰撞不衰减伤害，首次撞怪溅射45%；Lv.1–3为1颗，Lv.4为2颗，Lv.5为3颗，觉醒5颗。','抽杆重球；分球连库会分裂，重炮轰袋变成重击与小爆破。','穿过空隙后打出小球，位移受地图墙与障碍物限制。','展开星轨瞄准阵，给场上球补反弹次数、重新瞄准，并补充环形球阵。','环形星轨与多向瞄准激光交织冲击，逐级增加球数和波次；期间加快普攻与蓄力速度，并短暂提升球数量上限与弹射速度。'],pugilist:['三式连拳，每拳命中的怪物额外触发一次电击，第三拳击出震波；命中积累最多6点拳势。','消耗拳势提高崩拳伤害；大招雷门激活期间，蓄力命中在怪物身上爆发范围雷暴！','向行走方向突进并出拳，补充2点拳势。','雷鼓阵周期打击近敌，并为自己增加护盾。','六道雷门固定在地面持续高频电击范围内敌人；期间普攻更快且蓄力命中触发范围雷暴。'],cardmaster:['每轮普攻入手一张；方片叠欠条、梅花溅射、黑桃穿透、红桃限频回复；大招期间普攻发牌数随等级提升、射程大幅增加。','蓄力消耗手牌发射飞牌（前期精简、随等级逐步成长至满屏）；随牌型变换发射阵型（同花/两对扇形、三条集中一列、彩虹顺/王炸全范围），大招期间自动加快蓄力速度且数量与范围翻倍提升。','弃旧手牌、先抽1张，接下来的3轮普攻锁同花；位移后散射飞牌。','留最多2张同花，其余换成另一花色；留下周期伤害牌阵。','环形齐射并抽2张牌，获得1–3张鬼牌；持续期间自动加快蓄力速度，普攻与蓄力发牌数量和范围大幅度增加。']};
@@ -17608,9 +17621,9 @@
     }
     var STAGE_CGS=window.STAGE_CGS=window.STAGE_CGS||{};
     const r29Preview=document.createElement('figure');r29Preview.id='clockwork-preview';r29Preview.style.cssText='margin:12px 0;border:2px solid #70583e;background:#101922';const stageImg=document.createElement('img');stageImg.decoding='async';stageImg.style.cssText='display:block;width:100%;max-height:230px;object-fit:cover;image-rendering:pixelated';stageImg.alt='关卡像素CG';const stageCaption=document.createElement('figcaption');stageCaption.style.cssText='padding:7px;font-size:12px;color:#e9c278';r29Preview.append(stageImg,stageCaption);document.querySelector('#lobby-modal .biome-grid').after(r29Preview);
-    const r29Selection=syncHeroAndBiomeSelectionUI;syncHeroAndBiomeSelectionUI=function(){const r=r29Selection(),key=(["dungeon","tundra","graveyard","clockwork"].includes(GameState.activeBiome)?GameState.activeBiome:'dungeon');r29Preview.hidden=false;if(STAGE_CGS[key]&&(stageImg.dataset.biome!==key||!stageImg.src)){stageImg.src=STAGE_CGS[key];stageImg.dataset.biome=key;}stageCaption.textContent=({dungeon:'熔火地牢 · 烈焰深处的第一夜',tundra:'永冬冻原 · 向北再无归途',graveyard:'血月墓园 · 横越不安眠的长夜',clockwork:'锈月钟城 · 午夜永不下班'})[key];return r;};
+    const r29Selection=syncHeroAndBiomeSelectionUI;syncHeroAndBiomeSelectionUI=function(){const r=r29Selection(),key=(["dungeon","tundra","graveyard","clockwork"].includes(GameState.activeBiome)?GameState.activeBiome:'dungeon');r29Preview.hidden=false;if(STAGE_CGS[key]&&(stageImg.dataset.biome!==key||!stageImg.src)){stageImg.src=STAGE_CGS[key];stageImg.dataset.biome=key;}stageCaption.textContent=({dungeon:'熔火地牢 · 烈焰深处的第一夜',tundra:'永冬冻原 · 向北再无归途',graveyard:'血月墓园 · 横越不安眠的长夜',clockwork:'锈月钟城 · 时空崩坏的永夜回廊'})[key];return r;};
     function r29PickStage(){if(CoopManager.roomCode&&(!CoopManager.isHost||(GameState.isStarted&&!GameState.isOver))){showToast('地图由房主在出征前选择');return;}GameState.activeBiome='clockwork';syncHeroAndBiomeSelectionUI();if(CoopManager.roomCode)CoopManager.sendPacket({type:'ROOM_BIOME',biome:'clockwork',senderName:CoopManager.myName||'房主'});}
-    const r29Stage=document.createElement('button');r29Stage.type='button';r29Stage.className='biome-card';r29Stage.dataset.biome='clockwork';r29Stage.innerHTML='[px:clock-city] 第四关：锈月钟城<br><span style="font-size:10px;color:#b4c0ce">发条魔物 · 6位首领 · 3件觉醒秘宝</span>';r29Stage.onclick=r29PickStage;document.querySelector('#lobby-modal .biome-grid').append(r29Stage);
+    const r29Stage=document.createElement('button');r29Stage.type='button';r29Stage.className='biome-card';r29Stage.dataset.biome='clockwork';r29Stage.innerHTML='[px:clock-city] 第四关：时空锈月钟城<br><span style="font-size:9px;color:#94a3b8;">发条系怪+终末钟王 | 秘宝:逆摆表/心簧</span>';r29Stage.onclick=r29PickStage;document.querySelector('#lobby-modal .biome-grid').append(r29Stage);
     const r29CoopStage=r29Stage.cloneNode(true);r29CoopStage.classList.add('coop-biome-pick');r29CoopStage.innerHTML='[px:clock-city] 锈月钟城';r29CoopStage.onclick=()=>{r29PickStage();renderCoopModalUI();};document.querySelector('.coop-biome-pick').parentElement.append(r29CoopStage);
     document.getElementById('btn-start-game').insertAdjacentHTML('beforebegin','<button type="button" class="btn-secondary" id="btn-camp-title">标题画面</button>');
     var FrontDoor={
@@ -17633,7 +17646,7 @@
     };
     const tributePool=generateUpgradePool;generateUpgradePool=function(){const pool=tributePool(),p=player.passives,lv=p.garlicCharm||0,n=['critGlove','swiftBoots','lavaHeart','frostAura','pierceQuiver','garlicCharm'].filter(k=>p[k]>0).length;
       if(lv<5&&(lv>0||n<3))pool.push({id:'p_garlic_charm',name:'蒜香护符 Lv.'+(lv+1)+'/5',type:'item',icon:'[px:garlic-bulb]',desc:'每0.85秒以蒜香结界伤害并推开近敌，半径随等级提高。占1个装备格；次级伤害不触发连锁，对Boss伤害60%。Lv.5且人物Lv.20可觉醒。',apply:()=>{p.garlicCharm=lv+1;if(p.garlicCharm>=5)SurvivorTribute.mark();updateLoadoutHUD();}});
-      if(lv>=5&&!p.garlicAwakened&&player.level>=20)pool.push({id:'super_garlic_charm',name:'【超武觉醒】黑蒜晨星',type:'super',isTrueSuper:true,icon:'[px:garlic-bulb]',desc:'蒜香范围额外+35px，伤害提高35%；结界命中后每轮恢复自己2点生命，多目标不重复治疗。',apply:()=>{p.garlicAwakened=true;updateLoadoutHUD();showSuperWeaponFanfare('黑蒜晨星 · 连夜班也有蒜');}});return pool;
+      if(lv>=5&&!p.garlicAwakened&&player.level>=20)pool.push({id:'super_garlic_charm',name:'【超武觉醒】黑蒜晨星',type:'super',isTrueSuper:true,icon:'[px:garlic-bulb]',desc:'蒜香范围额外+35px，伤害提高35%；结界命中后每轮恢复自己2点生命，多目标不重复治疗。',apply:()=>{p.garlicAwakened=true;updateLoadoutHUD();showSuperWeaponFanfare('黑蒜晨星 · 破晓净邪');}});return pool;
     };
     const tributeRelics=updateMapRelicsEffect;updateMapRelicsEffect=function(dt){tributeRelics(dt);SurvivorTribute.tick(dt);};
     const tributeSetup=setupHero;setupHero=function(...a){SurvivorTribute.timer=0;return tributeSetup(...a);};
@@ -17643,7 +17656,7 @@
     const tributeAchievements=Campaign.achievements;Campaign.achievements=function(){return [...tributeAchievements.call(this),{id:'garlic5',name:'有蒜你就来',key:'garlicMastery',target:1,reward:80,desc:'将蒜香护符升至Lv.5。'},{id:'vampireFound',name:'这回真有吸血鬼',key:'vampireSeen',target:1,reward:90,desc:'在幽冥血月墓园遇见并收录吸血鬼。'}];};
     const tributeProgress=Campaign.progress;Campaign.progress=function(a){if(a.key==='vampireSeen')return this.permanent().seen.vampire?1:0;return tributeProgress.call(this,a);};
     const tributeAchInfo=Campaign.achievementInfo;Campaign.achievementInfo=function(a){if(['garlicMastery','vampireSeen'].includes(a.key))return{method:a.desc,icon:a.key==='garlicMastery'?'garlic-bulb':'vampire-question',progress:Math.min(1,this.progress(a))+' / 1'};return tributeAchInfo.call(this,a);};
-    const tributeEnd=Campaign.renderEnd;Campaign.renderEnd=function(){const r=tributeEnd.call(this);if(this.ended?.victory){const el=document.getElementById('run-report');if(el&&!el.querySelector('.survivor-tribute')){const p=document.createElement('p');p.className='campaign-note survivor-tribute';p.textContent='熬到天亮了。吸血鬼呢？——墓园确实有一位，可能已经下班。';el.append(p);}}return r;};
+    const tributeEnd=Campaign.renderEnd;Campaign.renderEnd=function(){const r=tributeEnd.call(this);if(this.ended?.victory){const el=document.getElementById('run-report');if(el&&!el.querySelector('.survivor-tribute')){const p=document.createElement('p');p.className='campaign-note survivor-tribute';p.textContent='熬过永夜迎来破晓。吸血鬼呢？——血月墓园深处确实蛰伏着一位古老血族。';el.append(p);}}return r;};
     const tributeDraw=NewHeroes.draw;NewHeroes.draw=function(c,s,ratio){if(s.type!=='r29_garlic')return tributeDraw.call(this,c,s,ratio);c.save();c.globalAlpha*=Math.min(1,ratio*2)*.65;const r=s.radius*(1.06-ratio*.09);c.strokeStyle=s.color;c.lineWidth=2;for(let i=0;i<24;i++){const a=i*Math.PI/12,x=Math.round(s.x+Math.cos(a)*r),y=Math.round(s.y+Math.sin(a)*r);c.strokeRect(x-3,y-3,6,6);}for(let i=0;i<4;i++){const a=i*Math.PI/2;PixelIcons.draw(c,'garlic-bulb',s.x+Math.cos(a)*r,s.y+Math.sin(a)*r,18+s.stage);}c.restore();};
     const tributeIcons=PixelIcons.build;PixelIcons.build=function(){tributeIcons.call(this);this.define('garlic-bulb','蒜香护符',g=>{g.rect(7,1,2,5,'n');g.rect(5,3,3,2,'N');g.rect(5,6,6,8,'i');g.rect(3,8,10,5,'l');g.rect(5,7,2,7,'w');g.rect(8,6,2,8,'w');g.rect(11,9,1,4,'s');g.rect(5,14,6,1,'s');});this.define('vampire-question','吸血鬼在哪里',g=>{g.rect(4,2,8,12,'k');g.rect(5,3,6,10,'R');g.rect(6,1,4,2,'s');g.rect(7,4,3,2,'w');g.rect(9,6,2,2,'w');g.rect(7,8,3,2,'w');g.rect(7,12,2,1,'w');});this.define('food','焦香烤鸡',g=>{g.rect(2,7,4,3,'w');g.rect(1,6,2,2,'i');g.rect(1,10,2,2,'i');g.rect(6,5,7,8,'b');g.rect(5,7,9,5,'g');g.rect(7,4,4,2,'y');g.rect(8,7,4,2,'y');g.rect(12,9,2,3,'b');g.rect(7,12,5,2,'R');});this.rasterize();};
 
@@ -17691,10 +17704,2268 @@
 
     const r30PoolDescriptions=generateUpgradePool;generateUpgradePool=function(){const pool=r30PoolDescriptions();if(!NewHeroes.has())return pool;const h=GameState.selectedHero,u=player.skills.ult,next=Math.min(5,u.level+1),card=pool.find(c=>c.id==='ult_up');if(card){const line=h==='billiard'?(([2,2,3,3,4][next-1])+'轮，每轮'+([3,4,5,8,9][next-1])+'颗球；期间加快普攻与蓄力、提高球数上限与球速。'):h==='pugilist'?('地面雷门持续'+(5+next*.5)+'秒高频电击，每轮最多'+(3+next)+'道雷击；期间蓄力命中触发范围雷暴。'):('环形飞牌'+(3+Math.floor((next-1)/2))+'轮，鬼牌'+(1+Math.floor((next-1)/2))+'张；期间自动加快蓄力速度并大幅提升普攻与蓄力发牌数与范围。');card.desc=line+' 大招伤害+18%，冷却缩短1.5秒；五级可觉醒。';}return pool;};
     const r30ExtraDetails=SkillDetails.describe;SkillDetails.describe=function(kind,key){const d=r30ExtraDetails.call(this,kind,key);if(kind==='active'&&GameState.selectedHero==='billiard'){const s=player.skills[key];if(key==='skill1')d.rows.push(['走位后小球数',([2,2,3,3,3][s.level-1]||3)+(s.isEvolved?4:0)]);if(key==='skill2')d.rows.push(['控台小球数',([3,3,5,6,8][s.level-1]||8)+(s.isEvolved?3:0)]);if(key==='ult')d.rows.push(['齐射轮数',([2,2,3,3,4][s.level-1]||4)+(s.isEvolved?1:0)],['每轮球数',([3,4,5,8,9][s.level-1]||9)+(s.isEvolved?2:0)],['清台狂潮增益','普攻间隔×0.65 · 蓄力耗时×0.60 · 球速+38% · 上限提升']);}return d;};
+    // =========================================================================
+    // 角色解锁体系 (HeroUnlocks) + 商店限时增益与限时影分身系统 (ShopBuffs & ShadowCloneKit)
+    // =========================================================================
+    (function injectHeroUnlockAndShopBuffStyles() {
+      const st = document.createElement('style');
+      st.id = 'hero-unlock-and-buff-styles';
+      st.textContent = `
+        /* 未解锁角色像素头像：保持与已解锁角色一致的卡片底色（不加额外灰底方框），保留原角色完整像素形状并将其渲染为纯黑像素剪影 */
+        .hero-card.hero-locked {
+          background: rgba(30, 41, 59, 0.85);
+          border-color: #475569;
+        }
+        .hero-card.hero-locked .hero-avatar {
+          background: none !important;
+          border: none !important;
+          box-shadow: none !important;
+          filter: none;
+        }
+        .hero-card.hero-locked .hero-avatar .pixel-icon {
+          filter: brightness(0) saturate(100%) drop-shadow(0 0 1px rgba(148, 163, 184, 0.45));
+          opacity: 1;
+        }
+        .coop-hero-pick.hero-locked .pixel-icon {
+          filter: brightness(0) saturate(100%) drop-shadow(0 0 1px rgba(148, 163, 184, 0.45));
+          opacity: 1;
+        }
+        .hero-unlock-tag {
+          margin-top: 3px;
+          padding: 2px 4px;
+          border-radius: 4px;
+          font-size: 9px;
+          font-weight: 800;
+          line-height: 1.25;
+          text-align: center;
+          width: 100%;
+          overflow-wrap: anywhere;
+        }
+        .hero-unlock-tag.is-locked {
+          background: rgba(15, 23, 42, 0.92);
+          border: 1px solid rgba(251, 191, 36, 0.65);
+          color: #fde68a;
+          cursor: pointer;
+        }
+        .hero-unlock-tag.is-unlocked {
+          background: rgba(6, 78, 59, 0.55);
+          border: 1px solid rgba(52, 211, 153, 0.45);
+          color: #6ee7b7;
+        }
+        .biome-card.stage-locked {
+          border-color: rgba(148, 163, 184, 0.45) !important;
+          background: linear-gradient(180deg, rgba(30, 41, 59, 0.78), rgba(15, 23, 42, 0.92)) !important;
+          opacity: 0.88;
+        }
+        .stage-unlock-tag {
+          margin-top: 3px;
+          padding: 1px 5px;
+          border-radius: 4px;
+          font-size: 9px;
+          font-weight: 800;
+          line-height: 1.3;
+          display: inline-block;
+        }
+        .stage-unlock-tag.is-locked {
+          background: rgba(15, 23, 42, 0.92);
+          border: 1px solid rgba(248, 113, 113, 0.6);
+          color: #fca5a5;
+        }
+        .stage-unlock-tag.is-unlocked {
+          background: rgba(6, 78, 59, 0.52);
+          border: 1px solid rgba(52, 211, 153, 0.45);
+          color: #6ee7b7;
+        }
+        .talent-card.shop-buff-card {
+          border-color: rgba(168, 85, 247, 0.45);
+          background: linear-gradient(180deg, rgba(30, 20, 52, 0.92), rgba(15, 23, 42, 0.95));
+        }
+        .talent-card.shop-clone-card {
+          border-color: rgba(244, 63, 94, 0.6);
+          background: linear-gradient(180deg, rgba(48, 16, 36, 0.95), rgba(15, 23, 42, 0.96));
+        }
+        .talent-card.shop-hero-unlock-card {
+          border-color: rgba(245, 158, 11, 0.5);
+          background: linear-gradient(180deg, rgba(38, 28, 16, 0.92), rgba(15, 23, 42, 0.95));
+        }
+        .talent-card.shop-hero-unlock-card.is-locked-hero .talent-icon {
+          background: none !important;
+          border: none !important;
+        }
+        .talent-card.shop-hero-unlock-card.is-locked-hero .talent-icon .pixel-icon {
+          filter: brightness(0) saturate(100%) drop-shadow(0 0 1px rgba(148, 163, 184, 0.45));
+          opacity: 1;
+        }
+      `;
+      document.head.appendChild(st);
+    })();
+
+    const HeroUnlocks = {
+      SPECS: {
+        warrior: { key: 'warrior', name: '鲜血狂战', icon: '[px:hero-warrior]', starter: true, cost: 0, mode: 'starter', desc: '初始解锁英雄' },
+        mage: { key: 'mage', name: '奥术大法师', icon: '[px:hero-mage]', starter: true, cost: 0, mode: 'starter', desc: '初始解锁英雄' },
+        ranger: { key: 'ranger', name: '暗夜游侠', icon: '[px:hero-ranger]', starter: true, cost: 0, mode: 'starter', desc: '初始解锁英雄' },
+        engineer: {
+          key: 'engineer',
+          name: '烬铁机匠',
+          icon: '[px:hero-engineer]',
+          starter: false,
+          cost: 5000,
+          mode: 'gold',
+          shortReq: '5,000 金币解锁',
+          desc: '重装机甲与浮游炮大师。需花费 5,000 金币购买解锁。'
+        },
+        healer: {
+          key: 'healer',
+          name: '曙光祷师',
+          icon: '[px:hero-healer]',
+          starter: false,
+          cost: 6800,
+          mode: 'gold',
+          shortReq: '6,800 金币解锁',
+          desc: '圣光治愈与神圣裁决牧师。需花费 6,800 金币购买解锁。'
+        },
+        necromancer: {
+          key: 'necromancer',
+          name: '冥契术士',
+          icon: '[px:hero-necromancer]',
+          starter: false,
+          cost: 9800,
+          mode: 'gold',
+          shortReq: '9,800 金币解锁',
+          desc: '统御亡灵骨卫与冥魂大军。需花费 9,800 金币购买解锁。'
+        },
+        billiard: {
+          key: 'billiard',
+          name: '终局球爵',
+          icon: '[px:hero-billiard]',
+          starter: false,
+          cost: 12000,
+          mode: 'stage_or_gold',
+          stageBiome: 'dungeon',
+          stageNum: 1,
+          stageName: '第一关（腐朽地牢）',
+          shortReq: '第1关通关 或 12,000金币',
+          desc: '星轨母球几何弹射大师。通关第一关（腐朽地牢）免费解锁，或花费 12,000 金币提前购买解锁。'
+        },
+        pugilist: {
+          key: 'pugilist',
+          name: '风暴拳师',
+          icon: '[px:hero-pugilist]',
+          starter: false,
+          cost: 16000,
+          mode: 'stage_or_gold',
+          stageBiome: 'tundra',
+          stageNum: 2,
+          stageName: '第二关（永冬冻土）',
+          shortReq: '第2关通关 或 16,000金币',
+          desc: '雷霆寸拳与架势崩解武道家。通关第二关（永冬冻土）免费解锁，或花费 16,000 金币提前购买解锁。'
+        },
+        cardmaster: {
+          key: 'cardmaster',
+          name: '赤契牌师',
+          icon: '[px:hero-cardmaster]',
+          starter: false,
+          cost: 20000,
+          mode: 'stage_or_gold',
+          stageBiome: 'graveyard',
+          stageNum: 3,
+          stageName: '第三关（血月墓园）',
+          shortReq: '第3关通关 或 20,000金币',
+          desc: '命运花色组合与王炸满贯大师。通关第三关（血月墓园）免费解锁，或花费 20,000 金币提前购买解锁。'
+        }
+      },
+      ensureData() {
+        if (!SaveManager.data) return {};
+        if (!SaveManager.data.unlockedHeroes || typeof SaveManager.data.unlockedHeroes !== 'object') {
+          SaveManager.data.unlockedHeroes = { warrior: true, mage: true, ranger: true };
+        }
+        SaveManager.data.unlockedHeroes.warrior = true;
+        SaveManager.data.unlockedHeroes.mage = true;
+        SaveManager.data.unlockedHeroes.ranger = true;
+        const cleared = SaveManager.data.campaign?.clearedBiomes || {};
+        const permStages = SaveManager.data.permanent?.biomes || {};
+        if (cleared.dungeon || permStages.dungeon) SaveManager.data.unlockedHeroes.billiard = true;
+        if (cleared.tundra || permStages.tundra) SaveManager.data.unlockedHeroes.pugilist = true;
+        if (cleared.graveyard || permStages.graveyard) SaveManager.data.unlockedHeroes.cardmaster = true;
+        return SaveManager.data.unlockedHeroes;
+      },
+      isStageCleared(spec) {
+        if (!spec || !spec.stageBiome) return false;
+        const cleared = SaveManager.data?.campaign?.clearedBiomes || {};
+        const permBiomes = SaveManager.data?.permanent?.biomes || {};
+        const campCount = Number(SaveManager.data?.permanent?.counters?.['biome_' + spec.stageBiome] || 0);
+        return Boolean(cleared[spec.stageBiome] || permBiomes[spec.stageBiome] || campCount > 0);
+      },
+      isUnlocked(heroKey) {
+        const spec = this.SPECS[heroKey];
+        if (!spec || spec.starter) return true;
+        const map = this.ensureData();
+        if (map[heroKey]) return true;
+        if (spec.mode === 'stage_or_gold' && this.isStageCleared(spec)) {
+          map[heroKey] = true;
+          return true;
+        }
+        return false;
+      },
+      checkStageClearUnlocks(biomeKey, notify = true) {
+        const map = this.ensureData();
+        let changed = false;
+        for (const spec of Object.values(this.SPECS)) {
+          if (spec.mode === 'stage_or_gold' && (spec.stageBiome === biomeKey || this.isStageCleared(spec))) {
+            if (!map[spec.key]) {
+              map[spec.key] = true;
+              changed = true;
+              if (notify && typeof CoopManager !== 'undefined' && CoopManager.showToast) {
+                CoopManager.showToast(`[px:crown] 通关${spec.stageName}，已免费解锁英雄【${spec.name}】！`, 3600);
+              }
+            }
+          }
+        }
+        if (changed) {
+          SaveManager.save();
+          this.refreshUI();
+        }
+        return changed;
+      },
+      buy(heroKey) {
+        const spec = this.SPECS[heroKey];
+        if (!spec) return false;
+        if (this.isUnlocked(heroKey)) return true;
+        if (SaveManager.data.gold < spec.cost) {
+          if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
+            const msg = spec.mode === 'stage_or_gold'
+              ? `[px:lock] 解锁【${spec.name}】需通关${spec.stageName}，或攒够 ${spec.cost.toLocaleString()} 金币提前解锁！`
+              : `[px:lock] 解锁【${spec.name}】需要 ${spec.cost.toLocaleString()} 金币（当前 ${SaveManager.data.gold.toLocaleString()}）！`;
+            CoopManager.showToast(msg, 2800);
+          }
+          return false;
+        }
+        SaveManager.data.gold -= spec.cost;
+        const map = this.ensureData();
+        map[heroKey] = true;
+        SaveManager.save();
+        AudioEngine.levelUp();
+        if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
+          CoopManager.showToast(`[px:crown] 成功花费 ${spec.cost.toLocaleString()} 金币解锁英雄【${spec.name}】！`, 3000);
+        }
+        this.refreshUI();
+        if (typeof renderShopList === 'function' && document.getElementById('shop-modal')?.style.display === 'flex') {
+          renderShopList();
+        }
+        return true;
+      },
+      refreshUI() {
+        this.ensureData();
+        document.querySelectorAll('.hero-card').forEach(card => {
+          const h = card.getAttribute('data-hero');
+          const spec = this.SPECS[h];
+          if (!spec) return;
+          const unlocked = this.isUnlocked(h);
+          card.classList.toggle('hero-locked', !unlocked);
+          let tag = card.querySelector('.hero-unlock-tag');
+          if (!tag) {
+            tag = document.createElement('div');
+            tag.className = 'hero-unlock-tag';
+            card.appendChild(tag);
+          }
+          tag.className = 'hero-unlock-tag ' + (unlocked ? 'is-unlocked' : 'is-locked');
+          if (unlocked) {
+            tag.innerHTML = `[px:check] 已解锁`;
+          } else if (spec.mode === 'stage_or_gold') {
+            tag.innerHTML = `[px:lock] ${spec.stageReqLabel || ('第' + spec.stageNum + '关通关')} / ${spec.cost.toLocaleString()}[px:coin]`;
+          } else {
+            tag.innerHTML = `[px:lock] ${spec.cost.toLocaleString()}[px:coin] 解锁`;
+          }
+          if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
+            PixelIcons.hydrate(tag);
+          }
+        });
+        document.querySelectorAll('.coop-hero-pick').forEach(btn => {
+          const h = btn.getAttribute('data-coop-hero') || btn.getAttribute('data-hero');
+          if (!h || !this.SPECS[h]) return;
+          btn.classList.toggle('hero-locked', !this.isUnlocked(h));
+        });
+      }
+    };
+
+    // 绑定英雄卡片点击：若未解锁且金币充足，点击即可直接购买解锁；若金币不足，仍允许预览技能但保持未解锁剪影状态并提示
+    document.querySelectorAll('.hero-card').forEach(card => {
+      card.addEventListener('click', (ev) => {
+        const h = card.getAttribute('data-hero');
+        const spec = HeroUnlocks.SPECS[h];
+        if (!spec || HeroUnlocks.isUnlocked(h)) {
+          HeroUnlocks.refreshUI();
+          return;
+        }
+        const clickedUnlockBadge = ev.target && ev.target.closest && ev.target.closest('.hero-unlock-tag');
+        if (SaveManager.data.gold >= spec.cost) {
+          HeroUnlocks.buy(h);
+          setupHero(h);
+          syncHeroAndBiomeSelectionUI();
+          HeroUnlocks.refreshUI();
+        } else {
+          HeroUnlocks.refreshUI();
+          if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
+            const reqText = spec.mode === 'stage_or_gold'
+              ? `通关${spec.stageName}免费解锁，或花费 ${spec.cost.toLocaleString()} 金币提前购买`
+              : `需花费 ${spec.cost.toLocaleString()} 金币购买解锁`;
+            CoopManager.showToast(`[px:lock] 【${spec.name}】未解锁（${reqText}）${clickedUnlockBadge ? '，当前金币不足！' : '，当前为剪影预览'}`, 2600);
+          }
+        }
+      });
+    });
+
+    // =========================================================================
+    // 章节通关实时渲染剧情动画系统 (ChapterCutscene — 四大章节专属 60FPS 实时像素剧场)
+    // =========================================================================
+    const ChapterCutscene = {
+      active: false,
+      biome: 'dungeon',
+      elapsed: 0,
+      duration: 10.5,
+      rafId: 0,
+      lastTs: 0,
+      particles: [],
+      shards: [],
+      stars: [],
+      shake: 0,
+      flashAlpha: 0,
+      bossShattered: false,
+      CHAPTER_SPECS: {
+        dungeon: {
+          chapterLabel: '第一章 · 恶魔熔火地牢',
+          title: '《破晓断狱 · 熔火熄灭》',
+          bossKey: 'boss',
+          bossName: '暗夜灭世魔神·巴尔',
+          allyHero: 'billiard',
+          allyName: '终局球爵',
+          themeColor: '#f97316',
+          accentColor: '#fde047',
+          skyTop: '#16070a',
+          skyBot: '#3b0d11',
+          purifiedTop: '#0f172a',
+          purifiedBot: '#33241b',
+          summaryText: '你成功撑过30分钟漫长血夜并讨伐地牢最终魔神【暗夜灭世魔神·巴尔】！(已额外发放通关赏金 +500 [px:coin])',
+          acts: [
+            { start: 0,   end: 3.4, speaker: '【第一幕 · 魔神授首】', text: '深渊熔核剧烈震颤，暗夜灭世魔神·巴尔发出最后的咆哮，你化作流光贯穿魔神真身！' },
+            { start: 3.4, end: 7.0, speaker: '【第二幕 · 炼狱崩解】', text: '巴尔的魔核寸寸碎裂化作漫天金焰，沸腾的血池逐渐冷却，黑曜石王座的千年枷锁应声断裂！' },
+            { start: 7.0, end: 10.5, speaker: '【第三幕 · 极北呼唤】', text: '破晓晨光刺穿地牢穹顶，远方却飘来刺骨寒霜——极寒永冬冻原的封印已然松动，新的征途在北方等待！' }
+          ]
+        },
+        tundra: {
+          chapterLabel: '第二章 · 极寒永冬冻原',
+          title: '《冰渊解冻 · 极光重燃》',
+          bossKey: 'boss_dragon',
+          bossName: '绝对零度古神·利维坦',
+          allyHero: 'pugilist',
+          allyName: '风暴拳师',
+          themeColor: '#38bdf8',
+          accentColor: '#6ee7b7',
+          skyTop: '#06101e',
+          skyBot: '#0f2942',
+          purifiedTop: '#07192e',
+          purifiedBot: '#133a47',
+          summaryText: '你成功撑过30分钟凛冬暴雪并讨伐冻原最终古神【绝对零度古神·利维坦】！(已额外发放通关赏金 +500 [px:coin])',
+          acts: [
+            { start: 0,   end: 3.4, speaker: '【第一幕 · 零度破碎】', text: '万里冰封之巅，绝对零度古神·利维坦掀起灭世寒潮，你在暴风雪中心轰出破晓一击！' },
+            { start: 3.4, end: 7.0, speaker: '【第二幕 · 极光重燃】', text: '亘古冰晶巨柱轰然崩塌化作漫天星尘，遮天风雪散去，绚烂的极光时隔千年再度照亮极北夜空！' },
+            { start: 7.0, end: 10.5, speaker: '【第三幕 · 血月前兆】', text: '冰川融水映出天边悄然升起的一轮猩红血月——幽冥血月墓园的亡者正蠢蠢欲动……' }
+          ]
+        },
+        graveyard: {
+          chapterLabel: '第三章 · 幽冥血月墓园',
+          title: '《冥河渡尽 · 血月净魂》',
+          bossKey: 'boss_lich',
+          bossName: '幽冥死神·纳迦什真身',
+          allyHero: 'cardmaster',
+          allyName: '赤契牌师',
+          themeColor: '#10b981',
+          accentColor: '#c084fc',
+          skyTop: '#16091c',
+          skyBot: '#0c231e',
+          purifiedTop: '#0b1528',
+          purifiedBot: '#152e2b',
+          summaryText: '你成功撑过30分钟幽冥尸潮并讨伐墓园最终死神【幽冥死神·纳迦什真身】！(已额外发放通关赏金 +500 [px:coin])',
+          acts: [
+            { start: 0,   end: 3.4, speaker: '【第一幕 · 死神陨落】', text: '猩红血月之下，幽冥死神·纳迦什挥动收割万魂的冥镰，你逆流而上直接击碎死神命匣！' },
+            { start: 3.4, end: 7.0, speaker: '【第二幕 · 万魂安息】', text: '禁锢千年的万千幽魂化作金色流萤升入星海，妖异血月蜕变为澄澈银月，冥河重归宁静！' },
+            { start: 7.0, end: 10.5, speaker: '【第三幕 · 锈月钟鸣】', text: '墓园尽头的虚空裂开一道青铜时隙，倒转的发条巨钟敲响第十二声——时空锈月钟城浮现于世！' }
+          ]
+        },
+        clockwork: {
+          chapterLabel: '第四章 · 时空锈月钟城',
+          title: '《逆时终焉 · 黎明重铸》',
+          bossKey: 'clock_emperor',
+          bossName: '锈月终末钟王',
+          allyHero: 'warrior',
+          allyName: '全体猎手团',
+          themeColor: '#fbbf24',
+          accentColor: '#38bdf8',
+          skyTop: '#0f1722',
+          skyBot: '#271e17',
+          purifiedTop: '#172554',
+          purifiedBot: '#7c2d12',
+          summaryText: '你成功跨越时空灾变并讨伐终局古神【锈月终末钟王】，打碎永夜轮回迎来真正的黎明！(已额外发放通关赏金 +500 [px:coin])',
+          acts: [
+            { start: 0,   end: 3.4, speaker: '【第一幕 · 终钟破碎】', text: '时空乱流之中，锈月终末钟王企图再度倒转世界时针，你冲破时停枷锁一举斩断终末钟摆！' },
+            { start: 3.4, end: 7.0, speaker: '【第二幕 · 时间归位】', text: '倒转的巨型青铜齿轮轰然停滞随后正向咬合，停滞在午夜十二点的世界指针终于迈向黎明！' },
+            { start: 7.0, end: 10.5, speaker: '【终章 · 破晓降临】', text: '锈月散尽，金色朝阳自地平线磅礴升起！九大猎手并肩伫立于曙光之巅——永夜终结，传奇不朽！' }
+          ]
+        }
+      },
+      ensureDOM() {
+        let overlay = document.getElementById('chapter-cutscene-overlay');
+        if (overlay) return overlay;
+        const style = document.createElement('style');
+        style.textContent = `
+          #chapter-cutscene-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 26000;
+            background: #020617;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            user-select: none;
+            overflow: hidden;
+            transition: opacity 0.35s ease;
+          }
+          #chapter-cutscene-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            image-rendering: pixelated;
+          }
+          .cutscene-letterbox-top, .cutscene-letterbox-bottom {
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(180deg, rgba(2,6,23,0.96), rgba(2,6,23,0.82));
+            border-bottom: 1px solid rgba(251,191,36,0.35);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+          }
+          .cutscene-letterbox-bottom {
+            background: linear-gradient(0deg, rgba(2,6,23,0.97), rgba(2,6,23,0.84));
+            border-bottom: none;
+            border-top: 1px solid rgba(251,191,36,0.35);
+            flex-direction: column;
+            align-items: stretch;
+            padding: 14px 22px 18px;
+          }
+          .cutscene-chapter-badge {
+            font-size: 12px;
+            font-weight: 800;
+            color: #fbbf24;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .cutscene-title-main {
+            font-size: 16px;
+            font-weight: 900;
+            color: #f8fafc;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+          }
+          .cutscene-skip-btn {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(251, 191, 36, 0.65);
+            color: #fde68a;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.12s, background 0.15s;
+          }
+          .cutscene-skip-btn:hover {
+            background: rgba(51, 65, 85, 0.95);
+            transform: scale(1.03);
+          }
+          .cutscene-dialogue-row {
+            max-width: 820px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+          }
+          .cutscene-speaker {
+            font-size: 12px;
+            font-weight: 900;
+            color: #38bdf8;
+            letter-spacing: 0.5px;
+          }
+          .cutscene-subtitle {
+            font-size: 15px;
+            font-weight: 700;
+            color: #f1f5f9;
+            line-height: 1.55;
+            min-height: 2.8em;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.95);
+          }
+          .cutscene-progress-track {
+            max-width: 820px;
+            width: 100%;
+            margin: 6px auto 0;
+            height: 4px;
+            background: rgba(51, 65, 85, 0.7);
+            border-radius: 2px;
+            overflow: hidden;
+          }
+          .cutscene-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f59e0b, #fde047, #38bdf8);
+            transition: width 0.08s linear;
+          }
+        `;
+        document.head.appendChild(style);
+        overlay = document.createElement('div');
+        overlay.id = 'chapter-cutscene-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-label', '章节通关实时剧情动画');
+        overlay.innerHTML = `
+          <canvas id="chapter-cutscene-canvas"></canvas>
+          <div class="cutscene-letterbox-top">
+            <div>
+              <div class="cutscene-chapter-badge" id="cutscene-chapter-label">第一章 · 恶魔熔火地牢</div>
+              <div class="cutscene-title-main" id="cutscene-title-main">《破晓断狱 · 熔火熄灭》</div>
+            </div>
+            <button type="button" class="cutscene-skip-btn" id="cutscene-skip-btn">跳过剧情 / 查看战报 (Space)</button>
+          </div>
+          <div class="cutscene-letterbox-bottom">
+            <div class="cutscene-dialogue-row">
+              <div class="cutscene-speaker" id="cutscene-speaker">【第一幕】</div>
+              <div class="cutscene-subtitle" id="cutscene-subtitle"></div>
+            </div>
+            <div class="cutscene-progress-track">
+              <div class="cutscene-progress-fill" id="cutscene-progress-fill"></div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+        document.getElementById('cutscene-skip-btn').addEventListener('click', () => this.stop());
+        window.addEventListener('keydown', (e) => {
+          if (!this.active) return;
+          if (e.code === 'Space' || e.code === 'Escape' || e.code === 'Enter') {
+            e.preventDefault();
+            this.stop();
+          }
+        });
+
+        // 在结算界面 (#over-modal) 注入“重播本章通关剧情”按钮
+        const overCard = document.querySelector('#over-modal .modal-card');
+        if (overCard && !document.getElementById('btn-replay-cutscene')) {
+          const replayBtn = document.createElement('button');
+          replayBtn.type = 'button';
+          replayBtn.id = 'btn-replay-cutscene';
+          replayBtn.className = 'btn-secondary';
+          replayBtn.style.cssText = 'margin-top:8px;width:100%;border-color:#f59e0b;color:#fde68a;display:none;';
+          replayBtn.innerHTML = '[px:sparkles] 重播本章通关实时剧情动画';
+          replayBtn.addEventListener('click', () => {
+            this.play(GameState.activeBiome || 'dungeon');
+          });
+          overCard.appendChild(replayBtn);
+          if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) PixelIcons.hydrate(replayBtn);
+        }
+        return overlay;
+      },
+      initParticles(spec) {
+        this.particles = [];
+        this.shards = [];
+        this.stars = [];
+        for (let i = 0; i < 65; i++) {
+          this.stars.push({
+            x: Math.random(),
+            y: Math.random() * 0.65,
+            size: 1 + Math.floor(Math.random() * 2.5),
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+        for (let i = 0; i < 45; i++) {
+          this.particles.push({
+            x: Math.random(),
+            y: Math.random(),
+            vx: (Math.random() - 0.5) * 0.12,
+            vy: -0.06 - Math.random() * 0.14,
+            size: 2 + Math.random() * 4,
+            color: i % 2 === 0 ? spec.themeColor : spec.accentColor,
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+      },
+      spawnBossShatter(cx, cy, spec) {
+        this.bossShattered = true;
+        this.shake = 18;
+        this.flashAlpha = 0.85;
+        if (typeof audio !== 'undefined' && audio.playExplosion) audio.playExplosion();
+        for (let i = 0; i < 95; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const spd = 40 + Math.random() * 260;
+          this.shards.push({
+            x: cx + (Math.random() - 0.5) * 40,
+            y: cy + (Math.random() - 0.5) * 40,
+            vx: Math.cos(ang) * spd,
+            vy: Math.sin(ang) * spd - 45,
+            size: 3 + Math.floor(Math.random() * 6),
+            color: i % 3 === 0 ? '#ffffff' : (i % 2 === 0 ? spec.themeColor : spec.accentColor),
+            life: 1.8 + Math.random() * 1.8,
+            maxLife: 3.6
+          });
+        }
+      },
+      play(biomeKey) {
+        const key = ['dungeon', 'tundra', 'graveyard', 'clockwork'].includes(biomeKey)
+          ? biomeKey
+          : (['dungeon', 'tundra', 'graveyard', 'clockwork'].includes(GameState.activeBiome) ? GameState.activeBiome : 'dungeon');
+        const spec = this.CHAPTER_SPECS[key] || this.CHAPTER_SPECS.dungeon;
+        const overlay = this.ensureDOM();
+
+        // 同步更新结算面板上的章节专属文案与重播按钮
+        const summaryEl = document.getElementById('over-summary');
+        if (summaryEl && GameState.isVictory) {
+          summaryEl.innerHTML = spec.summaryText;
+          if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) PixelIcons.hydrate(summaryEl);
+        }
+        const replayBtn = document.getElementById('btn-replay-cutscene');
+        if (replayBtn) {
+          replayBtn.style.display = GameState.isVictory ? 'inline-flex' : 'none';
+          replayBtn.style.justifyContent = 'center';
+          replayBtn.style.alignItems = 'center';
+          replayBtn.style.gap = '6px';
+        }
+
+        this.biome = key;
+        this.elapsed = 0;
+        this.bossShattered = false;
+        this.shake = 0;
+        this.flashAlpha = 0.35;
+        this.initParticles(spec);
+
+        document.getElementById('cutscene-chapter-label').textContent = spec.chapterLabel;
+        document.getElementById('cutscene-chapter-label').style.color = spec.themeColor;
+        document.getElementById('cutscene-title-main').textContent = spec.title;
+
+        overlay.style.opacity = '1';
+        overlay.style.display = 'flex';
+        this.active = true;
+        this.lastTs = performance.now();
+        cancelAnimationFrame(this.rafId);
+        this.rafId = requestAnimationFrame((ts) => this.loop(ts));
+      },
+      stop() {
+        if (!this.active) return;
+        this.active = false;
+        cancelAnimationFrame(this.rafId);
+        const overlay = document.getElementById('chapter-cutscene-overlay');
+        if (overlay) {
+          overlay.style.opacity = '0';
+          setTimeout(() => {
+            if (!this.active) overlay.style.display = 'none';
+          }, 320);
+        }
+      },
+      loop(ts) {
+        if (!this.active) return;
+        const dt = Math.min(0.05, Math.max(0.005, (ts - this.lastTs) / 1000));
+        this.lastTs = ts;
+        this.elapsed += dt;
+
+        const spec = this.CHAPTER_SPECS[this.biome] || this.CHAPTER_SPECS.dungeon;
+        if (this.elapsed >= 3.4 && !this.bossShattered) {
+          const cv = document.getElementById('chapter-cutscene-canvas');
+          const w = cv ? cv.width : 800;
+          const h = cv ? cv.height : 500;
+          this.spawnBossShatter(w * 0.68, h * 0.54, spec);
+        }
+
+        this.updateUI(spec);
+        this.renderCanvas(dt, spec);
+
+        if (this.elapsed >= this.duration) {
+          this.stop();
+          return;
+        }
+        this.rafId = requestAnimationFrame((nextTs) => this.loop(nextTs));
+      },
+      updateUI(spec) {
+        const pct = Math.min(100, (this.elapsed / this.duration) * 100);
+        const fill = document.getElementById('cutscene-progress-fill');
+        if (fill) fill.style.width = `${pct.toFixed(1)}%`;
+
+        let curAct = spec.acts[0];
+        for (const act of spec.acts) {
+          if (this.elapsed >= act.start) curAct = act;
+        }
+        const spkEl = document.getElementById('cutscene-speaker');
+        const subEl = document.getElementById('cutscene-subtitle');
+        if (spkEl) {
+          spkEl.textContent = curAct.speaker;
+          spkEl.style.color = spec.accentColor;
+        }
+        if (subEl) {
+          const actLocal = Math.max(0, this.elapsed - curAct.start);
+          const chars = Math.min(curAct.text.length, Math.floor(actLocal * 28) + 2);
+          subEl.textContent = curAct.text.slice(0, chars);
+        }
+      },
+      drawSprite(ctx, key, x, y, targetSize, flipX = false, whiteFlash = false, alpha = 1) {
+        const frame = Math.floor(this.elapsed * 6) % 2;
+        const set = SpriteCache[`${key}_${frame}`] || SpriteCache[`${key}_0`] || SpriteCache.warrior_0;
+        if (!set) return;
+        const img = whiteFlash && set.white ? set.white : set.normal;
+        if (!img) return;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(Math.round(x), Math.round(y));
+        if (flipX) ctx.scale(-1, 1);
+        ctx.imageSmoothingEnabled = false;
+        const scale = targetSize / Math.max(img.width, img.height);
+        const dw = Math.round(img.width * scale);
+        const dh = Math.round(img.height * scale);
+        ctx.drawImage(img, -Math.round(dw / 2), -Math.round(dh / 2), dw, dh);
+        ctx.restore();
+      },
+      renderCanvas(dt, spec) {
+        const cv = document.getElementById('chapter-cutscene-canvas');
+        if (!cv) return;
+        const rect = cv.getBoundingClientRect();
+        const targetW = Math.max(480, Math.min(960, Math.floor(rect.width * 0.75)));
+        const targetH = Math.max(300, Math.min(600, Math.floor(rect.height * 0.75)));
+        if (cv.width !== targetW || cv.height !== targetH) {
+          cv.width = targetW;
+          cv.height = targetH;
+        }
+        const ctx = cv.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        const W = cv.width;
+        const H = cv.height;
+        const t = this.elapsed;
+        const purifyRatio = Math.max(0, Math.min(1, (t - 3.4) / 3.2));
+        const dawnRatio = Math.max(0, Math.min(1, (t - 6.8) / 3.0));
+
+        if (this.shake > 0) this.shake = Math.max(0, this.shake - dt * 28);
+        if (this.flashAlpha > 0) this.flashAlpha = Math.max(0, this.flashAlpha - dt * 1.6);
+
+        ctx.save();
+        if (this.shake > 0) {
+          ctx.translate((Math.random() - 0.5) * this.shake, (Math.random() - 0.5) * this.shake);
+        }
+
+        // 1. 实时渐变天幕与破晓晨光
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, H * 0.72);
+        skyGrad.addColorStop(0, purifyRatio > 0.5 ? spec.purifiedTop : spec.skyTop);
+        skyGrad.addColorStop(1, dawnRatio > 0 ? '#9a3412' : (purifyRatio > 0.5 ? spec.purifiedBot : spec.skyBot));
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        // 星空闪烁
+        for (const st of this.stars) {
+          const tw = 0.35 + 0.65 * Math.abs(Math.sin(t * 3 + st.phase));
+          ctx.fillStyle = `rgba(248, 250, 252, ${tw * (0.3 + purifyRatio * 0.7)})`;
+          ctx.fillRect(Math.floor(st.x * W), Math.floor(st.y * H), st.size, st.size);
+        }
+
+        const horizonY = Math.floor(H * 0.66);
+
+        // 2. 四大章节专属天象与背景奇观实时渲染
+        if (this.biome === 'dungeon') {
+          // 熔岩裂谷与黑曜石断柱 -> 第三幕破晓金日升起
+          if (dawnRatio > 0) {
+            const sunY = horizonY + 40 - dawnRatio * 65;
+            const sunGrad = ctx.createRadialGradient(W * 0.5, sunY, 6, W * 0.5, sunY, 130);
+            sunGrad.addColorStop(0, 'rgba(254, 240, 138, 0.95)');
+            sunGrad.addColorStop(0.45, 'rgba(249, 115, 22, 0.55)');
+            sunGrad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+            ctx.fillStyle = sunGrad;
+            ctx.beginPath();
+            ctx.arc(W * 0.5, sunY, 130, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          // 远景黑曜石山脉与熔火柱
+          ctx.fillStyle = '#1c1014';
+          for (let i = 0; i < 9; i++) {
+            const px = (W / 8) * i;
+            const ph = 55 + ((i * 37) % 45) * (1 - purifyRatio * 0.35);
+            ctx.fillRect(px - 28, horizonY - ph, 56, ph);
+          }
+        } else if (this.biome === 'tundra') {
+          // 第二幕&第三幕：实时动态波浪极光 (Aurora Borealis)
+          if (purifyRatio > 0.05) {
+            for (let band = 0; band < 3; band++) {
+              ctx.save();
+              ctx.globalAlpha = purifyRatio * (0.35 - band * 0.08);
+              ctx.fillStyle = band === 0 ? '#34d399' : (band === 1 ? '#38bdf8' : '#a855f7');
+              for (let x = 0; x < W; x += 8) {
+                const waveY = H * (0.18 + band * 0.08) + Math.sin(x * 0.018 + t * 2.2 + band) * 18 + Math.cos(x * 0.009 - t * 1.4) * 12;
+                ctx.fillRect(x, waveY, 6, 36);
+              }
+              ctx.restore();
+            }
+          }
+          // 冰晶山峰
+          for (let i = 0; i < 8; i++) {
+            const mx = (W / 7) * i;
+            const mh = 65 + (i % 3) * 28;
+            ctx.fillStyle = i % 2 === 0 ? '#1e3a5f' : '#0f2942';
+            ctx.beginPath();
+            ctx.moveTo(mx - 65, horizonY);
+            ctx.lineTo(mx, horizonY - mh);
+            ctx.lineTo(mx + 65, horizonY);
+            ctx.closePath();
+            ctx.fill();
+          }
+        } else if (this.biome === 'graveyard') {
+          // 猩红血月 -> 净化为澄澈银蓝明月
+          const moonX = W * 0.72;
+          const moonY = H * 0.24;
+          const moonR = 46;
+          const moonGlow = ctx.createRadialGradient(moonX, moonY, moonR * 0.3, moonX, moonY, moonR * 2.4);
+          if (purifyRatio < 0.5) {
+            moonGlow.addColorStop(0, 'rgba(244, 63, 94, 0.92)');
+            moonGlow.addColorStop(0.5, 'rgba(190, 18, 60, 0.42)');
+            moonGlow.addColorStop(1, 'rgba(190, 18, 60, 0)');
+          } else {
+            moonGlow.addColorStop(0, 'rgba(224, 242, 254, 0.95)');
+            moonGlow.addColorStop(0.5, 'rgba(56, 189, 248, 0.38)');
+            moonGlow.addColorStop(1, 'rgba(56, 189, 248, 0)');
+          }
+          ctx.fillStyle = moonGlow;
+          ctx.beginPath();
+          ctx.arc(moonX, moonY, moonR * 2.4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = purifyRatio < 0.5 ? '#e11d48' : '#e0f2fe';
+          ctx.beginPath();
+          ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+          ctx.fill();
+          // 第三幕：浮现巨型时隙钟盘剪影
+          if (dawnRatio > 0.1) {
+            ctx.save();
+            ctx.globalAlpha = dawnRatio * 0.65;
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(W * 0.5, H * 0.34, 72, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+          }
+        } else if (this.biome === 'clockwork') {
+          // 巨型发条星盘与逆转/顺行指针
+          const clockX = W * 0.5;
+          const clockY = H * 0.34;
+          const clockR = Math.min(W, H) * 0.24;
+          ctx.save();
+          ctx.translate(clockX, clockY);
+          ctx.strokeStyle = purifyRatio > 0.3 ? '#fde047' : '#d97706';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(0, 0, clockR, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(0, 0, clockR * 0.78, 0, Math.PI * 2);
+          ctx.stroke();
+          for (let k = 0; k < 12; k++) {
+            const a = (k * Math.PI) / 6;
+            ctx.beginPath();
+            ctx.moveTo(Math.cos(a) * clockR * 0.82, Math.sin(a) * clockR * 0.82);
+            ctx.lineTo(Math.cos(a) * clockR * 0.96, Math.sin(a) * clockR * 0.96);
+            ctx.stroke();
+          }
+          // 第一幕逆时针狂转，第二幕起顺时针迈向破晓
+          const handAngle = t < 3.4 ? -t * 6.5 : -Math.PI / 2 + (t - 3.4) * 1.2;
+          ctx.strokeStyle = '#f8fafc';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(handAngle) * clockR * 0.68, Math.sin(handAngle) * clockR * 0.68);
+          ctx.stroke();
+          ctx.strokeStyle = '#38bdf8';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(handAngle * 0.25) * clockR * 0.48, Math.sin(handAngle * 0.25) * clockR * 0.48);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // 3. 地面战场平台与网格透视
+        const groundGrad = ctx.createLinearGradient(0, horizonY, 0, H);
+        groundGrad.addColorStop(0, '#0f172a');
+        groundGrad.addColorStop(1, '#020617');
+        ctx.fillStyle = groundGrad;
+        ctx.fillRect(0, horizonY, W, H - horizonY);
+        ctx.strokeStyle = purifyRatio > 0.4 ? spec.accentColor : spec.themeColor;
+        ctx.globalAlpha = 0.35;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(0, horizonY);
+        ctx.lineTo(W, horizonY);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+
+        const heroKey = GameState.selectedHero || 'warrior';
+        const groundY = horizonY + 26;
+
+        // 4. 第一幕 (0 ~ 3.4s)：英雄疾冲斩击最终 Boss！
+        if (t < 3.4) {
+          const bossX = W * 0.68 + Math.sin(t * 18) * (t > 2.2 ? 6 : 2);
+          const bossY = groundY - 22 + Math.cos(t * 5) * 4;
+          // Boss 邪能光环
+          ctx.save();
+          ctx.strokeStyle = spec.themeColor;
+          ctx.lineWidth = 2.5;
+          ctx.globalAlpha = 0.65;
+          ctx.beginPath();
+          ctx.arc(bossX, bossY, 54 + Math.sin(t * 12) * 6, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+
+          this.drawSprite(ctx, spec.bossKey, bossX, bossY, 108, true, t > 2.4 && Math.floor(t * 20) % 2 === 0, 1);
+
+          // 玩家英雄冲锋与必杀斩击光束
+          const dashProgress = Math.max(0, Math.min(1, (t - 1.1) / 1.4));
+          const heroX = W * 0.20 + dashProgress * (W * 0.36);
+          const heroY = groundY - Math.sin(dashProgress * Math.PI) * 28;
+          if (dashProgress > 0.05) {
+            for (let g = 1; g <= 3; g++) {
+              this.drawSprite(ctx, heroKey, heroX - g * 22, heroY + g * 3, 64, false, true, 0.25 / g);
+            }
+          }
+          this.drawSprite(ctx, heroKey, heroX, heroY, 68, false, false, 1);
+
+          // 致命斩击剑气/光炮贯穿 Boss
+          if (t > 2.1) {
+            const beamP = Math.min(1, (t - 2.1) / 0.8);
+            ctx.save();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 10 * (1 - beamP * 0.3);
+            ctx.beginPath();
+            ctx.moveTo(W * 0.24, groundY - 18);
+            ctx.lineTo(bossX + 70 * beamP, bossY - 25 * beamP);
+            ctx.stroke();
+            ctx.strokeStyle = spec.accentColor;
+            ctx.lineWidth = 18 * (1 - beamP * 0.4);
+            ctx.globalAlpha = 0.55;
+            ctx.stroke();
+            ctx.restore();
+          }
+        } else {
+          // 5. 第二幕 & 第三幕 (3.4s ~ 10.5s)：Boss 粉碎消散、新解锁伙伴登场、第四章全英雄集结！
+          const heroX = W * 0.38;
+          const heroY = groundY - 4;
+          // 脚下凯旋圣环
+          ctx.save();
+          ctx.strokeStyle = '#fde047';
+          ctx.lineWidth = 2;
+          ctx.globalAlpha = 0.65;
+          ctx.beginPath();
+          ctx.ellipse(heroX, heroY + 26, 44 + Math.sin(t * 4) * 4, 12, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+
+          this.drawSprite(ctx, heroKey, heroX, heroY, 72, false, false, 1);
+
+          const allyEnter = Math.max(0, Math.min(1, (t - 4.0) / 1.2));
+          if (allyEnter > 0) {
+            if (this.biome === 'clockwork') {
+              // 第四章终局：九大英雄并肩列阵迎接黎明！
+              const roster = ['warrior', 'mage', 'ranger', 'engineer', 'healer', 'necromancer', 'billiard', 'pugilist', 'cardmaster'].filter(k => k !== heroKey);
+              roster.forEach((rk, idx) => {
+                const slot = idx < 4 ? idx - 4 : idx - 3;
+                const ax = heroX + slot * 58;
+                const ay = groundY + (Math.abs(slot) % 2) * 8;
+                this.drawSprite(ctx, rk, ax, ay, 54, slot > 0, false, allyEnter * 0.92);
+              });
+            } else {
+              // 第1~3章：本章解锁的全新传奇英雄登场致意！
+              const allyX = W * 0.62 - (1 - allyEnter) * 45;
+              const allyY = groundY - 4;
+              ctx.save();
+              ctx.strokeStyle = spec.accentColor;
+              ctx.lineWidth = 2;
+              ctx.globalAlpha = allyEnter * 0.65;
+              ctx.beginPath();
+              ctx.ellipse(allyX, allyY + 26, 38, 10, 0, 0, Math.PI * 2);
+              ctx.stroke();
+              ctx.restore();
+              this.drawSprite(ctx, spec.allyHero, allyX, allyY, 70, true, false, allyEnter);
+              ctx.save();
+              ctx.globalAlpha = allyEnter;
+              ctx.fillStyle = '#fde047';
+              ctx.font = 'bold 12px monospace';
+              ctx.textAlign = 'center';
+              ctx.fillText(`★ ${spec.allyName} · 响应号召 ★`, allyX, allyY - 46);
+              ctx.restore();
+            }
+          }
+        }
+
+        // 6. Boss 崩解像素碎片与升腾魂火粒子
+        for (let i = this.shards.length - 1; i >= 0; i--) {
+          const s = this.shards[i];
+          s.x += s.vx * dt;
+          s.y += s.vy * dt;
+          s.vy -= 28 * dt; // 化作流萤向上升腾
+          s.vx *= 0.97;
+          s.life -= dt;
+          if (s.life <= 0) {
+            this.shards.splice(i, 1);
+            continue;
+          }
+          ctx.fillStyle = s.color;
+          ctx.globalAlpha = Math.max(0, Math.min(1, s.life / 1.2));
+          ctx.fillRect(Math.round(s.x), Math.round(s.y), s.size, s.size);
+        }
+        ctx.globalAlpha = 1;
+
+        // 环境氛围粒子（火星 / 极光雪晶 / 净魂流萤 / 时空金尘）
+        for (const p of this.particles) {
+          p.x = (p.x + p.vx * dt + 1) % 1;
+          p.y = (p.y + p.vy * dt + 1) % 1;
+          ctx.fillStyle = purifyRatio > 0.5 ? spec.accentColor : p.color;
+          ctx.globalAlpha = 0.45 + 0.35 * Math.sin(t * 4 + p.phase);
+          ctx.fillRect(Math.round(p.x * W), Math.round(p.y * H), p.size, p.size);
+        }
+        ctx.globalAlpha = 1;
+
+        // 闪白冲击帧
+        if (this.flashAlpha > 0) {
+          ctx.fillStyle = `rgba(255, 255, 255, ${this.flashAlpha.toFixed(3)})`;
+          ctx.fillRect(0, 0, W, H);
+        }
+
+        ctx.restore();
+      }
+    };
+
+    // 通关自动解锁对应章节英雄（第一关->球爵，第二关->拳师，第三关->牌师）并播放章节实时渲染通关剧情动画
+    const _origTriggerVictoryForUnlocks = triggerVictory;
+    triggerVictory = function(biomeKey) {
+      const targetBiome = biomeKey || GameState.activeBiome || 'dungeon';
+      const res = _origTriggerVictoryForUnlocks.apply(this, arguments);
+      HeroUnlocks.checkStageClearUnlocks(targetBiome, true);
+      if (typeof StageUnlocks !== 'undefined') StageUnlocks.recordSurvival(targetBiome, 1800, true);
+      if (typeof ChapterCutscene !== 'undefined') ChapterCutscene.play(targetBiome);
+      return res;
+    };
+    const _origGameOverForCutscene = gameOver;
+    gameOver = function() {
+      const res = _origGameOverForCutscene.apply(this, arguments);
+      const replayBtn = document.getElementById('btn-replay-cutscene');
+      if (replayBtn) replayBtn.style.display = 'none';
+      if (typeof StageUnlocks !== 'undefined') {
+        StageUnlocks.recordSurvival(GameState.activeBiome || 'dungeon', GameState.gameTime || 0, true);
+      }
+      return res;
+    };
+    const _origSyncHeroSelectionUI = syncHeroAndBiomeSelectionUI;
+    syncHeroAndBiomeSelectionUI = function() {
+      const res = _origSyncHeroSelectionUI.apply(this, arguments);
+      HeroUnlocks.refreshUI();
+      if (typeof StageUnlocks !== 'undefined') StageUnlocks.refreshUI();
+      if (typeof PauseHeroCodex !== 'undefined') PauseHeroCodex.render();
+      return res;
+    };
+
+    // =========================================================================
+    // 暂停菜单当前角色图鉴、简要数值与专属连携面板 (PauseHeroCodex)
+    // =========================================================================
+    const PauseHeroCodex = {
+      render() {
+        const box = document.getElementById('pause-hero-codex-card');
+        if (!box) return;
+        const hKey = GameState.selectedHero || 'warrior';
+        const cfg = HERO_CONFIGS[hKey] || HERO_CONFIGS.warrior;
+        const rows = Campaign.bookRows('heroes');
+        const codexRow = rows.find(r => r.id === hKey) || rows[0];
+        const comboText = HERO_COMBO_GUIDE[hKey] || '';
+        const loreOnly = (codexRow?.desc || '').replace(comboText, '').trim();
+        const atkDmg = Math.round(player.skills?.attack?.damage || cfg.initSkills().attack.damage || 24);
+        const curHp = Math.max(0, Math.round(player.hp || cfg.maxHp));
+        const maxHp = Math.max(1, Math.round(player.maxHp || cfg.maxHp));
+        const spd = Math.round(player.speed || cfg.speed);
+        const critPct = Math.round((player.critChance ?? cfg.critChance) * 100);
+        const armorPct = Math.round((player.armor ?? cfg.armor) * 100);
+        const sk = player.skills || cfg.initSkills();
+        const s1Name = sk.skill1?.name || cfg.labels?.s1 || '1技能';
+        const s2Name = sk.skill2?.name || cfg.labels?.s2 || '2技能';
+        const ultName = sk.ult?.name || cfg.labels?.ult || '大招';
+        box.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #1e293b;padding-bottom:8px;margin-bottom:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;background:#1e293b;border:1px solid ${cfg.color || '#64748b'};">[px:hero-${hKey}]</span>
+              <div>
+                <div style="font-size:13px;font-weight:900;color:${cfg.color || '#f8fafc'};">${cfg.name} <span style="font-size:11px;color:#94a3b8;font-weight:600;">· Lv.${player.level || 1} 当前出战图鉴</span></div>
+                <div style="font-size:11px;color:#cbd5e1;">${loreOnly}</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:8px;font-size:11px;background:#0f172a;padding:7px 9px;border-radius:6px;border:1px solid #1e293b;">
+            <div>[px:heart] 生命: <strong style="color:#4ade80;">${curHp}/${maxHp}</strong></div>
+            <div>[px:sword] 普攻基数: <strong style="color:#fbbf24;">${atkDmg}</strong></div>
+            <div>[px:boots] 移速: <strong style="color:#38bdf8;">${spd} px/s</strong></div>
+            <div>[px:burst] 暴击率: <strong style="color:#f472b6;">${critPct}%</strong></div>
+            <div>[px:shield] 护甲减伤: <strong style="color:#a78bfa;">${armorPct}%</strong></div>
+            <div>[px:star] 核心战技: <strong style="color:#fde68a;">${s1Name}/${s2Name}/${ultName}</strong></div>
+          </div>
+          <div style="font-size:11px;color:#fde68a;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.35);padding:6px 8px;border-radius:6px;">
+            [px:lightning] ${comboText}
+          </div>
+        `;
+        if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
+          PixelIcons.hydrate(box);
+        }
+      }
+    };
+    const _btnPauseCodex = document.getElementById('btn-pause-codex');
+    if (_btnPauseCodex) {
+      _btnPauseCodex.addEventListener('click', () => {
+        document.getElementById('pause-modal').style.display = 'none';
+        Campaign.openBook('heroes');
+      });
+    }
+    const _origMenuPauseRender = MenuPause.render;
+    MenuPause.render = function() {
+      const r = _origMenuPauseRender.apply(this, arguments);
+      PauseHeroCodex.render();
+      return r;
+    };
+
+    // =========================================================================
+    // 关卡阶梯解锁体系 (StageUnlocks)：第1关生存20分钟解锁第2关，第2关生存20分钟解锁第3关，第3关生存20分钟解锁第4关
+    // =========================================================================
+    const StageUnlocks = {
+      REQ_SECONDS: 1200, // 20分钟 (1200秒)
+      ORDER: ['dungeon', 'tundra', 'graveyard', 'clockwork'],
+      NAMES: {
+        dungeon: '第一关（熔火地牢）',
+        tundra: '第二关（永冬冻原）',
+        graveyard: '第三关（血月墓园）',
+        clockwork: '第四关（时空锈月钟城）'
+      },
+      PREV_MAP: {
+        tundra: { prev: 'dungeon', prevNum: 1, prevName: '第一关（熔火地牢）' },
+        graveyard: { prev: 'tundra', prevNum: 2, prevName: '第二关（永冬冻原）' },
+        clockwork: { prev: 'graveyard', prevNum: 3, prevName: '第三关（血月墓园）' }
+      },
+      ensureData() {
+        if (!SaveManager.data) return { unlocked: { dungeon: true }, best: {} };
+        if (!SaveManager.data.unlockedStages || typeof SaveManager.data.unlockedStages !== 'object') {
+          SaveManager.data.unlockedStages = { dungeon: true };
+        }
+        if (!SaveManager.data.stageBestSeconds || typeof SaveManager.data.stageBestSeconds !== 'object') {
+          SaveManager.data.stageBestSeconds = { dungeon: 0, tundra: 0, graveyard: 0, clockwork: 0 };
+        }
+        SaveManager.data.unlockedStages.dungeon = true;
+        const cleared = SaveManager.data.campaign?.clearedBiomes || {};
+        const permBiomes = SaveManager.data.permanent?.biomes || {};
+        const counters = SaveManager.data.permanent?.counters || {};
+        for (const b of this.ORDER) {
+          if (cleared[b] || permBiomes[b] || Number(counters['biome_' + b] || 0) > 0) {
+            SaveManager.data.stageBestSeconds[b] = Math.max(Number(SaveManager.data.stageBestSeconds[b] || 0), 1800);
+          }
+        }
+        if ((SaveManager.data.stageBestSeconds.dungeon || 0) >= this.REQ_SECONDS) SaveManager.data.unlockedStages.tundra = true;
+        if ((SaveManager.data.stageBestSeconds.tundra || 0) >= this.REQ_SECONDS) SaveManager.data.unlockedStages.graveyard = true;
+        if ((SaveManager.data.stageBestSeconds.graveyard || 0) >= this.REQ_SECONDS) SaveManager.data.unlockedStages.clockwork = true;
+        return { unlocked: SaveManager.data.unlockedStages, best: SaveManager.data.stageBestSeconds };
+      },
+      getBestSeconds(biomeKey) {
+        const { best } = this.ensureData();
+        return Math.floor(Number(best[biomeKey] || 0));
+      },
+      isUnlocked(biomeKey) {
+        if (!biomeKey || biomeKey === 'dungeon') return true;
+        const { unlocked } = this.ensureData();
+        return Boolean(unlocked[biomeKey]);
+      },
+      recordSurvival(biomeKey, seconds, notify = true) {
+        if (!biomeKey || !this.ORDER.includes(biomeKey)) return false;
+        const { unlocked, best } = this.ensureData();
+        const sec = Math.floor(Number(seconds || 0));
+        if (sec > (best[biomeKey] || 0)) {
+          best[biomeKey] = sec;
+        }
+        let newlyUnlocked = false;
+        for (const [targetStage, reqInfo] of Object.entries(this.PREV_MAP)) {
+          if (reqInfo.prev === biomeKey && (best[biomeKey] || 0) >= this.REQ_SECONDS && !unlocked[targetStage]) {
+            unlocked[targetStage] = true;
+            newlyUnlocked = true;
+            if (notify && typeof showToast === 'function') {
+              showToast(`[px:crown] 在${reqInfo.prevName}成功生存满 20 分钟，已解锁【${this.NAMES[targetStage]}】！`);
+            }
+          }
+        }
+        if (newlyUnlocked) {
+          SaveManager.save();
+          this.refreshUI();
+        }
+        return newlyUnlocked;
+      },
+      formatMinSec(sec) {
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
+        return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      },
+      refreshUI() {
+        this.ensureData();
+        document.querySelectorAll('#lobby-modal .biome-card[data-biome], #coop-modal .coop-biome-pick[data-biome]').forEach(card => {
+          const b = card.dataset.biome;
+          if (!b) return;
+          const isUnl = this.isUnlocked(b);
+          card.classList.toggle('stage-locked', !isUnl);
+          if (card.classList.contains('coop-biome-pick')) return;
+          let tag = card.querySelector('.stage-unlock-tag');
+          if (!tag) {
+            tag = document.createElement('div');
+            tag.className = 'stage-unlock-tag';
+            card.appendChild(tag);
+          }
+          tag.className = 'stage-unlock-tag ' + (isUnl ? 'is-unlocked' : 'is-locked');
+          if (isUnl) {
+            const bestSec = this.getBestSeconds(b);
+            tag.innerHTML = bestSec > 0
+              ? `[px:check] 已解锁 · 最佳 ${this.formatMinSec(bestSec)}`
+              : `[px:check] 已解锁`;
+          } else {
+            const req = this.PREV_MAP[b];
+            const prevBest = this.getBestSeconds(req.prev);
+            tag.innerHTML = `[px:lock] 第${req.prevNum}关生存20分钟解锁 (${this.formatMinSec(prevBest)}/20:00)`;
+          }
+          if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
+            PixelIcons.hydrate(tag);
+          }
+        });
+      }
+    };
+
+    document.querySelectorAll('#lobby-modal .biome-card[data-biome]').forEach(card => {
+      card.addEventListener('click', () => {
+        const b = card.dataset.biome;
+        if (b && !StageUnlocks.isUnlocked(b)) {
+          const req = StageUnlocks.PREV_MAP[b];
+          if (req) {
+            const prevBest = StageUnlocks.getBestSeconds(req.prev);
+            showToast(`[px:lock] 【${StageUnlocks.NAMES[b]}】需先在${req.prevName}生存满 20 分钟解锁（当前最佳 ${StageUnlocks.formatMinSec(prevBest)} / 20:00）！`);
+          }
+        }
+        StageUnlocks.refreshUI();
+      });
+    });
+
+    // =========================================================================
+    // 第四关【时空锈月钟城】专属时空灾变机制 & 终末钟王10秒时间法则技能与时间免疫 (ClockworkChrono)
+    // =========================================================================
+    const ClockworkChrono = {
+      catastropheInterval: 120, // 每过 2 分钟 (120秒) 触发一次地图时间灾变
+      nextCatastropheAt: 120,
+      activeCatastrophe: null, // 'time_accel' | 'time_slow' | 'time_stop_enemies' | 'time_stop_player'
+      catastropheTimer: 0,
+      catastropheMax: 0,
+      playerMoveStopTimer: 0, // 玩家被暂停移动 (5s)：不可移动，但仍可正常普攻、蓄力与释放全部技能
+      bossPlayerSlowTimer: 0, // 最终Boss单独减慢玩家时间
+      bossSelfHasteTimer: 0,  // 最终Boss单独加快自身时间
+      lastBossSkillName: '',
+      CATASTROPHE_SPECS: {
+        time_accel: {
+          id: 'time_accel',
+          name: '时空灾变·发条狂飙 (时间×1.5)',
+          shortLabel: '灾变:时间加速×1.5',
+          duration: 30,
+          color: '#fbbf24',
+          desc: '全场时间流速加快 ×1.5（持续30秒）！'
+        },
+        time_slow: {
+          id: 'time_slow',
+          name: '时空灾变·锈月迟滞 (时间×0.7)',
+          shortLabel: '灾变:时间变慢×0.7',
+          duration: 30,
+          color: '#38bdf8',
+          desc: '全场时间流速变慢 ×0.7（持续30秒，最终首领不受时间影响）！'
+        },
+        time_stop_enemies: {
+          id: 'time_stop_enemies',
+          name: '时空灾变·万象时停 (敌群定格)',
+          shortLabel: '灾变:敌群暂停',
+          duration: 5,
+          color: '#34d399',
+          desc: '时间眷顾！全场魔物被短暂暂停 5 秒（最终首领免疫）！'
+        },
+        time_stop_player: {
+          id: 'time_stop_player',
+          name: '时空灾变·逆时禁足 (玩家定身)',
+          shortLabel: '灾变:玩家定身',
+          duration: 3,
+          color: '#f43f5e',
+          desc: '时运不济！玩家被时间暂停禁足 3 秒（无法移动，但仍可释放技能和攻击）！'
+        }
+      },
+      reset() {
+        this.nextCatastropheAt = this.catastropheInterval;
+        this.activeCatastrophe = null;
+        this.catastropheTimer = 0;
+        this.catastropheMax = 0;
+        this.playerMoveStopTimer = 0;
+        this.bossPlayerSlowTimer = 0;
+        this.bossSelfHasteTimer = 0;
+        this.lastBossSkillName = '';
+      },
+      isFinalBossEntity(en) {
+        if (!en || !en.isBoss) return false;
+        return Boolean(en.isFinal || en.isFinalBoss || en.bossKey === 'clock_emperor' || en.bossMinute === 30 || en.key === 'clock_emperor');
+      },
+      triggerCatastrophe(forcedType = null) {
+        const keys = ['time_accel', 'time_slow', 'time_stop_enemies', 'time_stop_player'];
+        const pick = forcedType && this.CATASTROPHE_SPECS[forcedType]
+          ? forcedType
+          : keys[Math.floor(Math.random() * keys.length)];
+        const spec = this.CATASTROPHE_SPECS[pick];
+        this.activeCatastrophe = spec.id;
+        this.catastropheTimer = spec.duration;
+        this.catastropheMax = spec.duration;
+
+        if (pick === 'time_stop_enemies') {
+          for (const en of enemies) {
+            if (!en.isDead && !this.isFinalBossEntity(en)) {
+              en.freezeTimer = Math.max(en.freezeTimer || 0, spec.duration);
+            }
+          }
+        } else if (pick === 'time_stop_player') {
+          this.playerMoveStopTimer = Math.max(this.playerMoveStopTimer, spec.duration);
+          player.vx = 0;
+          player.vy = 0;
+          if (player.skills?.skill1) player.skills.skill1.isDashing = false;
+        }
+
+        createShockwave(player.x, player.y, 320, spec.color);
+        createParticles(player.x, player.y, 24, spec.color, 180, 0.55);
+        createFloatingText(player.x, player.y - 42, spec.name, spec.color, 16);
+        showToast(`[px:clock] ${spec.name}：${spec.desc}`);
+        if (typeof updateStatusTray === 'function') updateStatusTray();
+      },
+      castFinalBossTimeSkill(boss) {
+        if (!boss || boss.isDead) return;
+        const modes = ['boss_slow_player', 'boss_haste_self', 'boss_stop_player'];
+        boss._timeLawStep = ((boss._timeLawStep || 0) + 1) % modes.length;
+        const mode = modes[boss._timeLawStep];
+        if (mode === 'boss_slow_player') {
+          this.bossPlayerSlowTimer = Math.max(this.bossPlayerSlowTimer, 6.0);
+          this.lastBossSkillName = '终末时律·迟滞枷锁';
+          createShockwave(player.x, player.y, 185, '#38bdf8');
+          createFloatingText(player.x, player.y - 38, '终末时律：玩家时间减慢 6s!', '#38bdf8', 15);
+          showToast(`[px:clock] 【${boss.title || '终末钟王'}】发动时间法则【迟滞枷锁】：单独减慢玩家时间 6 秒（冷却18秒）！`);
+        } else if (mode === 'boss_haste_self') {
+          this.bossSelfHasteTimer = Math.max(this.bossSelfHasteTimer, 6.0);
+          this.lastBossSkillName = '终末时律·极速发条';
+          createShockwave(boss.x, boss.y, 210, '#fbbf24');
+          createFloatingText(boss.x, boss.y - 42, '终末时律：首领时间加速 6s!', '#fbbf24', 15);
+          showToast(`[px:clock] 【${boss.title || '终末钟王'}】发动时间法则【极速发条】：单独加快自身时间与攻速 6 秒（冷却18秒）！`);
+        } else {
+          this.playerMoveStopTimer = Math.max(this.playerMoveStopTimer, 3.0);
+          player.vx = 0;
+          player.vy = 0;
+          if (player.skills?.skill1) player.skills.skill1.isDashing = false;
+          this.lastBossSkillName = '终末时律·时停禁足';
+          createShockwave(player.x, player.y, 195, '#f43f5e');
+          createFloatingText(player.x, player.y - 38, '终末时律：暂停玩家移动 3s!', '#f43f5e', 15);
+          showToast(`[px:clock] 【${boss.title || '终末钟王'}】发动时间法则【时停禁足】：暂停玩家移动 3 秒（冷却18秒，仍可攻击与施放技能）！`);
+        }
+        boss.bossMove = this.lastBossSkillName;
+        if (typeof updateBossHud === 'function') updateBossHud(boss);
+        if (typeof updateStatusTray === 'function') updateStatusTray();
+      },
+      getPlayerTimeMultiplier() {
+        let mul = 1.0;
+        if (GameState.activeBiome === 'clockwork') {
+          if (this.activeCatastrophe === 'time_accel' && this.catastropheTimer > 0) mul *= 1.5;
+          else if (this.activeCatastrophe === 'time_slow' && this.catastropheTimer > 0) mul *= 0.7;
+        }
+        if (this.bossPlayerSlowTimer > 0) mul *= 0.62;
+        return mul;
+      },
+      getEnemyTimeMultiplier(en) {
+        const isFinal = this.isFinalBossEntity(en);
+        let mul = 1.0;
+        if (GameState.activeBiome === 'clockwork') {
+          if (this.activeCatastrophe === 'time_accel' && this.catastropheTimer > 0) {
+            mul *= 1.5;
+          } else if (this.activeCatastrophe === 'time_slow' && this.catastropheTimer > 0 && !isFinal) {
+            mul *= 0.7;
+          }
+        }
+        if (isFinal && this.bossSelfHasteTimer > 0) {
+          mul *= 1.85;
+        }
+        return mul;
+      },
+      preUpdate(dt) {
+        if (!GameState.isStarted || GameState.isPaused || GameState.isOver) return null;
+        // 同步记录当前关卡生存进度以实时触发 20 分钟下一关解锁
+        StageUnlocks.recordSurvival(GameState.activeBiome, GameState.gameTime, true);
+
+        // 第四关每 2 分钟 (120s) 触发一次时空灾变
+        if (GameState.activeBiome === 'clockwork') {
+          while (GameState.gameTime >= this.nextCatastropheAt) {
+            this.nextCatastropheAt += this.catastropheInterval;
+            this.triggerCatastrophe();
+          }
+        }
+
+        if (this.catastropheTimer > 0) {
+          this.catastropheTimer = Math.max(0, this.catastropheTimer - dt);
+          if (this.catastropheTimer <= 0) {
+            this.activeCatastrophe = null;
+          }
+        }
+        if (this.playerMoveStopTimer > 0) {
+          this.playerMoveStopTimer = Math.max(0, this.playerMoveStopTimer - dt);
+        }
+        if (this.bossPlayerSlowTimer > 0) {
+          this.bossPlayerSlowTimer = Math.max(0, this.bossPlayerSlowTimer - dt);
+        }
+        if (this.bossSelfHasteTimer > 0) {
+          this.bossSelfHasteTimer = Math.max(0, this.bossSelfHasteTimer - dt);
+        }
+
+        // 敌群定格期间，新刷出的普通怪也同步定格；最终Boss永远不受任何时间减益/冰冻/定身影响
+        for (const en of enemies) {
+          if (en.isDead) continue;
+          if (this.isFinalBossEntity(en)) {
+            en.freezeTimer = 0;
+            en.isChilled = false;
+            en.bladeSlowTimer = 0;
+          } else if (GameState.activeBiome === 'clockwork' && this.activeCatastrophe === 'time_stop_enemies' && this.catastropheTimer > 0) {
+            en.freezeTimer = Math.max(en.freezeTimer || 0, this.catastropheTimer);
+          }
+        }
+
+        const snap = {
+          px: player.x,
+          py: player.y,
+          moveLocked: this.playerMoveStopTimer > 0,
+          enemiesPos: new Map()
+        };
+        if (snap.moveLocked) {
+          player.vx = 0;
+          player.vy = 0;
+          if (player.skills?.skill1) player.skills.skill1.isDashing = false;
+        }
+        for (const en of enemies) {
+          if (!en.isDead) {
+            snap.enemiesPos.set(en, { x: en.x, y: en.y });
+          }
+        }
+        return snap;
+      },
+      postUpdate(dt, snap) {
+        if (!snap || !GameState.isStarted || GameState.isPaused || GameState.isOver) return;
+
+        // 1. 若玩家处于 5秒【时间暂停·禁足】状态：锁定移动坐标，但保留所有普攻、蓄力与技能释放！
+        if (snap.moveLocked) {
+          player.x = snap.px;
+          player.y = snap.py;
+          player.vx = 0;
+          player.vy = 0;
+          if (player.skills?.skill1) player.skills.skill1.isDashing = false;
+        } else {
+          // 2. 结算玩家时间流速倍率 (×1.5 加速 / ×0.7 减速 / 最终Boss迟滞枷锁)
+          const pMul = this.getPlayerTimeMultiplier();
+          if (Math.abs(pMul - 1.0) > 0.01 && !player.isDowned) {
+            const deltaMul = pMul - 1.0;
+            player.x = snap.px + (player.x - snap.px) * pMul;
+            player.y = snap.py + (player.y - snap.py) * pMul;
+            Arena.clamp(player, player.radius);
+            for (const sk of ['attack', 'skill1', 'skill2', 'ult']) {
+              const sObj = player.skills?.[sk];
+              if (sObj && sObj.timer > 0) {
+                sObj.timer = Math.max(0, sObj.timer - dt * deltaMul);
+              }
+            }
+            if (player.isCharging) {
+              player.chargeTimer = Math.max(0, player.chargeTimer + dt * deltaMul);
+            }
+          }
+        }
+
+        // 3. 结算敌人时间流速倍率 & 最终Boss的 10秒冷却时间法则技能
+        for (const en of enemies) {
+          if (en.isDead) continue;
+          const isFinal = this.isFinalBossEntity(en);
+          if (isFinal) {
+            en.freezeTimer = 0;
+            en.isChilled = false;
+            en.bladeSlowTimer = 0;
+            if (WorldCoop.authority()) {
+              if (!Number.isFinite(en.bossTimeSkillCd)) en.bossTimeSkillCd = 18.0;
+              en.bossTimeSkillCd -= dt;
+              if (en.bossTimeSkillCd <= 0) {
+                en.bossTimeSkillCd = 18.0; // 冷却固定 18s
+                this.castFinalBossTimeSkill(en);
+              }
+            }
+            if (this.bossSelfHasteTimer > 0 && typeof BossCombat !== 'undefined') {
+              const st = BossCombat.state(en);
+              if (st && st.cd > 0) st.cd = Math.max(0, st.cd - dt * 0.85);
+            }
+          }
+          const prev = snap.enemiesPos.get(en);
+          if (prev) {
+            const eMul = this.getEnemyTimeMultiplier(en);
+            if (Math.abs(eMul - 1.0) > 0.01) {
+              en.x = prev.x + (en.x - prev.x) * eMul;
+              en.y = prev.y + (en.y - prev.y) * eMul;
+              Arena.clamp(en, en.radius);
+            }
+          }
+        }
+      },
+      drawOverlay(ctx) {
+        if (!GameState.isStarted || GameState.isOver) return;
+        // 绘制玩家被时间禁足时的金色齿轮时停锁环（提示不可移动但可释放技能与攻击）
+        if (this.playerMoveStopTimer > 0) {
+          ctx.save();
+          ctx.strokeStyle = '#f43f5e';
+          ctx.lineWidth = 2.5;
+          ctx.setLineDash([6, 4]);
+          ctx.beginPath();
+          ctx.arc(player.x, player.y, player.radius + 16, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.font = 'bold 10px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#fda4af';
+          ctx.fillText(`时停禁足 ${this.playerMoveStopTimer.toFixed(1)}s (可攻击/施法)`, player.x, player.y + player.radius + 26);
+          ctx.restore();
+        }
+        // 绘制最终Boss不受时间影响的金色时之冕光环
+        for (const en of enemies) {
+          if (!en.isDead && this.isFinalBossEntity(en)) {
+            ctx.save();
+            ctx.strokeStyle = this.bossSelfHasteTimer > 0 ? '#fbbf24' : 'rgba(240, 203, 131, 0.65)';
+            ctx.lineWidth = this.bossSelfHasteTimer > 0 ? 3 : 2;
+            ctx.beginPath();
+            ctx.arc(en.x, en.y, en.radius + 12, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      }
+    };
+
+    // =========================================================================
+    // 商店限时增益秘药与限时影分身系统 (ShopBuffs & ShadowCloneKit)
+    // =========================================================================
+    const ShadowCloneKit = {
+      clones: [],
+      _mirroring: false,
+      MAX_CLONES: 2,
+      MIN_PLAYER_DIST: 68,
+      MIN_CLONE_DIST: 58,
+      reset() {
+        this.clones = [];
+        this._mirroring = false;
+      },
+      activeCount() {
+        return this.clones.length;
+      },
+      maxRemaining() {
+        if (!this.clones.length) return 0;
+        return Math.max(...this.clones.map(c => Math.max(0, c.duration)));
+      },
+      spawnClone(durationSec = 75) {
+        // 如果已达上限 2 个分身，延长所有分身持续时间并强化回满状态
+        if (this.clones.length >= this.MAX_CLONES) {
+          for (const c of this.clones) {
+            c.duration = Math.min(240, c.duration + durationSec);
+            c.maxDuration = Math.max(c.maxDuration, c.duration);
+          }
+          createParticles(player.x, player.y, '#c084fc', 24, 180, 0.55);
+          createFloatingText(player.x, player.y - 36, `影分身契约延长 +${durationSec}s!`, '#e879f9', 15);
+          return this.clones[0];
+        }
+        const idx = this.clones.length;
+        const flankSide = idx === 0 ? 1 : -1;
+        const baseAngle = (player.facingAngle || 0) + flankSide * (Math.PI * 0.58);
+        const spawnDist = 76;
+        const cx = player.x + Math.cos(baseAngle) * spawnDist;
+        const cy = player.y + Math.sin(baseAngle) * spawnDist;
+        const clone = {
+          id: 'shadow_clone_' + Date.now() + '_' + idx,
+          slot: idx,
+          flankSide,
+          x: cx,
+          y: cy,
+          vx: 0,
+          vy: 0,
+          duration: durationSec,
+          maxDuration: durationSec,
+          facing: player.facing || 1,
+          facingAngle: player.facingAngle || 0,
+          autoFireTimer: 0.45 + idx * 0.25,
+          pulsePhase: idx * Math.PI
+        };
+        this.clones.push(clone);
+        this.enforceNonOverlap();
+        createParticles(clone.x, clone.y, '#a855f7', 26, 190, 0.55);
+        createParticles(clone.x, clone.y, '#38bdf8', 16, 150, 0.45);
+        createFloatingText(clone.x, clone.y - 32, '禁忌影分身降临!', '#e879f9', 15);
+        return clone;
+      },
+      enforceNonOverlap() {
+        // 严格保证每个影分身绝不与玩家本体重叠，且多个影分身之间绝不重叠
+        for (let i = 0; i < this.clones.length; i++) {
+          const c = this.clones[i];
+          let dx = c.x - player.x;
+          let dy = c.y - player.y;
+          let dist = Math.hypot(dx, dy);
+          if (dist < this.MIN_PLAYER_DIST) {
+            const fallbackAng = (player.facingAngle || 0) + (c.flankSide || (i === 0 ? 1 : -1)) * (Math.PI * 0.55);
+            const ux = dist > 0.001 ? dx / dist : Math.cos(fallbackAng);
+            const uy = dist > 0.001 ? dy / dist : Math.sin(fallbackAng);
+            c.x = player.x + ux * this.MIN_PLAYER_DIST;
+            c.y = player.y + uy * this.MIN_PLAYER_DIST;
+          }
+          // 多个影分身相互排斥，防止重叠
+          for (let j = 0; j < i; j++) {
+            const other = this.clones[j];
+            const odx = c.x - other.x;
+            const ody = c.y - other.y;
+            const odist = Math.hypot(odx, ody);
+            if (odist < this.MIN_CLONE_DIST) {
+              const pushAng = odist > 0.001 ? Math.atan2(ody, odx) : (i * Math.PI);
+              const push = (this.MIN_CLONE_DIST - odist) * 0.55 + 2;
+              c.x += Math.cos(pushAng) * push;
+              c.y += Math.sin(pushAng) * push;
+              other.x -= Math.cos(pushAng) * push;
+              other.y -= Math.sin(pushAng) * push;
+            }
+          }
+        }
+      },
+      tick(dt) {
+        if (!GameState.isStarted || GameState.isPaused || GameState.isOver) return;
+        if (!this.clones.length) return;
+        for (let i = this.clones.length - 1; i >= 0; i--) {
+          const c = this.clones[i];
+          c.duration -= dt;
+          c.pulsePhase += dt * 4.2;
+          if (c.duration <= 0) {
+            createParticles(c.x, c.y, '#a855f7', 18, 140, 0.45);
+            createFloatingText(c.x, c.y - 24, '影分身消散', '#c084fc', 12);
+            this.clones.splice(i, 1);
+            continue;
+          }
+          // 侧翼战术跟随：保持在玩家侧翼 74~82px 处，平滑移动且绝不重叠
+          const flankAngle = (player.facingAngle || 0) + (c.flankSide || (i === 0 ? 1 : -1)) * (Math.PI * 0.58) + Math.sin(c.pulsePhase * 0.5) * 0.18;
+          const desiredDist = 76 + (i % 2) * 8;
+          const targetX = player.x + Math.cos(flankAngle) * desiredDist;
+          const targetY = player.y + Math.sin(flankAngle) * desiredDist;
+          const followLerp = Math.min(1, dt * 7.5);
+          c.x += (targetX - c.x) * followLerp;
+          c.y += (targetY - c.y) * followLerp;
+          c.facing = player.facing || 1;
+          c.facingAngle = player.facingAngle || 0;
+        }
+        this.enforceNonOverlap();
+      },
+      mirrorAction(kind, fn, args) {
+        if (this._mirroring || !this.clones.length || !GameState.isStarted || player.isDowned) return;
+        this._mirroring = true;
+        try {
+          this.enforceNonOverlap();
+          const origX = player.x;
+          const origY = player.y;
+          const origCd = player.attackCooldown;
+          const origCharge = player.chargeTimer;
+          const origCharging = player.isCharging;
+          const origS1Cd = player.skills?.skill1?.cooldown;
+          const origS2Cd = player.skills?.skill2?.cooldown;
+          const origUltCd = player.skills?.ult?.cooldown;
+          const origUltActive = player.skills?.ult?.activeTimer;
+          const origInvul = player.invulnerableTimer;
+
+          for (let i = 0; i < this.clones.length; i++) {
+            const c = this.clones[i];
+            // 将发招起点临时切到影分身的独立坐标（绝不与本体重叠）
+            player.x = c.x;
+            player.y = c.y;
+            if (kind === 'attack') {
+              player.attackCooldown = 0;
+            } else if (kind === 'charge') {
+              if (GameState.selectedHero === 'healer' && typeof HealerKit !== 'undefined') HealerKit.chargeCd = 0;
+              if (GameState.selectedHero === 'necromancer' && typeof NecroKit !== 'undefined') NecroKit.chargeCd = 0;
+              if (GameState.selectedHero === 'engineer' && typeof EngineerKit !== 'undefined') EngineerKit.chargeCd = 0;
+            } else if (kind === 'skill1' && player.skills?.skill1) {
+              player.skills.skill1.cooldown = 0;
+            } else if (kind === 'skill2' && player.skills?.skill2) {
+              player.skills.skill2.cooldown = 0;
+            } else if (kind === 'ult' && player.skills?.ult) {
+              player.skills.ult.cooldown = 0;
+            }
+
+            fn.apply(null, args);
+
+            // 若技能带有位移（如冲锋/跃击），让影分身同步位移但依然保持侧翼非重叠偏移
+            const movedDist = Math.hypot(player.x - c.x, player.y - c.y);
+            if (movedDist > 4 && movedDist < 420) {
+              c.x = player.x + (c.flankSide || 1) * 42;
+              c.y = player.y + (i === 0 ? -36 : 36);
+            }
+            createParticles(c.x, c.y, '#c084fc', 6, 90, 0.25);
+          }
+
+          // 恢复玩家本体真实位置与冷却状态
+          player.x = origX;
+          player.y = origY;
+          player.attackCooldown = origCd;
+          player.chargeTimer = origCharge;
+          player.isCharging = origCharging;
+          if (player.skills?.skill1 && origS1Cd !== undefined) player.skills.skill1.cooldown = origS1Cd;
+          if (player.skills?.skill2 && origS2Cd !== undefined) player.skills.skill2.cooldown = origS2Cd;
+          if (player.skills?.ult && origUltCd !== undefined) player.skills.ult.cooldown = origUltCd;
+          if (player.skills?.ult && origUltActive !== undefined) player.skills.ult.activeTimer = origUltActive;
+          player.invulnerableTimer = Math.max(origInvul || 0, player.invulnerableTimer || 0);
+          this.enforceNonOverlap();
+        } catch (err) {
+          console.warn('[ShadowCloneKit.mirrorAction]', err);
+        } finally {
+          this._mirroring = false;
+        }
+      },
+      drawClones(ctx) {
+        if (!this.clones.length || !GameState.isStarted) return;
+        for (let i = 0; i < this.clones.length; i++) {
+          const c = this.clones[i];
+          ctx.save();
+          // 1. 绘制连接本体与影分身的暗紫灵魂契约光链
+          ctx.strokeStyle = 'rgba(192, 132, 252, 0.32)';
+          ctx.lineWidth = 1.8;
+          ctx.setLineDash([5, 5]);
+          ctx.beginPath();
+          ctx.moveTo(player.x, player.y);
+          ctx.lineTo(c.x, c.y);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // 2. 绘制影分身脚下暗紫星芒光环与剩余时间进度弧
+          const ratio = Math.max(0, Math.min(1, c.duration / Math.max(1, c.maxDuration || 75)));
+          ctx.strokeStyle = 'rgba(168, 85, 247, 0.55)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(c.x, c.y + 4, 22, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.strokeStyle = '#38bdf8';
+          ctx.lineWidth = 2.6;
+          ctx.beginPath();
+          ctx.arc(c.x, c.y + 4, 25, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * ratio);
+          ctx.stroke();
+
+          // 3. 复用英雄像素立绘渲染影分身（非重叠位置 + 幻影紫青流光）
+          ctx.globalAlpha = 0.86;
+          ctx.shadowColor = '#c084fc';
+          ctx.shadowBlur = 12;
+          drawHeroSpriteAt(
+            ctx,
+            c.x,
+            c.y,
+            GameState.selectedHero,
+            c.facing || player.facing || 1,
+            c.facingAngle ?? player.facingAngle ?? 0,
+            player.isCharging,
+            player.chargeTimer || 0,
+            player.skills?.ult?.activeTimer || 0,
+            false
+          );
+          ctx.shadowBlur = 0;
+
+          // 4. 顶部悬浮标签显示影分身与剩余秒数
+          ctx.globalAlpha = 0.95;
+          ctx.font = 'bold 10px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#090d16';
+          ctx.fillRect(c.x - 32, c.y - 34, 64, 13);
+          ctx.strokeStyle = '#c084fc';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(c.x - 32, c.y - 34, 64, 13);
+          ctx.fillStyle = '#f5d0fe';
+          ctx.fillText(`影分身 ${Math.ceil(c.duration)}s`, c.x, c.y - 24);
+          ctx.restore();
+        }
+      }
+    };
+
+    const ShopBuffs = {
+      SPECS: [
+        {
+          id: 'buff_exp',
+          name: '经验增幅秘药',
+          icon: '[px:star-bright]',
+          cost: 320,
+          duration: 90,
+          badge: '+80% 经验',
+          desc: '购买后 90 秒内获取的经验值提升 +80%，并立即吸附全屏经验晶石（可叠加时长）。'
+        },
+        {
+          id: 'buff_dmg',
+          name: '狂怒伤害秘药',
+          icon: '[px:burst]',
+          cost: 380,
+          duration: 90,
+          badge: '+55% 伤害',
+          desc: '购买后 90 秒内全技能与普攻伤害提升 +55%，暴击率额外 +15%（可叠加时长）。'
+        },
+        {
+          id: 'buff_haste',
+          name: '极速狂飙秘药',
+          icon: '[px:lightning]',
+          cost: 420,
+          duration: 90,
+          badge: '+40% 极速',
+          desc: '购买后 90 秒内普攻与蓄力速度 +35%，技能与大招冷却恢复加快 +40%，移速 +22%。'
+        },
+        {
+          id: 'buff_wealth',
+          name: '聚财磁暴秘药',
+          icon: '[px:coin]',
+          cost: 360,
+          duration: 90,
+          badge: '+75% 金币',
+          desc: '购买后 90 秒内杀敌与拾取金币收益提升 +75%，拾取磁吸范围扩大 +140px。'
+        },
+        {
+          id: 'buff_shadow_clone',
+          name: '禁忌契约·限时影分身',
+          icon: '[px:ally]',
+          cost: 1200,
+          duration: 75,
+          isClone: true,
+          badge: '双身齐射',
+          desc: '召唤复制自身角色的限时影分身（75秒，最多2体且绝不重叠），同步释放所有普攻、蓄力、1/2技能与大招！'
+        }
+      ],
+      timers: {
+        buff_exp: 0,
+        buff_dmg: 0,
+        buff_haste: 0,
+        buff_wealth: 0
+      },
+      ensureQueue() {
+        if (!SaveManager.data) return {};
+        if (!SaveManager.data.queuedShopBuffs || typeof SaveManager.data.queuedShopBuffs !== 'object') {
+          SaveManager.data.queuedShopBuffs = {};
+        }
+        return SaveManager.data.queuedShopBuffs;
+      },
+      resetRunTimers() {
+        this.timers.buff_exp = 0;
+        this.timers.buff_dmg = 0;
+        this.timers.buff_haste = 0;
+        this.timers.buff_wealth = 0;
+        ShadowCloneKit.reset();
+        this.consumeQueuedBuffsIntoRun();
+      },
+      consumeQueuedBuffsIntoRun() {
+        const q = this.ensureQueue();
+        let activated = false;
+        for (const spec of this.SPECS) {
+          const sec = Number(q[spec.id] || 0);
+          if (sec > 0) {
+            delete q[spec.id];
+            this.activateBuff(spec, sec, true);
+            activated = true;
+          }
+        }
+        if (activated) SaveManager.save();
+      },
+      activateBuff(spec, durationSec, silent = false) {
+        const dur = durationSec || spec.duration;
+        if (spec.isClone) {
+          ShadowCloneKit.spawnClone(dur);
+        } else {
+          this.timers[spec.id] = Math.min(300, (this.timers[spec.id] || 0) + dur);
+          if (spec.id === 'buff_exp' && typeof gems !== 'undefined') {
+            for (const g of gems) g.magnetized = true;
+          }
+          if (!silent && GameState.isStarted) {
+            createParticles(player.x, player.y, '#38bdf8', 18, 150, 0.45);
+            createFloatingText(player.x, player.y - 30, `${spec.name} +${dur}s!`, '#fde047', 14);
+          }
+        }
+        if (typeof updateStatusTray === 'function') updateStatusTray();
+      },
+      getRemaining(buffId) {
+        const q = this.ensureQueue();
+        const queuedSec = Number(q[buffId] || 0);
+        if (buffId === 'buff_shadow_clone') {
+          return Math.ceil(ShadowCloneKit.maxRemaining() + queuedSec);
+        }
+        return Math.ceil((this.timers[buffId] || 0) + queuedSec);
+      },
+      buy(buffId) {
+        const spec = this.SPECS.find(s => s.id === buffId);
+        if (!spec) return false;
+        if (SaveManager.data.gold < spec.cost) {
+          if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
+            CoopManager.showToast(`[px:coin] 金币不足！购买【${spec.name}】需要 ${spec.cost.toLocaleString()} 金币。`, 2400);
+          }
+          return false;
+        }
+        SaveManager.data.gold -= spec.cost;
+        if (GameState.isStarted && !GameState.isOver) {
+          this.activateBuff(spec, spec.duration, false);
+          if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
+            CoopManager.showToast(`[px:sparkles] 已启用【${spec.name}】（持续 ${spec.duration} 秒）！`, 2600);
+          }
+        } else {
+          const q = this.ensureQueue();
+          q[spec.id] = (Number(q[spec.id]) || 0) + spec.duration;
+          if (typeof CoopManager !== 'undefined' && CoopManager.showToast) {
+            CoopManager.showToast(`[px:sparkles] 已备战【${spec.name}】（开局自动生效 ${q[spec.id]} 秒）！`, 2600);
+          }
+        }
+        SaveManager.save();
+        AudioEngine.gem();
+        updateShopUnlocksUI();
+        if (typeof renderShopList === 'function' && document.getElementById('shop-modal')?.style.display === 'flex') {
+          renderShopList();
+        }
+        if (typeof CampMarket !== 'undefined' && CampMarket.open && document.getElementById('merchant-modal')?.style.display === 'flex') {
+          CampMarket.render();
+        }
+        return true;
+      },
+      tick(dt) {
+        if (!GameState.isStarted || GameState.isPaused || GameState.isOver) return;
+        for (const k of Object.keys(this.timers)) {
+          if (this.timers[k] > 0) {
+            this.timers[k] = Math.max(0, this.timers[k] - dt);
+          }
+        }
+        // 极速狂飙秘药 (buff_haste)：加快普攻冷却、蓄力速度、主动技能与大招冷却恢复及移速
+        if (this.timers.buff_haste > 0 && !player.isDowned) {
+          if (player.attackCooldown > 0) {
+            player.attackCooldown = Math.max(0, player.attackCooldown - dt * 0.35);
+          }
+          if (player.isCharging) {
+            player.chargeTimer += dt * 0.35;
+          }
+          for (const sk of ['skill1', 'skill2', 'ult']) {
+            if (player.skills?.[sk]?.cooldown > 0) {
+              player.skills[sk].cooldown = Math.max(0, player.skills[sk].cooldown - dt * 0.40);
+            }
+          }
+          if ( (input.x || input.y) && !player.isFrozen ) {
+            player.x += (player.vx || 0) * dt * 0.22;
+            player.y += (player.vy || 0) * dt * 0.22;
+          }
+        }
+        // 聚财磁暴秘药 (buff_wealth)：额外吸附金币与经验晶石范围 +140px
+        if (this.timers.buff_wealth > 0 && typeof gems !== 'undefined') {
+          const extraRange = (player.magnetRange || 95) + 140;
+          for (const g of gems) {
+            if (!g.magnetized && Math.hypot(g.x - player.x, g.y - player.y) <= extraRange) {
+              g.magnetized = true;
+            }
+          }
+        }
+        ShadowCloneKit.tick(dt);
+      }
+    };
+
+    // 1. 经验增幅秘药挂钩 addExp (+80% 经验获取)
+    const _origAddExpForBuff = addExp;
+    addExp = function(amount) {
+      let finalAmt = amount;
+      if (ShopBuffs.timers.buff_exp > 0 && finalAmt > 0) {
+        finalAmt = Math.ceil(finalAmt * 1.8);
+      }
+      return _origAddExpForBuff.call(this, finalAmt);
+    };
+
+    // 2. 伤害增幅秘药挂钩 damageEnemy (+55% 全伤害 & +15% 暴击率)
+    const _origDamageEnemyForBuff = damageEnemy;
+    damageEnemy = function(e, rawDmg, isCrit = false, knockback = 0, sourceType = 'normal', vfxColor = null) {
+      let dmg = rawDmg;
+      let crit = isCrit;
+      if (ShopBuffs.timers.buff_dmg > 0 && dmg > 0) {
+        dmg = dmg * 1.55;
+        if (!crit && Math.random() < 0.15) {
+          crit = true;
+          dmg *= (player.critMultiplier || 1.75);
+        }
+      }
+      return _origDamageEnemyForBuff.call(this, e, dmg, crit, knockback, sourceType, vfxColor);
+    };
+
+    // 3. 聚财磁暴秘药挂钩 SaveManager.addGold (+75% 局内金币收益)
+    const _origAddGoldForBuff = SaveManager.addGold;
+    SaveManager.addGold = function(amount) {
+      let finalGold = amount;
+      if (GameState.isStarted && ShopBuffs.timers.buff_wealth > 0 && finalGold > 0) {
+        finalGold = Math.ceil(finalGold * 1.75);
+      }
+      return _origAddGoldForBuff.call(this, finalGold);
+    };
+
+    // 4. 影分身同步释放普攻、蓄力、1技能、2技能、3技能(大招)
+    const _origExecuteAttackForClone = executeAttack;
+    executeAttack = function() {
+      const r = _origExecuteAttackForClone.apply(this, arguments);
+      ShadowCloneKit.mirrorAction('attack', _origExecuteAttackForClone, arguments);
+      return r;
+    };
+    const _origExecuteChargedForClone = executeChargedAttack;
+    executeChargedAttack = function() {
+      const r = _origExecuteChargedForClone.apply(this, arguments);
+      ShadowCloneKit.mirrorAction('charge', _origExecuteChargedForClone, arguments);
+      return r;
+    };
+    const _origExecuteSkill1ForClone = executeSkill1;
+    executeSkill1 = function() {
+      const r = _origExecuteSkill1ForClone.apply(this, arguments);
+      ShadowCloneKit.mirrorAction('skill1', _origExecuteSkill1ForClone, arguments);
+      return r;
+    };
+    const _origExecuteSkill2ForClone = executeSkill2;
+    executeSkill2 = function() {
+      const r = _origExecuteSkill2ForClone.apply(this, arguments);
+      ShadowCloneKit.mirrorAction('skill2', _origExecuteSkill2ForClone, arguments);
+      return r;
+    };
+    const _origExecuteUltForClone = executeUlt;
+    executeUlt = function() {
+      const r = _origExecuteUltForClone.apply(this, arguments);
+      ShadowCloneKit.mirrorAction('ult', _origExecuteUltForClone, arguments);
+      return r;
+    };
+
+    // 5. 影分身、限时增益与第四关【时空锈月钟城】时间灾变/终末钟王时间法则随局内帧更新与渲染、状态栏徽章展示
+    const _origUpdateForShopBuffs = update;
+    update = function(dt) {
+      const chronoSnap = typeof ClockworkChrono !== 'undefined' ? ClockworkChrono.preUpdate(dt) : null;
+      const r = _origUpdateForShopBuffs.apply(this, arguments);
+      if (typeof ClockworkChrono !== 'undefined') ClockworkChrono.postUpdate(dt, chronoSnap);
+      ShopBuffs.tick(dt);
+      return r;
+    };
+    const _origDrawPlayerForClone = drawPlayer;
+    drawPlayer = function() {
+      ShadowCloneKit.drawClones(ctx);
+      const r = _origDrawPlayerForClone.apply(this, arguments);
+      if (typeof ClockworkChrono !== 'undefined') ClockworkChrono.drawOverlay(ctx);
+      return r;
+    };
+    const _origResetSessionForBuffs = resetGameSession;
+    resetGameSession = function() {
+      if (GameState.isStarted && GameState.gameTime > 0 && typeof StageUnlocks !== 'undefined') {
+        StageUnlocks.recordSurvival(GameState.activeBiome, GameState.gameTime, true);
+      }
+      const r = _origResetSessionForBuffs.apply(this, arguments);
+      ShopBuffs.resetRunTimers();
+      if (typeof ClockworkChrono !== 'undefined') ClockworkChrono.reset();
+      if (typeof StageUnlocks !== 'undefined') StageUnlocks.refreshUI();
+      if (typeof PauseHeroCodex !== 'undefined') PauseHeroCodex.render();
+      return r;
+    };
+    const _origStatusTrayForBuffs = updateStatusTray;
+    updateStatusTray = function() {
+      const r = _origStatusTrayForBuffs.apply(this, arguments);
+      const tray = document.getElementById('status-tray');
+      if (!tray) return r;
+      if (typeof ClockworkChrono !== 'undefined') {
+        if (GameState.activeBiome === 'clockwork' && ClockworkChrono.activeCatastrophe && ClockworkChrono.catastropheTimer > 0) {
+          const cSpec = ClockworkChrono.CATASTROPHE_SPECS[ClockworkChrono.activeCatastrophe];
+          if (cSpec) {
+            const pill = document.createElement('div');
+            pill.className = 'status-pill';
+            pill.style.borderColor = cSpec.color;
+            pill.style.color = cSpec.color;
+            pill.innerHTML = `[px:clock] ${cSpec.shortLabel} ${Math.ceil(ClockworkChrono.catastropheTimer)}s`;
+            PixelIcons.hydrate(pill);
+            tray.appendChild(pill);
+          }
+        }
+        if (ClockworkChrono.playerMoveStopTimer > 0) {
+          const pill = document.createElement('div');
+          pill.className = 'status-pill';
+          pill.style.borderColor = '#f43f5e';
+          pill.style.color = '#fda4af';
+          pill.innerHTML = `[px:clock] 时停禁足(可施法) ${ClockworkChrono.playerMoveStopTimer.toFixed(1)}s`;
+          PixelIcons.hydrate(pill);
+          tray.appendChild(pill);
+        }
+        if (ClockworkChrono.bossPlayerSlowTimer > 0) {
+          const pill = document.createElement('div');
+          pill.className = 'status-pill';
+          pill.style.borderColor = '#38bdf8';
+          pill.style.color = '#bae6fd';
+          pill.innerHTML = `[px:clock] 钟王迟滞 ${ClockworkChrono.bossPlayerSlowTimer.toFixed(1)}s`;
+          PixelIcons.hydrate(pill);
+          tray.appendChild(pill);
+        }
+        if (ClockworkChrono.bossSelfHasteTimer > 0) {
+          const pill = document.createElement('div');
+          pill.className = 'status-pill';
+          pill.style.borderColor = '#fbbf24';
+          pill.style.color = '#fde68a';
+          pill.innerHTML = `[px:clock] 钟王极速 ${ClockworkChrono.bossSelfHasteTimer.toFixed(1)}s`;
+          PixelIcons.hydrate(pill);
+          tray.appendChild(pill);
+        }
+      }
+      if (ShadowCloneKit.activeCount() > 0) {
+        const pill = document.createElement('div');
+        pill.className = 'status-pill';
+        pill.style.borderColor = '#e879f9';
+        pill.style.color = '#f5d0fe';
+        pill.innerHTML = `[px:ally] 影分身×${ShadowCloneKit.activeCount()} ${ Math.ceil(ShadowCloneKit.maxRemaining()) }s`;
+        PixelIcons.hydrate(pill);
+        tray.appendChild(pill);
+      }
+      for (const spec of ShopBuffs.SPECS) {
+        if (spec.isClone) continue;
+        const rem = Math.ceil(ShopBuffs.timers[spec.id] || 0);
+        if (rem > 0) {
+          const pill = document.createElement('div');
+          pill.className = 'status-pill';
+          pill.style.borderColor = '#38bdf8';
+          pill.style.color = '#bae6fd';
+          pill.innerHTML = `${spec.icon} ${spec.badge} ${rem}s`;
+          PixelIcons.hydrate(pill);
+          tray.appendChild(pill);
+        }
+      }
+      return r;
+    };
+
+    // 6. 扩展军需黑市商店 (#shop-modal renderShopList)：加入限时 Buff、限时影分身与英雄解锁商品
+    const _origRenderShopList = renderShopList;
+    renderShopList = function() {
+      _origRenderShopList.apply(this, arguments);
+      const container = document.getElementById('shop-item-list');
+      if (!container) return;
+
+      // (A) 限时战斗增益秘药 & 昂贵限时影分身
+      for (const spec of ShopBuffs.SPECS) {
+        const rem = ShopBuffs.getRemaining(spec.id);
+        const canAfford = SaveManager.data.gold >= spec.cost;
+        const card = document.createElement('div');
+        card.className = 'talent-card ' + (spec.isClone ? 'shop-clone-card' : 'shop-buff-card');
+        card.setAttribute('data-shop-buff', spec.id);
+        const activeTag = rem > 0
+          ? `<span style="color:#4ade80;">生效/备战 ${rem}s</span>`
+          : `<span style="color:#f472b6;">${spec.badge} · ${spec.duration}s</span>`;
+        card.innerHTML = `
+          <div class="talent-card-top">
+            <span class="talent-icon">${spec.icon}</span>
+            <div class="talent-meta">
+              <div class="talent-name">${spec.name}</div>
+              <div class="talent-lvl">${activeTag}</div>
+            </div>
+          </div>
+          <div class="talent-desc">${spec.desc}</div>
+          <button class="talent-btn" data-buy-shop-buff="${spec.id}" ${!canAfford ? 'disabled' : ''}>
+            ${rem > 0 ? `叠加时长 (${spec.cost} [px:coin])` : `购买 (${spec.cost} [px:coin])`}
+          </button>
+        `;
+        card.querySelector('[data-buy-shop-buff]').addEventListener('click', () => {
+          ShopBuffs.buy(spec.id);
+        });
+        container.appendChild(card);
+      }
+
+      // (B) 角色契约解锁（死灵/机匠/奶妈 金币解锁；球爵/拳师/牌师 通关第1/2/3关或提前金币购买解锁）
+      for (const hKey of ['engineer', 'healer', 'necromancer', 'billiard', 'pugilist', 'cardmaster']) {
+        const spec = HeroUnlocks.SPECS[hKey];
+        if (!spec) continue;
+        const unlocked = HeroUnlocks.isUnlocked(hKey);
+        const canAfford = SaveManager.data.gold >= spec.cost;
+        const card = document.createElement('div');
+        card.className = 'talent-card shop-hero-unlock-card' + (unlocked ? '' : ' is-locked-hero');
+        card.setAttribute('data-shop-hero', hKey);
+        const reqBadge = unlocked
+          ? '<span style="color:#34d399;">[px:check] 已解锁</span>'
+          : `<span style="color:#fbbf24;">[px:lock] ${spec.shortReq}</span>`;
+        card.innerHTML = `
+          <div class="talent-card-top">
+            <span class="talent-icon">${spec.icon}</span>
+            <div class="talent-meta">
+              <div class="talent-name">${spec.name}</div>
+              <div class="talent-lvl">${reqBadge}</div>
+            </div>
+          </div>
+          <div class="talent-desc">${spec.desc}</div>
+          <button class="talent-btn" data-buy-shop-hero="${hKey}" ${(unlocked || !canAfford) ? 'disabled' : ''}>
+            ${unlocked ? '已解锁角色' : `立即解锁 (${spec.cost.toLocaleString()} [px:coin])`}
+          </button>
+        `;
+        const btn = card.querySelector('[data-buy-shop-hero]');
+        if (btn && !unlocked) {
+          btn.addEventListener('click', () => {
+            HeroUnlocks.buy(hKey);
+          });
+        }
+        container.appendChild(card);
+      }
+      if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
+        PixelIcons.hydrate(container);
+      }
+    };
+
+    // 7. 扩展营地神秘行商 (CampMarket.render)：同样可购买限时增益秘药与昂贵限时影分身
+    if (typeof CampMarket !== 'undefined' && CampMarket.render) {
+      const _origCampMarketRender = CampMarket.render;
+      CampMarket.render = function() {
+        _origCampMarketRender.apply(this, arguments);
+        const m = document.getElementById('merchant-modal');
+        const body = document.getElementById('merchant-body');
+        if (!m || !body || !this.open) return;
+        const buffRows = ShopBuffs.SPECS.map(spec => {
+          const rem = ShopBuffs.getRemaining(spec.id);
+          const canAfford = SaveManager.data.gold >= spec.cost;
+          return `<div class="merchant-tile ${spec.isClone ? 'boss' : ''}" data-offer="${spec.id}">
+            <div class="merchant-head">
+              <div class="merchant-icon">${spec.icon}</div>
+              <div class="merchant-title">
+                <b>${spec.name}</b>
+                <span class="merchant-tag">${rem > 0 ? `剩余 ${rem}s` : `${spec.badge} · ${spec.duration}s`}</span>
+              </div>
+            </div>
+            <details><summary>效果说明</summary><p>${spec.desc}</p></details>
+            <button data-buy-buff="${spec.id}" ${!canAfford ? 'disabled' : ''}>${spec.cost}[px:coin] ${rem > 0 ? '续时' : '购买'}</button>
+          </div>`;
+        }).join('');
+        const sectionHtml = `<div class="merchant-section-label">[px:sparkles] 秘药增益与禁忌影分身（即时生效，影分身绝不重叠并同步施放全技能）</div><div class="merchant-grid" data-market-section="buffs">${buffRows}</div>`;
+        const footer = body.querySelector('.merchant-footer');
+        if (footer) {
+          footer.insertAdjacentHTML('beforebegin', sectionHtml);
+        } else {
+          body.insertAdjacentHTML('beforeend', sectionHtml);
+        }
+        if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
+          PixelIcons.hydrate(body);
+        }
+        body.querySelectorAll('[data-buy-buff]').forEach(btn => {
+          btn.onclick = () => ShopBuffs.buy(btn.dataset.buyBuff);
+        });
+      };
+    }
+
     const titleCgEl=document.getElementById('title-cg');if(titleCgEl)titleCgEl.decoding='async';
     PixelIcons.start();
     setupHero('warrior');
     syncHeroAndBiomeSelectionUI();
+    HeroUnlocks.refreshUI();
+    StageUnlocks.refreshUI();
+    PauseHeroCodex.render();
     updateLoadoutHUD();
     CoopManager.updateHUD();
     updateShopUnlocksUI();
