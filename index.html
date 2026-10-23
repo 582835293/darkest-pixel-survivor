@@ -2613,18 +2613,40 @@
       draw(c,s,ratio){
         const t=GameState.gameTime,r=s.radius||120;c.globalAlpha*=Math.min(1,ratio*4);
         if(s.type==='healer_smite'||s.type==='healer_judgment'){
-          c.translate(s.x,s.y);const w=(s.width||8)*Math.min(1,ratio*3),h=(s.type==='healer_judgment'?82:64)+(s.stage||1)*4;c.fillStyle='rgba(255,226,129,.15)';c.fillRect(-w*2,-h,w*4,h);c.fillStyle='#e8bf56';c.fillRect(-w,-h,w*2,h);c.fillStyle='#fff9d8';c.fillRect(-w*.4,-h,w*.8,h);c.fillStyle='#ffffff';c.fillRect(-2,-h,4,h);c.fillStyle='#fde68a';c.fillRect(-14,-h+20,28,4);c.fillRect(-2,-h+9,4,26);
-          c.strokeStyle='#fff2ad';c.lineWidth=2;c.save();c.scale(1,.5);c.rotate(t*.6);c.strokeRect(-r*.6,-r*.6,r*1.2,r*1.2);for(let i=0;i<(s.stage||1)+2;i++){c.rotate(Math.PI*2/((s.stage||1)+2));c.fillRect(r,-2,5,4);}c.restore();return;
+          c.translate(s.x,s.y);const isJudg=s.type==='healer_judgment',w=(s.width||8)*Math.min(1,ratio*3),h=(isJudg?96:72)+(s.stage||1)*5;
+          const gGrad=c.createRadialGradient(0,0,r*.08,0,0,r);gGrad.addColorStop(0,isJudg?'rgba(254,240,138,.42)':'rgba(167,243,208,.36)');gGrad.addColorStop(.62,'rgba(251,191,36,.18)');gGrad.addColorStop(1,'rgba(251,191,36,0)');
+          c.fillStyle=gGrad;c.beginPath();c.arc(0,0,r,0,Math.PI*2);c.fill();
+          c.strokeStyle=isJudg?'#fde047':'#fff2ad';c.lineWidth=2.4;c.beginPath();c.arc(0,0,r*.86,0,Math.PI*2);c.stroke();
+          c.strokeStyle='#ecfdf5';c.lineWidth=1.5;c.beginPath();c.arc(0,0,r*.58,0,Math.PI*2);c.stroke();
+          c.save();c.rotate(t*(isJudg?1.2:.8));const nodes=(s.stage||1)+4;for(let i=0;i<nodes;i++){c.rotate(Math.PI*2/nodes);c.fillStyle=i%2?'#fef08a':'#a7f3d0';c.beginPath();c.arc(r*.86,0,3.2,0,Math.PI*2);c.fill();c.fillRect(r*.58-2,-1.5,6,3);}c.restore();
+          c.fillStyle='rgba(255,226,129,.18)';c.fillRect(-w*2.2,-h,w*4.4,h);c.fillStyle='#e8bf56';c.fillRect(-w,-h,w*2,h);c.fillStyle='#fff9d8';c.fillRect(-w*.45,-h,w*.9,h);c.fillStyle='#ffffff';c.fillRect(-2.5,-h,5,h);
+          c.strokeStyle='#fef08a';c.lineWidth=2;c.beginPath();c.arc(0,-h+22,12+w*.4,0,Math.PI*2);c.stroke();
+          c.fillStyle='#fde68a';c.fillRect(-16,-h+20,32,4);c.fillRect(-2,-h+7,4,28);return;
         }
-        if(s.type==='healer_lance'){c.translate(s.x1,s.y1);c.rotate(Math.atan2(s.y2-s.y1,s.x2-s.x1));const len=Math.hypot(s.x2-s.x1,s.y2-s.y1),w=(s.width||18)*ratio;c.fillStyle='rgba(167,243,208,.28)';c.fillRect(0,-w,len,w*2);c.fillStyle='#fcd34d';c.fillRect(0,-w*.35,len,w*.7);c.fillStyle='#fffde7';c.fillRect(0,-2,len,4);return;}
-        c.translate(s.x,s.y);const persistent=['healer_sanctuary','healer_wings'].includes(s.type),rr=persistent?r:r*(1.15-ratio*.8);
-        c.fillStyle=s.type==='healer_wings'?'rgba(252,211,77,.065)':'rgba(110,231,183,.07)';c.beginPath();c.arc(0,0,rr,0,Math.PI*2);c.fill();c.strokeStyle=s.color||'#a7f3d0';c.lineWidth=2;c.save();c.rotate(t*.18);c.setLineDash([14,7]);c.beginPath();c.arc(0,0,rr,0,Math.PI*2);c.stroke();c.setLineDash([]);c.beginPath();c.arc(0,0,rr*.82,0,Math.PI*2);c.stroke();
-        for(let i=0;i<8;i++){c.save();c.rotate(i*Math.PI/4);c.fillStyle='#fff7cf';c.fillRect(rr*.9,-3,11,6);c.fillRect(rr*.9+3,-7,4,14);c.restore();}c.restore();
-        if(s.type==='healer_wings'||s.type==='healer_mending'){
+        if(s.type==='healer_lance'){
+          c.translate(s.x1,s.y1);c.rotate(Math.atan2(s.y2-s.y1,s.x2-s.x1));const len=Math.hypot(s.x2-s.x1,s.y2-s.y1),w=(s.width||18)*ratio;
+          c.fillStyle='rgba(167,243,208,.28)';c.fillRect(0,-w,len,w*2);c.fillStyle='#fcd34d';c.fillRect(0,-w*.42,len,w*.84);c.fillStyle='#fffde7';c.fillRect(0,-2.5,len,5);
+          c.strokeStyle='#fef08a';c.lineWidth=1.6;for(let x=28;x<len-16;x+=52){c.beginPath();c.arc(x,0,w*.65,0,Math.PI*2);c.stroke();}
+          c.fillStyle='#ffffff';c.beginPath();c.moveTo(len+10,0);c.lineTo(len-10,-w*.7);c.lineTo(len-10,w*.7);c.closePath();c.fill();return;
+        }
+        c.translate(s.x,s.y);const persistent=['healer_sanctuary','healer_wings'].includes(s.type),isWings=s.type==='healer_wings',isMending=s.type==='healer_mending',rr=persistent?r:r*(1.12-ratio*.72);
+        const hGrad=c.createRadialGradient(0,0,rr*.06,0,0,rr);
+        if(isWings||isMending){hGrad.addColorStop(0,'rgba(254,249,195,.28)');hGrad.addColorStop(.52,'rgba(252,211,77,.14)');hGrad.addColorStop(.86,'rgba(110,231,183,.10)');hGrad.addColorStop(1,'rgba(252,211,77,0)');}
+        else{hGrad.addColorStop(0,'rgba(209,250,229,.22)');hGrad.addColorStop(.6,'rgba(110,231,183,.11)');hGrad.addColorStop(1,'rgba(16,185,129,0)');}
+        c.fillStyle=hGrad;c.beginPath();c.arc(0,0,rr,0,Math.PI*2);c.fill();
+        c.strokeStyle=s.color||'#fde68a';c.lineWidth=isWings?3:2.4;c.beginPath();c.arc(0,0,rr,0,Math.PI*2);c.stroke();
+        c.save();c.rotate(t*.24);c.setLineDash([16,8]);c.strokeStyle='#fef3c7';c.lineWidth=2;c.beginPath();c.arc(0,0,rr*.86,0,Math.PI*2);c.stroke();c.setLineDash([]);
+        c.strokeStyle=isWings?'#fde047':'#a7f3d0';c.lineWidth=1.8;c.beginPath();c.arc(0,0,rr*.66,0,Math.PI*2);c.stroke();
+        const runeCnt=isWings?12:8;for(let i=0;i<runeCnt;i++){c.save();c.rotate(i*Math.PI*2/runeCnt);c.fillStyle=i%2?'#fffbeb':'#fde68a';c.beginPath();c.arc(rr*.86,0,4,0,Math.PI*2);c.fill();c.fillRect(rr*.93,-2,9,4);c.fillRect(rr*.93+2.5,-5.5,3,11);c.restore();}c.restore();
+        if(isWings||isMending){
+          c.save();c.rotate(-t*.35);c.strokeStyle='#fef08a';c.lineWidth=2;c.beginPath();c.arc(0,0,rr*.42,0,Math.PI*2);c.stroke();
+          for(let i=0;i<6;i++){const a=i*Math.PI/3;c.beginPath();c.arc(Math.cos(a)*rr*.42,Math.sin(a)*rr*.42,rr*.12,0,Math.PI*2);c.stroke();}c.restore();
           for(const side of [-1,1])for(let i=0;i<(s.isSuper?4:3);i++){c.save();c.scale(side,1);c.rotate(-.3+i*.22+Math.sin(t*2)*.04);const length=(persistent?155:95)-i*18;c.fillStyle=i%2?'#fde68a':'#ecfdf5';c.beginPath();c.moveTo(12,-12+i*8);c.lineTo(length,-80+i*13);c.lineTo(length-20,-30+i*13);c.lineTo(18,15+i*8);c.closePath();c.fill();c.strokeStyle='#bfa65f';c.lineWidth=2;c.stroke();c.restore();}
-          c.strokeStyle='#fef3c7';c.lineWidth=4;c.beginPath();c.ellipse(0,-70,32,9,0,0,Math.PI*2);c.stroke();
+          c.strokeStyle='#fef3c7';c.lineWidth=3.5;c.beginPath();c.arc(0,-68,24,0,Math.PI*2);c.stroke();c.strokeStyle='#fde047';c.lineWidth=1.8;c.beginPath();c.arc(0,-68,16,0,Math.PI*2);c.stroke();
         }
-        if(s.type==='healer_sanctuary'){c.save();c.rotate(-t*.32);c.strokeStyle='#d1fae5';for(let i=0;i<6;i++){c.rotate(Math.PI/3);c.strokeRect(rr*.35,-8,rr*.28,16);}c.restore();}
+        if(s.type==='healer_sanctuary'){
+          c.save();c.rotate(-t*.32);c.strokeStyle='#d1fae5';c.lineWidth=1.8;for(let i=0;i<6;i++){c.rotate(Math.PI/3);c.beginPath();c.arc(rr*.46,0,rr*.14,0,Math.PI*2);c.stroke();c.fillStyle='#a7f3d0';c.beginPath();c.arc(rr*.46,0,3.5,0,Math.PI*2);c.fill();}c.restore();
+        }
       }
     };
 
@@ -2912,23 +2934,24 @@
           const dx=s.x2-s.x1,dy=s.y2-s.y1,len=Math.max(1,Math.hypot(dx,dy));c.translate(s.x1,s.y1);c.rotate(Math.atan2(dy,dx));
           const mainCol=s.shiny?'#fde047':s.type==='necro_soul'?'#c4b5fd':'#34d399',coreCol=s.shiny?'#fef9c3':'#ecfdf5';
           c.strokeStyle=s.type==='necro_soul'?'rgba(167,139,250,.42)':s.shiny?'rgba(250,204,21,.48)':'rgba(16,185,129,.45)';
-          c.lineWidth=(s.type==='necro_cleave'?13:8)*ratio;c.beginPath();c.moveTo(0,0);c.lineTo(len,0);c.stroke();
-          c.strokeStyle=mainCol;c.lineWidth=s.type==='necro_cleave'?5.5:3.5;c.beginPath();c.moveTo(0,0);c.lineTo(len,0);c.stroke();
-          c.strokeStyle=coreCol;c.lineWidth=1.8;c.beginPath();c.moveTo(0,0);c.lineTo(len,0);c.stroke();
-          for(let i=0;i<5;i++){const t=((1-ratio)*1.2+i*.18)%1,px=len*t,py=Math.sin(t*10+GameState.gameTime*14)*(s.type==='necro_cleave'?8:5);c.fillStyle=i%2?coreCol:'#a78bfa';c.fillRect(px-4,py-3,8,6);}
-          c.fillStyle=coreCol;c.beginPath();c.moveTo(len+8,0);c.lineTo(len-12,-9);c.lineTo(len-7,0);c.lineTo(len-12,9);c.closePath();c.fill();
+          c.lineWidth=(s.type==='necro_cleave'?14:9)*ratio;c.beginPath();c.moveTo(0,0);c.lineTo(len,0);c.stroke();
+          c.strokeStyle=mainCol;c.lineWidth=s.type==='necro_cleave'?6:3.8;c.beginPath();c.moveTo(0,0);c.lineTo(len,0);c.stroke();
+          c.strokeStyle=coreCol;c.lineWidth=2;c.beginPath();c.moveTo(0,0);c.lineTo(len,0);c.stroke();
+          for(let i=0;i<5;i++){const t=((1-ratio)*1.2+i*.18)%1,px=len*t,py=Math.sin(t*10+GameState.gameTime*14)*(s.type==='necro_cleave'?8:5);c.fillStyle=i%2?coreCol:'#a78bfa';c.beginPath();c.arc(px,py,3.2,0,Math.PI*2);c.fill();}
+          c.fillStyle=coreCol;c.beginPath();c.moveTo(len+10,0);c.lineTo(len-12,-9);c.lineTo(len-7,0);c.lineTo(len-12,9);c.closePath();c.fill();
           c.translate(len,0);c.strokeStyle=mainCol;c.lineWidth=2.5;c.beginPath();c.arc(0,0,(14+lv*2)*pulse,0,Math.PI*2);c.stroke();
           for(let i=0;i<4;i++){c.save();c.rotate(i*Math.PI/2+(1-ratio)*1.5);c.fillStyle=i%2?coreCol:'#c4b5fd';c.fillRect(6,-2.5,12+lv*2,5);c.restore();}
           if(s.type==='necro_cleave'){
-            c.strokeStyle=s.shiny?'#fde047':'#6ee7b7';c.lineWidth=4;c.beginPath();c.arc(0,0,r*(.65+(1-ratio)*.35),-Math.PI*.72,Math.PI*.72);c.stroke();
-            c.strokeStyle='#c4b5fd';c.lineWidth=2.2;c.beginPath();c.ellipse(0,0,r,r*.65,0,0,Math.PI*2);c.stroke();
+            c.strokeStyle=s.shiny?'#fde047':'#6ee7b7';c.lineWidth=4.2;c.beginPath();c.arc(0,0,r*(.65+(1-ratio)*.35),-Math.PI*.72,Math.PI*.72);c.stroke();
+            c.strokeStyle='#c4b5fd';c.lineWidth=2.2;c.beginPath();c.arc(0,0,r*.82,0,Math.PI*2);c.stroke();
             for(let i=0;i<8;i++){c.save();c.rotate(i*Math.PI/4+ratio*.6);c.fillStyle=i%2?coreCol:mainCol;c.fillRect(r*.58,-2.5,14,5);c.restore();}
           }
         }else if(s.type==='necro_heal'){
           c.translate(s.x,s.y);const hr=r*(.75+(1-ratio)*.35);
-          c.fillStyle='rgba(52,211,153,.22)';c.beginPath();c.ellipse(0,0,hr,hr*.65,0,0,Math.PI*2);c.fill();
-          c.strokeStyle='#6ee7b7';c.lineWidth=2.5;c.beginPath();c.ellipse(0,0,hr,hr*.65,0,0,Math.PI*2);c.stroke();
-          c.fillStyle='#a7f3d0';for(let i=0;i<4;i++){const a=GameState.gameTime*3+i*Math.PI/2,px=Math.cos(a)*hr*.55,py=Math.sin(a)*hr*.35-(1-ratio)*18;c.fillRect(px-5,py-2,10,4);c.fillRect(px-2,py-5,4,10);}
+          c.fillStyle='rgba(52,211,153,.24)';c.beginPath();c.arc(0,0,hr,0,Math.PI*2);c.fill();
+          c.strokeStyle='#6ee7b7';c.lineWidth=2.5;c.beginPath();c.arc(0,0,hr,0,Math.PI*2);c.stroke();
+          c.strokeStyle='#d1fae5';c.lineWidth=1.4;c.beginPath();c.arc(0,0,hr*.68,0,Math.PI*2);c.stroke();
+          c.fillStyle='#a7f3d0';for(let i=0;i<4;i++){const a=GameState.gameTime*3+i*Math.PI/2,px=Math.cos(a)*hr*.55,py=Math.sin(a)*hr*.55-(1-ratio)*16;c.fillRect(px-5,py-2,10,4);c.fillRect(px-2,py-5,4,10);}
         }else if(s.type==='necro_brand'){
           c.translate(s.x,s.y);const br=r*(.85+Math.sin(ratio*Math.PI)*.25);
           c.strokeStyle='#f43f5e';c.lineWidth=3;c.beginPath();c.arc(0,0,br,0,Math.PI*2);c.stroke();
@@ -2936,18 +2959,21 @@
           c.fillStyle='#ffe4e6';c.fillRect(-7,-24,14,10);c.fillStyle='#881337';c.fillRect(-5,-21,3,3);c.fillRect(2,-21,3,3);
         }else{
           c.translate(s.x,s.y);const mainCol=s.shiny?'#fde047':s.type==='necro_command'?'#c4b5fd':'#34d399';
-          c.fillStyle=s.shiny?'rgba(250,204,21,.18)':s.type==='necro_command'?'rgba(167,139,250,.18)':'rgba(52,211,153,.16)';
-          c.beginPath();c.ellipse(0,0,r*pulse,r*.62*pulse,0,0,Math.PI*2);c.fill();
-          c.strokeStyle=mainCol;c.lineWidth=3;c.beginPath();c.ellipse(0,0,r,r*.62,0,0,Math.PI*2);c.stroke();
-          c.strokeStyle='#ecfdf5';c.lineWidth=1.6;c.beginPath();c.ellipse(0,0,r*.78,r*.48,0,0,Math.PI*2);c.stroke();
+          const nGrad=c.createRadialGradient(0,0,r*.08,0,0,r*pulse);
+          nGrad.addColorStop(0,s.shiny?'rgba(250,204,21,.28)':s.type==='necro_command'?'rgba(196,181,253,.28)':'rgba(52,211,153,.25)');
+          nGrad.addColorStop(.7,s.type==='necro_command'?'rgba(139,92,246,.12)':'rgba(16,185,129,.10)');
+          nGrad.addColorStop(1,'rgba(16,185,129,0)');
+          c.fillStyle=nGrad;c.beginPath();c.arc(0,0,r*pulse,0,Math.PI*2);c.fill();
+          c.strokeStyle=mainCol;c.lineWidth=2.8;c.beginPath();c.arc(0,0,r,0,Math.PI*2);c.stroke();
+          c.strokeStyle='#ecfdf5';c.lineWidth=1.6;c.beginPath();c.arc(0,0,r*.78,0,Math.PI*2);c.stroke();
           const rings=s.type==='necro_rise'?2:Math.min(4,1+Math.ceil(lv/2));
           for(let k=0;k<rings;k++){
-            c.save();c.scale(1,.62);c.rotate(GameState.gameTime*(k%2?-1.4:1.6)+k*.5);
-            c.strokeStyle=k%2?'#c4b5fd':mainCol;c.lineWidth=2;c.strokeRect(-r*.66,-r*.66,r*1.32,r*1.32);
-            const spokes=6+lv;for(let i=0;i<spokes;i++){c.rotate(Math.PI*2/spokes);c.fillStyle=i%2?'#ecfdf5':mainCol;c.fillRect(r*.76,-3.5,12,7);}
+            c.save();c.rotate(GameState.gameTime*(k%2?-1.4:1.6)+k*.5);
+            c.strokeStyle=k%2?'#c4b5fd':mainCol;c.lineWidth=1.8;c.beginPath();c.arc(0,0,r*(.52+k*.12),0,Math.PI*2);c.stroke();
+            const spokes=6+lv;for(let i=0;i<spokes;i++){c.rotate(Math.PI*2/spokes);c.fillStyle=i%2?'#ecfdf5':mainCol;c.beginPath();c.arc(r*.78,0,3,0,Math.PI*2);c.fill();c.fillRect(r*.84,-2,9,4);}
             c.restore();
           }
-          for(let i=0;i<6;i++){const a=i*Math.PI/3+GameState.gameTime*1.8,px=Math.cos(a)*r*.72,py=Math.sin(a)*r*.42;c.fillStyle=i%2?'#a7f3d0':'#ddd6fe';c.fillRect(px-3,py-18*ratio-6,6,18*ratio+6);}
+          for(let i=0;i<6;i++){const a=i*Math.PI/3+GameState.gameTime*1.8,px=Math.cos(a)*r*.72,py=Math.sin(a)*r*.72;c.fillStyle=i%2?'#a7f3d0':'#ddd6fe';c.fillRect(px-3,py-18*ratio-6,6,18*ratio+6);}
           if(s.type==='necro_legion'||s.type==='necro_rise'||s.type==='necro_command'){
             c.fillStyle=s.shiny?'#fef08a':'#ecfdf5';c.fillRect(-12,-26,24,16);c.fillStyle='#0f172a';c.fillRect(-8,-21,5,5);c.fillRect(3,-21,5,5);c.fillStyle=mainCol;c.fillRect(-7,-20,3,3);c.fillRect(4,-20,3,3);c.fillStyle='#ecfdf5';c.fillRect(-7,-10,14,8);
           }
@@ -7874,30 +7900,48 @@
           ctx.save();
           ctx.globalAlpha = fadeAlpha;
           ctx.translate(ge.x, ge.y);
-          ctx.fillStyle = 'rgba(16, 185, 129, 0.18)';
+          const tGrad = ctx.createRadialGradient(0, 0, ge.radius * 0.1, 0, 0, ge.radius);
+          tGrad.addColorStop(0, 'rgba(52, 211, 153, 0.34)');
+          tGrad.addColorStop(0.7, 'rgba(16, 185, 129, 0.16)');
+          tGrad.addColorStop(1, 'rgba(6, 95, 70, 0.04)');
+          ctx.fillStyle = tGrad;
           ctx.beginPath();
           ctx.arc(0, 0, ge.radius, 0, Math.PI * 2);
           ctx.fill();
           ctx.strokeStyle = '#34d399';
-          ctx.lineWidth = 1.8;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(0, 0, ge.radius, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.strokeStyle = 'rgba(167, 243, 208, 0.65)';
+          ctx.lineWidth = 1.4;
+          ctx.beginPath();
+          ctx.arc(0, 0, ge.radius * 0.68, 0, Math.PI * 2);
+          ctx.stroke();
           ctx.beginPath();
           for (let k = 0; k < 8; k++) {
-            const a = (Math.PI * 2 / 8) * k + GameState.gameTime * 1.5;
-            const px = Math.cos(a) * ge.radius;
-            const py = Math.sin(a) * ge.radius;
+            const a = (Math.PI * 2 / 8) * k + GameState.gameTime * 1.6;
+            const px = Math.cos(a) * ge.radius * 0.88;
+            const py = Math.sin(a) * ge.radius * 0.88;
             if (k === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-            ctx.fillStyle = '#fde047';
-            ctx.fillRect(px - 2, py - 2, 4, 4);
+            ctx.fillStyle = k % 2 ? '#fde047' : '#a7f3d0';
+            ctx.beginPath();
+            ctx.arc(px, py, 3, 0, Math.PI * 2);
+            ctx.fill();
           }
           ctx.closePath();
           ctx.stroke();
-          // 内部跃动十字电弧
-          ctx.strokeStyle = '#a7f3d0';
-          ctx.lineWidth = 1.4;
+          // 内部跃动十字翠雷核心
+          const jitter = Math.sin(GameState.gameTime * 22 + i) * 5;
+          ctx.strokeStyle = '#ecfdf5';
+          ctx.lineWidth = 1.8;
           ctx.beginPath();
-          ctx.moveTo(-ge.radius * 0.7, 0);
-          ctx.lineTo(0, (Math.random() - 0.5) * 8);
-          ctx.lineTo(ge.radius * 0.7, 0);
+          ctx.moveTo(-ge.radius * 0.68, 0);
+          ctx.lineTo(0, jitter);
+          ctx.lineTo(ge.radius * 0.68, 0);
+          ctx.moveTo(0, -ge.radius * 0.68);
+          ctx.lineTo(-jitter, 0);
+          ctx.lineTo(0, ge.radius * 0.68);
           ctx.stroke();
           ctx.restore();
         }
@@ -7925,37 +7969,49 @@
       if (orbitingBlades.length > 0) {
         const ringDists = [...new Set(orbitingBlades.map(b => b.dist))];
         ctx.save();
-        ctx.setLineDash([8, 6]);
         ringDists.forEach(rDist => {
-          ctx.strokeStyle = 'rgba(244, 63, 94, 0.28)';
+          ctx.strokeStyle = 'rgba(244, 63, 94, 0.16)';
+          ctx.lineWidth = 6;
+          ctx.beginPath();
+          ctx.arc(player.x, player.y, rDist, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([10, 6]);
+          ctx.strokeStyle = 'rgba(251, 113, 133, 0.42)';
           ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.arc(player.x, player.y, rDist, 0, Math.PI * 2);
           ctx.stroke();
+          ctx.setLineDash([]);
         });
-        ctx.setLineDash([]);
         ctx.restore();
       }
       for (let i = 0; i < orbitingBlades.length; i++) {
         const blade = orbitingBlades[i];
         const bx = player.x + Math.cos(blade.angle) * blade.dist;
         const by = player.y + Math.sin(blade.angle) * blade.dist;
-        // 旋转刀风拖尾弧
-        ctx.strokeStyle = blade.isEvolved ? 'rgba(249, 115, 22, 0.55)' : 'rgba(244, 63, 94, 0.45)';
-        ctx.lineWidth = 6;
+        // 双层旋转刀风拖尾弧
+        ctx.strokeStyle = blade.isEvolved ? 'rgba(249, 115, 22, 0.58)' : 'rgba(244, 63, 94, 0.5)';
+        ctx.lineWidth = 8;
         ctx.beginPath();
-        ctx.arc(player.x, player.y, blade.dist, blade.angle - 0.75, blade.angle);
+        ctx.arc(player.x, player.y, blade.dist, blade.angle - 0.85, blade.angle);
+        ctx.stroke();
+        ctx.strokeStyle = blade.isEvolved ? '#fde047' : '#fda4af';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, blade.dist, blade.angle - 0.55, blade.angle);
         ctx.stroke();
 
         ctx.save();
         ctx.translate(bx, by);
         ctx.rotate(blade.angle + Math.PI / 2);
         ctx.fillStyle = blade.isEvolved ? '#f97316' : '#f43f5e';
-        ctx.fillRect(-18, -5, 36, 10);
-        ctx.fillStyle = '#f8fafc';
-        ctx.fillRect(-16, -2, 32, 4);
+        ctx.beginPath();
+        ctx.moveTo(22, 0); ctx.lineTo(-16, -6); ctx.lineTo(-20, 0); ctx.lineTo(-16, 6);
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(-14, -2, 30, 4);
         ctx.fillStyle = '#fde047';
-        ctx.fillRect(-5, -10, 10, 20);
+        ctx.fillRect(-6, -11, 8, 22);
         ctx.restore();
       }
 
@@ -7978,12 +8034,17 @@
           // 地面落点接取光圈
           const ringPulse = 1 + Math.sin(performance.now() * 0.012) * 0.1;
           ctx.translate(bm.catchX, bm.catchY);
-          ctx.fillStyle = bm.isEvolved ? 'rgba(250, 204, 21, 0.18)' : 'rgba(16, 185, 129, 0.18)';
+          ctx.fillStyle = bm.isEvolved ? 'rgba(250, 204, 21, 0.22)' : 'rgba(16, 185, 129, 0.22)';
           ctx.beginPath();
           ctx.arc(0, 0, 26 * ringPulse, 0, Math.PI * 2);
           ctx.fill();
           ctx.strokeStyle = bm.isEvolved ? '#fde047' : '#34d399';
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 2.2;
+          ctx.stroke();
+          ctx.strokeStyle = '#ecfdf5';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.arc(0, 0, 18 * ringPulse, 0, Math.PI * 2);
           ctx.stroke();
           ctx.fillStyle = bm.isEvolved ? '#fde047' : '#6ee7b7';
           ctx.font = 'bold 9px sans-serif';
@@ -7994,13 +8055,18 @@
 
         ctx.save();
         ctx.translate(bm.x, bm.y);
-        ctx.strokeStyle = bm.isEvolved ? 'rgba(250, 204, 21, 0.7)' : 'rgba(52, 211, 153, 0.55)';
-        ctx.lineWidth = 3;
+        ctx.strokeStyle = bm.isEvolved ? 'rgba(250, 204, 21, 0.78)' : 'rgba(52, 211, 153, 0.65)';
+        ctx.lineWidth = 3.5;
         ctx.beginPath();
-        ctx.arc(0, 0, bm.radius + 3, 0, Math.PI * 2);
+        ctx.arc(0, 0, bm.radius + 4, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.arc(0, 0, bm.radius, 0, Math.PI * 2);
         ctx.stroke();
         ctx.rotate(bm.spinAngle);
-        const armLen = bm.isEvolved ? 24 : 18;
+        const armLen = bm.isEvolved ? 25 : 19;
         ctx.fillStyle = bm.isEvolved ? '#f59e0b' : '#10b981';
         ctx.fillRect(-armLen, -4, armLen * 2, 8);
         ctx.fillRect(-4, -armLen, 8, armLen * 2);
@@ -8008,7 +8074,9 @@
         ctx.fillRect(-(armLen - 4), -2, (armLen - 4) * 2, 4);
         ctx.fillRect(-2, -(armLen - 4), 4, (armLen - 4) * 2);
         ctx.fillStyle = '#fde047';
-        ctx.fillRect(-4, -4, 8, 8);
+        ctx.beginPath();
+        ctx.arc(0, 0, 5, 0, Math.PI * 2);
+        ctx.fill();
         ctx.restore();
       }
 
@@ -8055,24 +8123,34 @@
           ctx.fillStyle='#1e293b';ctx.fillRect(-14,-5,28,10);ctx.fillStyle=p.color;
           if(p.isGrenade){ctx.fillRect(-10,-7,20,14);ctx.fillStyle='#94a3b8';ctx.fillRect(-12,-11,8,4);ctx.fillRect(-12,7,8,4);ctx.fillStyle='#fff7ae';ctx.fillRect(-4,-5,7,10);}else{ctx.fillRect(-13,-3,24,6);ctx.fillStyle='#fff7ae';ctx.fillRect(7,-5,7,10);ctx.fillStyle='#94a3b8';ctx.fillRect(-14,-5,4,10);}
         }else if (p.applyBleed) {
-          // 剑客：多层新月弯刀剑气波
-          ctx.strokeStyle = p.color;
-          ctx.lineWidth = 6;
+          // 剑客：三层新月弯刀剑气波 + 炽白刀芒核
+          ctx.strokeStyle = 'rgba(244, 63, 94, 0.35)';
+          ctx.lineWidth = 10;
           ctx.beginPath();
-          ctx.arc(-6, 0, p.radius * 1.15, -Math.PI * 0.42, Math.PI * 0.42);
+          ctx.arc(-7, 0, p.radius * 1.22, -Math.PI * 0.46, Math.PI * 0.46);
+          ctx.stroke();
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = 5.5;
+          ctx.beginPath();
+          ctx.arc(-5, 0, p.radius * 1.16, -Math.PI * 0.42, Math.PI * 0.42);
           ctx.stroke();
           ctx.strokeStyle = '#ffffff';
           ctx.lineWidth = 2.5;
           ctx.beginPath();
-          ctx.arc(-4, 0, p.radius * 1.15, -Math.PI * 0.35, Math.PI * 0.35);
+          ctx.arc(-3, 0, p.radius * 1.12, -Math.PI * 0.35, Math.PI * 0.35);
           ctx.stroke();
         } else if (p.isArcaneChain) {
-          // 法师：八芒星晶奥术法球 + 径向辉光晕 + 环绕双星屑
-          const r = p.radius * 1.25;
-          ctx.fillStyle = p.isFreeze ? 'rgba(56, 189, 248, 0.32)' : 'rgba(168, 85, 247, 0.32)';
+          // 法师：八芒星晶奥术法球 + 径向辉光环 + 环绕双星轨
+          const r = p.radius * 1.28;
+          ctx.fillStyle = p.isFreeze ? 'rgba(56, 189, 248, 0.34)' : 'rgba(168, 85, 247, 0.34)';
           ctx.beginPath();
-          ctx.arc(0, 0, r * 1.35, 0, Math.PI * 2);
+          ctx.arc(0, 0, r * 1.45, 0, Math.PI * 2);
           ctx.fill();
+          ctx.strokeStyle = p.isFreeze ? '#bae6fd' : '#e9d5ff';
+          ctx.lineWidth = 1.4;
+          ctx.beginPath();
+          ctx.arc(0, 0, r * 1.15, 0, Math.PI * 2);
+          ctx.stroke();
           ctx.rotate(GameState.gameTime * 16);
           ctx.fillStyle = p.color;
           for (let k = 0; k < 2; k++) {
@@ -8082,18 +8160,20 @@
           }
           ctx.fillStyle = '#ffffff';
           ctx.beginPath();
-          ctx.arc(0, 0, r * 0.45, 0, Math.PI * 2);
+          ctx.arc(0, 0, r * 0.48, 0, Math.PI * 2);
           ctx.fill();
         } else if (p.applyPoison) {
-          // 游侠：带铁簇箭头与翠绿尾羽的利箭
+          // 游侠：带翠绿疾风气旋与锋簇的破甲毒箭
+          ctx.fillStyle = 'rgba(16, 185, 129, 0.28)';
+          ctx.fillRect(-22, -4, 30, 8);
           ctx.fillStyle = p.color;
-          ctx.fillRect(-14, -2, 24, 4);
+          ctx.fillRect(-15, -2.2, 26, 4.4);
           ctx.fillStyle = '#f8fafc';
           ctx.beginPath();
-          ctx.moveTo(14, 0); ctx.lineTo(6, -5); ctx.lineTo(6, 5);
+          ctx.moveTo(16, 0); ctx.lineTo(6, -5.5); ctx.lineTo(8, 0); ctx.lineTo(6, 5.5);
           ctx.closePath(); ctx.fill();
           ctx.fillStyle = '#fde047';
-          ctx.fillRect(-16, -4, 6, 8);
+          ctx.fillRect(-17, -4.5, 6, 9);
         } else {
           // 敌方邪火球或冰锥
           ctx.fillStyle = p.color;
@@ -8139,7 +8219,7 @@
     }
 
     function drawNativeSlashes(ctx, slashVisuals) {
-      // 绘制三层复合动态刀光弧线 (外层烈焰光晕 + 中层主刃 + 内层炽白剑锋)
+      // 绘制四层复合动态刀光弧线 (外层烈焰流光晕 + 副弧残影 + 主刃 + 炽白剑锋 + 剑气龙骨)
       for (let i = 0; i < slashVisuals.length; i++) {
         const s = slashVisuals[i];
         const progress = 1 - (s.life / s.maxLife);
@@ -8152,25 +8232,32 @@
         ctx.rotate(s.angle);
         ctx.globalAlpha = alpha;
 
+        // 内圈气浪薄环
+        ctx.strokeStyle = s.color;
+        ctx.lineWidth = (s.isFinisher ? 5 : 3) * alpha;
+        ctx.beginPath();
+        ctx.arc(0, 0, curRad * 0.72, -arcSpan * 0.38, arcSpan * 0.38);
+        ctx.stroke();
+
         // 第一层：宽幅彩色剑气外晕
         ctx.strokeStyle = s.color;
-        ctx.lineWidth = (s.isFinisher ? 20 : 12) * alpha;
+        ctx.lineWidth = (s.isFinisher ? 22 : 14) * alpha;
         ctx.beginPath();
         ctx.arc(0, 0, curRad, -arcSpan / 2, arcSpan / 2);
         ctx.stroke();
 
         // 第二层：高亮剑刃中层
         ctx.strokeStyle = s.isFinisher ? '#fde047' : '#93c5fd';
-        ctx.lineWidth = (s.isFinisher ? 10 : 6) * alpha;
+        ctx.lineWidth = (s.isFinisher ? 11 : 6.5) * alpha;
         ctx.beginPath();
-        ctx.arc(0, 0, curRad + 2, -arcSpan * 0.44, arcSpan * 0.44);
+        ctx.arc(0, 0, curRad + 2, -arcSpan * 0.45, arcSpan * 0.45);
         ctx.stroke();
 
         // 第三层：炽白剑芯亮线
         ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth = 2.8;
         ctx.beginPath();
-        ctx.arc(0, 0, curRad + 4, -arcSpan * 0.36, arcSpan * 0.36);
+        ctx.arc(0, 0, curRad + 4, -arcSpan * 0.38, arcSpan * 0.38);
         ctx.stroke();
 
         // 第四层：剑气龙骨放射棱线与刀锋飞溅星火残粒
@@ -8178,13 +8265,15 @@
         for (let rIdx = 0; rIdx < ribs; rIdx++) {
           const rAng = -arcSpan * 0.42 + (arcSpan * 0.84) * (rIdx / (ribs - 1));
           ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 1.5 * alpha;
+          ctx.lineWidth = 1.6 * alpha;
           ctx.beginPath();
-          ctx.moveTo(Math.cos(rAng) * (curRad - 10), Math.sin(rAng) * (curRad - 10));
-          ctx.lineTo(Math.cos(rAng) * (curRad + 8), Math.sin(rAng) * (curRad + 8));
+          ctx.moveTo(Math.cos(rAng) * (curRad - 12), Math.sin(rAng) * (curRad - 12));
+          ctx.lineTo(Math.cos(rAng) * (curRad + 10), Math.sin(rAng) * (curRad + 10));
           ctx.stroke();
           ctx.fillStyle = '#fde047';
-          ctx.fillRect(Math.cos(rAng) * (curRad + 10) - 2, Math.sin(rAng) * (curRad + 10) - 2, 4, 4);
+          ctx.beginPath();
+          ctx.arc(Math.cos(rAng) * (curRad + 11), Math.sin(rAng) * (curRad + 11), 2.4, 0, Math.PI * 2);
+          ctx.fill();
         }
 
         ctx.restore();
@@ -8210,19 +8299,41 @@
         else if(sb.type?.startsWith('necro_')){NecroKit.drawFx(ctx,sb,ratio);}
         else if(sb.type?.startsWith('forge_')){EngineerKit.drawBeam(ctx,sb,ratio);}
         else if (sb.type === 'sword_pillar') {
-          // 断界天陨斩：贯穿天地的黄金巨剑光柱
+          // 断界天陨斩：贯穿天地的黄金巨剑光柱 + 圆环剑阵底座
           const w = sb.width * ratio;
-          ctx.fillStyle = 'rgba(250, 204, 21, 0.38)';
-          ctx.fillRect(sb.x - w, sb.y - 420, w * 2, 430);
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(sb.x - w * 0.35, sb.y - 420, w * 0.7, 430);
-          // 地面十字星芒裂痕
-          ctx.strokeStyle = '#fde047';
-          ctx.lineWidth = 3.5;
+          const bRad = Math.max(38, sb.width * 1.15);
+          ctx.save();
+          ctx.translate(sb.x, sb.y);
+          ctx.fillStyle = 'rgba(250, 204, 21, 0.22)';
           ctx.beginPath();
-          ctx.moveTo(sb.x - 48, sb.y); ctx.lineTo(sb.x + 48, sb.y);
-          ctx.moveTo(sb.x, sb.y - 24); ctx.lineTo(sb.x, sb.y + 24);
+          ctx.arc(0, 0, bRad, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#fde047';
+          ctx.lineWidth = 2.4 * ratio;
+          ctx.beginPath();
+          ctx.arc(0, 0, bRad * (0.65 + (1 - ratio) * 0.35), 0, Math.PI * 2);
           ctx.stroke();
+          ctx.strokeStyle = '#fb923c';
+          ctx.lineWidth = 1.6 * ratio;
+          ctx.beginPath();
+          ctx.arc(0, 0, bRad * 0.52, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.fillStyle = 'rgba(250, 204, 21, 0.38)';
+          ctx.fillRect(-w, -420, w * 2, 430);
+          ctx.fillStyle = '#fde047';
+          ctx.fillRect(-w * 0.62, -420, w * 1.24, 430);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(-w * 0.32, -420, w * 0.64, 430);
+          // 剑锷与地面八芒十字星裂痕
+          ctx.fillStyle = '#f59e0b';
+          ctx.fillRect(-w * 1.45, -85, w * 2.9, 8);
+          ctx.strokeStyle = '#fef08a';
+          ctx.lineWidth = 3.2;
+          ctx.beginPath();
+          ctx.moveTo(-54, 0); ctx.lineTo(54, 0);
+          ctx.moveTo(0, -32); ctx.lineTo(0, 32);
+          ctx.stroke();
+          ctx.restore();
         } else if (sb.type === 'frost_nova_matrix') {
           // 法师【极寒冰闪】专属特效：双层旋转六芒星冰晶法阵 + 6根突起冰川棱柱！
           ctx.translate(sb.x, sb.y);
@@ -8305,54 +8416,84 @@
             ctx.stroke();
           }
         } else if (sb.type === 'meteor') {
-          // 群星坠落：地面预瞄星芒法阵 + 三层等离子慧尾陨星
+          // 群星坠落：地面预瞄双环星轨法阵 + 三层等离子彗尾陨星
           const p = 1 - ratio;
           const curX = sb.startX + (sb.x - sb.startX) * p;
           const curY = sb.startY + (sb.y - sb.startY) * p;
-          // 地面落点锁定星芒阵
+          // 地面落点锁定星芒圆阵
           ctx.save();
           ctx.translate(sb.x, sb.y);
-          ctx.strokeStyle = sb.color || '#38bdf8';
-          ctx.lineWidth = 1.8;
+          const mRad = sb.radius * (0.45 + 0.45 * p);
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.14)';
           ctx.beginPath();
-          ctx.arc(0, 0, sb.radius * 0.55 * p, 0, Math.PI * 2);
+          ctx.arc(0, 0, mRad, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = sb.color || '#38bdf8';
+          ctx.lineWidth = 2.2;
+          ctx.beginPath();
+          ctx.arc(0, 0, mRad, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.strokeStyle = '#c084fc';
+          ctx.lineWidth = 1.4;
+          ctx.beginPath();
+          ctx.arc(0, 0, mRad * 0.65, 0, Math.PI * 2);
           ctx.stroke();
           ctx.restore();
           // 彗星三层等离子拖尾
           ctx.strokeStyle = 'rgba(192, 132, 252, 0.55)';
-          ctx.lineWidth = 18 * ratio;
+          ctx.lineWidth = 20 * ratio;
           ctx.beginPath();
           ctx.moveTo(sb.startX, sb.startY);
           ctx.lineTo(curX, curY);
           ctx.stroke();
           ctx.strokeStyle = sb.color || '#38bdf8';
-          ctx.lineWidth = 10 * ratio;
+          ctx.lineWidth = 11 * ratio;
           ctx.stroke();
+          ctx.fillStyle = '#e0f2fe';
+          ctx.beginPath();
+          ctx.arc(curX, curY, 17, 0, Math.PI * 2);
+          ctx.fill();
           ctx.fillStyle = '#ffffff';
           ctx.beginPath();
-          ctx.arc(curX, curY, 15, 0, Math.PI * 2);
+          ctx.arc(curX, curY, 10, 0, Math.PI * 2);
           ctx.fill();
         } else if (sb.type === 'cross_slash') {
-          // 居合次元十字斩：X型空间斩裂线
+          // 居合次元十字斩：圆环剑域 + X型空间斩裂线
           ctx.translate(sb.x, sb.y);
+          ctx.strokeStyle = 'rgba(244, 63, 94, 0.48)';
+          ctx.lineWidth = 2.5 * ratio;
+          ctx.beginPath();
+          ctx.arc(0, 0, sb.radius * 0.78, 0, Math.PI * 2);
+          ctx.stroke();
           ctx.strokeStyle = '#ef4444';
-          ctx.lineWidth = 9 * ratio;
+          ctx.lineWidth = 10 * ratio;
           ctx.beginPath();
           ctx.moveTo(-sb.radius, -sb.radius * 0.6); ctx.lineTo(sb.radius, sb.radius * 0.6);
           ctx.moveTo(-sb.radius, sb.radius * 0.6);  ctx.lineTo(sb.radius, -sb.radius * 0.6);
           ctx.stroke();
+          ctx.strokeStyle = '#fde047';
+          ctx.lineWidth = 5 * ratio;
+          ctx.stroke();
           ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 3 * ratio;
+          ctx.lineWidth = 2.5 * ratio;
           ctx.stroke();
         } else if (sb.type === 'laser_beam') {
-          // 星界超新星贯穿炮：双层粗大激光束
-          ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
-          ctx.lineWidth = sb.width * ratio;
+          // 星界超新星贯穿炮：三层等离子星轨激光束 + 发射端聚焦环
+          ctx.strokeStyle = 'rgba(168, 85, 247, 0.36)';
+          ctx.lineWidth = sb.width * 1.35 * ratio;
           ctx.beginPath();
           ctx.moveTo(sb.x1, sb.y1); ctx.lineTo(sb.x2, sb.y2);
           ctx.stroke();
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.72)';
+          ctx.lineWidth = sb.width * ratio;
+          ctx.stroke();
           ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = sb.width * 0.35 * ratio;
+          ctx.lineWidth = sb.width * 0.38 * ratio;
+          ctx.stroke();
+          ctx.strokeStyle = '#bae6fd';
+          ctx.lineWidth = 2.2 * ratio;
+          ctx.beginPath();
+          ctx.arc(sb.x1, sb.y1, sb.width * 0.65 * ratio, 0, Math.PI * 2);
           ctx.stroke();
         } else if (sb.type === 'death_slash') {
           // 怪物被斩杀时的凌厉一闪亮线
@@ -10664,6 +10805,15 @@
         const ang = Math.random() * Math.PI * 2;
         const spd = 45 + Math.random() * 150;
         particles.push({ x, y, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd, size: 3, color, life: 0.35, maxLife: 0.35 });
+      }
+    }
+
+    function createParticles(x, y, count = 6, color = '#ffffff', maxSpd = 110, life = 0.28) {
+      const allowed = Math.min(count, MAX_PARTICLES - particles.length);
+      for (let i = 0; i < allowed; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const spd = (0.35 + Math.random() * 0.65) * maxSpd;
+        particles.push({ x, y, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd, size: 3, color, life, maxLife: life });
       }
     }
 
@@ -16889,29 +17039,55 @@
       grades(victory){const rows=[...this.rows.values()];const maxima={};for(const k of ['damage','healing','shielding','kills','rescues'])maxima[k]=Math.max(1,...rows.map(r=>r[k]));const rated=rows.map(r=>{const role=r.hero==='healer';const contribution=(role?.22:.48)*r.damage/maxima.damage+(role?.32:.10)*r.healing/maxima.healing+(role?.15:.07)*r.shielding/maxima.shielding+.13*r.kills/maxima.kills+.18*r.rescues/maxima.rescues;const score=Math.min(99,Math.round((victory?55:Math.min(40,GameState.gameTime/45))+contribution*40+Math.min(8,r.seconds/180)-Math.min(18,r.downs*4)));const grade=score>=90?'S':score>=83?'S-':score>=77?'A+':score>=70?'A':score>=63?'A-':score>=55?'B+':score>=47?'B':score>=39?'B-':'C';return{...r,score,grade,contribution};}).sort((a,b)=>b.score-a.score||b.contribution-a.contribution||b.damage-a.damage||a.id.localeCompare(b.id));if(victory&&rated.length)rated[0].grade='S+';return rated;},
       beginEnd(victory){if(!this.ended){this.ended={victory,settled:false,at:Date.now(),rows:[]};const ending=this.ended;setTimeout(()=>{if(this.ended===ending)this.networkTick();},1850);}if(WorldCoop.authority())this.ended.rows=this.grades(victory);this.renderEnd();},
       renderEnd(){if(this.ended){for(const id of ['btn-over-lobby','btn-restart'])document.getElementById(id).disabled=!this.ended.settled;document.getElementById('over-healing').textContent=Math.round(this.rows.get(CoopManager.myPeerId)?.healing||0).toLocaleString();}const el=document.getElementById('run-report');if(!el||!this.ended)return;el.innerHTML='<div class="campaign-note">'+(this.ended.settled?'本局评定 · 治疗计有效恢复，护盾计实际新增':'战局统计汇总中…')+' · S+仅通关且全队唯一</div><div class="campaign-scroll" tabindex="0" role="region" aria-label="战局评分，左右滑动查看全部数据"><table><thead><tr><th>猎手 / 评分</th><th>伤害</th><th>治疗</th><th>护盾</th><th>击杀 / 救援</th></tr></thead><tbody>'+this.ended.rows.map(r=>'<tr><td><b class="rank-label">'+r.grade+'</b> '+this.esc(r.name)+(r.id===CoopManager.myPeerId?'（你）':'')+'</td><td>'+Math.round(r.damage).toLocaleString()+'</td><td>'+Math.round(r.healing).toLocaleString()+'</td><td>'+Math.round(r.shielding).toLocaleString()+'</td><td>'+r.kills+' / '+r.rescues+'</td></tr>').join('')+'</tbody></table></div><div class="report-scroll-hint">左右滑动查看完整战绩</div>';},
-      syncPermanent(){if(!this.round)return;const p=this.permanent(),r=this.rows.get(CoopManager.myPeerId);if(!r)return;const round=p.rounds[this.round]||(p.rounds[this.round]={values:{},started:true});for(const k of ['damage','healing','shielding','kills','rescues','downs','bosses','purchases','hires','removals']){const value=Math.floor(r[k]||0),old=round.values[k]||0;if(value>old){p.counters[k]=(p.counters[k]||0)+value-old;round.values[k]=value;}}p.heroes[r.hero]=true;p.counters.maxLevel=Math.max(p.counters.maxLevel||0,player.level);p.counters.survival=Math.max(p.counters.survival||0,GameState.gameTime);p.counters.awakened=Math.max(p.counters.awakened||0,Object.values(player.skills).filter(s=>s.isEvolved).length);p.counters.maxed=Math.max(p.counters.maxed||0,Object.values(player.skills).filter(s=>s.level>=5).length);p.counters.relics=Math.max(p.counters.relics||0,player.mapRelics.length);for(const id of this.bosses)p.bosses[id]=true;for(const e of enemies)if(!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<500)p.seen[e.type]=true;
+      syncPermanent(){if(!this.round)return;const p=this.permanent(),r=this.rows.get(CoopManager.myPeerId);if(!r)return;const round=p.rounds[this.round]||(p.rounds[this.round]={values:{},started:true});for(const k of ['damage','healing','shielding','kills','rescues','downs','bosses','purchases','hires','removals']){const value=Math.floor(r[k]||0),old=round.values[k]||0;if(value>old){p.counters[k]=(p.counters[k]||0)+value-old;round.values[k]=value;}}p.heroes[r.hero]=true;p.counters.maxLevel=Math.max(p.counters.maxLevel||0,player.level);p.counters.survival=Math.max(p.counters.survival||0,GameState.gameTime);p.counters.awakened=Math.max(p.counters.awakened||0,Object.values(player.skills).filter(s=>s.isEvolved).length);p.counters.maxed=Math.max(p.counters.maxed||0,Object.values(player.skills).filter(s=>s.level>=5).length);p.counters.relics=Math.max(p.counters.relics||0,player.mapRelics.length);p.counters.synergies=Math.max(p.counters.synergies||0,SYNERGY_KEYS.filter(k=>(player.passives?.[k]||0)>0).length);p.counters.limitBreaks=Math.max(p.counters.limitBreaks||0,Object.values(player.skills).reduce((n,s)=>n+(s.limitBreak||0),0)+Object.values(player.passives?.equipLB||{}).reduce((n,v)=>n+(v||0),0));p.counters.curseLevel=Math.max(p.counters.curseLevel||0,GameState.curseLevel||0);for(const id of this.bosses)p.bosses[id]=true;for(const e of enemies)if(!e.isDead&&Math.hypot(e.x-player.x,e.y-player.y)<500)p.seen[e.type]=true;
         if(this.ended?.settled&&!round.finished){round.finished=true;p.counters.runs=(p.counters.runs||0)+1;if(this.rows.size>1)p.counters.coop=(p.counters.coop||0)+1;if(this.ended.victory){p.counters.wins=(p.counters.wins||0)+1;p.wins[r.hero]=true;}if(this.ended.rows.find(x=>x.id===r.id)?.grade==='S+')p.counters.splus=(p.counters.splus||0)+1;}
         const keys=Object.keys(p.rounds);while(keys.length>40)delete p.rounds[keys.shift()];this.awardAchievements();SaveManager.save();},
-      achievements(){const list=[],steps={},titles={"kills": ["试用期见红", "夜班开始了", "这片归我清洁", "地狱裁员办"], "damage": ["话疗无效", "武力催收", "伤害转账已到账"], "healing": ["还有抢救价值", "医保之外的温柔", "阎王退单专家"], "shielding": ["临时安全感", "本盾不保售后", "死神请取号"], "rescues": ["躺得还不够久", "地板很凉的", "反复上岗人员"], "uniqueBosses": ["管理层初见", "领导挨个谈", "组织架构已清空"], "wins": ["熬到天亮算工伤吗", "熟练夜班工", "破晓钉子户"], "survival": ["还没到下班点", "夜色欠我加班费", "太阳终于打卡了"], "maxLevel": ["略懂一点自救", "专业送终人员", "简历写不下了"], "purchases": ["先花钱再谈命", "钱包比命薄", "商人的好朋友"]};const add=(id,name,key,target,reward,desc)=>{const i=steps[key]||0;steps[key]=i+1;list.push({id,name:titles[key]?.[i]||name,key,target,reward,desc:desc||name});};
-        for(const [v,g]of [[1,20],[100,40],[1000,100],[10000,300]])add('kill'+v,'讨伐 '+v+' 只魔物','kills',v,g);
-        for(const [v,g]of [[10000,40],[100000,100],[1000000,250]])add('damage'+v,'累计伤害 '+v.toLocaleString(),'damage',v,g);
-        for(const [v,g]of [[100,40],[1000,100],[10000,300]])add('heal'+v,'有效治疗 '+v.toLocaleString(),'healing',v,g);
-        for(const [v,g]of [[100,40],[1000,100],[5000,200]])add('shield'+v,'新增护盾 '+v.toLocaleString(),'shielding',v,g);
-        for(const [v,g]of [[1,50],[5,100],[20,250]])add('rescue'+v,'救起队友 '+v+' 次','rescues',v,g);
-        for(const [v,g]of [[1,80],[5,150],[18,400]])add('boss'+v,'解锁 '+v+' 位首领','uniqueBosses',v,g);
-        for(const [v,g]of [[1,100],[3,200],[10,500]])add('win'+v,'破晓凯旋 '+v+' 次','wins',v,g);
-        for(const [v,g]of [[5,40],[15,80],[30,150]])add('survive'+v,'坚持 '+v+' 分钟','survival',v*60,g);
-        for(const [v,g]of [[10,30],[30,80],[50,150]])add('level'+v,'达到 Lv.'+v,'maxLevel',v,g);
-        for(const [v,g]of [[1,40],[5,80],[10,150]])add('buy'+v,'商人交易 '+v+' 次','purchases',v,g);
-        add('hire1','打不过就发工资','hires',1,100);add('hire3','前领导再就业','hires',3,200);add('remove1','花钱买个后悔药','removals',1,60);add('coop1','总算有人收尸','coop',1,60);add('coop10','固定夜班搭子','coop',10,180);add('heroes5','五份高危兼职','uniqueHeroes',5,150);add('wins5','换谁都得上夜班','heroWins',5,500);add('awaken1','困意突然没了','awakened',1,60);add('awaken4','失眠的四个阶段','awakened',4,180);add('maxed5','学历终于够用了','maxed',5,200);add('relic2','捡来的才最贵','relics',2,80);add('splus1','全队唯一绩效A','splus',1,250);return list;},
-      progress(a){const p=this.permanent();return a.key==='uniqueBosses'?Object.keys(p.bosses).length:a.key==='uniqueHeroes'?Object.keys(p.heroes).length:a.key==='heroWins'?Object.keys(p.wins).length:p.counters[a.key]||0;},
+      achievements(){const list=[],steps={},titles={
+        "kills": ["试用期见红", "夜班开始了", "街区清道夫", "这片归我清洁", "尸山打卡机", "亡灵人口普查", "地狱裁员办", "深渊拆迁队长", "暗夜清场专家", "万魔静默之夜"],
+        "damage": ["话疗无效", "先礼后兵", "武力催收", "物理说服教育", "伤害转账已到账", "超额账单清算", "毁灭级绩效", "天灾级输出"],
+        "healing": ["还有抢救价值", "止血贴批发", "医保之外的温柔", "战地急诊科主任", "阎王退单专家", "生命流水线", "不死圣咏"],
+        "shielding": ["临时安全感", "加厚防撞条", "本盾不保售后", "全天候防暴层", "死神请取号", "叹息之墙", "绝对圣域壁垒"],
+        "rescues": ["躺得还不够久", "拉一把算工时", "地板很凉的", "急诊担架工", "反复上岗人员", "不许躺平督导"],
+        "uniqueBosses": ["管理层初见", "部门主管约谈", "领导挨个谈", "高管名单划掉一半", "董事会大换血", "组织架构已清空", "全图首领全勤奖"],
+        "wins": ["熬到天亮算工伤吗", "熟练夜班工", "晨光打卡常客", "破晓钉子户", "暗夜终身荣誉员工", "血月满勤传奇", "永夜破晓统治者"],
+        "survival": ["还没到下班点", "先撑过上半夜", "夜色欠我加班费", "凌晨三点还精神", "快见着早班太阳了", "太阳终于打卡了", "通宵连轴转神话"],
+        "maxLevel": ["略懂一点自救", "正式转正猎手", "专业送终人员", "暗夜高阶顾问", "简历写不下了", "战力溢出天花板", "半神级夜班主任"],
+        "purchases": ["先花钱再谈命", "雾中常客", "钱包比命薄", "商人的好朋友", "黑市VIP金卡", "把商队买空的人"]
+      };const add=(id,name,key,target,reward,desc)=>{const i=steps[key]||0;steps[key]=i+1;list.push({id,name:titles[key]?.[i]||name,key,target,reward,desc:desc||name});};
+        for(const [v,g]of [[1,20],[100,40],[500,70],[1000,100],[2500,180],[5000,260],[10000,300],[25000,500],[50000,800],[100000,1500]])add('kill'+v,'讨伐 '+v+' 只魔物','kills',v,g);
+        for(const [v,g]of [[10000,40],[50000,70],[100000,100],[500000,180],[1000000,250],[5000000,450],[15000000,800],[50000000,1600]])add('damage'+v,'累计伤害 '+v.toLocaleString(),'damage',v,g);
+        for(const [v,g]of [[100,40],[500,70],[1000,100],[3000,180],[10000,300],[30000,600],[100000,1200]])add('heal'+v,'有效治疗 '+v.toLocaleString(),'healing',v,g);
+        for(const [v,g]of [[100,40],[500,70],[1000,100],[2500,150],[5000,200],[15000,450],[50000,900]])add('shield'+v,'新增护盾 '+v.toLocaleString(),'shielding',v,g);
+        for(const [v,g]of [[1,50],[3,80],[5,100],[10,160],[20,250],[50,500]])add('rescue'+v,'救起队友 '+v+' 次','rescues',v,g);
+        for(const [v,g]of [[1,80],[3,110],[5,150],[10,240],[15,320],[18,400],[24,700]])add('boss'+v,'解锁 '+v+' 位首领','uniqueBosses',v,g);
+        for(const [v,g]of [[1,100],[3,200],[5,320],[10,500],[20,800],[35,1200],[50,2000]])add('win'+v,'破晓凯旋 '+v+' 次','wins',v,g);
+        for(const [v,g]of [[5,40],[10,60],[15,80],[20,110],[25,130],[30,150],[45,350]])add('survive'+v,'坚持 '+v+' 分钟','survival',v*60,g);
+        for(const [v,g]of [[10,30],[20,55],[30,80],[40,115],[50,150],[65,260],[80,450]])add('level'+v,'达到 Lv.'+v,'maxLevel',v,g);
+        for(const [v,g]of [[1,40],[3,60],[5,80],[10,150],[25,300],[50,600]])add('buy'+v,'商人交易 '+v+' 次','purchases',v,g);
+        add('hire1','打不过就发工资','hires',1,100);add('hire3','前领导再就业','hires',3,200);add('hire6','首领外包团队','hires',6,350);add('hire12','豪华高管保安团','hires',12,600);
+        add('remove1','花钱买个后悔药','removals',1,60);add('remove3','及时止损大师','removals',3,120);add('remove8','断舍离重度患者','removals',8,240);
+        add('coop1','总算有人收尸','coop',1,60);add('coop5','夜班互助小组','coop',5,120);add('coop10','固定夜班搭子','coop',10,180);add('coop25','生死合伙人','coop',25,380);
+        add('heroes3','三班倒轮岗','uniqueHeroes',3,90);add('heroes5','五份高危兼职','uniqueHeroes',5,150);add('heroes7','七十二行幸存者','uniqueHeroes',7,240);add('heroes9','全职业满编上岗','uniqueHeroes',9,400);
+        add('wins3','三栖破晓猎手','heroWins',3,300);add('wins5','换谁都得上夜班','heroWins',5,500);add('wins7','七冠破晓宗师','heroWins',7,800);add('wins9','九职全制霸传奇','heroWins',9,1500);
+        add('awaken1','困意突然没了','awakened',1,60);add('awaken2','双倍精神抖擞','awakened',2,110);add('awaken3','三核超武共鸣','awakened',3,150);add('awaken4','失眠的四个阶段','awakened',4,180);
+        add('maxed3','三门功课满分','maxed',3,120);add('maxed5','学历终于够用了','maxed',5,200);add('maxed6','六边形满级战士','maxed',6,320);
+        add('relic1','路边捡到传家宝','relics',1,45);add('relic2','捡来的才最贵','relics',2,80);
+        add('splus1','全队唯一绩效A','splus',1,250);add('splus3','连续季度销冠','splus',3,450);add('splus10','王牌首席猎手','splus',10,900);add('splus25','不可超越的S+神话','splus',25,1800);
+        add('runs3','三天打鱼还在岗','runs',3,50);add('runs10','十次出征老油条','runs',10,120);add('runs25','二十五夜老兵','runs',25,260);add('runs50','五十场血夜活化石','runs',50,500);
+        add('bosskill5','专挑领导下手','bosses',5,100);add('bosskill15','首领收割专业户','bosses',15,220);add('bosskill30','高管克星','bosses',30,420);add('bosskill60','魔王再见亦是泪','bosses',60,800);
+        add('seen5','魔物生态观察员','monstersSeen',5,60);add('seen12','暗夜博物学者','monstersSeen',12,130);add('seen20','怪物图鉴编纂人','monstersSeen',20,240);add('seen30','全魔物百科全书','monstersSeen',30,480);
+        add('synergy2','流派初成','synergies',2,70);add('synergy4','四象流派交汇','synergies',4,150);add('synergy6','万法归宗大师','synergies',6,300);
+        add('lb1','初次极限突破','limitBreaks',1,90);add('lb3','三阶破限潜能','limitBreaks',3,180);add('lb6','六重极限解放','limitBreaks',6,360);add('lb10','十阶破限超越者','limitBreaks',10,700);
+        add('curse1','主动加点难度','curseLevel',1,100);add('curse3','深渊血咒挑战者','curseLevel',3,260);add('curse5','满阶灾厄征服王','curseLevel',5,600);
+        return list;},
+      progress(a){const p=this.permanent();return a.key==='uniqueBosses'?Object.keys(p.bosses).length:a.key==='uniqueHeroes'?Object.keys(p.heroes).length:a.key==='heroWins'?Object.keys(p.wins).length:a.key==='monstersSeen'?Object.keys(p.seen).length:p.counters[a.key]||0;},
       awardAchievements(){const p=this.permanent(),earned=[];let gold=0;for(const a of this.achievements())if(!p.achievements[a.id]&&this.progress(a)>=a.target){p.achievements[a.id]=Date.now();gold+=a.reward;earned.push(a);}if(earned.length){SaveManager.data.gold+=gold;AchievementNotices.enqueue(earned);}},
       bossCatalog(){return Object.entries(BIOME_BOSS_ROSTER).flatMap(([biome,rows])=>Object.entries(rows).map(([minute,cfg])=>({...cfg,id:biome+'_'+minute,biome,minute:Number(minute)})));},
       openBook(tab='heroes'){this.bookPaused=GameState.isPaused;GameState.isPaused=GameState.isStarted&&!GameState.isOver?true:GameState.isPaused;CoopSocial.clearInput();document.getElementById('campaign-modal').style.display='flex';this.renderBook(tab);},
       closeBook(){document.getElementById('campaign-modal').style.display='none';GameState.isPaused=this.bookPaused||false;CombatKeys.focus();},
       achievementInfo(a){const t=a.target.toLocaleString(),methods={
-        kills:'累计亲自击杀'+t+'只魔物。',damage:'累计对魔物造成'+t+'点实际伤害。',healing:'累计恢复'+t+'点有效生命；满血溢出不计。',shielding:'通过祷师支援累计新增'+t+'点护盾。',rescues:'累计成功救起倒地队友'+t+'次。',uniqueBosses:'战胜'+t+'种不同首领；重复击败同一位不增加。',wins:'累计通关'+t+'局战役。',survival:'在一局中坚持'+(a.target/60)+'分钟。',maxLevel:'在一局中达到Lv.'+t+'。',purchases:'在神秘商人处完成'+t+'次交易。',hires:'累计雇佣'+t+'位已解锁首领友军。',removals:'在商人处付费卸下一项技能、流派、装备或秘宝。',coop:'完成'+t+'局多人战役，胜负均可。',uniqueHeroes:'使用任意五种不同角色进入战场。',heroWins:'用任意五种不同角色各通关一次。',awakened:'在一局中同时拥有'+t+'项觉醒技能。',maxed:'在一局中使五项技能达到五级。',relics:'在一局中同时携带两件地图秘宝。',splus:'通关并获得本局唯一的S+评定。'};
-        const icons={kills:'sword',damage:'burst',healing:'heart-green',shielding:'shield',rescues:'rescue',uniqueBosses:'boss',wins:'trophy',survival:'clock',maxLevel:'star',purchases:'shop',hires:'ally',removals:'gear',coop:'ally',uniqueHeroes:'book',heroWins:'trophy',awakened:'star',maxed:'star',relics:'chest',splus:'trophy'};
+        kills:'累计亲自击杀'+t+'只魔物。',damage:'累计对魔物造成'+t+'点实际伤害。',healing:'累计恢复'+t+'点有效生命；满血溢出不计。',shielding:'通过祷师支援累计新增'+t+'点护盾。',rescues:'累计成功救起倒地队友'+t+'次。',uniqueBosses:'战胜'+t+'种不同首领；重复击败同一位不增加。',wins:'累计通关'+t+'局战役。',survival:'在一局中坚持'+(a.target/60)+'分钟。',maxLevel:'在一局中达到Lv.'+t+'。',purchases:'在神秘商人处完成'+t+'次交易。',hires:'累计雇佣'+t+'位已解锁首领友军。',removals:'在商人处累计付费卸下'+t+'项技能、流派、装备或秘宝。',coop:'完成'+t+'局多人战役，胜负均可。',uniqueHeroes:'使用任意'+t+'种不同角色进入战场。',heroWins:'用任意'+t+'种不同角色各通关一次。',awakened:'在一局中同时拥有'+t+'项觉醒技能。',maxed:'在一局中使'+t+'项技能达到五级。',relics:'在一局中同时携带'+t+'件地图秘宝。',splus:'累计'+t+'次通关并获得本局唯一的S+评定。',runs:'累计完成'+t+'局出征结算（胜负均可）。',bosses:'累计亲自参与讨伐'+t+'只首领。',monstersSeen:'在战场上累计遇见并收录'+t+'种不同魔物。',synergies:'在一局中同时激活'+t+'项流派共鸣。',limitBreaks:'在一局中累计完成'+t+'次极限突破。',curseLevel:'在至少'+t+'阶灾厄诅咒难度下进入战场。'};
+        const icons={kills:'sword',damage:'burst',healing:'heart-green',shielding:'shield',rescues:'rescue',uniqueBosses:'boss',wins:'trophy',survival:'clock',maxLevel:'star',purchases:'shop',hires:'ally',removals:'gear',coop:'ally',uniqueHeroes:'book',heroWins:'trophy',awakened:'star',maxed:'star',relics:'chest',splus:'trophy',runs:'clock',bosses:'boss',monstersSeen:'book',synergies:'sparkles',limitBreaks:'diamond-core',curseLevel:'skull'};
         return{method:methods[a.key]||a.name,icon:icons[a.key]||'trophy',progress:a.key==='survival'?(Math.min(a.target,this.progress(a))/60).toFixed(1)+' / '+a.target/60+' 分钟':Math.floor(Math.min(a.target,this.progress(a))).toLocaleString()+' / '+t};},
       heroFlavor:{"warrior": "他相信沟通能解决问题，所以每次都带三把剑。", "mage": "把学费写进了伤害账单，怪物负责分期偿还。", "ranger": "从不空手接飞轮，除非想提早结束职业生涯。", "engineer": "自动化本该减少加班，现在炮台替他一起加班。", "healer": "擅长把人从死亡线上拉回来，顺便让死神白跑一趟。", "necromancer": "招聘启事只有一句：来都来了，死后也算出勤。"},
       monsterFlavor:{"imp": "地狱最便宜的劳动力，福利是一双从不报销的角。", "bat": "夜班巡逻员，靠回声定位寻找下一个倒霉蛋。", "icewolf": "冷脸不代表没热情，它只是把热情留给了你的骨头。", "snow_owl": "眼神很有智慧，行动很像饿了一周。", "zombie": "身体已离职，工作惯性还没批下来。", "crow": "报丧是副业，围观事故才是兴趣。", "hellhound": "双倍的脑袋，双倍的饭量，零倍的服从性。", "fire_skull": "脑子里确实有点火，只是没什么别的。", "archer": "生前没练好准头，死后终于有时间慢慢瞄。", "frost_spider": "织的网很冷，售后服务更冷。", "ghoul": "从不浪费食物，也不太在乎食物的意见。", "skeleton": "骨感是被迫的，精神内耗倒是很扎实。", "mage": "邪术培训包分配，毕业就负责远程劝退旅客。", "succubus": "笑容属于服务态度，爪子属于最终解释权。", "gargoyle": "本来只想当个摆件，结果被安排了安保岗。", "yeti": "看起来适合拥抱，验伤报告不这么认为。", "wraith": "透明的前途，清晰的杀意。", "icemage": "他很擅长冷处理，通常从你的脚开始。", "valkyrie": "曾经负责带人上天，现在省略了征求意见。", "mummy": "防腐做得很好，情绪管理没能保存下来。", "vampire": "不收现金，只接受你随身携带的流动资产。", "hellknight": "盔甲很厚，说明这份工作也没他想的安全。", "voidbug": "脾气不大，爆炸半径不小。", "reaper": "准时下班的秘诀，是让客户先下班。", "bone_knight": "装备全靠捡，尊严全靠硬撑。", "mammoth": "活化石的另一层意思：会动，而且很重。", "golem": "石头都能找到工作，你最好跑快一点。", "abomination": "采购了太多零件，验收时忘了问拼起来像什么。"},
@@ -17523,25 +17699,34 @@
     CoopManager.updateHUD();
     updateShopUnlocksUI();
 
-    function gameLoop(now) {
-      MenuPause.sync();
-      const dt = Math.min(0.05, (now - lastTime) / 1000);
-      lastTime = now;
-      // 全局真实倍速引擎 (1x / 2x / 3x)：按倍速执行物理与战斗子步，使移动速度、攻速、冷却与怪物速度同步真实加速！
-      const steps = Math.max(1, Math.min(3, GameState.timeScale || 1));
-      for (let s = 0; s < steps; s++) {
-        update(dt);
-      }
-      if (typeof CoopManager !== 'undefined' && CoopManager.alwaysTick) CoopManager.alwaysTick(dt);
-      WorldCoop.tick(dt);
-      draw();
-      requestAnimationFrame(gameLoop);
-    }
     let _appLoopStarted = false;
+    let _appLoopLastTick = 0;
+    function gameLoop(now) {
+      _appLoopLastTick = performance.now();
+      try {
+        MenuPause.sync();
+        const rawDt = (now - lastTime) / 1000;
+        const dt = Number.isFinite(rawDt) && rawDt >= 0 ? Math.min(0.05, rawDt) : 0.016;
+        lastTime = now;
+        // 全局真实倍速引擎 (1x / 2x / 3x)：按倍速执行物理与战斗子步，使移动速度、攻速、冷却与怪物速度同步真实加速！
+        const steps = Math.max(1, Math.min(3, GameState.timeScale || 1));
+        for (let s = 0; s < steps; s++) {
+          update(dt);
+        }
+        if (typeof CoopManager !== 'undefined' && CoopManager.alwaysTick) CoopManager.alwaysTick(dt);
+        WorldCoop.tick(dt);
+        draw();
+      } catch (err) {
+        console.error('[GameLoop Error]', err);
+      } finally {
+        requestAnimationFrame(gameLoop);
+      }
+    }
     function startAppLoop() {
-      if (_appLoopStarted) return;
+      if (_appLoopStarted && (performance.now() - _appLoopLastTick) < 1500) return;
       _appLoopStarted = true;
       lastTime = performance.now();
+      _appLoopLastTick = lastTime;
       requestAnimationFrame(gameLoop);
     }
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
