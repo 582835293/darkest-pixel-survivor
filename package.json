@@ -5,6 +5,9 @@
   "license": "MIT",
   "description": "A single-file pixel survivor game with browser co-op, spectator mode, text chat and WebRTC voice.",
   "scripts": {
+    "dev": "node server.js",
+    "build": "node scripts/check.mjs",
+    "start": "node server.js",
     "check": "node scripts/check.mjs",
     "test": "node scripts/test-all.cjs",
     "screenshots": "node scripts/capture-screenshots.cjs",
@@ -16,5 +19,8 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
   }
 }

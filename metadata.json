@@ -1,0 +1,7 @@
+{
+  "name": "血夜幸存者：暗黑像素版 (Darkest Pixel Survivor)",
+  "description": "A single-file pixel survivor game with browser co-op, spectator mode, text chat and WebRTC voice.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
