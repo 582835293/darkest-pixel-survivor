@@ -86,7 +86,7 @@
       flex-direction: column;
       gap: 3px;
       pointer-events: none;
-      z-index: 10;
+      z-index: 30;
     }
     .hud-row {
       display: flex;
@@ -1319,18 +1319,18 @@
           <div class="hero-card" data-hero="healer"><div class="hero-avatar">[px:hero-healer]</div><div class="hero-title">曙光祷师 · 治疗辅助</div><div class="hero-perk">圣矢攒祷光 · 溢疗转盾<br>救援速度×2 · 六翼圣光审判</div></div>
         </div>
 
-        <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #fde047;">2. 选择作战关卡（后序关卡怪物基础血量递增：第二关115% · 第三关130% · 第四关140%）</div>
+        <div style="font-size: 12px; font-weight: 800; text-align: left; margin-bottom: 5px; color: #fde047;">2. 选择作战关卡</div>
         <div class="biome-grid">
-          <div class="biome-card selected" data-biome="dungeon">[px:castle] 第一关：恶魔熔火地牢<br><span style="font-size:9px;color:#94a3b8;">恶魔系怪(100%血量)+巴尔 | 秘宝:炎魔颅/荆棘甲</span></div>
-          <div class="biome-card" data-biome="tundra">[px:snow] 第二关：纵向永冬冻原<br><span style="font-size:9px;color:#94a3b8;">雪原系怪(115%血量)+冰古神 | 秘宝:永冬冠/霜狼柱</span></div>
-          <div class="biome-card" data-biome="graveyard">[px:grave] 第三关：横向血月墓园<br><span style="font-size:9px;color:#94a3b8;">亡灵系怪(130%血量)+死神 | 秘宝:引魂灯/伯爵衣</span></div>
+          <div class="biome-card selected" data-biome="dungeon">[px:castle] 第一关：恶魔熔火地牢<br><span style="font-size:9px;color:#94a3b8;">恶魔系怪+巴尔 | 秘宝:炎魔颅/荆棘甲</span></div>
+          <div class="biome-card" data-biome="tundra">[px:snow] 第二关：纵向永冬冻原<br><span style="font-size:9px;color:#94a3b8;">雪原系怪+冰古神 | 秘宝:永冬冠/霜狼柱</span></div>
+          <div class="biome-card" data-biome="graveyard">[px:grave] 第三关：横向血月墓园<br><span style="font-size:9px;color:#94a3b8;">亡灵系怪+死神 | 秘宝:引魂灯/伯爵衣</span></div>
         </div>
 
         <div id="lobby-difficulty-bar" style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:8px 0 6px;padding:7px 10px;background:rgba(15,23,42,0.88);border:1px solid #475569;border-radius:8px;">
           <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
             <span style="font-size:12px;font-weight:800;color:#fb923c;">[px:fire] 3. 战前初始难度</span>
             <span id="lobby-curse-badge" style="font-size:11px;font-weight:900;padding:2px 8px;border-radius:999px;background:#1e293b;border:1px solid #64748b;color:#e2e8f0;">标准难度 (0阶)</span>
-            <span id="lobby-curse-preview" style="font-size:10px;color:#94a3b8;">本关基础血量 100% · 总怪血量 100% | 伤害 100% | 金币爆率 24%</span>
+            <span id="lobby-curse-preview" style="font-size:10px;color:#94a3b8;">怪物血量 100% | 伤害 100% | 金币爆率 24%</span>
           </div>
           <div style="display:flex;align-items:center;gap:5px;">
             <button type="button" class="btn-secondary" id="btn-lobby-curse-down" style="padding:3px 9px;font-size:11px;min-height:26px;" title="降低战前初始难度">- 降难</button>
@@ -1876,6 +1876,13 @@
         add('soul-command','冥契号令',g=>{g.line(7,3,7,14,'p',2);g.disk(7,3,3,'i');g.rect(5,2,5,3,'k');g.rect(5,3,1,1,'g');g.rect(9,3,1,1,'g');g.line(0,6,3,8,'c');g.line(15,6,12,8,'c');});
         add('raise-dead','亡骸复苏',g=>{g.rect(2,12,12,3,'s');g.rect(5,6,6,8,'p');g.rect(4,1,8,7,'i');g.rect(5,3,2,2,'k');g.rect(9,3,2,2,'k');g.rect(7,6,2,2,'g');});
         add('dead-legion','亡者大军',g=>{for(const [x,y]of [[1,7],[10,7],[5,1]]){g.rect(x,y,5,5,'i');g.rect(x+1,y+1,1,2,'k');g.rect(x+3,y+1,1,2,'k');g.rect(x+1,y+5,3,2,'p');}g.rect(1,15,14,1,'g');});
+        add('potion','秘药果冻',g=>{g.rect(6,1,4,3,'i');g.rect(5,4,6,2,'s');g.disk(7,10,5,'c');g.disk(7,10,3,'p');g.rect(5,8,2,2,'w');});
+        add('flame-ring','烈焰火环',g=>{g.disk(7,7,6,'r');g.disk(7,7,4,'k',null);g.rect(7,1,2,3,'y');g.rect(7,12,2,3,'y');});
+        add('blades','旋刃风暴',g=>{g.line(2,2,13,13,'i',2);g.line(13,2,2,13,'c',2);g.disk(7,7,3,'g');});
+        add('horn','深渊号角',g=>{g.poly([[2,11],[6,9],[13,3],[14,7],[8,13],[3,14]],'g');g.rect(12,2,3,4,'r');g.rect(2,11,3,3,'y');});
+        add('totem','风暴图腾',g=>{g.rect(5,2,6,13,'b');g.rect(2,5,12,3,'c');g.rect(6,3,4,2,'y');g.rect(6,9,4,4,'i');});
+        add('cloak','伯爵披风',g=>{g.poly([[4,2],[11,2],[14,14],[8,12],[2,14]],'r');g.poly([[5,3],[10,3],[12,12],[4,12]],'R');g.rect(6,2,4,2,'g');});
+        add('poison','剧毒印记',g=>{g.disk(7,6,4,'g');g.rect(5,9,6,4,'g');g.rect(5,5,2,2,'k');g.rect(9,5,2,2,'k');g.disk(4,13,2,'y');g.disk(11,13,2,'y');});
         for(const hero of ['warrior','mage','ranger','engineer','healer','necromancer'])add('hero-'+hero,{warrior:'苍红剑客',mage:'星界魔导',ranger:'暗夜巡林',engineer:'烬铁机匠',healer:'曙光祷师',necromancer:'冥契术士',billiard:'终局球爵',pugilist:'风暴拳师',cardmaster:'赤契牌师'}[hero],g=>{
           const rows=SPRITE_MATRICES[hero+'_0'],heroPal={...PALETTE,o:hero==='engineer'?'#ea580c':PALETTE.o,w:'#f3e8d2',s:hero==='healer'?'#eab386':'#94a3b8'};for(let y=0;y<Math.min(16,rows.length);y++)for(let x=0;x<16;x++){const ch=rows[y][x];if(ch!=='.')g.dot(x,y,heroPal[ch]||'#71879d');}
         });
@@ -1890,14 +1897,14 @@
       key(value){return this.defs.has(value)?value:this.aliases[value]||String(value).match(/^\[px:([a-z-]+)\]$/)?.[1];},
       parts(value,legacy=true){
         const text=String(value??''),regex=legacy?this.pattern:this.tokens,parts=[];if(!regex)return[{text}];regex.lastIndex=0;let at=0,m;
-        while((m=regex.exec(text))){const key=m[1]||this.aliases[m[0]];if(!this.defs.has(key))continue;if(m.index>at)parts.push({text:text.slice(at,m.index)});parts.push({icon:key});at=regex.lastIndex;}if(at<text.length)parts.push({text:text.slice(at)});return parts;
+        while((m=regex.exec(text))){const rawKey=m[1]||this.aliases[m[0]],key=this.defs.has(rawKey)?rawKey:(m[1]&&this.defs.has('sparkles')?'sparkles':null);if(!key)continue;if(m.index>at)parts.push({text:text.slice(at,m.index)});parts.push({icon:key});at=regex.lastIndex;}if(at<text.length)parts.push({text:text.slice(at)});return parts;
       },
       element(name){const d=this.defs.get(this.key(name));if(!d)return document.createTextNode(String(name));const e=document.createElement('span');e.className='pixel-icon';e.dataset.pixelIcon=d.name;e.setAttribute('role','img');e.setAttribute('aria-label',d.label);const u=this.urls.get(d.name);if(u){e.style.backgroundImage=u;e.style.backgroundSize='100% 100%';e.style.backgroundPosition='0% 0%';}else{e.style.backgroundPosition=this.position(d.name);}return e;},
       skip(e){return !e||e.closest('script,style,input,textarea,select,option,.pixel-icon,[data-plain-text],.social-message,.coop-danmaku-message,.coop-member>span,.coop-public-room strong,.coop-public-room small,#coop-room-banner,#spectate-status,#voice-members,#coop-current-routes');},
       hydrate(root){
         if(!this.pattern||!this.atlas||!root||!root.isConnected)return;const nodes=[];
-        if(root.nodeType===3)nodes.push(root);else{if(root.nodeType!==1||this.skip(root))return;for(const e of [root,...root.querySelectorAll('[title],[aria-label],[placeholder]')])for(const a of ['title','aria-label','placeholder'])if(e.hasAttribute(a)&&this.hasIcon(e.getAttribute(a)))e.setAttribute(a,this.plain(e.getAttribute(a)));const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);for(let n=w.nextNode();n;n=w.nextNode())nodes.push(n);}
-        for(const n of nodes){if(this.skip(n.parentElement)||!this.hasIcon(n.data))continue;const parts=this.parts(n.data),f=document.createDocumentFragment();for(const p of parts)f.append(p.icon?this.element(p.icon):document.createTextNode(p.text));n.replaceWith(f);}
+        if(root.nodeType===3)nodes.push(root);else{if(root.nodeType!==1||this.skip(root))return;for(const e of [root,...root.querySelectorAll('[title],[aria-label],[placeholder]')])for(const a of ['title','aria-label','placeholder'])if(e.hasAttribute(a)&&this.hasIcon(e.getAttribute(a))){const next=this.plain(e.getAttribute(a));if(next!==e.getAttribute(a))e.setAttribute(a,next);}const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);for(let n=w.nextNode();n;n=w.nextNode())nodes.push(n);}
+        for(const n of nodes){if(this.skip(n.parentElement)||!this.hasIcon(n.data))continue;const parts=this.parts(n.data);if(!parts.some(p=>p.icon))continue;const f=document.createDocumentFragment();for(const p of parts)f.append(p.icon?this.element(p.icon):document.createTextNode(p.text));n.replaceWith(f);}
       },
       hasIcon(text){if(!this.pattern)return false;this.pattern.lastIndex=0;return this.pattern.test(text);},
       plain(text){return this.parts(text).map(p=>p.icon?this.defs.get(p.icon).label:p.text).join('');},
@@ -2376,9 +2383,9 @@
         const lanternMul = relicLantern ? (1 + (relicLantern.level || 1) * 0.06) : 1.0;
         const biomeMul = (GameState.activeBiome === 'graveyard' ? 1.25 : 1.0) * lanternMul;
         const curseGoldMul = typeof getCurseMultipliers === 'function' ? getCurseMultipliers().goldYieldMul : 1.0;
-        const finalGold = Math.max(1, Math.round(val * greedMul * biomeMul * curseGoldMul));
-        this.data.gold += finalGold;
-        GameState.goldCollected += finalGold;
+        const finalGold = Math.max(1, Math.round((Number(val) || 0) * greedMul * biomeMul * curseGoldMul));
+        this.data.gold = Math.max(0, Math.floor(Number(this.data.gold) || 0)) + finalGold;
+        GameState.goldCollected = Math.max(0, Math.floor(Number(GameState.goldCollected) || 0)) + finalGold;
         this.save();
         const gEl = document.getElementById('gold-count');
         if (gEl) gEl.innerText = GameState.goldCollected;
@@ -5734,13 +5741,22 @@
       for (let i = goldDrops.length - 1; i >= 0; i--) {
         const gd = goldDrops[i];
         const dist = Math.hypot(player.x - gd.x, player.y - gd.y);
-        if (dist <= player.magnetRange) {
+        if (dist <= player.magnetRange || gd.isSuperAttracted) {
           const ang = Math.atan2(player.y - gd.y, player.x - gd.x);
-          gd.x += Math.cos(ang) * 440 * dt;
-          gd.y += Math.sin(ang) * 440 * dt;
-          if (dist <= player.radius + 10) {
+          const pullSpd = gd.isSuperAttracted ? 860 : 440;
+          gd.x += Math.cos(ang) * pullSpd * dt;
+          gd.y += Math.sin(ang) * pullSpd * dt;
+          if (dist <= player.radius + (gd.isChest ? 16 : 10)) {
             SaveManager.addGold(gd.val);
-            audio.playCoin();
+            if (gd.isChest) {
+              if (typeof ExtraStagesSystem !== 'undefined' && ExtraStagesSystem.playBlingBling) {
+                ExtraStagesSystem.playBlingBling(1);
+              } else {
+                audio.playCoin();
+              }
+            } else {
+              audio.playCoin();
+            }
             goldDrops.splice(i, 1);
           }
         }
@@ -5767,8 +5783,11 @@
       createShockwave(item.x, item.y, 55, item.color);
       if (item.type === 'magnet') {
         audio.playMagnet();
-        showToast('[px:magnet] 拾取【虚空磁石】！全图经验宝石光速汇集！');
-        if (!item.worldApplied) gems.forEach(g => { g.isSuperAttracted = true; });
+        showToast('[px:magnet] 拾取【虚空磁石】！全图经验宝石、金币与宝箱光速汇集！');
+        if (!item.worldApplied) {
+          gems.forEach(g => { g.isSuperAttracted = true; });
+          goldDrops.forEach(gd => { gd.isSuperAttracted = true; });
+        }
       } else if (item.type === 'freeze') {
         audio.playFreeze();
         if (!item.worldApplied) GameState.globalFreezeTimer = 5.0;
@@ -5939,10 +5958,11 @@
       const isCrit = !fixedDamage && Math.random() < (player.critChance + bonusCrit);
       const powerMul = GameState.powerShrineTimer > 0 ? 2.0 : 1.0;
       const poisonVuln = (en.poisonStacks && en.poisonStacks > 0) ? (1 + en.poisonStacks * 0.08) : 1.0;
+      const vaultGoldVuln = (en.vaultVulnStacks && en.vaultVulnTimer > 0) ? (1 + en.vaultVulnStacks * 0.08) : 1.0;
       // 玩家等级成长共鸣：每升1级全伤害提升 +6.5%，确保中后期输出紧跟怪潮血量成长！
       const levelGrowthMul = 1 + (player.level - 1) * 0.065;
 
-      let finalDmg = Math.round((isCrit ? baseDmg * player.critMultiplier : baseDmg) * powerMul * poisonVuln * levelGrowthMul);
+      let finalDmg = Math.round((isCrit ? baseDmg * player.critMultiplier : baseDmg) * powerMul * poisonVuln * vaultGoldVuln * levelGrowthMul);
       finalDmg = fixedDamage ? Math.max(1,Math.round(baseDmg)) : Math.max(1, Math.round(finalDmg * (0.92 + Math.random() * 0.16)));
 
       if (WorldCoop.guest()) WorldCoop.reportHit(en, finalDmg, pushAngle, pushForce);
@@ -6316,58 +6336,63 @@
       source(id){return enemies.find(e=>e.isBoss&&!e.isDead&&e.netId===id);},
       pack(w){const r={};for(const k of ['netId','bossAttack','bossId','type','x','y','x1','y1','x2','y2','radius','innerRadius','angle','arc','safeAngle','safeArc','width','color','damage','life','maxLife'])if(w[k]!==undefined)r[k]=w[k];return r;},
       warn(en,type,data,delay=1,mul=.8,action=null){
-        WorldCoop.identify(en);const w=WorldCoop.warn({bossAttack:true,bossId:en.netId,type,color:en.color,damage:Math.round(en.damage*mul),life:delay,maxLife:delay,...data});w._action=action;return w;
+        WorldCoop.identify(en);const w=WorldCoop.warn({bossAttack:true,bossId:en.netId,type,color:en.color,damage:Math.max(4,Math.round(en.damage*mul*0.75)),life:delay,maxLife:delay,...data});w._action=action;return w;
       },
-      circle(en,x,y,r,delay=1,mul=.8,action=null){return this.warn(en,'circle',{x,y,radius:r},delay,mul,action);},
-      line(en,x1,y1,x2,y2,width=42,delay=1,mul=.8,action=null){return this.warn(en,'corridor',{x1,y1,x2,y2,width},delay,mul,action);},
-      sector(en,x,y,angle,arc,radius,delay=1,mul=.8){return this.warn(en,'sector',{x,y,angle,arc,radius},delay,mul);},
-      ring(en,x,y,innerRadius,radius,delay=1,mul=.8,safeAngle=0,safeArc=0){return this.warn(en,'ring',{x,y,innerRadius,radius,safeAngle,safeArc},delay,mul);},
+      circle(en,x,y,r,delay=1,mul=.8,action=null){return this.warn(en,'circle',{x,y,radius:Math.round(r*0.80)},delay,mul,action);},
+      line(en,x1,y1,x2,y2,width=32,delay=1,mul=.8,action=null){return this.warn(en,'corridor',{x1,y1,x2,y2,width:Math.max(18,Math.round(width*0.76))},delay,mul,action);},
+      sector(en,x,y,angle,arc,radius,delay=1,mul=.8){return this.warn(en,'sector',{x,y,angle,arc:arc*0.82,radius:Math.round(radius*0.86)},delay,mul);},
+      ring(en,x,y,innerRadius,radius,delay=1,mul=.8,safeAngle=0,safeArc=0){
+        const safeInner=Math.max(115,Math.round(innerRadius+45));
+        const bandWidth=Math.max(46,Math.min(72,Math.round((radius-innerRadius)*0.58)));
+        const safeGap=safeArc>0?Math.max(1.22,safeArc*1.45):0.95;
+        return this.warn(en,'ring',{x,y,innerRadius:safeInner,radius:safeInner+bandWidth,safeAngle,safeArc:safeGap},delay,mul);
+      },
       later(en,delay,fn){const jobs=this.state(en).jobs;if(jobs.length<20)jobs.push({left:delay,fn});},
-      bullet(en,x,y,angle,speed=175,damage=.65,radius=7){if(projectiles.filter(p=>p.isEnemy&&p.life>0).length>=120)return;projectiles.push({isEnemy:true,x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,radius,damage:Math.round(en.damage*damage),life:3.2,color:en.color,bossSource:en.netId});},
+      bullet(en,x,y,angle,speed=175,damage=.65,radius=7){if(projectiles.filter(p=>p.isEnemy&&p.life>0).length>=120)return;projectiles.push({isEnemy:true,x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,radius,damage:Math.max(4,Math.round(en.damage*damage*0.75)),life:3.2,color:en.color,bossSource:en.netId});},
       fan(en,a,count,spread,speed=185){for(let i=0;i<count;i++)this.bullet(en,en.x,en.y,a+(i-(count-1)/2)*spread/Math.max(1,count-1),speed);},
-      gapRing(en,a,count=18,gap=.7){for(let i=0;i<count;i++){const b=a+i*Math.PI*2/count;if(Math.abs(Math.atan2(Math.sin(b-a),Math.cos(b-a)))>gap)this.bullet(en,en.x,en.y,b,155);}},
+      gapRing(en,a,count=16,gap=.95){for(let i=0;i<count;i++){const b=a+i*Math.PI*2/count;if(Math.abs(Math.atan2(Math.sin(b-a),Math.cos(b-a)))>gap)this.bullet(en,en.x,en.y,b,150);}},
       summon(en,x,y,type,count=3){for(let i=0;i<count&&enemies.filter(e=>!e.isDead).length<320;i++){const a=i*Math.PI*2/count,e=createEnemy(x+Math.cos(a)*48,y+Math.sin(a)*48,type);e.bossSummoner=en.netId;}},
-      dash(en,tx,ty){const s=this.state(en),d=Math.hypot(tx-en.x,ty-en.y),limit=Math.min(380,d);s.dash={x:en.x,y:en.y,tx:en.x+(tx-en.x)*limit/Math.max(1,d),ty:en.y+(ty-en.y)*limit/Math.max(1,d),left:.42,total:.42};en.motionEpoch=(en.motionEpoch||0)+1;},
+      dash(en,tx,ty){const s=this.state(en),d=Math.hypot(tx-en.x,ty-en.y),limit=Math.min(340,d);s.dash={x:en.x,y:en.y,tx:en.x+(tx-en.x)*limit/Math.max(1,d),ty:en.y+(ty-en.y)*limit/Math.max(1,d),left:.42,total:.42};en.motionEpoch=(en.motionEpoch||0)+1;},
       cast(en,t,move){
         const p2=en.isPhase2,a=Math.atan2(t.y-en.y,t.x-en.x),x=t.x,y=t.y,bx=en.x,by=en.y;
         const label=this.profile(en).name.split(' / ')[this.state(en).step%2];en.bossMove=label;this.state(en).busy=1.15;
         switch(move){
-          case 'wardenRush':this.line(en,bx,by,bx+Math.cos(a)*360,by+Math.sin(a)*360,p2?64:48,1.1,.95,()=>this.dash(en,bx+Math.cos(a)*360,by+Math.sin(a)*360));if(p2)this.later(en,1.6,()=>this.sector(en,en.x,en.y,a+Math.PI,Math.PI,145,.8));break;
-          case 'axe':this.sector(en,bx,by,a,p2?Math.PI*1.25:Math.PI*.95,170,1);break;
-          case 'magmaHammers':for(let i=0;i<(p2?4:3);i++)this.circle(en,x+(i-1)*90,y+Math.sin(i*2)*50,70,1+i*.25,.8);break;
-          case 'magmaRing':this.ring(en,bx,by,90,p2?320:270,1.2);break;
-          case 'scissors':for(const ang of [a-.55,a+.55])this.line(en,x-Math.cos(ang)*300,y-Math.sin(ang)*300,x+Math.cos(ang)*300,y+Math.sin(ang)*300,38,1);if(p2)this.circle(en,x,y,55,1.65,.6);break;
-          case 'petals':this.circle(en,bx,by,80,.9,.3,()=>{this.gapRing(en,a+Math.PI,20,.65);if(p2)this.later(en,.45,()=>this.gapRing(en,a+Math.PI+.3,20,.65));});break;
-          case 'lavaCross':for(const ang of [0,Math.PI/2])this.line(en,x-Math.cos(ang)*300,y-Math.sin(ang)*300,x+Math.cos(ang)*300,y+Math.sin(ang)*300,56,1.1);if(p2)this.ring(en,x,y,140,235,1.7,.65);break;
-          case 'fireTrail':for(let i=0;i<(p2?5:4);i++){const px=x+Math.cos(a)*(i-1)*80,py=y+Math.sin(a)*(i-1)*80;this.circle(en,px,py,62,1+i*.22,.65);this.circle(en,px,py,62,2.1+i*.22,.45);}break;
-          case 'eyeSweep':for(let i=0;i<(p2?7:5);i++){const ang=a-.6+i*.24;this.line(en,bx,by,bx+Math.cos(ang)*520,by+Math.sin(ang)*520,30,1+i*.2,.65);}break;
-          case 'voidSpiral':for(let i=0;i<(p2?5:3);i++)this.later(en,i*.3,()=>this.circle(en,en.x,en.y,45,.8,.2,()=>this.gapRing(en,a+i*.35,16,.65)));break;
-          case 'doomGrid':for(let row=-1;row<=1;row++)for(let col=-1;col<=1;col++)if((row+col+4)%2===(p2?1:0))this.circle(en,x+col*130,y+row*130,72,1.3,.9);this.later(en,1.6,()=>{for(let i=0;i<3;i++)this.line(en,x-220,y-160+i*160,x+220,y-160+i*160,30,1,.65);});break;
-          case 'doomTrinity':this.circle(en,bx,by,110,1,.85);this.ring(en,bx,by,130,300,1.7,.8);for(let i=0;i<(p2?5:3);i++){const ang=a+(i-(p2?2:1))*.5;this.line(en,bx,by,bx+Math.cos(ang)*480,by+Math.sin(ang)*480,40,2.25,.85);}break;
-          case 'iceStomps':for(let i=0;i<(p2?4:3);i++)this.ring(en,bx,by,35+i*85,100+i*85,1+i*.45,.7);break;
-          case 'beastLeap':this.circle(en,x,y,95,1.2,.9,()=>this.dash(en,x,y));if(p2)this.later(en,1.6,()=>this.ring(en,en.x,en.y,100,180,.9,.7));break;
-          case 'icePrison':for(let i=0;i<(p2?10:8);i++){const ang=i*Math.PI*2/(p2?10:8);this.line(en,x+Math.cos(ang)*70,y+Math.sin(ang)*70,x+Math.cos(ang)*300,y+Math.sin(ang)*300,22,1.2,.7);}break;
-          case 'iceFan':this.sector(en,bx,by,a,1.4,125,.9,.35);this.later(en,.9,()=>{this.fan(en,a,p2?9:7,1.6,170);if(p2)this.later(en,.5,()=>this.fan(en,a+.12,8,1.6,170));});break;
-          case 'frostBreath':this.sector(en,bx,by,a,p2?1.35:1.05,420,1.35,.9);this.later(en,1.6,()=>this.sector(en,en.x,en.y,a+.45,.55,340,.85,.6));break;
-          case 'wingSweep':for(const sign of [-1,1])this.sector(en,bx,by,a+sign*Math.PI/2,1.55,300,1.15,.8);if(p2)this.circle(en,bx,by,75,1.7,.5);break;
-          case 'royalLanes':for(const side of [-1,1])this.line(en,x+side*110,y-330,x+side*110,y+330,70,1.2,.8);this.later(en,1.65,()=>{for(const side of [-1,1])this.line(en,x-330,y+side*110,x+330,y+side*110,p2?90:70,1,.8);});break;
-          case 'royalCross':for(let wave=0;wave<(p2?3:2);wave++)for(const sign of [-1,1]){const ang=wave*Math.PI/4+sign*Math.PI/4;this.line(en,x-Math.cos(ang)*330,y-Math.sin(ang)*330,x+Math.cos(ang)*330,y+Math.sin(ang)*330,34,1.1+wave*.7,.7);}break;
-          case 'avalanche':for(let i=-2;i<=2;i++)if(i!==(p2?1:0)){const px=x+i*90;this.line(en,px,y-340,px,y+340,55,1.1+(i+2)*.16,.8);}break;
-          case 'iceBoulders':for(let i=0;i<(p2?7:5);i++){const ang=i*Math.PI*2/(p2?7:5);this.circle(en,x+Math.cos(ang)*140,y+Math.sin(ang)*140,70,1+(i%2)*.35,.75);}this.later(en,1.4,()=>this.circle(en,x,y,90,.9,.9));break;
-          case 'zeroGate':this.ring(en,bx,by,85,400,1.4,.9,a,p2?.65:1);this.later(en,1.8,()=>this.ring(en,en.x,en.y,55,350,1.1,.8,a+Math.PI/2,p2?.75:1.15));break;
-          case 'tideReturn':for(let i=0;i<3;i++){this.ring(en,bx,by,40+i*90,105+i*90,1.1+i*.45,.65);this.ring(en,bx,by,40+i*90,105+i*90,3.2-i*.45,.65);}if(p2)this.later(en,2.9,()=>this.fan(en,a,5,1.4,160));break;
-          case 'hookCleave':this.line(en,bx,by,x,y,24,1.1,.6);this.sector(en,bx,by,a,Math.PI*1.2,190,1.65,.95);break;
-          case 'poisonPits':for(let i=0;i<(p2?4:3);i++){const ang=i*Math.PI*2/(p2?4:3),px=x+Math.cos(ang)*95,py=y+Math.sin(ang)*95;for(let pulse=0;pulse<3;pulse++)this.circle(en,px,py,58,1.1+pulse*.8,.45);}break;
-          case 'boneCourt':this.circle(en,x,y,105,1.1,.4,()=>this.summon(en,x,y,'skeleton',p2?4:3));this.ring(en,x,y,140,230,1.6,.75);break;
-          case 'boneWalls':for(const side of [-1,1]){const px=x+side*165;this.line(en,px,y-240,px,y+240,35,1,.45,()=>{for(let i=-3;i<=3;i++)this.bullet(en,px,y+i*62,side>0?Math.PI:0,145,.6,8);});}break;
-          case 'river':for(const side of [-1,1])this.line(en,x-370,y+side*125,x+370,y+side*125,p2?115:90,1.1,.8);this.later(en,1.4,()=>this.line(en,x-280,y,x+280,y,48,1.05,.8));break;
-          case 'ferryPass':for(const side of [-1,1])this.line(en,bx-Math.sin(a)*side*75,by+Math.cos(a)*side*75,bx+Math.cos(a)*420-Math.sin(a)*side*75,by+Math.sin(a)*420+Math.cos(a)*side*75,38,1.1,.75);this.later(en,1.1,()=>this.dash(en,bx+Math.cos(a)*340,by+Math.sin(a)*340));break;
-          case 'bloodBloom':for(let i=0;i<(p2?8:6);i++){const ang=i*Math.PI*2/(p2?8:6);this.circle(en,x+Math.cos(ang)*145,y+Math.sin(ang)*145,56,1.1,.7);}this.later(en,1.2,()=>this.circle(en,x,y,90,.9,.9));break;
-          case 'bloodHunt':for(let i=0;i<(p2?3:2);i++)this.later(en,i*1.35,()=>{const victim=WorldCoop.target(en);if(victim){const vx=victim.x,vy=victim.y;this.circle(en,vx,vy,78,1,.75,()=>this.dash(en,vx,vy));}});break;
-          case 'boneWind':for(let wave=0;wave<(p2?3:2);wave++)this.later(en,wave*.8,()=>{for(let i=-3;i<=3;i++)if(i!==wave-1)this.line(en,x-300,y+i*72,x+300,y+i*72,28,1.15,.55,()=>this.bullet(en,x-300,y+i*72,0,200,.65));});break;
-          case 'boneBreath':this.sector(en,bx,by,a,1.9,300,1.3,.85);this.circle(en,bx-Math.cos(a)*150,by-Math.sin(a)*150,65,1.65,.35,()=>this.summon(en,bx,by,'reaper',p2?3:2));break;
-          case 'soulHarvest':this.ring(en,x,y,155,340,1.4,.9);for(let i=0;i<(p2?4:3);i++)this.circle(en,x+Math.cos(a+i*2.1)*90,y+Math.sin(a+i*2.1)*90,42,2,.65);break;
-          case 'deathWheel':for(let wave=0;wave<(p2?3:2);wave++){const cast=()=>{for(let i=0;i<4;i++)this.sector(en,bx,by,i*Math.PI/2+wave*Math.PI/4,Math.PI*.27,370,wave?1:1.3,.8);};if(wave)this.later(en,1.5+(wave-1)*1.2,cast);else cast();}break;
+          case 'wardenRush':this.line(en,bx,by,bx+Math.cos(a)*340,by+Math.sin(a)*340,p2?52:40,1.1,.85,()=>this.dash(en,bx+Math.cos(a)*340,by+Math.sin(a)*340));if(p2)this.later(en,1.6,()=>this.sector(en,en.x,en.y,a+Math.PI,Math.PI*.85,135,.75));break;
+          case 'axe':this.sector(en,bx,by,a,p2?Math.PI*1.05:Math.PI*.82,155,1);break;
+          case 'magmaHammers':for(let i=0;i<(p2?4:3);i++)this.circle(en,x+(i-1)*90,y+Math.sin(i*2)*50,62,1+i*.25,.75);break;
+          case 'magmaRing':this.ring(en,bx,by,135,p2?255:225,1.25,.8,a,1.25);break;
+          case 'scissors':for(const ang of [a-.55,a+.55])this.line(en,x-Math.cos(ang)*280,y-Math.sin(ang)*280,x+Math.cos(ang)*280,y+Math.sin(ang)*280,32,1);if(p2)this.circle(en,x,y,48,1.65,.55);break;
+          case 'petals':this.circle(en,bx,by,70,.9,.3,()=>{this.gapRing(en,a+Math.PI,16,.95);if(p2)this.later(en,.45,()=>this.gapRing(en,a+Math.PI+.3,16,.95));});break;
+          case 'lavaCross':for(const ang of [0,Math.PI/2])this.line(en,x-Math.cos(ang)*280,y-Math.sin(ang)*280,x+Math.cos(ang)*280,y+Math.sin(ang)*280,44,1.1);if(p2)this.ring(en,x,y,145,215,1.7,.62,a+Math.PI/4,1.25);break;
+          case 'fireTrail':for(let i=0;i<(p2?5:4);i++){const px=x+Math.cos(a)*(i-1)*80,py=y+Math.sin(a)*(i-1)*80;this.circle(en,px,py,54,1+i*.22,.6);this.circle(en,px,py,54,2.1+i*.22,.42);}break;
+          case 'eyeSweep':for(let i=0;i<(p2?6:4);i++){const ang=a-.5+i*.25;this.line(en,bx,by,bx+Math.cos(ang)*480,by+Math.sin(ang)*480,26,1+i*.2,.6);}break;
+          case 'voidSpiral':for(let i=0;i<(p2?4:3);i++)this.later(en,i*.3,()=>this.circle(en,en.x,en.y,42,.8,.2,()=>this.gapRing(en,a+i*.35,14,.95)));break;
+          case 'doomGrid':for(let row=-1;row<=1;row++)for(let col=-1;col<=1;col++)if((row+col+4)%2===(p2?1:0))this.circle(en,x+col*130,y+row*130,62,1.3,.8);this.later(en,1.6,()=>{for(let i=0;i<3;i++)this.line(en,x-210,y-150+i*150,x+210,y-150+i*150,26,1,.6);});break;
+          case 'doomTrinity':this.circle(en,bx,by,88,1,.78);this.ring(en,bx,by,150,235,1.7,.75,a,1.28);for(let i=0;i<(p2?4:3);i++){const ang=a+(i-1)*.52;this.line(en,bx,by,bx+Math.cos(ang)*440,by+Math.sin(ang)*440,32,2.25,.75);}break;
+          case 'iceStomps':for(let i=0;i<3;i++)this.ring(en,bx,by,105+i*72,158+i*72,1+i*.45,.68,a+i*.6,1.22);break;
+          case 'beastLeap':this.circle(en,x,y,80,1.2,.8,()=>this.dash(en,x,y));if(p2)this.later(en,1.6,()=>this.ring(en,en.x,en.y,125,185,.9,.65,a,1.22));break;
+          case 'icePrison':for(let i=0;i<(p2?8:6);i++){const ang=i*Math.PI*2/(p2?8:6);this.line(en,x+Math.cos(ang)*75,y+Math.sin(ang)*75,x+Math.cos(ang)*280,y+Math.sin(ang)*280,20,1.2,.65);}break;
+          case 'iceFan':this.sector(en,bx,by,a,1.2,115,.9,.35);this.later(en,.9,()=>{this.fan(en,a,p2?7:5,1.4,165);if(p2)this.later(en,.5,()=>this.fan(en,a+.12,6,1.4,165));});break;
+          case 'frostBreath':this.sector(en,bx,by,a,p2?1.15:.92,380,1.35,.8);this.later(en,1.6,()=>this.sector(en,en.x,en.y,a+.45,.48,310,.85,.55));break;
+          case 'wingSweep':for(const sign of [-1,1])this.sector(en,bx,by,a+sign*Math.PI/2,1.35,270,1.15,.72);if(p2)this.circle(en,bx,by,66,1.7,.45);break;
+          case 'royalLanes':for(const side of [-1,1])this.line(en,x+side*115,y-310,x+side*115,y+310,56,1.2,.72);this.later(en,1.65,()=>{for(const side of [-1,1])this.line(en,x-310,y+side*115,x+310,y+side*115,p2?68:56,1,.72);});break;
+          case 'royalCross':for(let wave=0;wave<(p2?3:2);wave++)for(const sign of [-1,1]){const ang=wave*Math.PI/4+sign*Math.PI/4;this.line(en,x-Math.cos(ang)*310,y-Math.sin(ang)*310,x+Math.cos(ang)*310,y+Math.sin(ang)*310,28,1.1+wave*.7,.65);}break;
+          case 'avalanche':for(let i=-2;i<=2;i++)if(i!==(p2?1:0)){const px=x+i*92;this.line(en,px,y-320,px,y+320,44,1.1+(i+2)*.16,.72);}break;
+          case 'iceBoulders':for(let i=0;i<(p2?6:5);i++){const ang=i*Math.PI*2/(p2?6:5);this.circle(en,x+Math.cos(ang)*140,y+Math.sin(ang)*140,60,1+(i%2)*.35,.68);}this.later(en,1.4,()=>this.circle(en,x,y,76,.9,.8));break;
+          case 'zeroGate':this.ring(en,bx,by,135,220,1.4,.8,a,1.28);this.later(en,1.8,()=>this.ring(en,en.x,en.y,115,195,1.1,.72,a+Math.PI/2,1.32));break;
+          case 'tideReturn':for(let i=0;i<3;i++){this.ring(en,bx,by,105+i*72,158+i*72,1.1+i*.45,.6,a+i*.5,1.20);this.ring(en,bx,by,105+i*72,158+i*72,3.2-i*.45,.6,a+Math.PI+i*.5,1.20);}if(p2)this.later(en,2.9,()=>this.fan(en,a,5,1.3,155));break;
+          case 'hookCleave':this.line(en,bx,by,x,y,22,1.1,.55);this.sector(en,bx,by,a,Math.PI,170,1.65,.82);break;
+          case 'poisonPits':for(let i=0;i<(p2?4:3);i++){const ang=i*Math.PI*2/(p2?4:3),px=x+Math.cos(ang)*95,py=y+Math.sin(ang)*95;for(let pulse=0;pulse<3;pulse++)this.circle(en,px,py,50,1.1+pulse*.8,.42);}break;
+          case 'boneCourt':this.circle(en,x,y,86,1.1,.38,()=>this.summon(en,x,y,'skeleton',p2?4:3));this.ring(en,x,y,150,218,1.6,.68,a,1.25);break;
+          case 'boneWalls':for(const side of [-1,1]){const px=x+side*165;this.line(en,px,y-230,px,y+230,28,1,.42,()=>{for(let i=-3;i<=3;i++)this.bullet(en,px,y+i*62,side>0?Math.PI:0,140,.55,7);});}break;
+          case 'river':for(const side of [-1,1])this.line(en,x-350,y+side*125,x+350,y+side*125,p2?86:70,1.1,.72);this.later(en,1.4,()=>this.line(en,x-260,y,x+260,y,38,1.05,.72));break;
+          case 'ferryPass':for(const side of [-1,1])this.line(en,bx-Math.sin(a)*side*75,by+Math.cos(a)*side*75,bx+Math.cos(a)*390-Math.sin(a)*side*75,by+Math.sin(a)*390+Math.cos(a)*side*75,32,1.1,.68);this.later(en,1.1,()=>this.dash(en,bx+Math.cos(a)*320,by+Math.sin(a)*320));break;
+          case 'bloodBloom':for(let i=0;i<(p2?7:5);i++){const ang=i*Math.PI*2/(p2?7:5);this.circle(en,x+Math.cos(ang)*145,y+Math.sin(ang)*145,48,1.1,.65);}this.later(en,1.2,()=>this.circle(en,x,y,76,.9,.8));break;
+          case 'bloodHunt':for(let i=0;i<(p2?3:2);i++)this.later(en,i*1.35,()=>{const victim=WorldCoop.target(en);if(victim){const vx=victim.x,vy=victim.y;this.circle(en,vx,vy,66,1,.68,()=>this.dash(en,vx,vy));}});break;
+          case 'boneWind':for(let wave=0;wave<(p2?3:2);wave++)this.later(en,wave*.8,()=>{for(let i=-3;i<=3;i++)if(i!==wave-1)this.line(en,x-280,y+i*72,x+280,y+i*72,24,1.15,.5,()=>this.bullet(en,x-280,y+i*72,0,190,.58));});break;
+          case 'boneBreath':this.sector(en,bx,by,a,1.55,270,1.3,.75);this.circle(en,bx-Math.cos(a)*150,by-Math.sin(a)*150,56,1.65,.35,()=>this.summon(en,bx,by,'reaper',p2?3:2));break;
+          case 'soulHarvest':this.ring(en,x,y,155,235,1.4,.78,a,1.28);for(let i=0;i<(p2?4:3);i++)this.circle(en,x+Math.cos(a+i*2.1)*90,y+Math.sin(a+i*2.1)*90,38,2,.6);break;
+          case 'deathWheel':for(let wave=0;wave<(p2?3:2);wave++){const cast=()=>{for(let i=0;i<4;i++)this.sector(en,bx,by,i*Math.PI/2+wave*Math.PI/4,Math.PI*.22,340,wave?1:1.3,.72);};if(wave)this.later(en,1.5+(wave-1)*1.2,cast);else cast();}break;
         }
         updateBossHud(en);
       },
@@ -6611,15 +6636,14 @@
       }
     }
 
-    // 各关卡怪物基础血量倍率：第一关 100%，第二关 115%，第三关 130%，第四关 140%，番外爽关 150%~165%
+    // 各关卡怪物基础血量倍率：第一关 100%，第二关 115%，第三关 130%，第四关 140%，黄金宝库 192%（比其他关卡高三四成），史莱姆牧场 155%
     const STAGE_HP_MULTIPLIERS = {
       dungeon: 1.00,
       tundra: 1.15,
       graveyard: 1.30,
       clockwork: 1.40,
-      vault: 1.50,
-      slime_carnival: 1.55,
-      starfall_temple: 1.65
+      vault: 1.92,
+      slime_carnival: 1.55
     };
     function getStageHpMultiplier(biome = GameState.activeBiome) {
       return STAGE_HP_MULTIPLIERS[biome] || 1.00;
@@ -6826,7 +6850,9 @@
 
       const tScale = getTimeScaling();
       const timeFactor = Math.min(1, GameState.gameTime / 600);
-      const currentBatchCount = 2 + Math.floor(waveProgress * 3) + Math.floor(timeFactor * 6);
+      const isVaultBiome = GameState.activeBiome === 'vault';
+      const baseBatchCount = 2 + Math.floor(waveProgress * 3) + Math.floor(timeFactor * 6);
+      const currentBatchCount = isVaultBiome ? Math.max(4, Math.round(baseBatchCount * 1.45)) : baseBatchCount;
       const waveEl = document.getElementById('hud-wave-info');
       if (waveEl) {
         const nextWaveText = `[px:book] ${waveInfo.label} (${tScale.hpMul.toFixed(1)}x)`;
@@ -6836,7 +6862,8 @@
         }
       }
 
-      const rate = Math.max(0.24, 0.82 - waveProgress * 0.28 - timeFactor * 0.26);
+      const baseRate = Math.max(0.24, 0.82 - waveProgress * 0.28 - timeFactor * 0.26);
+      const rate = isVaultBiome ? Math.max(0.16, baseRate * 0.72) : baseRate;
 
       if (spawnTimer >= rate) {
         spawnTimer = 0;
@@ -6857,7 +6884,7 @@
       }
 
       // 每 15 秒自动轮换触发 6 大几何战术包围阵型（平行夹逼 / 螺旋阵 / 多行斜线 / 直线铁墙 / 同心圆 / 侧翼兽群）！
-      if (ringFormationTimer >= 15.0) {
+      if (ringFormationTimer >= (isVaultBiome ? 11.5 : 15.0)) {
         ringFormationTimer = 0;
         triggerNextTacticalFormation(autoFormationIndex++);
       }
@@ -6903,7 +6930,7 @@
         en.isElite = true;
         en.hp = Math.round(en.hp * shinyHpMul);
         en.maxHp = en.hp;
-        en.damage = Math.round(en.damage * 2.2); // 闪光怪物攻击伤害大幅提升至普通小怪的 2.2 倍！
+        en.damage = Math.round(en.damage * 1.40); // 削弱闪光怪伤害倍率（由2.2倍下调至1.4倍），提高容错
         en.radius = Math.round(en.radius * 1.32);
         en.expReward = Math.round(en.expReward * 12);
         if (!en.affixes.includes('unstoppable')) en.affixes.push('unstoppable');
@@ -6936,7 +6963,7 @@
       const by = WorldCoop.spawnOrigin().y + Math.sin(angle) * 290;
       const bossPoint=Arena.safe(bx,by,(cfg.radius||38)+6);
 
-      // 动态计算当前时间波次普通小怪的实际血量，将 Boss 血量设为当前普通小怪的 45 ~ 60 倍（最终 Boss 血量基数额外提升至之前 Boss 的 2.65 倍，充满终局压迫感！）
+      // 动态计算当前时间波次普通小怪的实际血量，将 Boss 血量设为当前普通小怪的 45 ~ 60 倍
       const waveInfo = getCurrentWaveInfo();
       const { hpMul, dmgMul, stageHpMul } = getTimeScaling();
       const avgBaseHp = waveInfo.types.reduce((acc, t) => acc + (MONSTER_SPECS[t] ? MONSTER_SPECS[t].hp : 140), 0) / waveInfo.types.length;
@@ -6945,8 +6972,8 @@
       const finalHpBoost = cfg.isFinal ? 2.0 : 1.0;
       const bossMultiple = Math.round(normalBossMul * finalHpBoost);
       const computedBossHp = Math.max(Math.round(cfg.hp * 8 * (stageHpMul || 1)), curNormalMonsterHp * bossMultiple);
-      // 首领伤害大幅增强并随时间与提难倍率成长！
-      const computedBossDmg = Math.round(cfg.dmg * 1.85 * Math.max(1, dmgMul * 0.78));
+      // 削弱首领伤害倍率（由 1.85*0.78 下调至 1.25*0.65），提高生存容错
+      const computedBossDmg = Math.round(cfg.dmg * 1.25 * Math.max(1, dmgMul * 0.65));
 
       const boss = {
         x: bossPoint.x, y: bossPoint.y, vx: 0, vy: 0,
@@ -7593,6 +7620,10 @@
           }
         }
 
+        if (en.vaultVulnTimer > 0) {
+          en.vaultVulnTimer -= dt;
+          if (en.vaultVulnTimer <= 0) en.vaultVulnStacks = 0;
+        }
         if (en.freezeTimer > 0) en.freezeTimer -= dt;
         if (isGlobalFrozen || en.freezeTimer > 0) continue;
 
@@ -7771,7 +7802,27 @@
               const _pHint = window.__dmgSourceHint;
               window.__dmgSourceHint = p.friendBoss ? 'comp_friendBoss' : (p.necroShot ? 'comp_necroSummon' : (p.relicHoming ? 'relic_awakening' : (p._dmgSource || 'skill_attack')));
               try {
-                if(p.friendBoss)FriendlyBossKit.projectileDamage(p,en);else if(p.necroShot)NecroKit.shotHit(p,en);else damageEnemy(en, p.damage, Math.atan2(p.vy, p.vx), 110, Boolean(p.isSecondary));
+                if (p.isVaultGoldShot) {
+                  const prevStacks = en.vaultVulnStacks || 0;
+                  en.vaultVulnStacks = Math.min(5, prevStacks + 1);
+                  en.vaultVulnTimer = 5.0;
+                  const counterMul = (GameState.activeBiome === 'vault' || en.isVaultMonster) ? 1.35 : 1.15;
+                  damageEnemy(en, Math.round(p.damage * counterMul), Math.atan2(p.vy, p.vx), 115, Boolean(p.isSecondary));
+                  if (prevStacks === 0 && !en.isDead && typeof spawnFloatingText === 'function') {
+                    spawnFloatingText(en.x, en.y - en.radius - 8, '金钱克制·易伤!', '#fde047', true);
+                  }
+                  if (p.vaultAoE && p.vaultAoE > 0) {
+                    for (let k = 0; k < enemies.length; k++) {
+                      const other = enemies[k];
+                      if (!other || other === en || other.isDead) continue;
+                      if (Math.hypot(other.x - en.x, other.y - en.y) <= p.vaultAoE + other.radius) {
+                        other.vaultVulnStacks = Math.min(5, (other.vaultVulnStacks || 0) + 1);
+                        other.vaultVulnTimer = 5.0;
+                        damageEnemy(other, Math.round(p.damage * counterMul * 0.55), 0, 45, true);
+                      }
+                    }
+                  }
+                } else if(p.friendBoss)FriendlyBossKit.projectileDamage(p,en);else if(p.necroShot)NecroKit.shotHit(p,en);else damageEnemy(en, p.damage, Math.atan2(p.vy, p.vx), 110, Boolean(p.isSecondary));
                 if(p.relicHoming)RelicAwakening.hit(p);if(p.forgeHand)EngineerKit.onHit(en,p);
                 if(p.isGrenade&&!p.hasExploded){p.hasExploded=true;EngineerKit.explode(en.x,en.y,p.color==='#fde047'?95:70,Math.round(p.damage*.65),en,Boolean(p.forgeCannon));p.life=0;}
               } finally {
@@ -9372,22 +9423,45 @@
         ctx.restore();
       }
 
-      // 16-bit 立体旋转高光金币绘制
+      // 16-bit 立体旋转高光金币 & 掉在地上可拾取的黄金宝箱绘制
       for (let i = 0; i < goldDrops.length; i++) {
         const gd = goldDrops[i];
         if (gd.x < viewL || gd.x > viewR || gd.y < viewT || gd.y > viewB) continue;
         ctx.save();
         ctx.translate(gd.x, gd.y);
-        ctx.fillStyle = '#b45309';
-        ctx.beginPath();
-        ctx.arc(0, 0, 5.5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#facc15';
-        ctx.beginPath();
-        ctx.arc(0, 0, 4.2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#fef08a';
-        ctx.fillRect(-1, -2.5, 2, 5);
+        if (gd.isChest) {
+          const bob = Math.sin(performance.now() * 0.007 + i) * 1.8;
+          ctx.translate(0, bob);
+          // 宝箱金色光环底座
+          ctx.fillStyle = 'rgba(250, 204, 21, 0.28)';
+          ctx.beginPath();
+          ctx.arc(0, 0, 12, 0, Math.PI * 2);
+          ctx.fill();
+          // 宝箱木质红金箱体
+          ctx.fillStyle = '#78350f';
+          ctx.fillRect(-8, -5, 16, 11);
+          ctx.strokeStyle = '#facc15';
+          ctx.lineWidth = 1.6;
+          ctx.strokeRect(-8, -5, 16, 11);
+          // 宝箱黄金上盖与红宝石锁扣
+          ctx.fillStyle = '#d97706';
+          ctx.fillRect(-8, -6, 16, 4);
+          ctx.fillStyle = '#fef08a';
+          ctx.fillRect(-2, -3, 4, 5);
+          ctx.fillStyle = '#ef4444';
+          ctx.fillRect(-1, -2, 2, 2);
+        } else {
+          ctx.fillStyle = '#b45309';
+          ctx.beginPath();
+          ctx.arc(0, 0, 5.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#facc15';
+          ctx.beginPath();
+          ctx.arc(0, 0, 4.2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#fef08a';
+          ctx.fillRect(-1, -2.5, 2, 5);
+        }
         ctx.restore();
       }
 
@@ -10916,8 +10990,10 @@
 
       ctx.save();
       ctx.translate(en.x, en.y);
+      const vScale = en.visualScale || (en.pinataLevel > 1 ? (1 + (en.pinataLevel - 1) * 0.42) : 1);
+      if (vScale !== 1) ctx.scale(vScale, vScale);
       // 受击弹性形变 (Squash & Stretch)
-      if (en.hitTimer > 0) {
+      if (en.hitTimer > 0 || (en.squashTimer && en.squashTimer > 0)) {
         ctx.scale(1.22, 0.82);
       }
       if (player.x < en.x) ctx.scale(-1, 1);
@@ -11199,11 +11275,13 @@
       }
       const preview = document.getElementById('lobby-curse-preview');
       if (preview) {
-        preview.textContent = `本关基础血量 ${stagePct}% · 总怪血量 ${totalHpPct}% | 伤害 ${totalDmgPct}% | 金币爆率 ${goldDropPct}%(×${goldYieldMul})${lv > 0 ? ` | 经验 +${expBonusPct}%` : ''}`;
+        const curseHpPct = Math.round(curseHpMul * 100);
+        preview.textContent = `怪物血量 ${curseHpPct}% | 伤害 ${totalDmgPct}% | 金币爆率 ${goldDropPct}%(×${goldYieldMul})${lv > 0 ? ` | 经验 +${expBonusPct}%` : ''}`;
       }
       const coopSummary = document.getElementById('coop-curse-summary');
       if (coopSummary) {
-        coopSummary.textContent = `战前难度：${lv > 0 ? '+' + lv + '阶' : '0阶'} (本关基础${stagePct}% · 总怪血量${totalHpPct}% | 伤害${totalDmgPct}%)`;
+        const curseHpPct = Math.round(curseHpMul * 100);
+        coopSummary.textContent = `战前难度：${lv > 0 ? '+' + lv + '阶' : '0阶'} (怪物血量${curseHpPct}% | 伤害${totalDmgPct}%)`;
       }
       const isGuest = typeof CoopManager !== 'undefined' && Boolean(CoopManager.roomCode && !CoopManager.isHost);
       ['btn-lobby-curse-down', 'btn-coop-curse-down', 'btn-lobby-curse-reset', 'btn-coop-curse-reset'].forEach(id => {
@@ -11246,11 +11324,10 @@
       if (!fromNetwork) {
         audio.init();
         if (clamped > 0) audio.playSuperWeapon(); else audio.playFreeze();
-        const stagePct = Math.round(getStageHpMultiplier(GameState.activeBiome) * 100);
-        const totalHpPct = Math.round(getStageHpMultiplier(GameState.activeBiome) * (1 + clamped * 0.35) * 100);
+        const curseHpPct = Math.round((1 + clamped * 0.35) * 100);
         showToast(clamped > 0
-          ? `[px:fire] 战前初始难度已设为【+${clamped}阶】！本关基础血量${stagePct}% -> 开局怪血量${totalHpPct}% | 金币爆率+${clamped * 10}% | 经验+${clamped * 8}%`
-          : `[px:snow] 战前初始难度已重置为【标准 0阶】（本关基础血量 ${stagePct}%）`);
+          ? `[px:fire] 战前初始难度已设为【+${clamped}阶】！开局怪物血量 ${curseHpPct}% | 金币爆率+${clamped * 10}% | 经验+${clamped * 8}%`
+          : `[px:snow] 战前初始难度已重置为【标准 0阶】`);
       }
       return true;
     }
@@ -11345,8 +11422,7 @@
           graveyard: '[px:grave]幽冥血月墓园',
           clockwork: '[px:clock-city]时空锈月钟城',
           vault: '[px:coin]番外一·贪婪黄金宝库',
-          slime_carnival: '[px:potion]番外二·史莱姆狂欢牧场',
-          starfall_temple: '[px:star]番外三·星陨诸神黄昏'
+          slime_carnival: '[px:potion]番外二·史莱姆狂欢牧场'
         };
         showToast(`[px:map] 已切换作战地图为：【${bNames[biomeKey] || biomeKey}】（已同步给房间队友）！`);
       }
@@ -16925,7 +17001,10 @@
         }
       },
       applyWorldItem(item, actor) {
-        if (item.type === 'magnet') for (const g of gems) { g.magnetOwner = actor.id; g.isSuperAttracted = true; }
+        if (item.type === 'magnet') {
+          for (const g of gems) { g.magnetOwner = actor.id; g.isSuperAttracted = true; }
+          for (const gd of goldDrops) { gd.magnetOwner = actor.id; gd.isSuperAttracted = true; }
+        }
         if (item.type === 'freeze') GameState.globalFreezeTimer = 5;
         if (item.type === 'bomb') for (const en of [...enemies]) {
           if (en.isDead) continue;
@@ -18104,19 +18183,19 @@
     r29Bosses.forEach(([key,name,skin,move1,move2],i)=>{const minute=(i+1)*5,m=r29Matrices[skin].map(row=>row.replaceAll('p','g'));r29Bake(key,m);const b={key,title:minute.toString().padStart(2,'0')+'m钟城首领 · '+name,hp:[3750,7650,12750,19650,28200,56400][i],speed:[94,88,96,99,98,102][i],radius:25+i,dmg:[22,28,34,40,46,54][i],color:['#d1ae6a','#e8a45b','#b6a0dd','#7fa6bc','#8fd0d8','#f0cb83'][i],skill:'butcher',isFinal:i===5};BIOME_BOSS_ROSTER.clockwork[minute]=b;BossCombat.profiles['clockwork_'+minute]={name:({clockHands:'交错时针',gearRush:'齿轮突击',bellWaves:'钟声缺口',bellHammer:'三重落锤',timeGrid:'时隙棋阵',timeSpiral:'逆时弹环',trainLanes:'夜轨双线',ticketRing:'冥轨封锁',pendulum:'摆锤交错',starClock:'星盘分野',clockMidnight:'午夜十二响',clockRewind:'返场终钟'})[move1]+' / '+({gearRush:'齿轮突击',bellHammer:'三重落锤',timeSpiral:'逆时弹环',ticketRing:'冥轨封锁',starClock:'星盘分野',clockRewind:'返场终钟'})[move2],moves:[move1,move2],cd:3.8+i*.16};});
     const r29BossCast=BossCombat.cast;BossCombat.cast=function(en,t,move){if(!move?.startsWith('clock')&&!['gearRush','bellWaves','bellHammer','timeGrid','timeSpiral','trainLanes','ticketRing','pendulum','starClock'].includes(move))return r29BossCast.call(this,en,t,move);
       const x=t.x,y=t.y,bx=en.x,by=en.y,a=Math.atan2(y-by,x-bx),p2=en.isPhase2;en.bossMove=this.profile(en).name.split(' / ')[this.state(en).step%2];this.state(en).busy=1.2;
-      if(move==='clockHands'){for(const d of [-.5,.5])this.line(en,bx,by,bx+Math.cos(a+d)*360,by+Math.sin(a+d)*360,38,1.1,.8);}
-      if(move==='gearRush'){this.line(en,bx,by,x,y,48,1.1,.9,()=>this.dash(en,x,y));this.later(en,1.6,()=>this.ring(en,en.x,en.y,70,160,1,.6));}
-      if(move==='bellWaves')for(let k=0;k<3;k++)this.later(en,k*.9,()=>this.ring(en,bx,by,85+k*48,150+k*60,1,.7,a+k*.7,.75));
-      if(move==='bellHammer')for(let k=0;k<3+(p2?1:0);k++)this.circle(en,x+(k-1)*85,y+Math.sin(k*2)*55,58,1.1+k*.28,.8);
-      if(move==='timeGrid')for(let row=-1;row<=1;row++)for(let col=-1;col<=1;col++)if((row+col+4)%2===0)this.circle(en,x+col*110,y+row*110,52,1.3,.7);
-      if(move==='timeSpiral')for(let k=0;k<3;k++)this.later(en,k*.55,()=>this.circle(en,en.x,en.y,45,.8,.2,()=>this.gapRing(en,a+Math.PI+k*.45,18,.8)));
-      if(move==='trainLanes')for(const offset of [-95,95])this.line(en,x-380,y+offset,x+380,y+offset,42,1.3,.85,()=>{for(let k=0;k<3;k++)this.bullet(en,x-380,y+offset,k*.08,245,.7,9);});
-      if(move==='ticketRing'){this.ring(en,x,y,90,230,1.4,.75,a,.7);this.circle(en,x,y,45,2,.55);}
-      if(move==='pendulum')for(let k=0;k<3;k++){const ang=a-.65+k*.65;this.line(en,bx,by,bx+Math.cos(ang)*390,by+Math.sin(ang)*390,32,1+k*.4,.7);}
-      if(move==='starClock')for(let k=0;k<6;k++)this.sector(en,bx,by,k*Math.PI/3+a,Math.PI*.17,300,1.3,.7);
-      if(move==='clockMidnight')for(let k=0;k<6+(p2?2:0);k++){const ang=k*Math.PI*2/(6+(p2?2:0));this.circle(en,x+Math.cos(ang)*160,y+Math.sin(ang)*160,50,1.2+k*.12,.7);}
-      if(move==='clockRewind'){this.line(en,x-280,y-180,x+280,y-180,36,1.2,.7);this.line(en,x-280,y+180,x+280,y+180,36,1.2,.7);this.later(en,1.4,()=>this.ring(en,x,y,105,300,1.2,.8,a+Math.PI,.8));}
-      if(p2)this.later(en,.4,()=>this.circle(en,x,y,38,.9,.3));
+      if(move==='clockHands'){for(const d of [-.5,.5])this.line(en,bx,by,bx+Math.cos(a+d)*340,by+Math.sin(a+d)*340,30,1.1,.72);}
+      if(move==='gearRush'){this.line(en,bx,by,x,y,38,1.1,.8,()=>this.dash(en,x,y));this.later(en,1.6,()=>this.ring(en,en.x,en.y,115,175,1,.55,a,1.25));}
+      if(move==='bellWaves')for(let k=0;k<3;k++)this.later(en,k*.9,()=>this.ring(en,bx,by,115+k*56,170+k*56,1,.65,a+k*.7,1.22));
+      if(move==='bellHammer')for(let k=0;k<3+(p2?1:0);k++)this.circle(en,x+(k-1)*85,y+Math.sin(k*2)*55,50,1.1+k*.28,.72);
+      if(move==='timeGrid')for(let row=-1;row<=1;row++)for(let col=-1;col<=1;col++)if((row+col+4)%2===0)this.circle(en,x+col*110,y+row*110,46,1.3,.65);
+      if(move==='timeSpiral')for(let k=0;k<3;k++)this.later(en,k*.55,()=>this.circle(en,en.x,en.y,40,.8,.2,()=>this.gapRing(en,a+Math.PI+k*.45,16,.95)));
+      if(move==='trainLanes')for(const offset of [-95,95])this.line(en,x-360,y+offset,x+360,y+offset,34,1.3,.75,()=>{for(let k=0;k<3;k++)this.bullet(en,x-360,y+offset,k*.08,235,.65,8);});
+      if(move==='ticketRing'){this.ring(en,x,y,135,215,1.4,.68,a,1.25);this.circle(en,x,y,40,2,.5);}
+      if(move==='pendulum')for(let k=0;k<3;k++){const ang=a-.65+k*.65;this.line(en,bx,by,bx+Math.cos(ang)*360,by+Math.sin(ang)*360,26,1+k*.4,.65);}
+      if(move==='starClock')for(let k=0;k<6;k++)this.sector(en,bx,by,k*Math.PI/3+a,Math.PI*.15,275,1.3,.65);
+      if(move==='clockMidnight')for(let k=0;k<6+(p2?2:0);k++){const ang=k*Math.PI*2/(6+(p2?2:0));this.circle(en,x+Math.cos(ang)*160,y+Math.sin(ang)*160,44,1.2+k*.12,.65);}
+      if(move==='clockRewind'){this.line(en,x-260,y-180,x+260,y-180,30,1.2,.65);this.line(en,x-260,y+180,x+260,y+180,30,1.2,.65);this.later(en,1.4,()=>this.ring(en,x,y,145,235,1.2,.72,a+Math.PI,1.28));}
+      if(p2)this.later(en,.4,()=>this.circle(en,x,y,34,.9,.28));
       updateBossHud(en);
     };
     STAGE_SPECIAL_RELICS.clockwork=[
@@ -18170,10 +18249,10 @@
       const b=document.createElement('button');b.type='button';b.className='biome-card coop-hero-pick';b.dataset.hero=key;b.innerHTML='[px:hero-'+key+'] '+HERO_CONFIGS[key].name;b.onclick=()=>{trySelectOrBuyHero(key,b,true);};document.querySelector('.coop-hero-pick').parentElement.append(b);
     }
     var STAGE_CGS=window.STAGE_CGS=window.STAGE_CGS||{};
-    const r29Preview=document.createElement('figure');r29Preview.id='clockwork-preview';r29Preview.style.cssText='margin:12px 0;border:2px solid #70583e;background:#101922';const stageImg=document.createElement('img');stageImg.decoding='async';stageImg.style.cssText='display:block;width:100%;max-height:230px;object-fit:cover;image-rendering:pixelated';stageImg.alt='关卡像素CG';const stageCaption=document.createElement('figcaption');stageCaption.style.cssText='padding:7px;font-size:12px;color:#e9c278';r29Preview.append(stageImg,stageCaption);document.querySelector('#lobby-modal .biome-grid').after(r29Preview);
-    const r29Selection=syncHeroAndBiomeSelectionUI;syncHeroAndBiomeSelectionUI=function(){const r=r29Selection(),key=(["dungeon","tundra","graveyard","clockwork"].includes(GameState.activeBiome)?GameState.activeBiome:'dungeon');r29Preview.hidden=false;if(STAGE_CGS[key]&&(stageImg.dataset.biome!==key||!stageImg.src)){stageImg.src=STAGE_CGS[key];stageImg.dataset.biome=key;}stageCaption.textContent=({dungeon:'熔火地牢 · 烈焰深处的第一夜',tundra:'永冬冻原 · 向北再无归途',graveyard:'血月墓园 · 横越不安眠的长夜',clockwork:'锈月钟城 · 时空崩坏的永夜回廊'})[key];return r;};
+    const r29Preview=document.createElement('figure');r29Preview.id='clockwork-preview';r29Preview.style.cssText='margin:12px 0;border:2px solid #70583e;background:#101922';const stageImg=document.createElement('img');stageImg.id='stage-cg-img';stageImg.decoding='async';stageImg.style.cssText='display:block;width:100%;max-height:230px;object-fit:cover;image-rendering:pixelated';stageImg.alt='关卡像素CG';const stageCaption=document.createElement('figcaption');stageCaption.id='stage-cg-caption';stageCaption.style.cssText='padding:7px;font-size:12px;color:#e9c278';r29Preview.append(stageImg,stageCaption);document.querySelector('#lobby-modal .biome-grid').after(r29Preview);
+    const r29Selection=syncHeroAndBiomeSelectionUI;syncHeroAndBiomeSelectionUI=function(){const r=r29Selection(),key=(["dungeon","tundra","graveyard","clockwork","vault","slime_carnival"].includes(GameState.activeBiome)?GameState.activeBiome:'dungeon');r29Preview.hidden=false;if(STAGE_CGS[key]&&(stageImg.dataset.biome!==key||!stageImg.src)){stageImg.src=STAGE_CGS[key];stageImg.dataset.biome=key;}stageCaption.textContent=({dungeon:'熔火地牢 · 烈焰深处的第一夜',tundra:'永冬冻原 · 向北再无归途',graveyard:'血月墓园 · 横越不安眠的长夜',clockwork:'锈月钟城 · 时空崩坏的永夜回廊',vault:'番外一：贪婪黄金宝库 · 1%~5%买定离手30秒 · 局内金币撒币炮 · 十连全队命运轮盘',slime_carnival:'番外二：史莱姆狂欢牧场 · 同阶碰撞合体(最高5阶回血变大) · 4阶以上大爆奖 · 彩虹吞噬战车'})[key];return r;};
     function r29PickStage(cardEl=null,isCoop=false){trySelectStage('clockwork',cardEl,isCoop);}
-    const r29Stage=document.createElement('button');r29Stage.type='button';r29Stage.className='biome-card';r29Stage.dataset.biome='clockwork';r29Stage.innerHTML='[px:clock-city] 第四关：时空锈月钟城<br><span style="font-size:9px;color:#94a3b8;">发条系怪(140%血量)+终末钟王 | 秘宝:逆摆表/心簧</span>';r29Stage.onclick=()=>r29PickStage(r29Stage,false);document.querySelector('#lobby-modal .biome-grid').append(r29Stage);
+    const r29Stage=document.createElement('button');r29Stage.type='button';r29Stage.className='biome-card';r29Stage.dataset.biome='clockwork';r29Stage.innerHTML='[px:clock-city] 第四关：时空锈月钟城<br><span style="font-size:9px;color:#94a3b8;">发条系怪+终末钟王 | 秘宝:逆摆表/心簧</span>';r29Stage.onclick=()=>r29PickStage(r29Stage,false);document.querySelector('#lobby-modal .biome-grid').append(r29Stage);
     const r29CoopStage=r29Stage.cloneNode(true);r29CoopStage.classList.add('coop-biome-pick');r29CoopStage.innerHTML='[px:clock-city] 锈月钟城';r29CoopStage.onclick=()=>{r29PickStage(r29CoopStage,true);};document.querySelector('.coop-biome-pick').parentElement.append(r29CoopStage);
     document.getElementById('btn-start-game').insertAdjacentHTML('beforebegin','<button type="button" class="btn-secondary" id="btn-camp-title">标题画面</button>');
     var FrontDoor={
@@ -19916,15 +19995,14 @@
     // =========================================================================
     const StageUnlocks = {
       REQ_SECONDS: 1200, // 20分钟 (1200秒)
-      ORDER: ['dungeon', 'tundra', 'graveyard', 'clockwork', 'vault', 'slime_carnival', 'starfall_temple'],
+      ORDER: ['dungeon', 'tundra', 'graveyard', 'clockwork', 'vault', 'slime_carnival'],
       NAMES: {
         dungeon: '第一关（熔火地牢）',
         tundra: '第二关（永冬冻原）',
         graveyard: '第三关（血月墓园）',
         clockwork: '第四关（时空锈月钟城）',
         vault: '番外一（贪婪黄金宝库）',
-        slime_carnival: '番外二（史莱姆狂欢牧场）',
-        starfall_temple: '番外三（星陨诸神黄昏）'
+        slime_carnival: '番外二（史莱姆狂欢牧场）'
       },
       PREV_MAP: {
         tundra: { prev: 'dungeon', prevNum: 1, prevName: '第一关（熔火地牢）' },
@@ -19945,13 +20023,6 @@
           reqStageName: '第二关（永冬冻原）',
           goldCost: 5000,
           shortLabel: '通关第2关 或 5,000金币解锁'
-        },
-        starfall_temple: {
-          reqStage: 'graveyard',
-          reqStageNum: 3,
-          reqStageName: '第三关（血月墓园）',
-          goldCost: 8000,
-          shortLabel: '通关第3关 或 8,000金币解锁'
         }
       },
       ensureData() {
@@ -19960,7 +20031,7 @@
           SaveManager.data.unlockedStages = { dungeon: true };
         }
         if (!SaveManager.data.stageBestSeconds || typeof SaveManager.data.stageBestSeconds !== 'object') {
-          SaveManager.data.stageBestSeconds = { dungeon: 0, tundra: 0, graveyard: 0, clockwork: 0, vault: 0, slime_carnival: 0, starfall_temple: 0 };
+          SaveManager.data.stageBestSeconds = { dungeon: 0, tundra: 0, graveyard: 0, clockwork: 0, vault: 0, slime_carnival: 0 };
         }
         SaveManager.data.unlockedStages.dungeon = true;
         const cleared = SaveManager.data.campaign?.clearedBiomes || {};
@@ -20094,11 +20165,12 @@
               : `[px:check] 已解锁 · 点击出征`;
           } else if (this.EXTRA_SPECS[b]) {
             const spec = this.EXTRA_SPECS[b];
+            const prevBest = this.getBestSeconds(spec.reqStage);
             const canBuy = curGold >= spec.goldCost;
             tag.className = 'stage-unlock-tag ' + (canBuy ? 'is-buyable' : 'is-locked');
             tag.innerHTML = canBuy
-              ? `[px:coin] 点击花费 ${spec.goldCost.toLocaleString()} 金币立即解锁（或通关第${spec.reqStageNum}关免费解锁）`
-              : `[px:lock] 通关第${spec.reqStageNum}关免费解锁 · 或点击花费 ${spec.goldCost.toLocaleString()} 金币解锁`;
+              ? `[px:coin] 第${spec.reqStageNum}关生存20分钟(${this.formatMinSec(prevBest)}/20:00) 或点击花费${spec.goldCost.toLocaleString()}金解锁`
+              : `[px:lock] 第${spec.reqStageNum}关生存20分钟解锁 (${this.formatMinSec(prevBest)}/20:00) · 或${spec.goldCost.toLocaleString()}金`;
           } else {
             const req = this.PREV_MAP[b];
             const prevBest = req ? this.getBestSeconds(req.prev) : 0;
@@ -21851,7 +21923,7 @@
         const curNormalMonsterHp = Math.round(avgBaseHp * hpMul);
         const normalBossMul = Math.round((45 + Math.round(Math.max(20, minuteMark) * 0.5)) * 2.4);
         const computedBossHp = Math.max(Math.round(95000 * (stageHpMul || 1)), curNormalMonsterHp * normalBossMul);
-        const computedBossDmg = Math.round(38 * 1.75 * Math.max(1, dmgMul * 0.75));
+        const computedBossDmg = Math.round(38 * 1.20 * Math.max(1, dmgMul * 0.65));
 
         const boss = {
           x: bossPoint.x,
@@ -22862,8 +22934,8 @@
           ['warrior', 'mage', 'ranger', 'engineer', 'necromancer', 'healer', 'billiard', 'pugilist', 'cardmaster'].forEach(k => {
             SaveManager.data.unlockedHeroes[k] = true;
           });
-          SaveManager.data.unlockedStages = { dungeon: true, tundra: true, graveyard: true, clockwork: true, vault: true, slime_carnival: true, starfall_temple: true };
-          SaveManager.data.stageBestSeconds = { dungeon: 1800, tundra: 1800, graveyard: 1800, clockwork: 1800, vault: 1800, slime_carnival: 1800, starfall_temple: 1800 };
+          SaveManager.data.unlockedStages = { dungeon: true, tundra: true, graveyard: true, clockwork: true, vault: true, slime_carnival: true };
+          SaveManager.data.stageBestSeconds = { dungeon: 1800, tundra: 1800, graveyard: 1800, clockwork: 1800, vault: 1800, slime_carnival: 1800 };
           if (!SaveManager.data.shopUnlocks) SaveManager.data.shopUnlocks = {};
           Object.keys(SaveManager.data.shopUnlocks).forEach(k => { SaveManager.data.shopUnlocks[k] = true; });
           if (typeof SHOP_SPECS !== 'undefined' && Array.isArray(SHOP_SPECS)) {
@@ -22908,7 +22980,7 @@
             lastSaveTime: null,
             unlockedHeroes: { warrior: true, mage: true, ranger: true },
             unlockedStages: { dungeon: true },
-            stageBestSeconds: { dungeon: 0, tundra: 0, graveyard: 0, clockwork: 0, vault: 0, slime_carnival: 0, starfall_temple: 0 },
+            stageBestSeconds: { dungeon: 0, tundra: 0, graveyard: 0, clockwork: 0, vault: 0, slime_carnival: 0 },
             shopUnlocks: { dmgMode: false, autoAtk: false, curseUp: false, curseDown: false, timeScale: false, waveEvent: false },
             talents: { might: 0, vitality: 0, haste: 0, greed: 0, magnet: 0, charge: 0, revive: 0 }
           };
@@ -23120,13 +23192,12 @@
     }
 
     // =========================================================================
-    // 9. 三大解压番外爽关系统 (ExtraStagesSystem)
+    // 9. 两大解压番外爽关系统 (ExtraStagesSystem)
     // - 番外一：贪婪黄金宝库 (vault) —— 1%~5%五档下注锁定30秒 · 自动撒币炮(仅耗局内金币) · 每10击全队命运大轮盘
-    // - 番外二：史莱姆狂欢牧场 (slime_carnival) —— 超弹力果冻弹球物理 · 合体黄金皮纳塔 · 彩虹吞噬战车
-    // - 番外三：星陨诸神黄昏 (starfall_temple) —— 开局直升25级 · 小怪全闪光/原闪光全变Boss · 头顶Boss血条 · 5倍爆率与高频商人
+    // - 番外二：史莱姆狂欢牧场 (slime_carnival) —— 超弹力果冻弹球物理 · 同阶五阶合体(合体回血·4阶+爆大奖) · 彩虹吞噬战车
     // =========================================================================
     const ExtraStagesSystem = {
-      EXTRA_BIOMES: ['vault', 'slime_carnival', 'starfall_temple'],
+      EXTRA_BIOMES: ['vault', 'slime_carnival'],
       META: {
         vault: {
           key: 'vault',
@@ -23135,28 +23206,18 @@
           badge: '买定离手 · 自动撒币 · 十连轮盘',
           themeColor: '#facc15',
           borderColor: '#eab308',
-          caption: '[px:coin] 番外一 · 贪婪黄金宝库 —— 1%~5%五档下注锁定30秒 · 自动消耗局内金币发射撒币炮 · 每10击触发全队命运轮盘！',
+          caption: '番外一：贪婪黄金宝库 · 1%~5%五档下注锁定30秒 · 自动消耗局内金币发射撒币炮 · 每10击触发全队命运轮盘！',
           desc: '【爽点：买定离手豪赌撒币 · 十连全队命运轮盘】按下下注键选择投入 1%~5% 局内金币自动发射撒币炮（最少1金算1%档，仅耗本局金币绝不扣存档老本），下注后锁定 30 秒不可更改！档位越高伤害、穿透、怪物爆率与金箱率越暴涨；每攻击 10 次触发全队统一【命运赌神大轮盘】！'
         },
         slime_carnival: {
           key: 'slime_carnival',
           title: '[px:potion] 番外二 · 史莱姆狂欢牧场',
           shortTitle: '史莱姆狂欢牧场',
-          badge: '弹球碰撞 · 合体皮纳塔 · 吞噬战车',
+          badge: '弹球碰撞 · 五阶合体 · 吞噬战车',
           themeColor: '#38bdf8',
           borderColor: '#06b6d4',
-          caption: '[px:potion] 番外二 · 史莱姆狂欢牧场 —— 超弹力果冻物理碰撞 · 小怪相撞合体黄金皮纳塔 · 拾取王冠化身彩虹吞噬战车！',
-          desc: '【爽点：满屏Q弹台球连环撞 · 养肥合体大爆奖】全场史莱姆具备超强果冻弹性，受击后化作高速弹球在屏幕边缘与怪群间连环碰撞造成连锁伤害！小史莱姆相撞会合体进化为【黄金皮纳塔皇】，击破爆出满屏经验宝石雨；拾取狂欢果冻王冠更能化身无敌【彩虹果冻战车】一路碾压吞噬！'
-        },
-        starfall_temple: {
-          key: 'starfall_temple',
-          title: '[px:star] 番外三 · 星陨诸神黄昏',
-          shortTitle: '星陨诸神黄昏',
-          badge: '开局25级 · 全员闪光与满屏Boss',
-          themeColor: '#c084fc',
-          borderColor: '#a855f7',
-          caption: '[px:star] 番外三 · 星陨诸神黄昏 —— 开局直升25级 · 小怪全员闪光怪、原闪光全变Boss · 头顶独立血条 · 5倍道具爆率与高频商人！',
-          desc: '【爽点：开局25级神装 · 满屏闪光与诸神Boss同屏狂飙】入场即刻直升 25 级觉醒海量技能！普通小怪 100% 全员进化为【闪光怪】，原本的闪光/精英怪全部晋升为【诸神Boss】（Boss血条直接显示在Boss头顶，不占公屏顶部）！5倍道具爆率、高频黑市商人，每斩杀一尊Boss叠层【弑神神格】双向数值膨胀！'
+          caption: '番外二：史莱姆狂欢牧场 · 超弹力果冻物理碰撞 · 同阶碰撞五阶合体(合体回血·4阶以上爆大奖) · 拾取王冠化身彩虹吞噬战车！',
+          desc: '【爽点：满屏Q弹台球连环撞 · 五阶养肥合体大爆奖】全场史莱姆具备超强果冻弹性，受击后化作高速弹球在屏幕边缘与怪群间连环碰撞！两个同阶段史莱姆相撞会合体进化至下一阶段（1阶→2阶→3阶→4阶→最高5阶），合体时回血且阶段越高血量越高、体型越大，击败4阶及以上皮纳塔皇才会爆出满地宝石与黄金宝箱大奖！'
         }
       },
 
@@ -23180,7 +23241,10 @@
         rouletteTier: 1,
         rouletteResultBannerTimer: 0,
         rouletteLastOutcome: null,
-        // 轮盘 Buff / Debuff 计时器
+        // 轮盘 Buff / Debuff 计时器与大奖时刻状态
+        feverTimer: 0,
+        feverTier: 1,
+        feverBlingTick: 0,
         buffFuryTimer: 0,
         buffFuryTier: 1,
         debuffMonsterFrenzyTimer: 0,
@@ -23189,6 +23253,9 @@
         debuffHeavyGoldTier: 1
       },
 
+      // 局内通知去重集合（同一局内相同技能/道具描述通知只弹一次）
+      shownRunToasts: new Set(),
+
       // 番外二：史莱姆狂欢状态
       slime: {
         chariotTimer: 0,
@@ -23196,98 +23263,208 @@
         chainBounceCount: 0,
         chainResetTimer: 0,
         totalFusions: 0,
+        fusionCooldown: 0,
         crowns: []
       },
 
-      // 番外三：星陨诸神黄昏状态
-      starfall: {
-        godslayerStacks: 0,
-        bossSpawnTimer: 18,
-        autoUpgradedAtStart: false
-      },
-
       ROULETTE_SLICES: [
-        { id: 'jackpot_gold', good: true, icon: '🪙', name: '天降横财·彩金暴富', color: '#eab308', desc: '立即获得高额局内金币彩金与漫天金币雨' },
+        { id: 'fever_jackpot', good: true, icon: '🌟', name: '大奖时刻·黄金狂热', color: '#facc15', desc: '全屏金光特效与布林布林音效，全属性狂暴Buff，杀怪100%爆金币与掉落在地的黄金宝箱！' },
         { id: 'monster_frenzy', good: false, icon: '😈', name: '贪婪反噬·魔物狂化', color: '#ef4444', desc: '全场怪物移速与护盾短暂提升（高风险高爆率）' },
         { id: 'god_fury', good: true, icon: '⚡', name: '财神附体·狂暴神力', color: '#22c55e', desc: '全队伤害、攻速与暴击率随投入档位大幅飙升14秒' },
         { id: 'house_tax', good: false, icon: '💸', name: '庄家抽水·破财消灾', color: '#dc2626', desc: '扣除部分当前局内赌本金币（绝不扣局外存档金币）' },
         { id: 'gold_petrify', good: true, icon: '🗿', name: '点石成金·全屏石化', color: '#f59e0b', desc: '全屏怪物石化为黄金雕像并承受巨额破甲伤害' },
         { id: 'heavy_shackle', good: false, icon: '⛓️', name: '黄金枷锁·负重迟缓', color: '#b91c1c', desc: '全队受黄金负重影响短暂减速并易伤8秒' },
-        { id: 'royal_chests', good: true, icon: '🎁', name: '皇家空投·满地金箱', color: '#10b981', desc: '在队伍四周立即空投多座黄金宝箱与珍稀道具' },
+        { id: 'royal_chests', good: true, icon: '🎁', name: '皇家空投·满地金箱', color: '#10b981', desc: '在队伍四周地上立即掉落多座可拾取的黄金宝箱与珍稀道具' },
         { id: 'debt_enforcers', good: false, icon: '⚔️', name: '宝库追债·金甲行刑官', color: '#991b1b', desc: '召唤强力黄金宝库追债精英围剿玩家' }
       ],
 
       init() {
         this.registerStageData();
         this.generateStageCGs();
+        this.buildExtraBiomeTiles();
         this.injectStyles();
         this.injectLobbyCards();
         this.injectHUDAndModals();
         this.hookGameSystems();
-        StageUnlocks.refreshUI();
-        syncHeroAndBiomeSelectionUI();
+        if (typeof StageUnlocks !== 'undefined') StageUnlocks.refreshUI();
+        if (typeof syncHeroAndBiomeSelectionUI === 'function') syncHeroAndBiomeSelectionUI();
       },
 
       registerStageData() {
+        // 1. 烘焙两大番外关专属魔物像素精灵并注册到 MONSTER_SPECS
+        const extraMonsterMatrices = {
+          gold_mimic: [
+            '....kkkkkkkk....',
+            '...kggggggggk...',
+            '..kgyyyyyyyygk..',
+            '.kgddddddddddgk.',
+            '.kgkkkkkkkkkkgy.',
+            '.kgrwkrwkrwkgyk.',
+            '.kgkkkkkkkkkkgy.',
+            '.kgggggyyyggggk.',
+            '..kddddddddddk..',
+            '..kggggggggggk..',
+            '...kkkkkkkkkk...'
+          ],
+          vault_guard: [
+            '.....kkkkkk.....',
+            '....kyyyyyyk....',
+            '...kggggggggk...',
+            '...kgwwkkwwgk...',
+            '....kggggggk....',
+            '..kkkyyyyyykkk..',
+            '.kgggddddddgggk.',
+            '.kgygdyyyydgygk.',
+            '.kgggddddddgggk.',
+            '..kkkggggggkkk..',
+            '....kggkkggk....',
+            '...kggk..kggk...',
+            '..kkkk....kkkk..'
+          ],
+          jelly_slime: [
+            '.....kkkkkk.....',
+            '...kkcccccckk...',
+            '..kccwwwwwwcck..',
+            '.kccwccffccwcck.',
+            '.kccwkcccckwcck.',
+            '.kcccccccccccck.',
+            '.kccceeeeeeccck.',
+            '..kcccccccccck..',
+            '...kkkkkkkkkk...'
+          ],
+          pinata_slime: [
+            '.....kyyyyk.....',
+            '....kyryyryk....',
+            '...kkggggggkk...',
+            '..kggyyyyyyggk..',
+            '.kggywwggywwggk.',
+            '.kggykkgzykkygk.',
+            '.kggyrrrrrrggyk.',
+            '.kggggyyyyggggk.',
+            '..kggggggggggk..',
+            '...kkkkkkkkkk...'
+          ]
+        };
+
+        if (typeof r29Bake === 'function') {
+          for (const [mKey, mat] of Object.entries(extraMonsterMatrices)) {
+            r29Bake(mKey, mat, false);
+          }
+        }
+
+        if (typeof MONSTER_SPECS !== 'undefined') {
+          Object.assign(MONSTER_SPECS, {
+            gold_mimic:   { tier: 2, hp: 340, dmg: 14, speed: 64, radius: 13, exp: 12, color: '#eab308', stageKey: 'vault' },
+            vault_guard:  { tier: 3, hp: 680, dmg: 19, speed: 54, radius: 16, exp: 22, color: '#facc15', stageKey: 'vault' },
+            jelly_slime:  { tier: 1, hp: 165, dmg: 9,  speed: 74, radius: 13, exp: 5,  color: '#38bdf8', stageKey: 'slime_carnival' },
+            pinata_slime: { tier: 4, hp: 980, dmg: 20, speed: 58, radius: 30, exp: 42, color: '#f472b6', stageKey: 'slime_carnival' }
+          });
+        }
+
+        // 2. 注册两大番外关 30 分钟波次时间表 (严格对齐 { startSec, maxSec, types, newMonster, label, nextBoss } 格式)
         if (typeof BIOME_WAVE_SCHEDULES !== 'undefined') {
-          BIOME_WAVE_SCHEDULES.vault = [
-            { start: 0, end: 5, types: ['goblin', 'skeleton'], intervalMult: 0.90, batchBonus: 2 },
-            { start: 5, end: 10, types: ['goblin', 'orc', 'skeleton'], intervalMult: 0.82, batchBonus: 3 },
-            { start: 10, end: 15, types: ['orc', 'Succubus', 'golem'], intervalMult: 0.76, batchBonus: 3 },
-            { start: 15, end: 20, types: ['golem', 'Succubus', 'orc'], intervalMult: 0.70, batchBonus: 4 },
-            { start: 20, end: 25, types: ['golem', 'orc', 'goblin'], intervalMult: 0.65, batchBonus: 5 },
-            { start: 25, end: 999, types: ['golem', 'Succubus', 'orc', 'goblin'], intervalMult: 0.58, batchBonus: 6 }
-          ];
-          BIOME_WAVE_SCHEDULES.slime_carnival = [
-            { start: 0, end: 5, types: ['slime', ' bat'], intervalMult: 0.78, batchBonus: 3 },
-            { start: 5, end: 10, types: ['slime', 'goblin'], intervalMult: 0.72, batchBonus: 4 },
-            { start: 10, end: 15, types: ['slime', 'orc', 'goblin'], intervalMult: 0.66, batchBonus: 5 },
-            { start: 15, end: 20, types: ['slime', 'golem', 'orc'], intervalMult: 0.62, batchBonus: 5 },
-            { start: 20, end: 25, types: ['slime', 'golem', 'Succubus'], intervalMult: 0.56, batchBonus: 6 },
-            { start: 25, end: 999, types: ['slime', 'golem', 'orc'], intervalMult: 0.50, batchBonus: 7 }
-          ];
-          BIOME_WAVE_SCHEDULES.slime_carnival[0].types = ['slime', 'bat'];
-          BIOME_WAVE_SCHEDULES.starfall_temple = [
-            { start: 0, end: 5, types: ['skeleton', 'Succubus', 'orc'], intervalMult: 1.05, batchBonus: 1 },
-            { start: 5, end: 10, types: ['Succubus', 'golem', 'orc'], intervalMult: 0.98, batchBonus: 2 },
-            { start: 10, end: 15, types: ['golem', 'Succubus', 'skeleton'], intervalMult: 0.92, batchBonus: 2 },
-            { start: 15, end: 20, types: ['golem', 'Succubus', 'orc'], intervalMult: 0.86, batchBonus: 3 },
-            { start: 20, end: 25, types: ['golem', 'Succubus', 'orc'], intervalMult: 0.80, batchBonus: 3 },
-            { start: 25, end: 999, types: ['golem', 'Succubus', 'orc', 'skeleton'], intervalMult: 0.75, batchBonus: 4 }
-          ];
+          const buildSchedule = (waveDefs, stageLabel, bossHint) => waveDefs.map(([types, newMonster], i) => ({
+            startSec: i < 10 ? i * 120 : (i === 10 ? 1200 : 1440),
+            maxSec: i < 10 ? (i + 1) * 120 : (i === 10 ? 1440 : 1800),
+            types,
+            newMonster,
+            label: `${String(i * 2).padStart(2, '0')}m · ${stageLabel}`,
+            nextBoss: bossHint
+          }));
+
+          BIOME_WAVE_SCHEDULES.vault = buildSchedule([
+            [['gold_mimic', 'imp', 'gear_rat'], '噬金宝箱怪+盗宝铜鼠'],
+            [['gold_mimic', 'skeleton', 'gear_rat'], '金库骸骨守卫'],
+            [['gold_mimic', 'key_guard', 'mummy'], '黄金法老与锈钥卫'],
+            [['vault_guard', 'gold_mimic', 'key_guard'], '金库重甲卫兵'],
+            [['vault_guard', 'gold_mimic', 'succubus'], '黄金魅魔荷官'],
+            [['vault_guard', 'gear_mage', 'gold_mimic'], '皇家审计术师'],
+            [['vault_guard', 'hellknight', 'gold_mimic'], '金甲追债铁骑'],
+            [['vault_guard', 'bell_brute', 'gold_mimic'], '金钟巨兵'],
+            [['vault_guard', 'golem', 'bell_brute'], '纯金守财魔像'],
+            [['vault_guard', 'bone_knight', 'golem'], '黄金圣柜铁骑'],
+            [['vault_guard', 'abomination', 'golem'], '金库贪婪巨兽'],
+            [['vault_guard', 'gold_mimic', 'golem'], '万金宝库终局狂潮']
+          ], '贪婪黄金宝库', '每5分钟 · 宝库首领');
+
+          BIOME_WAVE_SCHEDULES.slime_carnival = buildSchedule([
+            [['jelly_slime', 'imp'], '1阶Q弹果冻史莱姆'],
+            [['jelly_slime', 'bat', 'snow_owl'], '弹球飞翼果冻群'],
+            [['jelly_slime', 'frost_spider', 'ghoul'], '薄荷跳跳糖怪群'],
+            [['jelly_slime', 'yeti', 'imp'], '同阶碰撞合体进化'],
+            [['jelly_slime', 'succubus', 'frost_spider'], '草莓糖果魅影'],
+            [['jelly_slime', 'gargoyle', 'yeti'], '焦糖弹力石像'],
+            [['jelly_slime', 'voidbug', 'gargoyle'], '爆浆跳跳糖虫'],
+            [['jelly_slime', 'mammoth', 'voidbug'], '软糖重装巨象'],
+            [['jelly_slime', 'golem', 'mammoth'], '果冻山岳泰坦'],
+            [['jelly_slime', 'bell_brute', 'golem'], '狂欢糖果巨兵'],
+            [['jelly_slime', 'abomination', 'golem'], '五阶皮纳塔军团'],
+            [['jelly_slime', 'golem', 'abomination'], '史莱姆狂欢终局大巡游']
+          ], '史莱姆狂欢牧场', '每5分钟 · 牧场狂欢王');
         }
 
+        // 3. 注册两大番外关 12 位专属首领到 BIOME_BOSS_ROSTER（严格使用 {5,10,15,20,25,30} 结构）与 BossCombat.profiles
         if (typeof BIOME_BOSS_ROSTER !== 'undefined') {
-          BIOME_BOSS_ROSTER.vault = [
-            { name: '黄金守财巨像·玛门之拳', title: '金库一重门守卫', color: '#facc15', accent: '#fef08a', radius: 34, hpMult: 1.15, speedMult: 1.0, skills: ['charge', 'nova', 'summon'] },
-            { name: '皇家税务审判官·奥金', title: '金库二重门守卫', color: '#eab308', accent: '#fde047', radius: 36, hpMult: 1.25, speedMult: 1.05, skills: ['hellfire', 'teleport', 'nova'] },
-            { name: '噬金贪婪魔龙·法夫纳', title: '金库三重门守卫', color: '#f59e0b', accent: '#fef9c3', radius: 38, hpMult: 1.35, speedMult: 1.08, skills: ['meteor', 'charge', 'hellfire'] },
-            { name: '黄金轮盘主宰·福尔图娜', title: '金库四重门守卫', color: '#fbbf24', accent: '#ffffff', radius: 40, hpMult: 1.45, speedMult: 1.12, skills: ['laser', 'nova', 'summon', 'teleport'] },
-            { name: '财神机械暴君·米达斯王', title: '金库五重门守卫', color: '#d97706', accent: '#fef08a', radius: 42, hpMult: 1.55, speedMult: 1.15, skills: ['blackhole', 'meteor', 'laser', 'nova'] },
-            { name: '万金之主·黄金圣柜古神', title: '贪婪黄金宝库终极主宰', color: '#facc15', accent: '#ffffff', radius: 46, hpMult: 1.75, speedMult: 1.20, skills: ['blackhole', 'laser', 'meteor', 'hellfire', 'summon'] }
-          ];
-          BIOME_BOSS_ROSTER.slime_carnival = [
-            { name: '草莓果冻巨王·噗叽', title: '牧场一重狂欢王', color: '#f472b6', accent: '#fbcfe8', radius: 36, hpMult: 1.10, speedMult: 1.05, skills: ['charge', 'nova', 'summon'] },
-            { name: '薄荷弹球霸主·波波', title: '牧场二重狂欢王', color: '#34d399', accent: '#a7f3d0', radius: 38, hpMult: 1.20, speedMult: 1.10, skills: ['charge', 'teleport', 'nova'] },
-            { name: '柠檬爆浆皮纳塔·酸酸', title: '牧场三重狂欢王', color: '#facc15', accent: '#fef08a', radius: 40, hpMult: 1.30, speedMult: 1.12, skills: ['meteor', 'charge', 'summon'] },
-            { name: '蓝莓超弹力巨兽·咕噜', title: '牧场四重狂欢王', color: '#38bdf8', accent: '#bae6fd', radius: 42, hpMult: 1.40, speedMult: 1.15, skills: ['laser', 'charge', 'nova'] },
-            { name: '五彩糖果合体皇·姆姆', title: '牧场五重狂欢王', color: '#c084fc', accent: '#f3e8ff', radius: 44, hpMult: 1.50, speedMult: 1.18, skills: ['blackhole', 'charge', 'meteor', 'summon'] },
-            { name: '彩虹果冻至尊神·史莱姆大帝', title: '史莱姆狂欢牧场终极主宰', color: '#ec4899', accent: '#fef08a', radius: 48, hpMult: 1.65, speedMult: 1.22, skills: ['blackhole', 'charge', 'nova', 'meteor', 'summon'] }
-          ];
-          BIOME_BOSS_ROSTER.starfall_temple = [
-            { name: '堕落星神·阿斯特拉', title: '黄昏第一陨神', color: '#c084fc', accent: '#f3e8ff', radius: 35, hpMult: 1.20, speedMult: 1.08, skills: ['meteor', 'nova', 'teleport'] },
-            { name: '破界雷神·索尔之影', title: '黄昏第二陨神', color: '#38bdf8', accent: '#e0f2fe', radius: 37, hpMult: 1.35, speedMult: 1.12, skills: ['laser', 'charge', 'nova'] },
-            { name: '日蚀炎神·苏尔特尔', title: '黄昏第三陨神', color: '#f97316', accent: '#ffedd5', radius: 39, hpMult: 1.50, speedMult: 1.15, skills: ['hellfire', 'meteor', 'charge'] },
-            { name: '冥界死神·海拉真身', title: '黄昏第四陨神', color: '#10b981', accent: '#d1fae5', radius: 41, hpMult: 1.65, speedMult: 1.18, skills: ['blackhole', 'summon', 'hellfire', 'teleport'] },
-            { name: '弑神巨狼·芬里尔星魂', title: '黄昏第五陨神', color: '#ef4444', accent: '#fee2e2', radius: 43, hpMult: 1.85, speedMult: 1.22, skills: ['charge', 'laser', 'blackhole', 'nova'] },
-            { name: '诸神黄昏终焉·奥丁星骸', title: '星陨神殿至高神王', color: '#facc15', accent: '#ffffff', radius: 47, hpMult: 2.10, speedMult: 1.25, skills: ['blackhole', 'laser', 'meteor', 'hellfire', 'teleport'] }
-          ];
+          const registerExtraBosses = (biomeKey, stageTag, defs) => {
+            BIOME_BOSS_ROSTER[biomeKey] = {};
+            defs.forEach(([key, name, skin, move1, move2, color, flavor], i) => {
+              const minute = (i + 1) * 5;
+              if (typeof r29Bake === 'function' && typeof SPRITE_MATRICES !== 'undefined') {
+                const baseMat = SPRITE_MATRICES[skin + '_0'] || extraMonsterMatrices.vault_guard;
+                const bossMat = baseMat.map(row => row.replaceAll('d', 'g').replaceAll('i', 'y'));
+                r29Bake(key, bossMat, false);
+              }
+              const hpArr = [4200, 8600, 14200, 21800, 31500, 64000];
+              const spdArr = [94, 92, 98, 100, 102, 106];
+              const dmgArr = [24, 30, 36, 42, 48, 58];
+              BIOME_BOSS_ROSTER[biomeKey][minute] = {
+                key,
+                name,
+                title: `${String(minute).padStart(2, '0')}m${stageTag}首领 · ${name}`,
+                hp: hpArr[i],
+                speed: spdArr[i],
+                radius: 26 + i,
+                dmg: dmgArr[i],
+                color,
+                bossAccent: '#fef08a',
+                skill: i === 5 ? 'baal' : (i % 2 === 0 ? 'butcher' : 'queen'),
+                isFinal: i === 5
+              };
+              if (typeof BossCombat !== 'undefined' && BossCombat.profiles) {
+                BossCombat.profiles[`${biomeKey}_${minute}`] = {
+                  name: `${name}·一式 / ${name}·二式`,
+                  moves: [move1, move2],
+                  cd: 3.7 + i * 0.15
+                };
+              }
+              if (typeof Campaign !== 'undefined' && Campaign.bossFlavor) {
+                Campaign.bossFlavor[`${biomeKey}_${minute}`] = flavor;
+              }
+            });
+          };
+
+          registerExtraBosses('vault', '宝库', [
+            ['vault_boss_5',  '玛门之拳·守财巨像', 'vault_guard', 'magmaHammers', 'magmaRing', '#facc15', '把每一枚铜板都焊死在拳头上，砸人时讲究以理服人、以钱压人。'],
+            ['vault_boss_10', '奥金·皇家税务审判官', 'gear_mage', 'clockHands', 'bellHammer', '#eab308', '他的账本从不错漏一分钱，连你呼吸的空气都算进了滞纳金。'],
+            ['vault_boss_15', '法夫纳·噬金贪婪魔龙', 'gold_mimic', 'lavaCross', 'fireTrail', '#f59e0b', '睡在金山上的恶龙，谁敢动它一片金鳞就会迎来满屏熔金吐息。'],
+            ['vault_boss_20', '福尔图娜·轮盘赌神', 'vault_guard', 'timeSpiral', 'ticketRing', '#fbbf24', '执掌宝库轮盘的命运女神，庄家通吃是她最喜欢开出的点数。'],
+            ['vault_boss_25', '米达斯王·点金暴君', 'bell_brute', 'pendulum', 'starClock', '#d97706', '触碰万物皆化纯金的远古暴君，连闯入者的骨头都想铸成金砖。'],
+            ['vault_boss_30', '黄金圣柜古神·玛门真身', 'vault_guard', 'doomGrid', 'doomTrinity', '#fde047', '贪婪黄金宝库的终极主宰，万金归宗、乾坤一掷，唯有真正的赌神方能将其讨伐！']
+          ]);
+
+          registerExtraBosses('slime_carnival', '牧场', [
+            ['slime_boss_5',  '草莓果冻巨王·噗叽', 'jelly_slime', 'beastLeap', 'iceStomps', '#f472b6', 'Q弹饱满的草莓味巨型果冻王，每一次蹦跳都会震飞整片牧场。'],
+            ['slime_boss_10', '薄荷弹球霸主·波波', 'jelly_slime', 'gearRush', 'bellWaves', '#34d399', '把整个牧场当成弹珠台的薄荷霸主，横冲直撞从不踩刹车。'],
+            ['slime_boss_15', '柠檬爆浆皮纳塔·酸酸', 'pinata_slime', 'magmaHammers', 'petals', '#facc15', '肚子里塞满酸甜糖果与宝石的巨型皮纳塔，挨揍越多弹得越欢。'],
+            ['slime_boss_20', '蓝莓超弹力巨兽·咕噜', 'jelly_slime', 'avalanche', 'iceBoulders', '#38bdf8', '浓缩了百倍果冻胶原的蓝莓巨兽，能把任何攻击反弹成漫天弹幕。'],
+            ['slime_boss_25', '五彩糖果合体皇·姆姆', 'pinata_slime', 'timeGrid', 'timeSpiral', '#c084fc', '由上千只彩虹小史莱姆合体而成的糖果女皇，走一步掉一地宝石。'],
+            ['slime_boss_30', '彩虹果冻至尊·史莱姆大帝', 'pinata_slime', 'doomGrid', 'doomTrinity', '#ec4899', '统御史莱姆狂欢牧场的果冻至尊神，弹力法则与糖果风暴的终极化身！']
+          ]);
         }
 
-        if (typeof WorldRelics !== 'undefined' && WorldRelics.BIOME_RELIC_POOL) {
-          WorldRelics.BIOME_RELIC_POOL.vault = ['blood_altar', 'golden_fountain', 'ancient_anvil', 'cursed_chest'];
-          WorldRelics.BIOME_RELIC_POOL.slime_carnival = ['healing_spring', 'speed_pylon', 'golden_fountain', 'ancient_anvil'];
-          WorldRelics.BIOME_RELIC_POOL.starfall_temple = ['ancient_anvil', 'blood_altar', 'cursed_chest', 'golden_fountain'];
+        if (typeof STAGE_SPECIAL_RELICS !== 'undefined') {
+          STAGE_SPECIAL_RELICS.vault = STAGE_SPECIAL_RELICS.clockwork || STAGE_SPECIAL_RELICS.dungeon;
+          STAGE_SPECIAL_RELICS.slime_carnival = STAGE_SPECIAL_RELICS.tundra || STAGE_SPECIAL_RELICS.dungeon;
         }
       },
 
@@ -23311,14 +23488,12 @@
           grad.addColorStop(1, '#713f12');
           g.fillStyle = grad;
           g.fillRect(0, 0, w, h);
-          // 黄金砖墙与柱子
           g.fillStyle = '#854d0e';
           for (let y = 8; y < h; y += 12) {
             for (let x = (y % 24 === 8 ? 0 : 8); x < w; x += 20) {
               g.fillRect(x, y, 18, 10);
             }
           }
-          // 金山与金条堆
           g.fillStyle = '#eab308';
           g.beginPath();
           g.moveTo(0, h);
@@ -23334,7 +23509,6 @@
             const cy = 48 + ((i * 17) % 38);
             g.fillRect(cx, cy, 5, 3);
           }
-          // 中央大轮盘与金宝箱
           g.save();
           g.translate(80, 36);
           const colors = ['#eab308', '#ef4444', '#22c55e', '#dc2626', '#f59e0b', '#991b1b', '#10b981', '#b91c1c'];
@@ -23364,14 +23538,12 @@
           grad.addColorStop(1, '#064e3b');
           g.fillStyle = grad;
           g.fillRect(0, 0, w, h);
-          // 糖果棋盘草地
           for (let y = 46; y < h; y += 10) {
             for (let x = 0; x < w; x += 14) {
               g.fillStyle = ((x / 14 + y / 10) & 1) ? 'rgba(52, 211, 153, 0.28)' : 'rgba(56, 189, 248, 0.22)';
               g.fillRect(x, y, 14, 10);
             }
           }
-          // 彩虹桥拱
           const rCols = ['#ef4444', '#f59e0b', '#fde047', '#22c55e', '#38bdf8', '#c084fc'];
           rCols.forEach((c, idx) => {
             g.strokeStyle = c;
@@ -23380,7 +23552,6 @@
             g.arc(80, 72, 58 - idx * 3, Math.PI, 0);
             g.stroke();
           });
-          // Q弹史莱姆与黄金皮纳塔
           const drawSlime = (sx, sy, sr, col, crown) => {
             g.fillStyle = col;
             g.beginPath();
@@ -23401,51 +23572,11 @@
           drawSlime(126, 60, 13, '#f472b6', false);
           drawSlime(80, 52, 18, '#eab308', true);
         });
-
-        // 3. 星陨诸神黄昏 CG
-        window.STAGE_CGS.starfall_temple = makeCG((g, w, h) => {
-          const grad = g.createLinearGradient(0, 0, 0, h);
-          grad.addColorStop(0, '#090514');
-          grad.addColorStop(0.55, '#2e1065');
-          grad.addColorStop(1, '#4c1d95');
-          g.fillStyle = grad;
-          g.fillRect(0, 0, w, h);
-          // 漫天星陨与神殿断柱
-          for (let i = 0; i < 32; i++) {
-            g.fillStyle = i % 3 === 0 ? '#fde047' : '#e9d5ff';
-            g.fillRect((i * 37) % w, (i * 19) % 55, i % 4 === 0 ? 3 : 2, i % 4 === 0 ? 3 : 2);
-          }
-          // 黄金神殿立柱
-          g.fillStyle = '#581c87';
-          [18, 46, 104, 132].forEach(px => {
-            g.fillRect(px, 24, 10, 56);
-            g.fillStyle = '#facc15';
-            g.fillRect(px - 2, 22, 14, 4);
-            g.fillStyle = '#581c87';
-          });
-          // 诸神Boss剪影与头顶血条示意
-          const bosses = [
-            { x: 42, y: 56, c: '#f97316' },
-            { x: 80, y: 48, c: '#facc15' },
-            { x: 118, y: 56, c: '#38bdf8' }
-          ];
-          bosses.forEach(b => {
-            g.fillStyle = b.c;
-            g.beginPath();
-            g.arc(b.x, b.y, 11, 0, Math.PI * 2);
-            g.fill();
-            // 头顶血条
-            g.fillStyle = '#111827';
-            g.fillRect(b.x - 13, b.y - 19, 26, 4);
-            g.fillStyle = '#ef4444';
-            g.fillRect(b.x - 12, b.y - 18, 22, 2);
-          });
-        });
       },
 
       buildExtraBiomeTiles() {
-        if (typeof TileCache === 'undefined' || !TileCache.tiles) return;
-        const size = TileCache.size || 64;
+        if (typeof TileCache === 'undefined') return;
+        const size = 64;
         const makeTile = (fn) => {
           const c = document.createElement('canvas');
           c.width = size;
@@ -23457,46 +23588,34 @@
         };
 
         // 番外一：黄金宝库金砖地脉
-        TileCache.tiles.vault = [0, 1, 2, 3].map(v => makeTile((g, s) => {
+        TileCache.vault = [0, 1, 2].map(v => makeTile((g, s) => {
           g.fillStyle = '#1f1608';
           g.fillRect(0, 0, s, s);
           g.fillStyle = '#2e200b';
           g.fillRect(2, 2, s - 4, s / 2 - 3);
           g.fillRect(2, s / 2 + 1, s - 4, s / 2 - 3);
-          g.strokeStyle = 'rgba(234, 179, 8, 0.22)';
+          g.strokeStyle = 'rgba(234, 179, 8, 0.25)';
           g.lineWidth = 1;
           g.strokeRect(2.5, 2.5, s - 5, s / 2 - 4);
           g.strokeRect(2.5, s / 2 + 1.5, s - 5, s / 2 - 4);
-          if (v === 1 || v === 3) {
-            g.fillStyle = 'rgba(250, 204, 21, 0.45)';
+          if (v >= 1) {
+            g.fillStyle = 'rgba(250, 204, 21, 0.5)';
             g.fillRect(12 + v * 7, 14 + v * 5, 4, 3);
             g.fillRect(38 - v * 4, 42, 3, 3);
           }
         }));
 
         // 番外二：史莱姆狂欢果冻棋盘
-        TileCache.tiles.slime_carnival = [0, 1, 2, 3].map(v => makeTile((g, s) => {
+        TileCache.slime_carnival = [0, 1, 2].map(v => makeTile((g, s) => {
           g.fillStyle = (v & 1) ? '#0c2d3a' : '#0f3544';
           g.fillRect(0, 0, s, s);
-          g.fillStyle = (v & 1) ? 'rgba(56, 189, 248, 0.12)' : 'rgba(52, 211, 153, 0.12)';
+          g.fillStyle = (v & 1) ? 'rgba(56, 189, 248, 0.14)' : 'rgba(52, 211, 153, 0.14)';
           g.fillRect(4, 4, s / 2 - 6, s / 2 - 6);
           g.fillRect(s / 2 + 2, s / 2 + 2, s / 2 - 6, s / 2 - 6);
           if (v === 2) {
             g.fillStyle = 'rgba(244, 114, 182, 0.35)';
             g.fillRect(24, 24, 8, 6);
           }
-        }));
-
-        // 番外三：星陨诸神神殿星盘
-        TileCache.tiles.starfall_temple = [0, 1, 2, 3].map(v => makeTile((g, s) => {
-          g.fillStyle = '#120b24';
-          g.fillRect(0, 0, s, s);
-          g.strokeStyle = 'rgba(192, 132, 252, 0.18)';
-          g.lineWidth = 1;
-          g.strokeRect(1.5, 1.5, s - 3, s - 3);
-          g.fillStyle = v % 2 === 0 ? 'rgba(250, 204, 21, 0.38)' : 'rgba(192, 132, 252, 0.35)';
-          g.fillRect(10 + v * 11, 16 + v * 8, 2, 2);
-          g.fillRect(46 - v * 6, 38, 2, 2);
         }));
       },
 
@@ -23507,43 +23626,42 @@
         st.textContent = `
           .extra-stage-divider {
             grid-column: 1 / -1;
-            margin: 10px 0 4px 0;
-            padding: 8px 12px;
-            background: linear-gradient(90deg, rgba(234, 179, 8, 0.22), rgba(168, 85, 247, 0.22), rgba(14, 165, 233, 0.22));
-            border: 2px solid #eab308;
+            margin: 8px 0 2px 0;
+            padding: 7px 12px;
+            background: linear-gradient(90deg, rgba(234, 179, 8, 0.22), rgba(14, 165, 233, 0.22));
+            border: 1.5px solid #eab308;
             border-radius: 8px;
             color: #fef08a;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 900;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 6px;
-            box-shadow: 0 0 18px rgba(234, 179, 8, 0.25);
+            box-shadow: 0 0 14px rgba(234, 179, 8, 0.22);
           }
           .biome-card.is-extra-stage {
             position: relative;
             border-width: 2px;
-            background: linear-gradient(160deg, rgba(30, 22, 10, 0.92), rgba(15, 23, 42, 0.95));
+            background: linear-gradient(160deg, rgba(30, 22, 10, 0.94), rgba(15, 23, 42, 0.96));
+            text-align: left;
+            padding: 8px 10px;
           }
           .biome-card.is-extra-stage[data-biome="vault"] {
-            border-color: rgba(250, 204, 21, 0.65);
+            border-color: rgba(250, 204, 21, 0.72);
           }
           .biome-card.is-extra-stage[data-biome="slime_carnival"] {
-            border-color: rgba(56, 189, 248, 0.65);
-          }
-          .biome-card.is-extra-stage[data-biome="starfall_temple"] {
-            border-color: rgba(192, 132, 252, 0.65);
+            border-color: rgba(56, 189, 248, 0.72);
           }
           .extra-stage-badge {
             display: inline-block;
-            padding: 2px 7px;
+            padding: 1px 6px;
             border-radius: 4px;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 900;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             color: #090d16;
             background: #facc15;
           }
@@ -23558,165 +23676,211 @@
             from { box-shadow: 0 0 4px rgba(250, 204, 21, 0.3); }
             to { box-shadow: 0 0 12px rgba(250, 204, 21, 0.75); }
           }
-          /* 局内专属爽关面板 */
+          /* 局内专属爽关面板（内嵌于顶栏底部，层级高于摇杆触控区，手机端可丝滑点按） */
           #extra-stage-hud {
-            position: fixed;
-            top: 64px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 65;
+            position: relative;
+            z-index: 35;
             display: none;
             pointer-events: auto;
+            touch-action: manipulation;
             font-family: inherit;
+            width: fit-content;
+            max-width: 100%;
+            margin-top: 2px;
           }
           .vault-bet-panel {
-            background: rgba(20, 14, 5, 0.92);
-            border: 2px solid #facc15;
-            border-radius: 10px;
-            padding: 7px 12px;
+            background: rgba(15, 11, 4, 0.84);
+            border: 1px solid rgba(250, 204, 21, 0.78);
+            border-radius: 7px;
+            padding: 3px 7px;
             color: #fef9c3;
-            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.75), 0 0 16px rgba(234, 179, 8, 0.32);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            min-width: 380px;
-            max-width: 94vw;
+            gap: 3px;
+            min-width: 0;
+            max-width: 100%;
+            pointer-events: auto;
+            touch-action: manipulation;
           }
           .vault-bet-top {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            font-size: 12px;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+            font-size: 10px;
             font-weight: 800;
+            line-height: 1.25;
+          }
+          .vault-fold-btn {
+            padding: 2px 6px;
+            border: 1px solid #64748b;
+            background: rgba(30, 41, 59, 0.9);
+            color: #cbd5e1;
+            font-size: 9.5px;
+            font-weight: 800;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: auto;
+            white-space: nowrap;
+            pointer-events: auto;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
           }
           .vault-tier-row {
             display: flex;
             align-items: center;
-            gap: 5px;
-            flex-wrap: wrap;
+            gap: 4px;
+            flex-wrap: nowrap;
+            pointer-events: auto;
           }
           .vault-tier-btn {
-            flex: 1;
-            min-width: 44px;
-            padding: 4px 6px;
-            border: 1.5px solid #854d0e;
-            background: rgba(66, 32, 6, 0.75);
+            flex: 0 0 auto;
+            min-width: 32px;
+            min-height: 24px;
+            padding: 3px 6px;
+            border: 1px solid #854d0e;
+            background: rgba(66, 32, 6, 0.85);
             color: #fde047;
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 900;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
+            white-space: nowrap;
             transition: all 0.12s;
+            pointer-events: auto;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
           }
           .vault-tier-btn.is-selected {
             border-color: #fef08a;
-            background: rgba(202, 138, 4, 0.55);
+            background: rgba(202, 138, 4, 0.65);
             color: #ffffff;
           }
           .vault-tier-btn.is-active {
             border-color: #22c55e;
-            box-shadow: 0 0 8px rgba(34, 197, 94, 0.65);
+            box-shadow: 0 0 6px rgba(34, 197, 94, 0.65);
           }
           .vault-tier-btn:disabled, .vault-lock-btn:disabled {
-            opacity: 0.55;
+            opacity: 0.5;
             cursor: not-allowed;
           }
           .vault-lock-btn {
-            padding: 4px 10px;
-            border: 2px solid #facc15;
+            min-height: 24px;
+            padding: 3px 8px;
+            border: 1.5px solid #facc15;
             background: linear-gradient(180deg, #eab308, #ca8a04);
             color: #090d16;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 900;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
+            white-space: nowrap;
+            pointer-events: auto;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
           }
           .vault-lock-btn.is-locked {
             background: rgba(127, 29, 29, 0.85);
             border-color: #f87171;
             color: #fecaca;
           }
-          /* 十连大轮盘浮层 */
+          .vault-bet-panel.is-folded .vault-tier-row,
+          .vault-bet-panel.is-folded #vault-tier-detail-txt {
+            display: none !important;
+          }
+          /* 十连迷你轮盘浮层（贴靠右上小地图下方，绝不挡屏幕中央与升级弹窗） */
           #vault-roulette-overlay {
-            position: fixed;
-            top: 148px;
-            right: 18px;
-            z-index: 70;
+            position: absolute;
+            top: calc(env(safe-area-inset-top, 0px) + 152px);
+            right: 6px;
+            z-index: 14;
             display: none;
-            background: rgba(17, 12, 4, 0.95);
-            border: 2px solid #facc15;
-            border-radius: 12px;
-            padding: 10px 12px;
-            width: 245px;
+            background: rgba(17, 12, 4, 0.82);
+            border: 1.5px solid #facc15;
+            border-radius: 8px;
+            padding: 4px 6px;
+            width: 112px;
             color: #fef08a;
-            box-shadow: 0 8px 28px rgba(0,0,0,0.85), 0 0 22px rgba(250,204,21,0.45);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.72);
             pointer-events: none;
             text-align: center;
+          }
+          @media (max-width: 600px), (max-height: 540px) {
+            .vault-bet-panel { padding: 3px 6px; gap: 3px; }
+            .vault-bet-top { font-size: 9.5px; gap: 2px 6px; }
+            .vault-tier-btn { min-width: 30px; min-height: 24px; padding: 2px 5px; font-size: 10px; }
+            .vault-lock-btn { min-height: 24px; padding: 2px 6px; font-size: 9.5px; }
+            #vault-tier-detail-txt { font-size: 9px !important; }
+            #vault-roulette-overlay { width: 98px; padding: 3px 4px; top: calc(env(safe-area-inset-top, 0px) + 144px); right: 4px; }
           }
         `;
         document.head.appendChild(st);
       },
 
       injectLobbyCards() {
-        const biomeSelect = document.querySelector('#lobby-modal .biome-select');
-        if (!biomeSelect || biomeSelect.querySelector('[data-biome="vault"]')) return;
+        const biomeGrid = document.querySelector('#lobby-modal .biome-grid');
+        if (biomeGrid && !biomeGrid.querySelector('[data-biome="vault"]')) {
+          const oldDivider = biomeGrid.querySelector('.extra-stage-divider');
+          if (oldDivider) oldDivider.remove();
 
-        const divider = document.createElement('div');
-        divider.className = 'extra-stage-divider';
-        divider.innerHTML = `
-          <span>[px:sparkles] 番外解压爽关 · 革命性爽快机制（标准 30 分钟生存）</span>
-          <span style="font-size:11px;color:#fde68a;font-weight:700;">通关对应主线免费解锁 · 或在主界面用金币直接解锁</span>
-        `;
-        biomeSelect.appendChild(divider);
+          // 直接放入普通关卡同一列表，排版、居中、字体与第一~第四关完全一致
+          const cardsSpec = [
+            {
+              key: 'vault',
+              title: '[px:coin] 番外一：贪婪黄金宝库',
+              sub: '黄金系怪+玛门 | 1%~5%撒币克制·十连轮盘'
+            },
+            {
+              key: 'slime_carnival',
+              title: '[px:potion] 番外二：史莱姆狂欢牧场',
+              sub: '果冻系怪+史莱姆皇 | 五阶合体爆奖·吞噬战车'
+            }
+          ];
 
-        const cardsSpec = [
-          {
-            key: 'vault',
-            badge: '💰 豪赌撒币 · 十连轮盘',
-            title: '[px:coin] 番外一：贪婪黄金宝库',
-            stats: '基础血量 150% · 局内赌本撒币炮 · 1%~5%买定离手30秒',
-            desc: '按下下注键投入 1%~5% 局内金币自动发射金钱炮（最低1金算1%档，锁定30秒不可改，仅耗局内金币）！档位越高伤害、穿透、爆率与金箱率越强；每10次攻击触发全队统一【命运大轮盘】！',
-            unlockReq: '通关第四关免费解锁 或 花费 100,000 金币解锁'
-          },
-          {
-            key: 'slime_carnival',
-            badge: '🫧 弹球碰撞 · 合体皮纳塔',
-            title: '[px:potion] 番外二：史莱姆狂欢牧场',
-            stats: '基础血量 155% · 全员超弹力台球碰撞 · 彩虹吞噬战车',
-            desc: '史莱姆受击后化作超高速弹球在屏幕边缘与怪群间连环碰撞！碰撞小怪合体进化为【黄金皮纳塔皇】爆满屏宝石雨；拾取果冻王冠化身 2.2 倍无敌【彩虹吞噬战车】！',
-            unlockReq: '通关第二关免费解锁 或 花费 5,000 金币解锁'
-          },
-          {
-            key: 'starfall_temple',
-            badge: '⚡ 开局25级 · 满屏闪光与Boss',
-            title: '[px:star] 番外三：星陨诸神黄昏',
-            stats: '基础血量 165% · 开局直升25级 · 5倍爆率与高频商人',
-            desc: '开局直升 25 级！小怪 100% 全是闪光怪，原闪光/精英全变诸神 Boss（血条直接顶在 Boss 头上）！大幅提高道具爆率与黑市商人出现率，斩杀 Boss 叠层【弑神神格】双向数值膨胀！',
-            unlockReq: '通关第三关免费解锁 或 花费 8,000 金币解锁'
-          }
-        ];
-
-        cardsSpec.forEach(c => {
-          const card = document.createElement('div');
-          card.className = 'biome-card is-extra-stage';
-          card.dataset.biome = c.key;
-          card.innerHTML = `
-            <div class="extra-stage-badge">${c.badge}</div>
-            <div class="biome-title">${c.title}</div>
-            <div class="biome-sub" style="color:#fde047;font-weight:700;margin:3px 0;">${c.stats}</div>
-            <div class="biome-desc">${c.desc}</div>
-            <div class="stage-unlock-tag is-locked">[px:lock] ${c.unlockReq}</div>
-          `;
-          card.addEventListener('click', (e) => {
-            if (typeof PurchaseFeedback !== 'undefined') PurchaseFeedback.lastClickEl = card;
-            trySelectStage(c.key, card, false);
+          cardsSpec.forEach(c => {
+            const card = document.createElement('div');
+            card.className = 'biome-card';
+            card.dataset.biome = c.key;
+            card.innerHTML = `${c.title}<br><span style="font-size:9px;color:#94a3b8;">${c.sub}</span>`;
+            card.addEventListener('click', () => {
+              if (typeof PurchaseFeedback !== 'undefined') PurchaseFeedback.lastClickEl = card;
+              trySelectStage(c.key, card, false);
+            });
+            biomeGrid.appendChild(card);
           });
-          biomeSelect.appendChild(card);
-        });
 
-        if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
-          PixelIcons.hydrate(biomeSelect);
+          if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
+            PixelIcons.hydrate(biomeGrid);
+          }
+          if (typeof StageUnlocks !== 'undefined' && StageUnlocks.refreshUI) {
+            StageUnlocks.refreshUI();
+          }
+        }
+
+        // 同步注入联机大厅关卡选择按钮
+        const coopBiomeParent = document.querySelector('.coop-biome-pick')?.parentElement;
+        if (coopBiomeParent && !coopBiomeParent.querySelector('[data-biome="vault"]')) {
+          const coopSpecs = [
+            { key: 'vault', label: '[px:coin] 番外一·黄金宝库' },
+            { key: 'slime_carnival', label: '[px:potion] 番外二·史莱姆牧场' }
+          ];
+          coopSpecs.forEach(item => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'biome-card coop-biome-pick';
+            btn.dataset.biome = item.key;
+            btn.innerHTML = item.label;
+            btn.addEventListener('click', () => trySelectStage(item.key, btn, true));
+            coopBiomeParent.appendChild(btn);
+          });
+          if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) {
+            PixelIcons.hydrate(coopBiomeParent);
+          }
         }
       },
 
@@ -23727,63 +23891,86 @@
         hud.innerHTML = `
           <div id="vault-hud-box" class="vault-bet-panel" style="display:none;">
             <div class="vault-bet-top">
-              <span id="vault-run-gold-txt">[px:coin] 局内赌本: 80 金币 (存档老本受保护)</span>
-              <span id="vault-roulette-prog-txt" style="color:#38bdf8;">🎲 距离全队轮盘: 10 发</span>
+              <span id="vault-run-gold-txt">🪙 赌本: 80金 (1金/发·1%档)</span>
+              <span id="vault-roulette-prog-txt" style="color:#38bdf8;">🎰 轮盘: 10发</span>
+              <button type="button" id="btn-vault-hud-fold" class="vault-fold-btn" title="折叠/展开下注档位栏">收起▲</button>
             </div>
             <div class="vault-tier-row">
-              <button type="button" class="vault-tier-btn is-selected is-active" data-tier="1">1%档</button>
-              <button type="button" class="vault-tier-btn" data-tier="2">2%档</button>
-              <button type="button" class="vault-tier-btn" data-tier="3">3%档</button>
-              <button type="button" class="vault-tier-btn" data-tier="4">4%档</button>
-              <button type="button" class="vault-tier-btn" data-tier="5">5%豪赌</button>
-              <button type="button" id="btn-vault-lock-bet" class="vault-lock-btn">[px:coin] 下注买定 (B) · 锁定30秒</button>
+              <button type="button" class="vault-tier-btn is-selected is-active" data-tier="1">1%</button>
+              <button type="button" class="vault-tier-btn" data-tier="2">2%</button>
+              <button type="button" class="vault-tier-btn" data-tier="3">3%</button>
+              <button type="button" class="vault-tier-btn" data-tier="4">4%</button>
+              <button type="button" class="vault-tier-btn" data-tier="5">5%</button>
+              <button type="button" id="btn-vault-lock-bet" class="vault-lock-btn">🪙 下注锁定(30s)</button>
             </div>
-            <div id="vault-tier-detail-txt" style="font-size:11px;color:#fde68a;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;">
-              <span>当前生效: 1%档 (1金/发) · 伤害x1.6 · 爆率+25% · 金箱率+20%</span>
-              <span id="vault-buff-status-txt" style="color:#4ade80;">可随时切换档位并按下注键锁定</span>
+            <div id="vault-tier-detail-txt" style="font-size:9.5px;color:#fde68a;display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;line-height:1.2;">
+              <span>1%档: 伤x1.6·穿2·爆+25%·金箱+20%</span>
+              <span id="vault-buff-status-txt" style="color:#4ade80;">✓ 点1%~5%下注锁定</span>
             </div>
           </div>
-          <div id="slime-hud-box" class="vault-bet-panel" style="display:none;border-color:#38bdf8;min-width:320px;">
+          <div id="slime-hud-box" class="vault-bet-panel" style="display:none;border-color:#38bdf8;">
             <div class="vault-bet-top" style="color:#bae6fd;">
-              <span id="slime-combo-txt">🫧 果冻弹球连击: 0 连撞</span>
-              <span id="slime-pinata-txt" style="color:#facc15;">👑 合体皮纳塔: 0 只</span>
-              <span id="slime-chariot-txt" style="color:#f472b6;">🌈 吞噬战车: 待拾取王冠</span>
-            </div>
-          </div>
-          <div id="starfall-hud-box" class="vault-bet-panel" style="display:none;border-color:#c084fc;min-width:340px;">
-            <div class="vault-bet-top" style="color:#e9d5ff;">
-              <span id="starfall-stacks-txt">⚡ 弑神神格: 0 层 (伤害+0% · 血量+0%)</span>
-              <span id="starfall-boss-count-txt" style="color:#facc15;">👹 在场诸神Boss: 0 尊</span>
-              <span style="color:#4ade80;">🎁 5倍道具爆率 · 高频黑市商人</span>
+              <span id="slime-combo-txt">🫧 弹球: 0连撞</span>
+              <span id="slime-pinata-txt" style="color:#facc15;">👑 合体: 0次 (4阶+爆奖)</span>
+              <span id="slime-chariot-txt" style="color:#f472b6;">🌈 战车: 待拾王冠</span>
             </div>
           </div>
         `;
-        document.body.appendChild(hud);
+        const topHud = document.getElementById('top-hud');
+        const gameContainer = document.getElementById('game-container') || document.body;
+        if (topHud) {
+          topHud.appendChild(hud);
+        } else {
+          gameContainer.appendChild(hud);
+        }
 
         const rOv = document.createElement('div');
         rOv.id = 'vault-roulette-overlay';
         rOv.innerHTML = `
-          <div style="font-size:12px;font-weight:900;color:#facc15;margin-bottom:4px;">🎰 全队命运赌神大轮盘 (每10击触发)</div>
-          <canvas id="vault-roulette-canvas" width="156" height="156" style="display:block;margin:0 auto;"></canvas>
-          <div id="vault-roulette-result-txt" style="font-size:11px;font-weight:800;margin-top:5px;color:#ffffff;min-height:28px;">买定离手，命运旋转中...</div>
+          <div style="font-size:9.5px;font-weight:900;color:#facc15;margin-bottom:2px;line-height:1.15;">🎰 全队命运轮盘</div>
+          <canvas id="vault-roulette-canvas" width="68" height="68" style="display:block;margin:0 auto;"></canvas>
+          <div id="vault-roulette-result-txt" style="font-size:9px;font-weight:800;margin-top:3px;color:#ffffff;line-height:1.2;">旋转中...</div>
         `;
-        document.body.appendChild(rOv);
+        gameContainer.appendChild(rOv);
 
-        // 绑定 1%~5% 档位点击与下注锁定按钮
+        // 统一绑定手机触摸 + PC 点击辅助函数，防止摇杆拦截或透传
+        const bindTap = (el, fn) => {
+          if (!el) return;
+          let lastTrig = 0;
+          const stopOnly = (e) => { e.stopPropagation(); };
+          const handler = (e) => {
+            e.stopPropagation();
+            if (e.cancelable && e.type === 'touchend') e.preventDefault();
+            const now = performance.now();
+            if (now - lastTrig < 180) return;
+            lastTrig = now;
+            fn(e);
+          };
+          el.addEventListener('touchstart', stopOnly, { passive: true });
+          el.addEventListener('pointerdown', stopOnly);
+          el.addEventListener('touchend', handler, { passive: false });
+          el.addEventListener('click', handler);
+        };
+
+        const foldBtn = document.getElementById('btn-vault-hud-fold');
+        bindTap(foldBtn, () => {
+          const vBox = document.getElementById('vault-hud-box');
+          if (!vBox) return;
+          const folded = vBox.classList.toggle('is-folded');
+          foldBtn.textContent = folded ? '展开▼' : '收起▲';
+        });
+
         hud.querySelectorAll('.vault-tier-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
+          bindTap(btn, () => {
             const t = Number(btn.dataset.tier) || 1;
             this.selectAndLockVaultTier(t, false);
           });
         });
         const lockBtn = document.getElementById('btn-vault-lock-bet');
-        if (lockBtn) {
-          lockBtn.addEventListener('click', () => {
-            this.selectAndLockVaultTier(this.vault.selectedTier, true);
-          });
-        }
+        bindTap(lockBtn, () => {
+          this.selectAndLockVaultTier(this.vault.selectedTier, true);
+        });
 
-        // 快捷键 B 下注锁定 / 数字键切换档位（当在黄金宝库战斗中）
         window.addEventListener('keydown', (e) => {
           if (!GameState.isStarted || GameState.isOver || GameState.isPaused || GameState.activeBiome !== 'vault') return;
           if (e.code === 'KeyB') {
@@ -23794,28 +23981,112 @@
         });
       },
 
-      selectAndLockVaultTier(tier, lockNow = true) {
+      isAnyModalBlocking() {
+        if (typeof GameState !== 'undefined' && GameState.isPaused) return true;
+        if (typeof UpgradeChoice !== 'undefined' && UpgradeChoice.active) return true;
+        if (typeof SoloRevive !== 'undefined' && SoloRevive.active) return true;
+        const modals = document.querySelectorAll('.modal-overlay');
+        for (let i = 0; i < modals.length; i++) {
+          const m = modals[i];
+          if (m && m.style.display && m.style.display !== 'none') return true;
+        }
+        return false;
+      },
+
+      // 金币“布林布林”清脆风铃连音特效
+      playBlingBling(bursts = 2) {
+        try {
+          if (typeof audio === 'undefined') return;
+          audio.init();
+          if (audio.isMuted || !audio.ctx) return;
+          const notes = [1318.5, 1567.98, 1975.53, 2637.02, 3135.96];
+          const total = Math.max(3, bursts * 4);
+          for (let i = 0; i < total; i++) {
+            const freq = notes[i % notes.length];
+            setTimeout(() => {
+              if (!audio.ctx || audio.isMuted) return;
+              audio.playTone(freq, 'sine', 0.14, 0.08, freq * 1.18);
+              if (i % 2 === 0) audio.playTone(freq * 1.5, 'triangle', 0.09, 0.04, freq * 1.65);
+            }, i * 55);
+          }
+        } catch (err) {}
+      },
+
+      // 在地面生成可拾取的实体黄金宝箱（支持磁铁吸引）
+      spawnGoldChest(x, y, val) {
+        if (typeof goldDrops === 'undefined') return;
+        const safePos = typeof Arena !== 'undefined' && Arena.safe ? Arena.safe(x, y, 22) : { x, y };
+        goldDrops.push({
+          x: safePos.x,
+          y: safePos.y,
+          val: Math.max(3, Math.round(val || 10)),
+          isChest: true
+        });
+      },
+
+      // 各档位所需的局内最低金币门槛：当金币不够时自动降低下注比例
+      getVaultTierMinGold(tier = 1) {
+        const mins = [0, 1, 20, 40, 60, 80];
+        const t = Math.max(1, Math.min(5, Math.floor(Number(tier) || 1)));
+        return mins[t] || 1;
+      },
+
+      getMaxAffordableVaultTier(runGold = this.vault.runGold) {
+        const g = Math.max(0, Math.floor(Number(runGold) || 0));
+        for (let t = 5; t >= 1; t--) {
+          if (g >= this.getVaultTierMinGold(t)) return t;
+        }
+        return 1;
+      },
+
+      autoDowngradeVaultTierIfNeeded(notify = false) {
+        const v = this.vault;
+        const maxTier = this.getMaxAffordableVaultTier(v.runGold);
+        if (v.activeTier > maxTier || v.selectedTier > maxTier) {
+          const oldTier = Math.max(v.activeTier, v.selectedTier);
+          v.activeTier = Math.min(v.activeTier, maxTier);
+          v.selectedTier = Math.min(v.selectedTier, maxTier);
+          if (notify && oldTier > maxTier) {
+            createFloatingText(player.x, player.y - 38, `金币不足·自动降为${maxTier}%档`, '#fde047', 12);
+          }
+          return true;
+        }
+        return false;
+      },
+
+      selectAndLockVaultTier(tier, lockNow = false) {
         const v = this.vault;
         if (v.lockTimer > 0) {
           audio.init();
           showToast(`[px:lock] 买定离手！当前已锁定【${v.activeTier}% 档位】，还需等待 ${v.lockTimer.toFixed(1)} 秒才能更改下注！`);
           return false;
         }
-        const clamped = Math.max(1, Math.min(5, Math.floor(Number(tier) || 1)));
+        const requested = Math.max(1, Math.min(5, Math.floor(Number(tier) || 1)));
+        const maxAffordable = this.getMaxAffordableVaultTier(v.runGold);
+        const clamped = Math.min(requested, maxAffordable);
         v.selectedTier = clamped;
         v.activeTier = clamped;
-        v.lockTimer = 30.0; // 按下下注后30秒无法改变
+        this.syncVaultSavedGold();
         audio.init();
         audio.playCoin();
         const tierNames = ['', '1% 稳健档', '2% 进阶档', '3% 狂热档', '4% 豪客档', '5% 至尊梭哈档'];
-        showToast(`[px:coin] 买定离手！已下注锁定【${tierNames[clamped]}】30秒，每发自动撒币炮按 ${clamped}% 局内金币发射！`);
-        if (typeof CoopManager !== 'undefined' && CoopManager.roomCode) {
-          CoopManager.sendPacket({
-            type: 'EXTRA_STAGE_EVENT',
-            subType: 'VAULT_BET_LOCK',
-            tier: clamped,
-            senderName: CoopManager.myName || '队友'
-          });
+        if (clamped < requested) {
+          const reqGold = this.getVaultTierMinGold(requested);
+          showToast(`[px:coin] 当前局内金币不足 ${reqGold} 金，已自动降低下注比例为【${tierNames[clamped]}】！`);
+        }
+        if (lockNow) {
+          v.lockTimer = 30.0; // 按下下注锁定键后30秒无法改变
+          showToast(`[px:coin] 买定离手！已下注锁定【${tierNames[clamped]}】30秒，每发自动撒币炮按 ${clamped}% 局内金币发射！`);
+          if (typeof CoopManager !== 'undefined' && CoopManager.roomCode) {
+            CoopManager.sendPacket({
+              type: 'EXTRA_STAGE_EVENT',
+              subType: 'VAULT_BET_LOCK',
+              tier: clamped,
+              senderName: CoopManager.myName || '队友'
+            });
+          }
+        } else if (clamped === requested) {
+          showToast(`[px:coin] 已切换下注比例为【${tierNames[clamped]}】，点击右侧「下注锁定(30s)」可买定离手！`);
         }
         this.updateHUD();
         return true;
@@ -23825,20 +24096,35 @@
         const t = Math.max(1, Math.min(5, Math.floor(Number(tier) || 1)));
         return {
           tier: t,
-          dmgMult: [1.0, 1.6, 2.5, 3.8, 5.5, 8.0][t],
-          pierce: [1, 2, 3, 4, 6, 9][t],
-          aoeRadius: [0, 26, 48, 72, 98, 132][t],
-          itemDropMult: [1.0, 1.25, 1.55, 1.95, 2.45, 3.20][t],
-          goldChestMult: [1.0, 1.20, 1.45, 1.80, 2.25, 2.85][t]
+          dmgMult: [1.0, 1.35, 1.85, 2.50, 3.30, 4.30][t],
+          pierce: [1, 2, 3, 4, 5, 7][t],
+          aoeRadius: [0, 22, 38, 54, 72, 95][t],
+          goldChestMult: [1.0, 1.15, 1.35, 1.60, 1.90, 2.30][t]
+        };
+      },
+
+      // 计算单发撒币炮消耗金币与伤害倍率：下注的金币越多，单发金币攻击的伤害越高！
+      getVaultShotStats(tier = this.vault.activeTier) {
+        const v = this.vault;
+        const t = Math.max(1, Math.min(5, Math.floor(Number(tier) || 1)));
+        const m = this.getVaultTierMultipliers(t);
+        const curGold = Math.max(0, Math.floor(Number(v.runGold) || 0));
+        const rawPctCost = Math.floor(curGold * (t / 100));
+        const cost = curGold >= 1 ? Math.min(curGold, Math.max(t, rawPctCost)) : 0;
+        const coinAmountBonus = 1 + Math.pow(Math.max(1, cost), 0.72) * 0.22;
+        return {
+          cost,
+          coinAmountBonus,
+          totalDmgMult: m.dmgMult * coinAmountBonus
         };
       },
 
       onRunReset() {
+        this.shownRunToasts.clear();
         const b = GameState.activeBiome;
-        // 重置黄金宝库状态
-        this.vault.initialSavedGold = Math.floor(Number(SaveManager.data?.gold || 0));
-        this.vault.starterLoanGold = 80;
-        this.vault.runGold = 80;
+        this.vault.initialSavedGold = Math.max(0, Math.floor(Number(SaveManager.data?.gold) || 0));
+        this.vault.starterLoanGold = 100;
+        this.vault.runGold = 100;
         this.vault.selectedTier = 1;
         this.vault.activeTier = 1;
         this.vault.lockTimer = 0;
@@ -23848,87 +24134,51 @@
         this.vault.rouletteSpinning = false;
         this.vault.rouletteTimer = 0;
         this.vault.rouletteResultBannerTimer = 0;
+        this.vault.feverTimer = 0;
+        this.vault.feverTier = 1;
+        this.vault.feverBlingTick = 0;
         this.vault.buffFuryTimer = 0;
         this.vault.debuffMonsterFrenzyTimer = 0;
         this.vault.debuffHeavyGoldTimer = 0;
 
-        // 重置史莱姆狂欢状态
         this.slime.chariotTimer = 0;
         this.slime.crownSpawnTimer = 8;
         this.slime.chainBounceCount = 0;
         this.slime.chainResetTimer = 0;
         this.slime.totalFusions = 0;
+        this.slime.fusionCooldown = 0;
         this.slime.crowns = [];
-
-        // 重置星陨诸神黄昏状态
-        this.starfall.godslayerStacks = 0;
-        this.starfall.bossSpawnTimer = 14;
-        this.starfall.autoUpgradedAtStart = false;
 
         const rOv = document.getElementById('vault-roulette-overlay');
         if (rOv) rOv.style.display = 'none';
 
         if (b === 'vault') {
+          this.syncVaultSavedGold();
           setTimeout(() => {
             if (GameState.isStarted && !GameState.isOver && GameState.activeBiome === 'vault') {
-              showToast('[px:coin] 欢迎来到【贪婪黄金宝库】！已发放 80 枚局内启动金币，点击顶部 [1%~5%档] 下注买定离手（锁定30秒），每攻击10次开启全队命运大轮盘！');
+              showToast('[px:coin] 欢迎来到【贪婪黄金宝库】！已发放 100 枚局内启动金币，下注金币越多伤害越高且克制宝库魔物附加易伤！');
             }
           }, 350);
         } else if (b === 'slime_carnival') {
           setTimeout(() => {
             if (GameState.isStarted && !GameState.isOver && GameState.activeBiome === 'slime_carnival') {
-              showToast('[px:potion] 欢迎来到【史莱姆狂欢牧场】！攻击史莱姆触发台球连环弹射，相撞合体黄金皮纳塔，拾取【果冻王冠】变身彩虹吞噬战车！');
+              showToast('[px:potion] 欢迎来到【史莱姆狂欢牧场】！同阶段史莱姆碰撞合体升阶(1→2→3→4→5阶，合体回血)，击杀4阶以上爆满屏宝石与金箱！');
             }
           }, 350);
-        } else if (b === 'starfall_temple') {
-          this.applyStarfallLevel25Start();
         }
         this.updateHUD();
       },
 
-      applyStarfallLevel25Start() {
-        if (this.starfall.autoUpgradedAtStart) return;
-        this.starfall.autoUpgradedAtStart = true;
-        if (typeof player === 'undefined') return;
-
-        // 玩家开局直升 25 级
-        player.level = 25;
-        player.nextExp = Math.floor(30 * Math.pow(1.18, 24));
-        player.maxHp = Math.round((player.maxHp || 150) * 2.2);
-        player.hp = player.maxHp;
-        player.damage = (player.damage || 22) * 2.1;
-
-        // 自动觉醒多门核心技能与圣物，让玩家0秒即具备诸神之战火力，同时保留3次自选升级乐趣
-        if (typeof SKILL_POOL !== 'undefined' && Array.isArray(SKILL_POOL)) {
-          const heroKey = player.heroType || 'warrior';
-          const eligible = SKILL_POOL.filter(s => !s.heroOnly || s.heroOnly === heroKey);
-          for (let i = 0; i < 16; i++) {
-            const pick = eligible[i % eligible.length];
-            if (pick && typeof pick.apply === 'function') {
-              const curLv = (player.skills && player.skills[pick.id]) || 0;
-              const maxLv = pick.maxLevel || 5;
-              if (curLv < maxLv) {
-                player.skills[pick.id] = curLv + 1;
-                try { pick.apply(player); } catch (e) {}
-              }
-            }
-          }
-        }
-        if (typeof updateLoadoutHUD === 'function') updateLoadoutHUD();
-        if (typeof updateUI === 'function') updateUI();
-        setTimeout(() => {
-          if (GameState.isStarted && !GameState.isOver && GameState.activeBiome === 'starfall_temple') {
-            showToast('[px:star] 【星陨诸神黄昏】开局已直升 Lv.25 并觉醒神装火力！本关小怪全员闪光，原闪光全变Boss（头顶独立血条），5倍道具爆率与高频商人已激活！');
-          }
-        }, 350);
-      },
-
+      // 同步宝库局内金币与存档净收益：顶栏 #gold-count 始终显示当前局内金币 runGold，绝不显示 923232 等局外总存款！
       syncVaultSavedGold() {
         if (GameState.activeBiome !== 'vault' || !SaveManager.data) return;
+        this.vault.runGold = Math.max(0, Math.floor(Number(this.vault.runGold) || 0));
+        this.vault.initialSavedGold = Math.max(0, Math.floor(Number(this.vault.initialSavedGold) || 0));
         const netProfit = Math.max(0, Math.floor(this.vault.runGold - this.vault.starterLoanGold));
+        GameState.goldCollected = netProfit;
         SaveManager.data.gold = Math.max(0, this.vault.initialSavedGold + netProfit);
         const gEl = document.getElementById('gold-count');
-        if (gEl) gEl.textContent = SaveManager.data.gold;
+        if (gEl) gEl.textContent = this.vault.runGold;
       },
 
       tick(dt) {
@@ -23939,8 +24189,6 @@
           this.tickVault(dt);
         } else if (b === 'slime_carnival') {
           this.tickSlimeCarnival(dt);
-        } else if (b === 'starfall_temple') {
-          this.tickStarfallTemple(dt);
         }
       },
 
@@ -23949,11 +24197,18 @@
         if (v.lockTimer > 0) {
           v.lockTimer = Math.max(0, v.lockTimer - dt);
         }
+        if (v.feverTimer > 0) {
+          v.feverTimer = Math.max(0, v.feverTimer - dt);
+          v.feverBlingTick -= dt;
+          if (v.feverBlingTick <= 0) {
+            v.feverBlingTick = 1.45;
+            this.playBlingBling(1);
+          }
+        }
         if (v.buffFuryTimer > 0) v.buffFuryTimer = Math.max(0, v.buffFuryTimer - dt);
         if (v.debuffMonsterFrenzyTimer > 0) v.debuffMonsterFrenzyTimer = Math.max(0, v.debuffMonsterFrenzyTimer - dt);
         if (v.debuffHeavyGoldTimer > 0) v.debuffHeavyGoldTimer = Math.max(0, v.debuffHeavyGoldTimer - dt);
 
-        // 轮盘旋转动画
         if (v.rouletteSpinning) {
           v.rouletteTimer += dt;
           const p = Math.min(1, v.rouletteTimer / v.rouletteDuration);
@@ -23964,7 +24219,7 @@
           this.drawRouletteWheel();
           if (p >= 1) {
             v.rouletteSpinning = false;
-            v.rouletteResultBannerTimer = 5.5;
+            v.rouletteResultBannerTimer = 2.0;
             this.applyRouletteOutcome(v.rouletteTargetSlice, v.rouletteTier);
           }
         } else if (v.rouletteResultBannerTimer > 0) {
@@ -23975,10 +24230,11 @@
           }
         }
 
-        // 自动消耗局内金币发射金钱攻击
-        v.shotTimer -= dt * (1 + (v.buffFuryTimer > 0 ? 0.15 * v.buffFuryTier : 0));
+        // 自动消耗局内金币发射金钱攻击（大奖时刻期间射速翻倍）
+        const atkSpdMul = 1 + (v.buffFuryTimer > 0 ? 0.15 * v.buffFuryTier : 0) + (v.feverTimer > 0 ? 0.85 : 0);
+        v.shotTimer -= dt * atkSpdMul;
         if (v.shotTimer <= 0) {
-          v.shotTimer = 0.52;
+          v.shotTimer = 0.54;
           this.fireVaultGoldShot();
         }
       },
@@ -23986,16 +24242,24 @@
       fireVaultGoldShot() {
         if (typeof enemies === 'undefined' || enemies.length === 0 || typeof player === 'undefined' || player.hp <= 0) return;
         const v = this.vault;
-        if (v.runGold < 1) {
-          v.lastShotCost = 0;
-          return;
+        v.runGold = Math.max(0, Math.floor(Number(v.runGold) || 0));
+        const inFever = v.feverTimer > 0;
+
+        // 当金币不足以维持当前档位时，自动降低下注比例
+        if (!inFever) {
+          this.autoDowngradeVaultTierIfNeeded(true);
+          if (v.runGold < 1) {
+            v.lastShotCost = 0;
+            this.syncVaultSavedGold();
+            return;
+          }
         }
-        // find nearest enemy
+
         let bestE = null;
         let bestDist = 520;
         for (let i = 0; i < enemies.length; i++) {
           const e = enemies[i];
-          if (!e || e.hp <= 0) continue;
+          if (!e || e.isDead || e.hp <= 0) continue;
           const d = Math.hypot(e.x - player.x, e.y - player.y);
           if (d < bestDist) {
             bestDist = d;
@@ -24004,47 +24268,57 @@
         }
         if (!bestE) return;
 
-        // 计算消耗：最少需 1% 的局内金币，没达到 1 颗就最少扣 1 颗并算作 1% 档位
-        const chosenTier = Math.max(1, Math.min(5, v.activeTier || 1));
-        const rawPctCost = Math.floor(v.runGold * (chosenTier / 100));
-        let cost = rawPctCost;
-        let effectiveTier = chosenTier;
-        if (rawPctCost < 1) {
-          cost = 1;
-          effectiveTier = 1;
+        const effectiveTier = Math.max(1, Math.min(5, v.activeTier || 1));
+        const shotStats = this.getVaultShotStats(effectiveTier);
+        let cost = shotStats.cost;
+        if (inFever) {
+          cost = 0;
+        } else {
+          cost = Math.min(v.runGold, Math.max(1, cost));
+          v.runGold = Math.max(0, v.runGold - cost);
+          this.autoDowngradeVaultTierIfNeeded(true);
         }
-        cost = Math.min(v.runGold, Math.max(1, cost));
-        v.runGold = Math.max(0, v.runGold - cost);
         v.lastShotCost = cost;
         v.shotCount += 1;
         this.syncVaultSavedGold();
 
         const m = this.getVaultTierMultipliers(effectiveTier);
         const baseAngle = Math.atan2(bestE.y - player.y, bestE.x - player.x);
-        const count = effectiveTier; // 1~5发黄金弹幕
-        const baseDmg = (player.damage || 24) * m.dmgMult * (1 + Math.min(3.5, cost * 0.032)) * (v.buffFuryTimer > 0 ? (1 + 0.30 * v.buffFuryTier) : 1);
+        const count = inFever ? Math.max(3, effectiveTier + 1) : effectiveTier;
+        const atkBase = player.skills?.attack?.damage || 28;
+        const feverDmgMul = inFever ? (1.75 + 0.25 * v.feverTier) : 1;
+        // 下注消耗的金币越多，单发金币攻击伤害越高！
+        const baseDmg = Math.round(atkBase * shotStats.totalDmgMult * (v.buffFuryTimer > 0 ? (1 + 0.30 * v.buffFuryTier) : 1) * feverDmgMul);
 
-        for (let i = 0; i < count; i++) {
-          const spread = count === 1 ? 0 : (i - (count - 1) / 2) * 0.13;
-          const ang = baseAngle + spread;
-          const spd = 480 + effectiveTier * 35;
-          bullets.push({
-            x: player.x,
-            y: player.y,
-            vx: Math.cos(ang) * spd,
-            vy: Math.sin(ang) * spd,
-            radius: 5 + effectiveTier * 1.6,
-            color: effectiveTier >= 4 ? '#fef08a' : '#facc15',
-            damage: baseDmg,
-            pierce: m.pierce,
-            life: 1.35,
-            aoe: m.aoeRadius,
-            isVaultGoldShot: true,
-            vaultTier: effectiveTier,
-            hitSet: new Set()
-          });
+        if (typeof projectiles !== 'undefined') {
+          for (let i = 0; i < count; i++) {
+            const spread = count === 1 ? 0 : (i - (count - 1) / 2) * 0.13;
+            const ang = baseAngle + spread;
+            const spd = 480 + effectiveTier * 35 + (inFever ? 120 : 0);
+            projectiles.push({
+              x: player.x,
+              y: player.y,
+              vx: Math.cos(ang) * spd,
+              vy: Math.sin(ang) * spd,
+              radius: 5 + effectiveTier * 1.6 + (inFever ? 2 : 0),
+              color: inFever || effectiveTier >= 4 ? '#fef08a' : '#facc15',
+              damage: baseDmg,
+              pierce: m.pierce + (inFever ? 3 : 0),
+              life: 1.35,
+              trail: [],
+              hitEnemies: new Set(),
+              isVaultGoldShot: true,
+              vaultTier: effectiveTier,
+              vaultAoE: m.aoeRadius,
+              _dmgSource: 'skill_attack'
+            });
+          }
         }
-        createFloatingText(player.x, player.y - 26, `-${cost}🪙 (${effectiveTier}%档)`, '#facc15', 11);
+        if (inFever) {
+          createFloatingText(player.x, player.y - 26, `🌟免费狂射 (${effectiveTier}%档)`, '#fef08a', 11);
+        } else {
+          createFloatingText(player.x, player.y - 26, `-${cost}🪙 (${effectiveTier}%档·伤x${shotStats.totalDmgMult.toFixed(1)})`, '#facc15', 11);
+        }
 
         // 每攻击 10 次触发全队统一轮盘抽奖！
         if (v.shotCount % 10 === 0) {
@@ -24064,10 +24338,10 @@
         v.rouletteTier = Math.max(1, Math.min(5, tier || v.activeTier || 1));
         const rOv = document.getElementById('vault-roulette-overlay');
         const rTxt = document.getElementById('vault-roulette-result-txt');
-        if (rOv) rOv.style.display = 'block';
+        if (rOv && !this.isAnyModalBlocking()) rOv.style.display = 'block';
         if (rTxt) {
           rTxt.style.color = '#fef08a';
-          rTxt.textContent = `投入倍率 ${v.rouletteTier}% 档 · 全队命运轮盘旋转中...`;
+          rTxt.textContent = `${v.rouletteTier}%档旋转中...`;
         }
         this.drawRouletteWheel();
         if (broadcast && typeof CoopManager !== 'undefined' && CoopManager.roomCode) {
@@ -24085,7 +24359,7 @@
         if (!cvs) return;
         const g = cvs.getContext('2d');
         const w = cvs.width, h = cvs.height;
-        const cx = w / 2, cy = h / 2, r = 64;
+        const cx = w / 2, cy = h / 2, r = Math.max(20, Math.floor(Math.min(w, h) * 0.40));
         g.clearRect(0, 0, w, h);
         const slices = this.ROULETTE_SLICES;
         const arc = (Math.PI * 2) / slices.length;
@@ -24102,33 +24376,31 @@
           g.fillStyle = s.color;
           g.fill();
           g.strokeStyle = '#1f2937';
-          g.lineWidth = 1.5;
+          g.lineWidth = 1;
           g.stroke();
 
           g.save();
           g.rotate(i * arc + arc / 2);
           g.fillStyle = '#ffffff';
-          g.font = 'bold 13px monospace';
+          g.font = 'bold 9px monospace';
           g.textAlign = 'center';
           g.textBaseline = 'middle';
-          g.fillText(s.icon, r * 0.66, 0);
+          g.fillText(s.icon, r * 0.64, 0);
           g.restore();
         }
         g.restore();
 
-        // 外圈金边与顶部指针
         g.strokeStyle = '#fef08a';
-        g.lineWidth = 3;
+        g.lineWidth = 2;
         g.beginPath();
         g.arc(cx, cy, r, 0, Math.PI * 2);
         g.stroke();
 
-        // 顶部指针
         g.fillStyle = '#ffffff';
         g.beginPath();
-        g.moveTo(cx - 7, cy - r - 8);
-        g.lineTo(cx + 7, cy - r - 8);
-        g.lineTo(cx, cy - r + 6);
+        g.moveTo(cx - 4, cy - r - 4);
+        g.lineTo(cx + 4, cy - r - 4);
+        g.lineTo(cx, cy - r + 4);
         g.closePath();
         g.fill();
       },
@@ -24142,53 +24414,57 @@
         let detail = '';
 
         audio.init();
-        if (s.good) {
-          audio.playSuperWeapon();
-        } else {
-          audio.playHit();
-        }
+        if (s.good) audio.playSuperWeapon();
+        else audio.playPlayerHurt();
 
-        if (s.id === 'jackpot_gold') {
-          const gain = Math.floor(35 * M + v.runGold * 0.08 * M);
-          v.runGold += gain;
-          this.syncVaultSavedGold();
-          detail = `【吉 · ${s.name}】(${M}%档倍率) 暴富入账 +${gain} 局内金币！`;
-          createFloatingText(player.x, player.y - 42, `🎰 轮盘暴富 +${gain} 金币!`, '#fde047', 17);
+        if (s.id === 'fever_jackpot') {
+          const dur = 12 + M * 2;
+          v.feverTimer = dur;
+          v.feverTier = M;
+          v.feverBlingTick = 0.2;
+          v.buffFuryTimer = Math.max(v.buffFuryTimer, dur);
+          v.buffFuryTier = Math.max(v.buffFuryTier || 1, M);
+          this.playBlingBling(3);
+          const dropChests = 3 + M;
+          for (let i = 0; i < dropChests; i++) {
+            const ang = (Math.PI * 2 * i) / dropChests + (Math.random() - 0.5) * 0.25;
+            const dist = 62 + (i % 2) * 32;
+            this.spawnGoldChest(player.x + Math.cos(ang) * dist, player.y + Math.sin(ang) * dist, 15 * M);
+          }
+          detail = `【头奖 · ${s.name}】全屏金光持续 ${dur} 秒！全属性狂暴加成、免费发射金币炮、杀怪100%爆金币并掉出 ${dropChests} 座黄金宝箱！`;
+          createFloatingText(player.x, player.y - 46, `🌟 大奖时刻·黄金狂热 (${dur}s)!`, '#fde047', 18);
         } else if (s.id === 'god_fury') {
           v.buffFuryTimer = 14;
           v.buffFuryTier = M;
+          this.playBlingBling(1);
           detail = `【吉 · ${s.name}】全队伤害+${30 * M}%、攻速+${15 * M}% 持续14秒！`;
           createFloatingText(player.x, player.y - 42, `⚡ 财神附体 伤害+${30 * M}%!`, '#4ade80', 16);
         } else if (s.id === 'gold_petrify') {
           const dur = 1.8 + 0.6 * M;
-          const burstDmg = (player.damage || 25) * (1.5 * M);
+          const burstDmg = Math.round((player.skills?.attack?.damage || 28) * (1.8 * M));
           if (typeof enemies !== 'undefined') {
             enemies.forEach(e => {
-              if (!e || e.hp <= 0) return;
-              e.stunTimer = Math.max(e.stunTimer || 0, dur);
+              if (!e || e.isDead || e.hp <= 0) return;
+              e.freezeTimer = Math.max(e.freezeTimer || 0, dur);
               e.color = '#facc15';
               e.hp -= burstDmg;
               if (e.hp <= 0 && typeof killEnemy === 'function') killEnemy(e);
             });
           }
-          detail = `【吉 · ${s.name}】全屏怪物石化 ${dur.toFixed(1)} 秒并承受巨额黄金轰击！`;
+          this.spawnGoldChest(player.x + 55, player.y, 10 * M);
+          detail = `【吉 · ${s.name}】全屏怪物石化 ${dur.toFixed(1)} 秒并掉落黄金宝箱！`;
           createFloatingText(player.x, player.y - 42, `🗿 全屏点石成金 ${dur.toFixed(1)}s!`, '#facc15', 16);
         } else if (s.id === 'royal_chests') {
-          const chestCount = 1 + Math.ceil(M / 2);
-          if (typeof fieldDrops !== 'undefined') {
-            for (let i = 0; i < chestCount; i++) {
-              const ang = (Math.PI * 2 * i) / chestCount;
-              fieldDrops.push({
-                x: player.x + Math.cos(ang) * 85,
-                y: player.y + Math.sin(ang) * 85,
-                type: i === 0 ? 'chest' : (i % 2 === 0 ? 'gold_bag' : 'magnet'),
-                radius: 14,
-                bobOffset: Math.random() * 6
-              });
-            }
+          const chestCount = 2 + M;
+          this.playBlingBling(2);
+          for (let i = 0; i < chestCount; i++) {
+            const ang = (Math.PI * 2 * i) / chestCount;
+            const px = player.x + Math.cos(ang) * 85;
+            const py = player.y + Math.sin(ang) * 85;
+            this.spawnGoldChest(px, py, 12 * M);
+            if (i % 2 === 0 && typeof spawnRandomPickup === 'function') spawnRandomPickup(px + 14, py);
           }
-          detail = `【吉 · ${s.name}】全队周围空投 ${chestCount} 座黄金宝箱与珍宝！`;
-          createFloatingText(player.x, player.y - 42, `🎁 皇家空投 x${chestCount}!`, '#34d399', 16);
+          detail = `【吉 · ${s.name}】全队周围地上掉落 ${chestCount} 座可拾取的黄金宝箱与珍稀道具！`;
         } else if (s.id === 'house_tax') {
           const loss = Math.max(1, Math.floor(v.runGold * (0.06 * M)));
           v.runGold = Math.max(0, v.runGold - loss);
@@ -24198,7 +24474,7 @@
         } else if (s.id === 'monster_frenzy') {
           v.debuffMonsterFrenzyTimer = 10;
           v.debuffMonsterFrenzyTier = M;
-          detail = `【凶 · ${s.name}】全场怪物移速+${12 * M}% 持续10秒（击杀额外掉金）！`;
+          detail = `【凶 · ${s.name}】全场怪物移速+${12 * M}% 持续10秒（击杀额外掉金箱）！`;
           createFloatingText(player.x, player.y - 42, `😈 魔物狂化 (${M}x)!`, '#ef4444', 16);
         } else if (s.id === 'heavy_shackle') {
           v.debuffHeavyGoldTimer = 8;
@@ -24207,14 +24483,14 @@
           createFloatingText(player.x, player.y - 42, `⛓️ 黄金负重 8秒!`, '#fca5a5', 16);
         } else if (s.id === 'debt_enforcers') {
           const cnt = 1 + Math.floor(M / 2);
-          if (typeof createEnemy === 'function' && typeof enemies !== 'undefined') {
+          if (typeof createEnemy === 'function') {
             for (let i = 0; i < cnt; i++) {
               const ang = Math.random() * Math.PI * 2;
-              const en = createEnemy('golem', player.x + Math.cos(ang) * 260, player.y + Math.sin(ang) * 260, true, false);
+              const en = createEnemy(player.x + Math.cos(ang) * 260, player.y + Math.sin(ang) * 260, 'vault_guard', 1.8);
               if (en) {
+                en.isElite = true;
                 en.name = '金库追债行刑官';
                 en.color = '#eab308';
-                enemies.push(en);
               }
             }
           }
@@ -24224,30 +24500,32 @@
 
         if (rTxt) {
           rTxt.style.color = s.good ? '#4ade80' : '#f87171';
-          rTxt.textContent = detail;
+          rTxt.textContent = `${s.good ? '吉' : '凶'}·${s.name.split('·').at(-1)}`;
         }
         showToast(`[px:coin] 命运轮盘结果：${detail}`);
       },
 
       tickSlimeCarnival(dt) {
         const sl = this.slime;
+        if (sl.fusionCooldown > 0) {
+          sl.fusionCooldown = Math.max(0, sl.fusionCooldown - dt);
+        }
         if (sl.chariotTimer > 0) {
           sl.chariotTimer = Math.max(0, sl.chariotTimer - dt);
           player.invulnerableTimer = Math.max(player.invulnerableTimer || 0, 0.15);
-          // 彩虹果冻吞噬战车碾压碰撞
           for (let i = enemies.length - 1; i >= 0; i--) {
             const e = enemies[i];
-            if (!e || e.hp <= 0) continue;
+            if (!e || e.isDead || e.hp <= 0) continue;
             const d = Math.hypot(e.x - player.x, e.y - player.y);
             if (d < player.radius * 2.3 + (e.radius || 14)) {
-              const ramDmg = e.isBoss ? (player.damage || 30) * 18 * dt : e.maxHp + 999;
+              const atkDmg = player.skills?.attack?.damage || 30;
+              const ramDmg = e.isBoss ? atkDmg * 18 * dt : e.maxHp + 999;
               e.hp -= ramDmg;
               const ang = Math.atan2(e.y - player.y, e.x - player.x);
-              e.slimeVx = Math.cos(ang) * 560;
-              e.slimeVy = Math.sin(ang) * 560;
+              e.slimeVx = Math.cos(ang) * 520;
+              e.slimeVy = Math.sin(ang) * 520;
               if (e.hp <= 0 && typeof killEnemy === 'function') {
                 killEnemy(e);
-                enemies.splice(i, 1);
               }
             }
           }
@@ -24257,7 +24535,6 @@
           if (sl.chainResetTimer <= 0) sl.chainBounceCount = 0;
         }
 
-        // 刷出狂欢果冻王冠
         sl.crownSpawnTimer -= dt;
         if (sl.crownSpawnTimer <= 0 && sl.crowns.length < 2) {
           sl.crownSpawnTimer = 18;
@@ -24271,7 +24548,6 @@
           showToast('[px:crown] 牧场刷新了【狂欢果冻王冠】！拾取即可化身 2.2 倍无敌彩虹果冻战车碾压吞噬！');
         }
 
-        // 拾取果冻王冠
         for (let i = sl.crowns.length - 1; i >= 0; i--) {
           const c = sl.crowns[i];
           c.bob += dt * 4;
@@ -24285,74 +24561,128 @@
           }
         }
 
-        // 史莱姆超弹力弹球物理与合体皮纳塔
-        const halfW = (canvas.width / 2) - 18;
-        const halfH = (canvas.height / 2) - 18;
-        for (let i = 0; i < enemies.length; i++) {
+        const halfW = ((camera.viewportWidth || window.innerWidth || 800) / 2) - 18;
+        const halfH = ((camera.viewportHeight || window.innerHeight || 600) / 2) - 18;
+        const len = enemies.length;
+        let activeBounces = 0;
+        for (let i = 0; i < len; i++) {
           const e = enemies[i];
-          if (!e || e.hp <= 0) continue;
+          if (!e || e.isDead || e.hp <= 0) continue;
+          if (e._slimeColCd > 0) e._slimeColCd = Math.max(0, e._slimeColCd - dt);
+          if (e._mergeCd > 0) e._mergeCd = Math.max(0, e._mergeCd - dt);
           if (!e.slimeVx && !e.slimeVy) continue;
+          if (++activeBounces > 36) {
+            e.slimeVx = 0;
+            e.slimeVy = 0;
+            continue;
+          }
           e.x += (e.slimeVx || 0) * dt;
           e.y += (e.slimeVy || 0) * dt;
-          e.slimeVx *= Math.pow(0.28, dt);
-          e.slimeVy *= Math.pow(0.28, dt);
+          const damp = Math.pow(0.24, dt);
+          e.slimeVx *= damp;
+          e.slimeVy *= damp;
           const speed = Math.hypot(e.slimeVx, e.slimeVy);
-          if (speed < 18) {
+          if (!Number.isFinite(speed) || speed < 22) {
             e.slimeVx = 0;
             e.slimeVy = 0;
             continue;
           }
 
-          // 屏幕边界反弹
           const dxCam = e.x - player.x;
           const dyCam = e.y - player.y;
           if (Math.abs(dxCam) > halfW) {
             e.x = player.x + Math.sign(dxCam) * halfW;
-            e.slimeVx = -e.slimeVx * 0.92;
+            e.slimeVx = -e.slimeVx * 0.85;
             e.squashTimer = 0.22;
             sl.chainBounceCount++;
             sl.chainResetTimer = 3.0;
           }
           if (Math.abs(dyCam) > halfH) {
             e.y = player.y + Math.sign(dyCam) * halfH;
-            e.slimeVy = -e.slimeVy * 0.92;
+            e.slimeVy = -e.slimeVy * 0.85;
             e.squashTimer = 0.22;
             sl.chainBounceCount++;
             sl.chainResetTimer = 3.0;
           }
 
-          // 与其他史莱姆台球碰撞 & 合体进化皮纳塔
-          for (let j = i + 1; j < enemies.length; j++) {
+          if (e._slimeColCd > 0) continue;
+          for (let j = i + 1; j < len; j++) {
             const o = enemies[j];
-            if (!o || o.hp <= 0) continue;
-            const dist = Math.hypot(o.x - e.x, o.y - e.y);
+            if (!o || o.isDead || o.hp <= 0 || o._slimeColCd > 0) continue;
+            const dx = o.x - e.x;
+            const dy = o.y - e.y;
             const minDist = (e.radius || 14) + (o.radius || 14);
-            if (dist > 0 && dist < minDist) {
-              // 满足条件的小怪合体为黄金皮纳塔皇
-              if (!e.isBoss && !o.isBoss && (e.pinataLevel || 1) < 4 && (o.pinataLevel || 1) <= 2 && Math.random() < 0.35) {
-                e.pinataLevel = (e.pinataLevel || 1) + 1;
-                e.radius = Math.min(34, (e.radius || 14) + 5);
-                e.maxHp *= 1.65;
-                e.hp = e.maxHp;
-                e.color = '#facc15';
-                e.name = `黄金皮纳塔皇 Lv.${e.pinataLevel}`;
+            if (Math.abs(dx) >= minDist || Math.abs(dy) >= minDist) continue;
+            const dist = Math.hypot(dx, dy);
+            if (dist < minDist) {
+              const lvE = e.pinataLevel || 1;
+              const lvO = o.pinataLevel || 1;
+              // 严格同阶段碰撞合体：两个1阶->2阶，两个2阶->3阶，两个3阶->4阶，两个4阶->5阶（最高5阶）
+              // 增加单怪合体冷却与全局合体冷却，防止合体过快；合体时回血且血量上限、体型随阶段递增
+              if (
+                !e.isBoss && !o.isBoss &&
+                lvE === lvO && lvE >= 1 && lvE < 5 &&
+                (e._mergeCd || 0) <= 0 && (o._mergeCd || 0) <= 0 &&
+                sl.fusionCooldown <= 0 &&
+                speed >= 75
+              ) {
+                const nextLv = lvE + 1;
+                const stageRadii = [13, 13, 19, 25, 32, 40];
+                const stageScales = [1.0, 1.0, 1.38, 1.82, 2.32, 2.95];
+                const stageHpMuls = [1.0, 1.0, 1.85, 2.15, 2.50, 2.90];
+                const stageColors = ['#38bdf8', '#38bdf8', '#34d399', '#c084fc', '#facc15', '#ec4899'];
+                const stageNames = ['', '1阶果冻史莱姆', '2阶弹力史莱姆', '3阶巨型史莱姆', '4阶黄金皮纳塔', '5阶至尊皮纳塔皇'];
+
+                e.pinataLevel = nextLv;
+                if (nextLv >= 4) {
+                  e.type = 'pinata_slime';
+                }
+                e.radius = stageRadii[nextLv];
+                e.visualScale = stageScales[nextLv];
+                const baseMaxHp = Math.max(e.maxHp || 165, o.maxHp || 165);
+                e.maxHp = Math.round(baseMaxHp * stageHpMuls[nextLv]);
+                const healAmt = Math.round(e.maxHp * 0.45);
+                e.hp = Math.min(e.maxHp, Math.round(e.hp + o.hp * 0.65 + healAmt));
+                e._lastExtraHp = e.hp;
+                e.color = stageColors[nextLv];
+                e.name = stageNames[nextLv];
+                e._mergeCd = 2.4;
+                e._slimeColCd = 0.45;
+                e.squashTimer = 0.30;
+                e.slimeVx *= 0.45;
+                e.slimeVy *= 0.45;
+
                 o.hp = 0;
+                o.isDead = true;
+                o.slimeVx = 0;
+                o.slimeVy = 0;
+                sl.fusionCooldown = 0.45;
                 sl.totalFusions++;
-                createFloatingText(e.x, e.y - 20, `👑 合体皮纳塔 Lv.${e.pinataLevel}!`, '#fde047', 13);
-                continue;
+                createFloatingText(e.x, e.y - e.radius - 8, `${nextLv}阶合体 +${healAmt}HP`, stageColors[nextLv], 12);
+                break;
               }
-              const nx = (o.x - e.x) / dist;
-              const ny = (o.y - e.y) / dist;
-              o.slimeVx = nx * speed * 0.88;
-              o.slimeVy = ny * speed * 0.88;
-              e.slimeVx = -nx * speed * 0.55;
-              e.slimeVy = -ny * speed * 0.55;
-              const colDmg = (player.damage || 22) * 1.35;
+              const nx = dist > 0.001 ? (dx / dist) : 1;
+              const ny = dist > 0.001 ? (dy / dist) : 0;
+              const overlap = Math.max(1, minDist - dist + 2);
+              e.x -= nx * overlap * 0.5;
+              e.y -= ny * overlap * 0.5;
+              o.x += nx * overlap * 0.5;
+              o.y += ny * overlap * 0.5;
+              o.slimeVx = nx * Math.min(440, speed * 0.78);
+              o.slimeVy = ny * Math.min(440, speed * 0.78);
+              e.slimeVx = -nx * Math.min(360, speed * 0.45);
+              e.slimeVy = -ny * Math.min(360, speed * 0.45);
+              e._slimeColCd = 0.22;
+              o._slimeColCd = 0.22;
+              const atkDmg = player.skills?.attack?.damage || 24;
+              const colDmg = Math.round(atkDmg * 1.35);
               o.hp -= colDmg;
-              e.hp -= colDmg * 0.6;
+              e.hp -= Math.round(colDmg * 0.6);
+              o._lastExtraHp = o.hp;
+              e._lastExtraHp = e.hp;
               sl.chainBounceCount++;
               sl.chainResetTimer = 3.0;
-              createFloatingText(o.x, o.y - 14, `🫧弹撞 -${Math.round(colDmg)}`, '#38bdf8', 11);
+              createFloatingText(o.x, o.y - 14, `🫧弹撞 -${colDmg}`, '#38bdf8', 11);
               if (o.hp <= 0 && typeof killEnemy === 'function') killEnemy(o);
               if (e.hp <= 0 && typeof killEnemy === 'function') killEnemy(e);
               break;
@@ -24361,69 +24691,15 @@
         }
       },
 
-      tickStarfallTemple(dt) {
-        // 4倍黑市商人刷新速度（相当于每55~60秒必出黑市商人）
-        if (typeof CampMarket !== 'undefined' && typeof CampMarket.tick === 'function') {
-          CampMarket.tick(dt * 3.0);
-        }
-        // 5倍地图道具爆率
-        if (typeof updateFieldDrops === 'function') {
-          updateFieldDrops(dt * 4.0);
-        }
-        // 隐藏公屏顶部 Boss 血条，全部改为 Boss 头顶独立血条
-        const bossHud = document.getElementById('boss-hud');
-        if (bossHud && bossHud.style.display !== 'none') {
-          bossHud.style.display = 'none';
-        }
-        // 定期额外降临诸神黄昏游走 Boss
-        this.starfall.bossSpawnTimer -= dt;
-        if (this.starfall.bossSpawnTimer <= 0) {
-          this.starfall.bossSpawnTimer = 22;
-          const activeBosses = enemies.filter(e => e && e.hp > 0 && e.isBoss).length;
-          if (activeBosses < 6 && typeof createEnemy === 'function') {
-            const ang = Math.random() * Math.PI * 2;
-            const b = createEnemy('golem', player.x + Math.cos(ang) * 340, player.y + Math.sin(ang) * 340, true, true);
-            if (b) enemies.push(b);
-          }
-        }
-      },
-
       promoteEnemyForExtraStage(enemy) {
         if (!enemy) return enemy;
         const b = GameState.activeBiome;
-        if (b === 'starfall_temple') {
-          const stacks = this.starfall.godslayerStacks || 0;
-          const inflate = Math.pow(1.12, Math.min(30, stacks));
-          // 原来的闪光怪或精英怪 -> 全部进化为诸神 Boss！
-          if (!enemy.isBoss && (enemy.isShiny || enemy.isElite || Math.random() < 0.14)) {
-            const roster = (typeof BIOME_BOSS_ROSTER !== 'undefined' && BIOME_BOSS_ROSTER.starfall_temple) || [];
-            const pick = roster[Math.floor(Math.random() * roster.length)] || {
-              name: '黄昏陨落古神', title: '诸神黄昏Boss', color: '#c084fc', accent: '#fef08a', radius: 34, skills: ['nova', 'charge', 'meteor']
-            };
-            enemy.isBoss = true;
-            enemy.isElite = true;
-            enemy.isShiny = false;
-            enemy.name = pick.name;
-            enemy.bossTitle = pick.title;
-            enemy.color = pick.color;
-            enemy.bossAccent = pick.accent;
-            enemy.radius = Math.max(enemy.radius || 22, 30);
-            enemy.maxHp = Math.round(enemy.maxHp * 3.2 * inflate);
-            enemy.hp = enemy.maxHp;
-            enemy.bossSkills = pick.skills || ['nova', 'charge'];
-            enemy.skillTimer = 3.5;
-          } else if (!enemy.isBoss) {
-            // 普通小怪 -> 100% 全员进化为闪光怪！
-            enemy.isShiny = true;
-            enemy.isElite = true;
-            enemy.color = '#fde047';
-            enemy.radius = Math.max(enemy.radius || 14, 16);
-            enemy.maxHp = Math.round(enemy.maxHp * 1.45 * inflate);
-            enemy.hp = enemy.maxHp;
-          } else {
-            enemy.maxHp = Math.round(enemy.maxHp * inflate);
-            enemy.hp = enemy.maxHp;
-          }
+        if (b === 'vault' && !enemy.isBoss) {
+          enemy.isVaultMonster = true;
+        } else if (b === 'slime_carnival' && !enemy.isBoss) {
+          enemy.pinataLevel = 1;
+          enemy.visualScale = 1.0;
+          enemy._mergeCd = 1.5;
         }
         return enemy;
       },
@@ -24432,67 +24708,44 @@
         if (!e) return;
         const b = GameState.activeBiome;
         if (b === 'vault') {
-          const m = this.getVaultTierMultipliers(this.vault.activeTier);
-          // 随投入档位提高怪物道具爆率与金币宝箱概率
-          const chestChance = (e.isBoss ? 0.85 : (e.isElite ? 0.18 : 0.018)) * m.goldChestMult;
-          if (Math.random() < chestChance && typeof fieldDrops !== 'undefined') {
-            fieldDrops.push({
-              x: e.x,
-              y: e.y,
-              type: Math.random() < 0.45 ? 'chest' : 'gold_bag',
-              radius: 13,
-              bobOffset: Math.random() * 6
+          const v = this.vault;
+          const m = this.getVaultTierMultipliers(v.activeTier);
+          const inFever = v.feverTimer > 0;
+          // 道具掉落率与普通关卡完全一致（仅闪光怪在 killEnemy 中按普通关卡 25% 概率掉道具，小怪不再额外掉随机道具）
+          // 大奖时刻期间杀怪 100% 必爆金币，且随档位掉落黄金宝箱
+          if (inFever && typeof goldDrops !== 'undefined') {
+            goldDrops.push({
+              x: e.x + (Math.random() - 0.5) * 14,
+              y: e.y + (Math.random() - 0.5) * 14,
+              val: Math.max(2, 2 * v.feverTier),
+              isSuperAttracted: true
             });
-            createFloatingText(e.x, e.y - 20, `🎁 ${this.vault.activeTier}%档爆出金箱!`, '#facc15', 12);
           }
-          if (Math.random() < 0.025 * m.itemDropMult && typeof fieldDrops !== 'undefined') {
-            const types = ['meat', 'magnet', 'bomb', 'shield_orb', 'frenzy_orb'];
-            fieldDrops.push({
-              x: e.x + 12,
-              y: e.y,
-              type: types[Math.floor(Math.random() * types.length)],
-              radius: 12,
-              bobOffset: Math.random() * 6
-            });
+          const chestChance = inFever
+            ? (e.isBoss ? 1.0 : (e.isElite ? 0.55 : 0.16))
+            : (e.isBoss ? 0.85 : (e.isElite ? 0.14 : 0.022)) * m.goldChestMult;
+          if (Math.random() < chestChance) {
+            this.spawnGoldChest(e.x, e.y, Math.max(4, (inFever ? 7 : 4) * v.activeTier));
           }
         } else if (b === 'slime_carnival') {
-          if ((e.pinataLevel || 1) >= 2) {
-            const lv = e.pinataLevel;
-            for (let i = 0; i < lv * 5; i++) {
-              const ang = (Math.PI * 2 * i) / (lv * 5);
-              gems.push({
-                x: e.x + Math.cos(ang) * 28,
-                y: e.y + Math.sin(ang) * 28,
-                val: 35 * lv,
-                color: '#fde047',
-                radius: 6
-              });
+          // 史莱姆狂欢牧场：只有合体到 4 阶段及以上的怪物被击杀才会爆出大奖！
+          const lv = e.pinataLevel || 1;
+          if (lv >= 4) {
+            const gemCount = lv >= 5 ? 24 : 14;
+            for (let i = 0; i < gemCount; i++) {
+              const ang = (Math.PI * 2 * i) / gemCount;
+              const gx = e.x + Math.cos(ang) * 32;
+              const gy = e.y + Math.sin(ang) * 32;
+              if (typeof spawnGemCrystal === 'function') {
+                spawnGemCrystal(gx, gy, 32 * lv, 3);
+              }
             }
-            createFloatingText(e.x, e.y - 24, `🎊 皮纳塔大爆奖 x${lv * 5}宝石!`, '#fde047', 14);
-          }
-        } else if (b === 'starfall_temple') {
-          // 5倍怪物道具爆率
-          if (typeof fieldDrops !== 'undefined' && Math.random() < (e.isBoss ? 0.95 : 0.085)) {
-            const pool = ['chest', 'gold_bag', 'meat', 'magnet', 'bomb', 'frenzy_orb', 'shield_orb'];
-            fieldDrops.push({
-              x: e.x,
-              y: e.y,
-              type: e.isBoss && Math.random() < 0.55 ? 'chest' : pool[Math.floor(Math.random() * pool.length)],
-              radius: 13,
-              bobOffset: Math.random() * 6
-            });
-          }
-          // 斩杀 Boss 叠加【弑神神格】双向数值膨胀，且高概率召唤黑市商人！
-          if (e.isBoss) {
-            this.starfall.godslayerStacks += 1;
-            const st = this.starfall.godslayerStacks;
-            player.damage = (player.damage || 30) * 1.12;
-            player.maxHp = Math.round((player.maxHp || 200) * 1.08);
-            player.hp = Math.min(player.maxHp, player.hp + Math.round(player.maxHp * 0.20));
-            createFloatingText(player.x, player.y - 36, `⚡ 弑神神格 +1 (${st}层 · 神力暴涨)!`, '#c084fc', 15);
-            if (typeof CampMarket !== 'undefined' && !CampMarket.activeMerchant && Math.random() < 0.42) {
-              CampMarket.spawnMerchant();
-              showToast('[px:coin] 诸神陨落惊动了【黑市神秘商人】，已在战场附近现身！');
+            const chestCount = lv >= 5 ? 2 : 1;
+            for (let c = 0; c < chestCount; c++) {
+              this.spawnGoldChest(e.x + (c * 22 - (chestCount > 1 ? 11 : 0)), e.y, 12 * lv);
+            }
+            if (lv >= 5 && typeof spawnRandomPickup === 'function') {
+              spawnRandomPickup(e.x, e.y + 16);
             }
           }
         }
@@ -24501,8 +24754,58 @@
       drawWorldExtras(ctx) {
         if (!GameState.isStarted) return;
         const b = GameState.activeBiome;
-        if (b === 'slime_carnival') {
-          // 绘制果冻王冠拾取物
+        if (b === 'vault' && this.vault.feverTimer > 0 && typeof player !== 'undefined') {
+          const now = performance.now() * 0.001;
+          // 1. 玩家脚下大奖时刻黄金圣环与漫天星芒
+          ctx.save();
+          ctx.translate(player.x, player.y);
+          ctx.strokeStyle = 'rgba(250, 204, 21, 0.85)';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(0, 0, player.radius * 2.1 + Math.sin(now * 8) * 4, 0, Math.PI * 2);
+          ctx.stroke();
+          for (let i = 0; i < 6; i++) {
+            const a = now * 3.2 + (i * Math.PI) / 3;
+            const rx = Math.cos(a) * (player.radius * 2.3);
+            const ry = Math.sin(a) * (player.radius * 2.3);
+            ctx.fillStyle = i % 2 === 0 ? '#fef08a' : '#facc15';
+            ctx.fillRect(rx - 3, ry - 3, 6, 6);
+          }
+          ctx.font = 'bold 11px monospace';
+          ctx.fillStyle = '#fef08a';
+          ctx.textAlign = 'center';
+          ctx.fillText(`🌟大奖时刻 ${this.vault.feverTimer.toFixed(1)}s`, 0, -player.radius * 2.5);
+          ctx.restore();
+
+          // 2. 全图金色流光射线与漫天飘落闪耀金币雨特效（屏幕空间）
+          ctx.save();
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          const vw = window.innerWidth || 800;
+          const vh = window.innerHeight || 600;
+          const pulse = 0.10 + 0.05 * Math.sin(now * 6);
+          const gGrad = ctx.createRadialGradient(vw / 2, vh / 2, Math.min(vw, vh) * 0.18, vw / 2, vh / 2, Math.max(vw, vh) * 0.72);
+          gGrad.addColorStop(0, 'rgba(254, 240, 138, 0.02)');
+          gGrad.addColorStop(1, `rgba(234, 179, 8, ${pulse.toFixed(3)})`);
+          ctx.fillStyle = gGrad;
+          ctx.fillRect(0, 0, vw, vh);
+
+          ctx.strokeStyle = 'rgba(250, 204, 21, 0.55)';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(2, 2, vw - 4, vh - 4);
+
+          for (let i = 0; i < 18; i++) {
+            const gx = ((i * 97 + now * 45 * (i % 2 === 0 ? 1 : -1)) % vw + vw) % vw;
+            const gy = ((i * 61 + now * (135 + (i % 4) * 28)) % vh + vh) % vh;
+            ctx.fillStyle = i % 3 === 0 ? '#fef08a' : '#facc15';
+            ctx.beginPath();
+            ctx.arc(gx, gy, 3.8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(gx - 1, gy - 2, 2, 4);
+          }
+          ctx.restore();
+        } else if (b === 'slime_carnival') {
           this.slime.crowns.forEach(c => {
             ctx.save();
             ctx.translate(c.x, c.y + Math.sin(c.bob) * 4);
@@ -24522,7 +24825,33 @@
             ctx.restore();
           });
 
-          // 彩虹果冻吞噬战车光环
+          // 绘制 2~5 阶合体史莱姆的阶段标识与血条
+          if (typeof enemies !== 'undefined') {
+            const stageCols = ['#38bdf8', '#38bdf8', '#34d399', '#c084fc', '#facc15', '#ec4899'];
+            for (let i = 0; i < enemies.length; i++) {
+              const e = enemies[i];
+              if (!e || e.isDead || e.hp <= 0 || e.isBoss) continue;
+              const lv = e.pinataLevel || 1;
+              if (lv < 2) continue;
+              const col = stageCols[lv] || '#facc15';
+              const bw = Math.max(26, (e.radius || 18) * 1.5);
+              const bh = 4;
+              const bx = e.x - bw / 2;
+              const by = e.y - (e.radius || 18) - 12;
+              const ratio = Math.max(0, Math.min(1, e.hp / Math.max(1, e.maxHp)));
+              ctx.save();
+              ctx.fillStyle = 'rgba(9, 13, 22, 0.78)';
+              ctx.fillRect(bx - 1, by - 1, bw + 2, bh + 2);
+              ctx.fillStyle = col;
+              ctx.fillRect(bx, by, bw * ratio, bh);
+              ctx.font = 'bold 9.5px monospace';
+              ctx.textAlign = 'center';
+              ctx.fillStyle = col;
+              ctx.fillText(lv >= 4 ? `👑${lv}阶(爆奖)` : `${lv}阶`, e.x, by - 3);
+              ctx.restore();
+            }
+          }
+
           if (this.slime.chariotTimer > 0 && typeof player !== 'undefined') {
             ctx.save();
             ctx.translate(player.x, player.y);
@@ -24541,156 +24870,220 @@
             ctx.fillText(`🌈吞噬战车 ${this.slime.chariotTimer.toFixed(1)}s`, 0, -player.radius * 2.4);
             ctx.restore();
           }
-        } else if (b === 'starfall_temple') {
-          // 番外三：所有 Boss 的血量条直接画在 Boss 头顶上，不占用公屏顶部！
-          if (typeof enemies !== 'undefined') {
-            for (let i = 0; i < enemies.length; i++) {
-              const e = enemies[i];
-              if (!e || e.hp <= 0 || !e.isBoss) continue;
-              const bw = Math.max(64, (e.radius || 32) * 2.1);
-              const bh = 7;
-              const bx = e.x - bw / 2;
-              const by = e.y - (e.radius || 32) - 24;
-              const ratio = Math.max(0, Math.min(1, e.hp / Math.max(1, e.maxHp)));
-
-              ctx.save();
-              ctx.fillStyle = 'rgba(9, 13, 22, 0.88)';
-              ctx.fillRect(bx - 2, by - 2, bw + 4, bh + 4);
-              ctx.strokeStyle = e.bossAccent || '#facc15';
-              ctx.lineWidth = 1.5;
-              ctx.strokeRect(bx - 2, by - 2, bw + 4, bh + 4);
-
-              const grad = ctx.createLinearGradient(bx, by, bx + bw, by);
-              grad.addColorStop(0, '#ef4444');
-              grad.addColorStop(0.6, '#f59e0b');
-              grad.addColorStop(1, '#facc15');
-              ctx.fillStyle = grad;
-              ctx.fillRect(bx, by, bw * ratio, bh);
-
-              ctx.font = 'bold 10px monospace';
-              ctx.textAlign = 'center';
-              ctx.fillStyle = '#fef08a';
-              ctx.fillText(`👑 ${e.name || '诸神Boss'} (${Math.ceil(e.hp)}/${Math.ceil(e.maxHp)})`, e.x, by - 5);
-              ctx.restore();
-            }
-          }
         }
       },
 
       updateHUD() {
         const hud = document.getElementById('extra-stage-hud');
+        const rOv = document.getElementById('vault-roulette-overlay');
         if (!hud) return;
+        const setTxt = (el, val) => {
+          if (el && el._lastTxt !== val) {
+            el._lastTxt = val;
+            el.textContent = val;
+          }
+        };
+        const setHtml = (el, val) => {
+          if (el && el._lastHtml !== val) {
+            el._lastHtml = val;
+            el.innerHTML = val;
+          }
+        };
         const b = GameState.activeBiome;
-        const inExtra = GameState.isStarted && !GameState.isOver && this.EXTRA_BIOMES.includes(b);
-        hud.style.display = inExtra ? 'block' : 'none';
+        const modalBlocking = this.isAnyModalBlocking();
+        const inExtra = GameState.isStarted && !GameState.isOver && !modalBlocking && this.EXTRA_BIOMES.includes(b);
+        const nextHudDisp = inExtra ? 'block' : 'none';
+        if (hud.style.display !== nextHudDisp) hud.style.display = nextHudDisp;
+        if (rOv) {
+          const showRoulette = inExtra && b === 'vault' && (this.vault.rouletteSpinning || this.vault.rouletteResultBannerTimer > 0);
+          const nextRovDisp = showRoulette ? 'block' : 'none';
+          if (rOv.style.display !== nextRovDisp) rOv.style.display = nextRovDisp;
+        }
         if (!inExtra) return;
 
         const vBox = document.getElementById('vault-hud-box');
         const sBox = document.getElementById('slime-hud-box');
-        const sfBox = document.getElementById('starfall-hud-box');
-        if (vBox) vBox.style.display = b === 'vault' ? 'flex' : 'none';
-        if (sBox) sBox.style.display = b === 'slime_carnival' ? 'flex' : 'none';
-        if (sfBox) sfBox.style.display = b === 'starfall_temple' ? 'flex' : 'none';
+        if (vBox) { const d = b === 'vault' ? 'flex' : 'none'; if (vBox.style.display !== d) vBox.style.display = d; }
+        if (sBox) { const d = b === 'slime_carnival' ? 'flex' : 'none'; if (sBox.style.display !== d) sBox.style.display = d; }
 
         if (b === 'vault') {
           const v = this.vault;
+          this.autoDowngradeVaultTierIfNeeded(false);
           const m = this.getVaultTierMultipliers(v.activeTier);
-          const rawCost = Math.floor(v.runGold * (v.activeTier / 100));
-          const effTier = rawCost < 1 ? 1 : v.activeTier;
-          const nextCost = v.runGold >= 1 ? Math.max(1, rawCost) : 0;
+          const shotStats = this.getVaultShotStats(v.activeTier);
+          const effTier = v.activeTier;
+          const nextCost = v.feverTimer > 0 ? 0 : shotStats.cost;
           const remShots = 10 - (v.shotCount % 10);
+          const maxAffordable = this.getMaxAffordableVaultTier(v.runGold);
 
-          const gTxt = document.getElementById('vault-run-gold-txt');
-          if (gTxt) gTxt.textContent = `🪙 局内赌本: ${Math.floor(v.runGold).toLocaleString()} 金 (单发耗 ${nextCost} 金 · 按 ${effTier}% 档结算)`;
-          const rProg = document.getElementById('vault-roulette-prog-txt');
-          if (rProg) rProg.textContent = `🎰 距离全队大轮盘: ${remShots} 发 (已发 ${v.shotCount} 次)`;
+          setTxt(document.getElementById('vault-run-gold-txt'), `🪙 局内金: ${Math.floor(v.runGold).toLocaleString()} (${v.feverTimer > 0 ? '免费狂射' : `耗${nextCost}金/发`}·${effTier}%档)`);
+          setTxt(document.getElementById('vault-roulette-prog-txt'), `🎰 轮盘: ${remShots}发`);
 
           hud.querySelectorAll('.vault-tier-btn').forEach(btn => {
             const t = Number(btn.dataset.tier) || 1;
             btn.classList.toggle('is-selected', t === v.selectedTier);
             btn.classList.toggle('is-active', t === v.activeTier);
-            btn.disabled = v.lockTimer > 0 && t !== v.activeTier;
+            btn.disabled = (v.lockTimer > 0 && t !== v.activeTier) || (t > maxAffordable && v.feverTimer <= 0);
           });
           const lockBtn = document.getElementById('btn-vault-lock-bet');
           if (lockBtn) {
             if (v.lockTimer > 0) {
               lockBtn.classList.add('is-locked');
               lockBtn.disabled = true;
-              lockBtn.textContent = `🔒 ${v.activeTier}%档锁定中 (${v.lockTimer.toFixed(1)}s)`;
+              setTxt(lockBtn, `🔒 ${v.activeTier}%档 (${v.lockTimer.toFixed(0)}s)`);
             } else {
               lockBtn.classList.remove('is-locked');
               lockBtn.disabled = false;
-              lockBtn.textContent = `🪙 下注买定 (B) · 锁定30秒`;
+              setTxt(lockBtn, `🪙 下注锁定(30s)`);
             }
           }
           const dTxt = document.getElementById('vault-tier-detail-txt');
           if (dTxt) {
-            let statusStr = v.lockTimer > 0 ? `🔒 买定离手倒计时 ${v.lockTimer.toFixed(1)}s` : '✓ 可点击1%~5%档下注锁定30秒';
-            if (v.buffFuryTimer > 0) statusStr = `⚡ 财神狂暴 (${v.buffFuryTimer.toFixed(1)}s)`;
-            else if (v.debuffMonsterFrenzyTimer > 0) statusStr = `😈 魔物狂化 (${v.debuffMonsterFrenzyTimer.toFixed(1)}s)`;
-            else if (v.debuffHeavyGoldTimer > 0) statusStr = `⛓️ 黄金负重 (${v.debuffHeavyGoldTimer.toFixed(1)}s)`;
-            dTxt.innerHTML = `
-              <span>生效档位: ${effTier}%档 · 伤害x${m.dmgMult.toFixed(1)} · 穿透${m.pierce} · 怪爆率+${Math.round((m.itemDropMult - 1) * 100)}% · 金箱率+${Math.round((m.goldChestMult - 1) * 100)}%</span>
-              <span style="color:${v.lockTimer > 0 ? '#fca5a5' : '#4ade80'};">${statusStr}</span>
-            `;
+            let statusStr = v.lockTimer > 0 ? `🔒锁定${v.lockTimer.toFixed(0)}s` : '✓点1%~5%切档/点右侧锁30s';
+            if (v.feverTimer > 0) statusStr = `🌟大奖时刻(${v.feverTimer.toFixed(0)}s)`;
+            else if (v.buffFuryTimer > 0) statusStr = `⚡狂暴(${v.buffFuryTimer.toFixed(0)}s)`;
+            else if (v.debuffMonsterFrenzyTimer > 0) statusStr = `😈狂化(${v.debuffMonsterFrenzyTimer.toFixed(0)}s)`;
+            else if (v.debuffHeavyGoldTimer > 0) statusStr = `⛓️负重(${v.debuffHeavyGoldTimer.toFixed(0)}s)`;
+            setHtml(dTxt, `
+              <span>${effTier}%档(耗${nextCost}金): 伤x${shotStats.totalDmgMult.toFixed(1)}·克制易伤·穿${m.pierce}·金箱+${Math.round((m.goldChestMult - 1) * 100)}%</span>
+              <span style="color:${v.feverTimer > 0 ? '#fde047' : (v.lockTimer > 0 ? '#fca5a5' : '#4ade80')};">${statusStr}</span>
+            `);
           }
         } else if (b === 'slime_carnival') {
           const sl = this.slime;
-          const cTxt = document.getElementById('slime-combo-txt');
-          const pTxt = document.getElementById('slime-pinata-txt');
-          const chTxt = document.getElementById('slime-chariot-txt');
-          if (cTxt) cTxt.textContent = `🫧 果冻弹球连击: ${sl.chainBounceCount} 连撞`;
-          if (pTxt) pTxt.textContent = `👑 合体黄金皮纳塔: ${sl.totalFusions} 次`;
-          if (chTxt) {
-            chTxt.textContent = sl.chariotTimer > 0
-              ? `🌈 彩虹吞噬战车无敌碾压中: ${sl.chariotTimer.toFixed(1)}s`
-              : `🌈 战车状态: 拾取场上【👑果冻王冠】变身`;
-          }
-        } else if (b === 'starfall_temple') {
-          const st = this.starfall.godslayerStacks;
-          const bossCnt = typeof enemies !== 'undefined' ? enemies.filter(e => e && e.hp > 0 && e.isBoss).length : 0;
-          const stTxt = document.getElementById('starfall-stacks-txt');
-          const bTxt = document.getElementById('starfall-boss-count-txt');
-          if (stTxt) stTxt.textContent = `⚡ 弑神神格: ${st} 层 (全队伤害+${st * 12}% · 血量上限+${st * 8}%)`;
-          if (bTxt) bTxt.textContent = `👹 同屏诸神Boss: ${bossCnt} 尊 (头顶独立血条)`;
+          setTxt(document.getElementById('slime-combo-txt'), `🫧 弹球: ${sl.chainBounceCount}连撞`);
+          setTxt(document.getElementById('slime-pinata-txt'), `👑 合体: ${sl.totalFusions}次 (4阶+爆奖)`);
+          setTxt(
+            document.getElementById('slime-chariot-txt'),
+            sl.chariotTimer > 0
+              ? `🌈 战车无敌: ${sl.chariotTimer.toFixed(1)}s`
+              : `🌈 战车: 拾取👑果冻王冠`
+          );
         }
       },
 
       hookGameSystems() {
         const self = this;
 
-        // 1. 扩展 TileCache.build 以生成三张番外关卡的地脉贴图
-        if (typeof TileCache !== 'undefined' && typeof TileCache.build === 'function') {
-          const _origBuild = TileCache.build.bind(TileCache);
-          TileCache.build = function() {
-            const res = _origBuild();
-            self.buildExtraBiomeTiles();
-            return res;
-          };
-          this.buildExtraBiomeTiles();
-        }
-
-        // 2. 扩展关卡预览横幅与说明 (syncHeroAndBiomeSelectionUI)
-        if (typeof syncHeroAndBiomeSelectionUI === 'function') {
-          const _origSyncUI = syncHeroAndBiomeSelectionUI;
-          syncHeroAndBiomeSelectionUI = function() {
-            _origSyncUI.apply(this, arguments);
-            const meta = self.META[GameState.activeBiome];
-            if (meta) {
-              const imgEl = document.getElementById('stage-cg-img');
-              if (imgEl && window.STAGE_CGS && window.STAGE_CGS[meta.key]) {
-                imgEl.src = window.STAGE_CGS[meta.key];
-              }
-              const capEl = document.getElementById('stage-cg-caption');
-              if (capEl) {
-                capEl.innerHTML = meta.caption;
-                if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) PixelIcons.hydrate(capEl);
+        // 0. 拦截局内 showToast：同一局内相同的技能升级描述、道具拾取描述等通知只弹出一次，避免刷屏烦人！
+        if (typeof showToast === 'function') {
+          const _origShowToast = showToast;
+          showToast = function(msg) {
+            if (typeof GameState !== 'undefined' && GameState.isStarted && !GameState.isOver) {
+              const s = String(msg || '');
+              const isInteractive = s.includes('买定离手') || s.includes('已切换下注比例') || s.includes('命运轮盘结果') || s.includes('不足');
+              if (!isInteractive) {
+                const normKey = s.replace(/Lv\.\d+/g, 'Lv.X').replace(/\+\d+(\.\d+)?%?/g, '+N');
+                if (self.shownRunToasts.has(normKey)) {
+                  return;
+                }
+                self.shownRunToasts.add(normKey);
               }
             }
+            return _origShowToast.apply(this, arguments);
           };
         }
 
-        // 3. 拦截黄金宝库局内金币获取（只增加局内赌本 runGold，控制自然增速，绝不扣存档金币）
+        // 1. 扩展怪物图鉴与首领图鉴 (Campaign.monsterName / Campaign.bookRows / Campaign.selectBook)
+        // 让图鉴收录全部番外新魔物与新Boss，且图鉴数值随当前关卡与难度倍率实时同步更新！
+        if (typeof Campaign !== 'undefined') {
+          const extraMonsterNames = {
+            gold_mimic: '噬金宝箱怪',
+            vault_guard: '金库重甲卫',
+            jelly_slime: '果冻弹球史莱姆',
+            pinata_slime: '黄金皮纳塔皇'
+          };
+          const extraMonsterFlavor = {
+            gold_mimic: '伪装成黄金宝箱的贪婪魔物，咬合力比银行保险柜还紧。',
+            vault_guard: '身披纯金重甲的宝库禁卫，受雇于玛门，加班费按秒结算。',
+            jelly_slime: '富含百倍果冻胶原的1阶Q弹史莱姆，同阶碰撞可逐级合体进化至最高5阶。',
+            pinata_slime: '由史莱姆同阶碰撞合体至4阶以上的黄金皮纳塔皇，击败后爆出满地宝石与黄金宝箱。'
+          };
+          Object.assign(Campaign.monsterFlavor, extraMonsterFlavor);
+
+          const _origMonsterName = Campaign.monsterName;
+          Campaign.monsterName = function(key) {
+            return extraMonsterNames[key] || _origMonsterName.call(this, key);
+          };
+
+          const monsterHomeBiome = {
+            imp: 'dungeon', bat: 'dungeon', hellhound: 'dungeon', fire_skull: 'dungeon', mage: 'dungeon', succubus: 'dungeon', gargoyle: 'dungeon', hellknight: 'dungeon', voidbug: 'dungeon', golem: 'dungeon', abomination: 'dungeon',
+            icewolf: 'tundra', snow_owl: 'tundra', archer: 'tundra', frost_spider: 'tundra', yeti: 'tundra', wraith: 'tundra', icemage: 'tundra', valkyrie: 'tundra', mammoth: 'tundra',
+            zombie: 'graveyard', crow: 'graveyard', ghoul: 'graveyard', skeleton: 'graveyard', mummy: 'graveyard', vampire: 'graveyard', reaper: 'graveyard', bone_knight: 'graveyard',
+            gear_rat: 'clockwork', cog_drone: 'clockwork', key_guard: 'clockwork', gear_mage: 'clockwork', bell_brute: 'clockwork', clock_wraith: 'clockwork',
+            gold_mimic: 'vault', vault_guard: 'vault',
+            jelly_slime: 'slime_carnival', pinata_slime: 'slime_carnival'
+          };
+
+          const _origBookRows = Campaign.bookRows;
+          Campaign.bookRows = function(tab) {
+            const rows = _origBookRows.call(this, tab);
+            const curseLv = GameState.isStarted ? (GameState.curseLevel || 0) : (GameState.lobbyCurseLevel || 0);
+            const curseHpMul = curseLv >= 0 ? (1 + curseLv * 0.35) : Math.max(0.25, Math.pow(0.78, -curseLv));
+            const curseDmgMul = curseLv >= 0 ? (1 + curseLv * 0.15) : Math.max(0.35, Math.pow(0.88, -curseLv));
+            const expMul = 1 + Math.max(0, curseLv) * 0.08;
+
+            if (tab === 'monsters') {
+              for (const row of rows) {
+                const m = MONSTER_SPECS[row.id];
+                if (!m) continue;
+                const homeBiome = m.stageKey || monsterHomeBiome[row.id] || GameState.activeBiome || 'dungeon';
+                const activeStageMul = typeof getStageHpMultiplier === 'function'
+                  ? getStageHpMultiplier(GameState.activeBiome || homeBiome)
+                  : 1.0;
+                const homeStageMul = typeof getStageHpMultiplier === 'function'
+                  ? getStageHpMultiplier(homeBiome)
+                  : 1.0;
+                const effStageMul = (GameState.activeBiome === homeBiome || !m.stageKey) ? activeStageMul : homeStageMul;
+                const actualHp = Math.round(m.hp * effStageMul * curseHpMul);
+                const actualDmg = Math.round(m.dmg * curseDmgMul);
+                const actualExp = Math.round(m.exp * expMul);
+                if (extraMonsterFlavor[row.id]) {
+                  row.desc = `${extraMonsterFlavor[row.id]} 第${m.tier}阶${m.isFlying ? '飞行' : '地面'}魔物，属性随战局成长。`;
+                }
+                row.stats = [
+                  ['实战生命', `${actualHp} (基础 ${m.hp})`],
+                  ['接触伤害', `${actualDmg} (基础 ${m.dmg})`],
+                  ['移动速度', `${m.speed} px/秒`],
+                  ['击败经验', `${actualExp}`]
+                ];
+              }
+            } else if (tab === 'bosses') {
+              for (const row of rows) {
+                const b = this.bossCatalog().find(x => x.id === row.id);
+                if (!b) continue;
+                const stageMul = typeof getStageHpMultiplier === 'function' ? getStageHpMultiplier(b.biome) : 1.0;
+                const finalBoost = b.isFinal ? 2.0 : 1.0;
+                const combatHp = Math.round(b.hp * 8 * stageMul * curseHpMul * finalBoost);
+                const combatDmg = Math.round(b.dmg * 1.25 * Math.max(1, curseDmgMul * 0.65));
+                const combatSpd = Math.round(b.speed * 0.68);
+                if (Campaign.bossFlavor[row.id]) {
+                  row.desc = `${Campaign.bossFlavor[row.id]} 战胜后解锁图鉴与商人雇佣资格。${b.title}`;
+                }
+                row.stats = [
+                  ['实战生命', combatHp.toLocaleString()],
+                  ['实战伤害', combatDmg],
+                  ['移动速度', `${combatSpd} px/秒`],
+                  ['登场时间', `${b.minute} 分钟`]
+                ];
+              }
+            }
+            return rows;
+          };
+
+          const _origSelectBook = Campaign.selectBook;
+          Campaign.selectBook = function(id) {
+            const r = _origSelectBook.call(this, id);
+            const panel = document.getElementById('book-detail');
+            if (panel && !panel.hidden) {
+              const sm = panel.querySelector('small');
+              if (sm) sm.textContent = '已同步当前关卡与难度动态实战数值（切换关卡或战前难度时实时更新）。';
+            }
+            return r;
+          };
+        }
+
+        // 2. 拦截黄金宝库局内金币获取（只增加局内金币 runGold，实时同步顶栏 #gold-count，绝不乱跳存档总额）
         if (typeof SaveManager !== 'undefined' && typeof SaveManager.addGold === 'function') {
           const _origAddGold = SaveManager.addGold.bind(SaveManager);
           SaveManager.addGold = function(amount) {
@@ -24698,9 +25091,11 @@
               const raw = Number(amount) || 0;
               if (raw > 0) {
                 const m = self.getVaultTierMultipliers(self.vault.activeTier);
-                const scaledGain = Math.max(1, Math.round(raw * 0.48 * m.goldChestMult));
-                self.vault.runGold += scaledGain;
+                const feverBoost = self.vault.feverTimer > 0 ? 1.5 : 1.0;
+                const scaledGain = Math.max(1, Math.round(raw * 0.55 * m.goldChestMult * feverBoost));
+                self.vault.runGold = Math.max(0, Math.floor(Number(self.vault.runGold) || 0)) + scaledGain;
                 self.syncVaultSavedGold();
+                self.updateHUD();
               }
               return;
             }
@@ -24708,26 +25103,26 @@
           };
         }
 
-        // 4. 拦截 resetRun 初始化爽关开局状态
-        if (typeof resetRun === 'function') {
-          const _origResetRun = resetRun;
-          resetRun = function() {
-            const res = _origResetRun.apply(this, arguments);
+        // 3. 拦截 resetGameSession 初始化爽关开局状态
+        if (typeof resetGameSession === 'function') {
+          const _origResetGameSession = resetGameSession;
+          resetGameSession = function() {
+            const res = _origResetGameSession.apply(this, arguments);
             self.onRunReset();
             return res;
           };
         }
 
-        // 5. 拦截 createEnemy 实现星陨神殿“小怪全闪光、原闪光全变Boss”与黄金宝库狂化加成
+        // 4. 拦截 createEnemy(x, y, type, hpScaleMul) 初始化番外关魔物状态
         if (typeof createEnemy === 'function') {
           const _origCreateEnemy = createEnemy;
-          createEnemy = function(typeKey, x, y, isElite = false, isBoss = false) {
+          createEnemy = function(x, y, type, hpScaleMul = 1.0) {
             const e = _origCreateEnemy.apply(this, arguments);
             return self.promoteEnemyForExtraStage(e);
           };
         }
 
-        // 6. 拦截 killEnemy 实现三大爽关专属掉落、皮纳塔爆奖与弑神神格叠层
+        // 5. 拦截 killEnemy 实现爽关专属掉落与四阶以上皮纳塔爆奖
         if (typeof killEnemy === 'function') {
           const _origKillEnemy = killEnemy;
           killEnemy = function(e) {
@@ -24739,52 +25134,59 @@
           };
         }
 
-        // 7. 拦截 updateBossHud 在星陨神殿中隐藏公屏顶部 Boss 血条
-        if (typeof updateBossHud === 'function') {
-          const _origUpdateBossHud = updateBossHud;
-          updateBossHud = function() {
-            if (GameState.activeBiome === 'starfall_temple') {
-              const bHud = document.getElementById('boss-hud');
-              if (bHud) bHud.style.display = 'none';
-              return;
-            }
-            return _origUpdateBossHud.apply(this, arguments);
-          };
-        }
-
-        // 8. 拦截 update 驱动三大爽关实时逻辑与史莱姆受击弹球速度
+        // 6. 拦截 update 驱动爽关实时逻辑、大奖时刻全属性Buff与史莱姆受击弹球速度
         if (typeof update === 'function') {
           const _origUpdate = update;
           update = function(dt) {
-            // 黄金宝库负重与史莱姆战车移速修正
             let origSpeed = player ? player.speed : 150;
+            let origMagnet = player ? player.magnetRange : 90;
+            let origAtkDmg = player?.skills?.attack ? player.skills.attack.damage : 24;
             if (GameState.isStarted && !GameState.isOver && player) {
-              if (GameState.activeBiome === 'vault' && self.vault.debuffHeavyGoldTimer > 0) {
-                player.speed = Math.max(85, origSpeed * (1 - 0.045 * self.vault.debuffHeavyGoldTier));
+              if (GameState.activeBiome === 'vault') {
+                if (self.vault.feverTimer > 0) {
+                  player.speed = origSpeed * 1.38;
+                  player.magnetRange = Math.max(origMagnet * 2.4, 240);
+                  if (player.skills?.attack) {
+                    player.skills.attack.damage = Math.round(origAtkDmg * (1.8 + 0.25 * self.vault.feverTier));
+                  }
+                } else if (self.vault.debuffHeavyGoldTimer > 0) {
+                  player.speed = Math.max(85, origSpeed * (1 - 0.045 * self.vault.debuffHeavyGoldTier));
+                }
               } else if (GameState.activeBiome === 'slime_carnival' && self.slime.chariotTimer > 0) {
                 player.speed = origSpeed * 1.85;
               }
             }
             const res = _origUpdate.apply(this, arguments);
-            if (player) player.speed = origSpeed;
+            if (player) {
+              player.speed = origSpeed;
+              player.magnetRange = origMagnet;
+              if (player.skills?.attack) player.skills.attack.damage = origAtkDmg;
+            }
 
             if (GameState.isStarted && !GameState.isOver && !GameState.isPaused) {
-              // 史莱姆狂欢：受击怪赋予超弹力果冻弹射初速度
               if (GameState.activeBiome === 'slime_carnival' && typeof enemies !== 'undefined') {
+                const now = performance.now();
                 for (let i = 0; i < enemies.length; i++) {
                   const e = enemies[i];
-                  if (!e || e.hp <= 0) continue;
-                  if (e._lastExtraHp !== undefined && e.hp < e._lastExtraHp) {
+                  if (!e || e.isDead || e.hp <= 0) continue;
+                  if (e._lastExtraHp !== undefined && e.hp < e._lastExtraHp && (!e._lastLaunchAt || now - e._lastLaunchAt > 240)) {
                     const ang = Math.atan2(e.y - player.y, e.x - player.x) + (Math.random() - 0.5) * 0.35;
-                    const impulse = e.isBoss ? 220 : 440;
+                    const impulse = e.isBoss ? 200 : 380;
                     e.slimeVx = Math.cos(ang) * impulse;
                     e.slimeVy = Math.sin(ang) * impulse;
                     e.squashTimer = 0.22;
+                    e._lastLaunchAt = now;
                   }
                   e._lastExtraHp = e.hp;
                 }
               }
               self.tick(dt);
+              if (GameState.activeBiome === 'slime_carnival' && typeof enemies !== 'undefined') {
+                for (let i = 0; i < enemies.length; i++) {
+                  const e = enemies[i];
+                  if (e) e._lastExtraHp = e.hp;
+                }
+              }
             } else {
               self.updateHUD();
             }
@@ -24792,14 +25194,17 @@
           };
         }
 
-        // 9. 拦截 draw 绘制果冻王冠、吞噬战车光环与星陨神殿 Boss 头顶独立血条
+        // 7. 拦截 draw 绘制果冻王冠、合体史莱姆阶段标识与吞噬战车光环
         if (typeof draw === 'function') {
           const _origDraw = draw;
           draw = function() {
             const res = _origDraw.apply(this, arguments);
-            if (GameState.isStarted && typeof ctx !== 'undefined' && typeof Camera !== 'undefined') {
+            if (GameState.isStarted && typeof ctx !== 'undefined' && typeof camera !== 'undefined') {
+              const dpr = Math.min(window.devicePixelRatio || 1, 2);
               ctx.save();
-              ctx.translate(-Camera.x, -Camera.y);
+              ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+              const shk = typeof CameraFeedback !== 'undefined' ? CameraFeedback.offset() : { x: 0, y: 0 };
+              ctx.translate(-camera.x + shk.x, -camera.y + shk.y);
               self.drawWorldExtras(ctx);
               ctx.restore();
             }
@@ -24807,33 +25212,7 @@
           };
         }
 
-        // 10. 扩展联机大厅地图选择与全队轮盘事件同步
-        if (typeof renderCoopModalUI === 'function') {
-          const _origRenderCoop = renderCoopModalUI;
-          renderCoopModalUI = function() {
-            const r = _origRenderCoop.apply(this, arguments);
-            const grid = document.querySelector('#coop-modal .coop-biome-grid');
-            if (grid && !grid.querySelector('[data-biome="vault"]')) {
-              const extraBtns = [
-                { key: 'vault', label: '[px:coin] 番外一·黄金宝库' },
-                { key: 'slime_carnival', label: '[px:potion] 番外二·史莱姆牧场' },
-                { key: 'starfall_temple', label: '[px:star] 番外三·诸神黄昏' }
-              ];
-              extraBtns.forEach(item => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'coop-biome-pick' + (GameState.activeBiome === item.key ? ' selected' : '');
-                btn.dataset.biome = item.key;
-                btn.innerHTML = item.label;
-                btn.addEventListener('click', () => trySelectStage(item.key, btn, true));
-                grid.appendChild(btn);
-              });
-              if (typeof PixelIcons !== 'undefined' && PixelIcons.hydrate) PixelIcons.hydrate(grid);
-            }
-            return r;
-          };
-        }
-
+        // 8. 联机全队轮盘与下注同步
         if (typeof CoopManager !== 'undefined' && typeof CoopManager.handlePacket === 'function') {
           const _origHandlePacket = CoopManager.handlePacket.bind(CoopManager);
           CoopManager.handlePacket = function(msg) {
