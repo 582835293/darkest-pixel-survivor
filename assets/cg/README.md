@@ -1,11 +1,13 @@
-# 像素 CG
+# 像素 CG 资源说明 (v1.0.0)
 
-开场、第四关，以及 R30 补齐的前三关插画，均使用内置 imagegen 工具生成（2026-10-21），无第三方角色或品牌。WebP 仅做网页格式压缩，未裁改内容；HTML 内嵌完全相同的数据，不额外请求图片服务器。与本项目一同按 MIT 发布。
+开场标题、四大主线战场与两大番外爽关的共 **7 幅像素插画** 均经过高压缩比 WebP 优化并直接 Base64 内嵌于 `/index.html` 中，无需额外请求外部图片服务器，保证网页秒开与单文件离线可用。与本项目一同按 MIT 许可证发布。
 
-- `blood-night-title.webp`：标题画面。
-- `dungeon-r30.webp`：熔火地牢，熔岩与黑石堡垒。
-- `tundra-r30.webp`：永冬冻原，纵向冰谷与极光。
-- `graveyard-r30.webp`：血月墓园，横向墓道与血月。
-- `rustmoon-clock-city.webp`：锈月钟城。
+- `blood-night-title.webp`（~47 KB）：标题画面（九位猎手在血月下眺望锈月钟城）。
+- `dungeon-r30.webp`（~58 KB）：主线第一关 · 恶魔熔火地牢（熔岩与黑石堡垒）。
+- `tundra-r30.webp`（~57 KB）：主线第二关 · 极寒永冬冻原（纵向冰谷与极光）。
+- `graveyard-r30.webp`（~51 KB）：主线第三关 · 幽冥血月墓园（横向墓道与血月）。
+- `rustmoon-clock-city.webp`（~53 KB）：主线第四关 · 锈月钟城（黄铜齿轮与蒸汽钟楼）。
+- `vault.webp`（~28 KB，516×288 高压缩 WebP）：**番外一 · 贪婪黄金宝库**（黄金瀑布、命运轮盘法阵与贪婪王座）。
+- `slime-carnival.webp`（~38 KB，516×288 高压缩 WebP）：**番外二 · 史莱姆狂欢牧场**（血月烟花、彩虹吞噬战车与五阶皇冠黄金皮纳塔皇）。
 
-R30 三幅均为 1536×1024，完整提示词见 [CG_R30_PROMPTS.json](../../docs/CG_R30_PROMPTS.json)。生成模式为内置 imagegen，没有使用 API/CLI。角色精灵、图标、台球、纸牌与雷拳战斗特效继续使用原生 Canvas 像素代码。README 战斗截图来自实际游戏渲染。
+主线关卡提示词存档见 [CG_PROMPTS.json](../../docs/CG_PROMPTS.json)。角色精灵、162 枚 UI 图标、台球、纸牌与雷拳等局内战斗特效继续采用原生 Canvas 2D 点阵代码实时绘制；`scripts/check.mjs` 会在每次构建时逐字节校验全部 7 幅 WebP 资源与 `index.html` 内嵌数据的一致性。

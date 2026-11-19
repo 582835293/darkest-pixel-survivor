@@ -1,6 +1,6 @@
 # 血夜幸存者 (Darkest Pixel Survivor) · 开发者维护与工程架构手册
 
-> **适用版本**：v26.4 R30+  
+> **适用版本**：v1.0.0（历史迭代归档：v0.1.0 ～ v0.9.5）  
 > **文档定位**：面向项目开发者、维护者与二次开发学习者的完整工程架构说明、核心模块导航、渲染与同步管线解析、功能扩展手册及测试校验规范。
 
 ---
@@ -24,13 +24,13 @@
 《血夜幸存者》采用 **零外部运行时构建依赖的单文件自包含架构（Single-File Self-Contained HTML Architecture）** 搭配轻量级 Node.js/Express 本地辅助服务：
 
 1. **单文件便携性 (`index.html`)**：
-   - 全部 HTML 结构、响应式 CSS 样式、162 枚矢量/像素图标图集、角色/怪物点阵精灵生成器、WebAudio 芯片交响乐合成器、5 幅高分辨率关卡 WebP CG（Base64 内嵌）以及完整游戏逻辑均内聚在 `/index.html` 中。
+   - 全部 HTML 结构、响应式 CSS 样式、162 枚矢量/像素图标图集、角色/怪物点阵精灵生成器、WebAudio 芯片交响乐合成器、7 幅高压缩关卡 WebP CG（标题 + 4 主线 + 2 番外，Base64 内嵌）以及完整游戏逻辑均内聚在 `/index.html` 中。
    - 使得游戏既可以部署在任何静态托管平台（如 GitHub Pages），也可以直接离线打开或在局域网手机热点下运行。
 2. **原生程序化像素与音频生成**：
    - **视觉**：所有英雄、34 种怪物、24 位首领、弹道、法阵、刀光均通过 Canvas 2D API 与点阵矩阵 (`SpriteCache` / `PixelIcons`) 动态绘制，无需加载外部雪碧图文件。
    - **音频**：通过 `SoundEngine` (Web Audio API) 实时合成打击音效、Boss 入场警报以及四张主线地图的多声部背景音乐。
-3. **增量式模块扩展 (R22 → R30+)**：
-   - 核心基础引擎位于前半部分，后续版本（如 R25 死灵法师、R27 友军首领与秘宝觉醒、R29 三位新猎手与钟城、R30+ 番外爽关与精细化体验优化）通过清晰的命名空间对象（`HealerKit`、`EngineerKit`、`NecroKit`、`NewHeroes`、`CardTable`、`RelicAwakening`、`FriendlyBossKit`、`DamageMeter`、`ExtraStages`）挂载并与主循环解耦协作。
+3. **增量式模块扩展 (v0.1.0 → v1.0.0)**：
+   - 核心基础引擎位于前半部分，后续版本（如 v0.7 死灵法师、v0.8 友军首领与秘宝觉醒、v0.9 三位新猎手与钟城、v0.9.5～v1.0.0 番外爽关与五级流派体系）通过清晰的命名空间对象（`HealerKit`、`EngineerKit`、`NecroKit`、`NewHeroes`、`CardTable`、`RelicAwakening`、`FriendlyBossKit`、`DamageMeter`、`ExtraStages`）挂载并与主循环解耦协作。
 
 ---
 
@@ -48,11 +48,14 @@
 │   ├── screenshots/            # 桌面端与移动端实机截图
 │   └── ui/                     # 162 枚像素图标图集导出文件
 ├── docs/                       # 开发者与设计文档中心
+│   ├── README.md               # 文档导航索引与语义化版本归档总览
 │   ├── DEVELOPER_GUIDE.md      # 【本文档】开发者维护与工程架构手册
 │   ├── GAME_DESIGN_BIBLE.md    # 【设计总集】游戏信息设计与数值设定百科全书
 │   ├── NETWORKING.md           # 联机发现、加密握手、WebRTC/MQTT 与状态同步协议深度说明
 │   ├── TESTING.md              # 自动化回归测试套件说明与校验记录
-│   └── BALANCE*.md             # 各版本受控木桩与 AI 遭遇战数值实验报告
+│   ├── BALANCE.md              # 早期版本受控木桩与 AI 遭遇战数值实验报告
+│   ├── CG_PROMPTS.json         # 主线像素插画提示词元数据
+│   └── archive/                # v0.7.0 ～ v0.9.5 历史平衡报告与验证 JSON 归档
 ├── scripts/                    # 工程校验、数值仿真与截图工具脚本
 │   ├── check.mjs               # JS 语法提取校验与静态资源链接完整性检查（npm run build / check）
 │   ├── test-all.cjs            # 全量 Playwright 自动化回归测试入口（npm test）
@@ -94,8 +97,8 @@
 | **9600 ～ 12690** | `SaveManager` / `Campaign` / `Arena` | 本地持久化存档、营地圣殿天赋（逐级加减无损退款）、铁匠铺、45+ 成就系统、地图边界与 `~1 km` 随机方位秘宝生成 (`Arena.relicPoint`) |
 | **12690 ～ 13400** | `SkillDetails` / `renderSkillTreeModal()` | 技能树 4 大标签页（主动技能、流派共鸣、被动装备、地图秘宝）的常显概要与可展开实时公式面板 |
 | **13400 ～ 19150** | `CoopManager` / `WorldCoop` / `FriendlyBossKit` / `RelicAwakening` | 多人联机房间发现、WebRTC P2P / MQTT / 离线热点直连、AI 机器人队友、友军首领（每人最多2位、10秒沉睡复苏）与地图秘宝拾取即觉醒 |
-| **19150 ～ 24500** | `R29` / `R30` 扩展与 `DamageMeter` | 第四关锈月钟城、内嵌 CG 加载器、实时与结算伤害统计系统 (`DamageMeter` + `__dmgSourceHint`)、高阶成就扩容 |
-| **24500 ～ 末尾** | `ExtraStages` | 番外一《贪婪黄金宝库》（对数增伤撒币炮 + 十连全队命运轮盘）与番外二《史莱姆狂欢牧场》（五阶合体皮纳塔 + 彩虹吞噬战车） |
+| **19150 ～ 24500** | `v0.9` / `v1.0` 扩展与 `DamageMeter` | 第四关锈月钟城、内嵌 CG 加载器、实时与结算伤害统计系统 (`DamageMeter` + `__dmgSourceHint`)、高阶成就扩容 |
+| **24500 ～ 末尾** | `ExtraStages` | 番外一《贪婪黄金宝库》（高压缩宝库 CG + 对数增伤撒币炮 + 十连全队命运轮盘）与番外二《史莱姆狂欢牧场》（高压缩牧场 CG + 五阶合体皮纳塔 + 彩虹吞噬战车） |
 
 ---
 
@@ -141,7 +144,7 @@
 
 `draw()` 函数严格遵循 **自底向上（Painter's Algorithm）** 的分层渲染顺序，确保画面信息清晰、不遮挡关键走位视野：
 
-1. **世界坐标系变换**：根据 `camera.x / camera.y` 与 `CameraFeedback`（限幅微震屏）平移画布。
+1. **世界坐标系变换与视野缩放 (`CameraZoom`)**：根据 `camera.x / camera.y`、`getViewportWorldZoom()`（支持 `60%～140%` 实时缩放与刷怪圈自适应）以及 `CameraFeedback`（限幅微震屏）变换画布；画布外实体（神龛、可破坏物、秘宝、掉落物、弹道）先经过视口裁剪再渲染。
 2. **底层背景与地砖**：绘制当前关卡的程序化像素地砖、走廊边界墙体与装饰物。
 3. **地面持续领域**：绘制熔岩火径 (`fireTrail`)、引力黑洞、庇护圣域、电磁陷阱、地面血迹 (`bloodDecals`)。
 4. **危险预警层 (`telegraphs`)**：绘制远程怪瞄准线与 Boss 技能的圆形/扇形/矩形/环带红色预警区（始终位于怪物下方、地面上方，确保清晰可读）。
@@ -152,8 +155,9 @@
    - **脚下状态光环**：当玩家处于蓄力中，或 **祷师满 100 祷光 / 拳师满 6 点拳势 / 牌师凑齐 4 张手牌或成型牌型** 时，在玩家脚下绘制旋转符文法阵、脉冲波纹与环绕光点。
    - **精灵绘制**：绘制亡灵军团、友军首领、敌方怪物与玩家本体（若玩家处于濒死倒地阶段，应用旋转倾倒变换）。
    - **Boss 头顶跟随血条**：所有敌方 Boss 不再使用遮挡手机视野的顶部大横幅，而是直接在 Boss 头顶绘制 **无背景名称 + 单行紧凑 10 格红框血条**。
-7. **顶层特效与 HUD 飘字**：
+7. **顶层特效与自适应画质 (`VfxQuality`)**：
    - 绘制近战弧形刀光 (`slashVisuals`)、弹道 (`projectiles`)、天降光柱/激光 (`skyBeams`)、闪电链 (`lightningArcs`)、暴击与治疗飘字 (`floatingTexts`)。
+   - `VfxQuality` 支持 `auto` / `high` / `low` 三档（`auto` 按平滑帧耗时自适应切换 LOD），**完整保留 100% 弹道与特效数量**，仅精简阴影发光（`shadowBlur`）与多层描边细节；同时采用 O(1) 交换删除特效池、复用空间哈希网格、20Hz 小地图节流与 HUD DOM 脏值检查降低 GC 与主线程抖动。
 
 ---
 
@@ -186,8 +190,10 @@ try {
 1. **房主权威 (Host Authority) + 客机本地表现 (Client Prediction & Local VFX)**：
    - **房主 (`WorldCoop.authority() === true`)**：负责刷怪、怪物 AI 寻路、Boss 招式状态机、怪物死亡确认、掉落物生成与团队救援进度（6 秒基准）结算。
    - **客机 (`WorldCoop.guest() === true`)**：本地立即执行自身移动、技能施放与命中检测，通过 `WORLD_HITS` 将伤害上报房主；房主扣血并广播世界快照，同时将伤害归属记入该客机的 `Campaign.stat(peerId)`。
-2. **全员可救 AI 机器人队友**：
-   - 无论单人模式添加的 AI 队友还是联机中的 AI 队友，其倒地判定与救援循环均遍历所有存活人类玩家 (`WorldCoop.actors()`)，房主与客机站在 AI 队友旁均可救援。
+2. **AI 机器人队友权威隔离、平滑插值与全员救援**：
+   - 多人房间仅房主运行 `CoopBotSystem.tick`，客机禁止本地 AI 驱动并隐藏移除按钮；机器人升级在 `runIsolatedBotCard()` 隔离沙箱内执行，绝不污染房主属性、金币、弹窗或成就。
+   - 房主高频 `PLAYER_STATE` 及 `CoopPoseWire` 携带紧凑 `bots` 位姿流，客机通过独立 `CoopSnapshotBuffer` 在 60FPS 下平滑插值；`CoopManager.remoteAllies()` 将机器人彻底隔离出 WebRTC 建连、心跳、语音与聊天 ACK 队列。
+   - 无论单人还是联机，倒地 AI 队友的救援循环遍历所有存活人类玩家 (`WorldCoop.actors()`)，房主与客机均可救援。
 3. **三模混合连接支持**：
    - **WebRTC P2P 数据通道**（公网低延迟直连）
    - **公共 MQTT / HTTPS 加密中继后备**（穿透严格 NAT）

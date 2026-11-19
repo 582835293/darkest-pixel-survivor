@@ -1,0 +1,65 @@
+{
+  "rows": [
+    {
+      "level": 6,
+      "rank": 1,
+      "awake": false,
+      "damage": 360,
+      "healing": 0,
+      "spec": {
+        "level": 1,
+        "awake": false,
+        "cd": 0.85,
+        "radius": 72,
+        "damage": 11.620000000000001,
+        "heal": 0
+      }
+    },
+    {
+      "level": 20,
+      "rank": 3,
+      "awake": false,
+      "damage": 1776,
+      "healing": 0,
+      "spec": {
+        "level": 3,
+        "awake": false,
+        "cd": 0.85,
+        "radius": 92,
+        "damage": 33.250768,
+        "heal": 0
+      }
+    },
+    {
+      "level": 38,
+      "rank": 5,
+      "awake": false,
+      "damage": 4896,
+      "healing": 0,
+      "spec": {
+        "level": 5,
+        "awake": false,
+        "cd": 0.85,
+        "radius": 112,
+        "damage": 59.8826430912,
+        "heal": 0
+      }
+    },
+    {
+      "level": 49,
+      "rank": 5,
+      "awake": true,
+      "damage": 9600,
+      "healing": 48,
+      "spec": {
+        "level": 5,
+        "awake": true,
+        "cd": 0.85,
+        "radius": 147,
+        "damage": 97.17656817312002,
+        "heal": 2
+      }
+    }
+  ],
+  "scope": "Actual garlic only, 20-second fixed target at levels 6/20/38/49, no other attacks/talents/equipment. Healing is per pulse."
+}
